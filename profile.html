@@ -7,209 +7,140 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg') center/cover fixed;
-      color: #00ff9d;
+      background: #f5f6f7;
       font-family: 'Inter', system-ui, sans-serif;
-      min-height: 100vh;
-      position: relative;
+      color: #222;
     }
-    .overlay {
-      min-height: 100vh;
-      background: rgba(0, 5, 42, 0.85);
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
     }
 
-    /* Аватарка — поверх шапки, с отступом */
-    .avatar-container {
-      position: absolute;
-      top: 220px;
-      left: 60px;
-      z-index: 10;
+    /* Шапка */
+    .profile-header {
+      height: 300px;
+      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg') center/cover no-repeat;
+      position: relative;
     }
     .avatar {
       width: 200px;
       height: 200px;
-      border: 4px solid #00ff9d;
+      border: 4px solid #fff;
       border-radius: 50%;
       background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/avatar.png') center/cover;
-      box-shadow: 0 0 20px rgba(0, 255, 157, 0.6);
-    }
-    /* Кнопка + для аплоада */
-    .upload-btn {
       position: absolute;
-      top: 220px;
-      left: 250px;
-      width: 40px;
-      height: 40px;
-      background: rgba(0, 0, 0, 0.7);
-      border: 2px solid #00ff9d;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: #00ff9d;
-      cursor: pointer;
-      z-index: 11;
-    }
-    .upload-btn:hover {
-      background: rgba(0, 255, 157, 0.2);
+      bottom: -60px;
+      left: 50px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    /* Подсказки при аплоаде — появляются динамически */
-    .upload-hint {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: 1px solid #00ff9d;
-      font-size: 14px;
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
-      z-index: 100;
-    }
-    .upload-hint.show {
-      opacity: 1;
-    }
-
-    /* Информация профиля — ниже аватарки */
+    /* Профиль */
     .profile-info {
-      margin-top: 280px;
-      padding: 0 60px;
-      max-width: 600px;
+      margin-top: 100px;
+      padding: 0 50px;
     }
     .profile-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 32px;
-      font-weight: 800;
+      font-size: 28px;
+      font-weight: 700;
       margin-bottom: 8px;
-      text-shadow: 0 0 10px #00ff9d;
     }
     .profile-rank {
       color: #d700ff;
-      font-family: 'Orbitron', monospace;
-      font-size: 18px;
+      font-weight: 600;
       margin-bottom: 20px;
     }
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
     .form-group label {
       display: block;
       margin-bottom: 6px;
-      color: #66ffff;
-      font-weight: 500;
+      color: #555;
+      font-weight: 600;
     }
     .form-group input, .form-group textarea {
       width: 100%;
-      padding: 12px;
-      background: rgba(0, 20, 40, 0.8);
-      color: #00ff9d;
-      border: 1px solid #00ff9d;
-      border-radius: 8px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
       font-family: 'Inter', sans-serif;
-      font-size: 16px;
     }
     .btn {
-      background: linear-gradient(90deg, #00ff9d, #66ffff);
-      color: #000;
+      background: #4c75a3;
+      color: white;
       border: none;
-      padding: 14px 32px;
-      border-radius: 10px;
-      font-family: 'Orbitron', monospace;
-      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
+      font-weight: 600;
     }
 
-    /* Боковая панель как в ВК */
+    /* Боковая панель */
     .sidebar {
-      position: absolute;
-      top: 80px;
-      left: 20px;
       width: 200px;
+      float: left;
+      margin-right: 20px;
+    }
+    .nav-list {
+      list-style: none;
     }
     .nav-item {
-      padding: 10px 0;
+      padding: 12px 0;
       cursor: pointer;
-      font-size: 16px;
-      color: #66ffff;
+      font-weight: 600;
+      color: #4c75a3;
     }
     .nav-item:hover {
-      color: #00ff9d;
+      text-decoration: underline;
     }
-    .nav-item.active {
-      color: #00ff9d;
-      font-weight: 700;
+
+    /* Основной контент */
+    .main-content {
+      margin-left: 220px;
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="overlay">
-    <!-- Аватарка + кнопка аплоада -->
-    <div class="avatar-container">
+  <div class="container">
+    <!-- Шапка -->
+    <div class="profile-header">
       <div class="avatar"></div>
-      <div class="upload-btn" id="avatar-upload">+</div>
     </div>
-
-    <!-- Подсказка при аплоаде -->
-    <div class="upload-hint" id="hint">✅ Avatar uploaded (200×200)</div>
 
     <!-- Боковая панель -->
     <div class="sidebar">
-      <div class="nav-item active">• News Feed</div>
-      <div class="nav-item">• Messages</div>
-      <div class="nav-item">• My Groups</div>
-      <div class="nav-item">• Tribunal</div>
+      <ul class="nav-list">
+        <li class="nav-item">News Feed</li>
+        <li class="nav-item">Messages</li>
+        <li class="nav-item">My Groups</li>
+        <li class="nav-item">Tribunal</li>
+        <li class="nav-item">Friends</li>
+      </ul>
     </div>
 
-    <!-- Информация профиля -->
-    <div class="profile-info">
-      <div class="profile-name">@cryptobros</div>
-      <div class="profile-rank">Degen (Master)</div>
+    <!-- Профиль -->
+    <div class="main-content">
+      <div class="profile-info">
+        <div class="profile-name">@cryptobros</div>
+        <div class="profile-rank">Degen (Master)</div>
 
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" placeholder="Enter your name">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+          <label>About</label>
+          <textarea placeholder="Tell us about yourself..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" placeholder="Your city">
+        </div>
+        <button class="btn">SAVE PROFILE</button>
       </div>
-      <div class="form-group">
-        <label>About</label>
-        <textarea placeholder="Tell us about yourself..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>City</label>
-        <input type="text" placeholder="Your city">
-      </div>
-      <button class="btn">SAVE PROFILE</button>
     </div>
   </div>
-
-  <script>
-    const hint = document.getElementById('hint');
-    const avatarBtn = document.getElementById('avatar-upload');
-
-    // При клике на «+» — имитируем аплоад (в реальности — file input)
-    avatarBtn.addEventListener('click', () => {
-      hint.textContent = '✅ Avatar uploaded (200×200)';
-      hint.classList.add('show');
-      setTimeout(() => hint.classList.remove('show'), 3000);
-    });
-
-    // Для демо: при перетаскивании файла (в будущем — drag & drop)
-    document.body.addEventListener('dragover', e => {
-      e.preventDefault();
-      hint.textContent = '📁 Drop header.jpg (1200×400) or avatar.png (200×200)';
-      hint.classList.add('show');
-    });
-    document.body.addEventListener('drop', e => {
-      e.preventDefault();
-      hint.classList.remove('show');
-      // Здесь будет upload logic
-    });
-  </script>
 </body>
 </html>
