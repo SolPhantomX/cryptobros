@@ -1,387 +1,292 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>CRYPTOBROS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@cryptobros – CRYPTOBROS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-body: #f8f9fa;
+      --bg-card: #ffffff;
+      --text-primary: #212529;
+      --text-secondary: #6c757d;
+      --border-color: #e9ecef;
+      --shadow: 0 4px 12px rgba(0,0,0,0.05);
+      --accent-gold: #FFD700;
+      --accent-cyan: #00F0FF;
+      --accent-purple: #9D00FF;
+      --hover-bg: #f1f3f5;
+      --active-sidebar: #fff9e6;
+    }
+
+    .dark-theme {
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --border-color: #333333;
+      --shadow: 0 4px 12px rgba(0,0,0,0.3);
+      --hover-bg: #2a2a2a;
+      --active-sidebar: #2a2515;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-size: cover;
-      background-attachment: fixed;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-body);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 0.3s ease;
     }
-    .top-section {
-      position: relative;
-      height: 300px;
-    }
-    .header {
-      width: 100%;
-      height: 100%;
-      background: center/cover;
-      border: 2px dashed #555;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .header.loaded {
-      border: none;
-    }
-    .avatar {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      border: 4px solid white;
-      background: center/cover;
-      position: absolute;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      cursor: pointer;
-    }
-    .main-layout {
-      max-width: 1200px;
-      margin: 220px auto 0;
+
+    .layout {
       display: flex;
-      gap: 20px;
-      padding: 0 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
     }
-    .edit-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 32px;
-      height: 32px;
-      background: #333;
-      border: 1px solid #666;
+
+    aside {
+      width: 280px;
+      flex-shrink: 0;
+      padding: 2rem 0;
+      position: sticky;
+      top: 20px;
+    }
+
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      color: #ffcc00;
+      background: linear-gradient(45deg, var(--accent-gold), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #0a0a0f;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.4rem;
+    }
+
+    .user-info h3 {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+    }
+    .user-info p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-menu {
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 1.2rem 1.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .menu-item:hover {
+      background: var(--hover-bg);
+      color: var(--accent-gold);
+    }
+
+    .menu-item.active {
+      background: var(--active-sidebar);
+      color: var(--accent-gold);
+      border-left: 4px solid var(--accent-gold);
+    }
+
+    main {
+      flex: 1;
+      max-width: 720px;
+      padding: 2rem 1rem 2rem 2rem;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--accent-gold), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #0a0a0f;
+      font-family: 'Roboto Mono';
+      font-size: 2.5rem;
+    }
+
+    .profile-info h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-info p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .bio {
+      background: var(--bg-card);
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .bio h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .bio p {
+      line-height: 1.6;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 100;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow);
+      z-index: 1000;
     }
-    .edit-tooltip {
-      position: absolute;
-      top: 50px;
-      right: 16px;
-      background: #000;
-      color: #ffcc00;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 14px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      z-index: 100;
+
+    @media (max-width: 1024px) {
+      .layout { flex-direction: column; }
+      aside { width: 100%; }
+      main { padding: 2rem 1rem; }
     }
-    .edit-menu {
-      position: absolute;
-      top: 50px;
-      right: 16px;
-      background: #000;
-      border: 1px solid #ffcc00;
-      border-radius: 6px;
-      padding: 8px;
-      display: none;
-      z-index: 100;
-      min-width: 180px;
-    }
-    .edit-menu button {
-      background: #222;
-      color: #ffcc00;
-      border: 1px solid #555;
-      border-radius: 4px;
-      padding: 4px 8px;
-      margin: 2px;
-      cursor: pointer;
-      font-size: 12px;
-      display: inline-block;
-    }
-    .sidebar { width: 200px; }
-    .nav-item {
-      padding: 10px 0;
-      color: #385898;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .main { flex: 1; }
-    .name, .rank, .field-value {
-      color: #ffcc00;
-      animation: flicker 3s infinite alternate;
-    }
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
-      20%,24%,55%,81%,85% { opacity:0.8; }
-    }
-    .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
-    .rank { margin-bottom: 20px; }
-    .field-label { color: #aaa; margin: 10px 0 4px; font-weight: bold; }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0 15px;
-      background: rgba(0,0,0,0.3);
-      color: #ffcc00;
-      border: 1px solid #555;
-      border-radius: 4px;
-    }
-    .btn {
-      background: #4267B2;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #header-upload, #avatar-upload, #bg-upload { display: none; }
   </style>
 </head>
 <body>
 
-<div class="top-section">
-  <div class="header" id="header"></div>
-  <div class="avatar" id="avatar"></div>
-  <div class="edit-btn" id="editBtn">⚙️</div>
-  <div class="edit-tooltip" id="editTooltip">Edit Profile</div>
-  <div class="edit-menu" id="editMenu"></div>
-</div>
+<div class="theme-toggle" id="themeToggle">🌙</div>
 
-<div class="main-layout">
-  <div class="sidebar">
-    <div class="nav-item">News Feed</div>
-    <div class="nav-item">Messages</div>
-    <div class="nav-item">My Groups</div>
-    <div class="nav-item">Tribunal</div>
-    <div class="nav-item">My Friends</div>
-  </div>
-  <div class="main" id="profileContent"></div>
-</div>
+<div class="layout">
+  <!-- Левая панель -->
+  <aside>
+    <div class="sidebar-user">
+      <div class="avatar">C</div>
+      <div class="user-info">
+        <h3>@cryptobros</h3>
+        <p>Degen (Master)</p>
+      </div>
+    </div>
 
-<input type="file" id="header-upload" accept="image/*">
-<input type="file" id="avatar-upload" accept="image/*">
-<input type="file" id="bg-upload" accept="image/*">
+    <div class="sidebar-menu">
+      <a href="feed.html" class="menu-item active">📰 News Feed</a>
+      <a href="messages.html" class="menu-item">💬 Messages</a>
+      <a href="groups.html" class="menu-item">👥 My Groups</a>
+      <a href="tribunal.html" class="menu-item">💡 Tribunal</a>
+      <a href="friends.html" class="menu-item">🤝 My Friends</a>
+    </div>
+  </aside>
+
+  <!-- Профиль -->
+  <main>
+    <div class="profile-header">
+      <div class="profile-avatar">M</div>
+      <div class="profile-info">
+        <h1>Mikhail Ivanov</h1>
+        <p>@cryptobros · Founder of Cryptobros</p>
+        <p>San Diego, CA</p>
+      </div>
+    </div>
+
+    <div class="bio">
+      <h2>About</h2>
+      <p>
+        Creator of the CRYPTOBROS social network — a no-BS, roast-first community for real alpha and anti-guru truth.
+        Building AURASPACE (AUS) token on Solana. Musician, collector, degen.
+      </p>
+    </div>
+
+    <div class="bio">
+      <h2>Onboarding Status</h2>
+      <p><strong>Tier:</strong> Degen (Master)</p>
+      <p><strong>AUS Balance:</strong> pending launch</p>
+      <p><strong>Wallet:</strong> Connected via Phantom</p>
+    </div>
+  </main>
+</div>
 
 <script>
-  let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
-  let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
-  let isProfileSaved = !!localStorage.getItem('profileData');
-  let currentBg = localStorage.getItem('pageBg') || 'bg3.jpg';
-  let customBg = localStorage.getItem('customBg');
-
-  function applyBackground() {
-    if (customBg) {
-      document.body.style.backgroundImage = `url(${customBg})`;
+  function initTheme() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'dark' || (!saved && prefersDark)) {
+      document.body.classList.add('dark-theme');
+      document.getElementById('themeToggle').textContent = '☀️';
     } else {
-      document.body.style.backgroundImage = `url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/${currentBg}')`;
+      document.body.classList.remove('dark-theme');
+      document.getElementById('themeToggle').textContent = '🌙';
     }
   }
 
-  function init() {
-    const headerImg = localStorage.getItem('header') || 'https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg';
-    const avatarImg = localStorage.getItem('avatar') || 'https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/avatar.png';
-    
-    const headerEl = document.getElementById('header');
-    const avatarEl = document.getElementById('avatar');
-    
-    // Проверка на null
-    if (!headerEl || !avatarEl) {
-      console.error('❌ Элементы #header или #avatar не найдены!');
-      return;
-    }
-
-    headerEl.style.backgroundImage = `url(${headerImg})`;
-    headerEl.style.backgroundSize = 'auto';
-    headerEl.style.backgroundRepeat = 'no-repeat';
-    avatarEl.style.backgroundImage = `url(${avatarImg})`;
-    headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-    
-    if (localStorage.getItem('header')) {
-      headerEl.classList.add('loaded');
-    }
-
-    applyBackground();
-    renderViewMode();
-    buildEditMenu();
-
-    if (!isProfileSaved) {
-      setupDragToPan();
-    }
-  }
-
-  function setupDragToPan() {
-    const headerEl = document.getElementById('header');
-    if (!headerEl) return;
-
-    let isDragging = false;
-    let startX, startY, startXPx, startYPx;
-
-    headerEl.addEventListener('mousedown', e => {
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      const bgPos = getComputedStyle(headerEl).backgroundPosition.split(' ');
-      startXPx = parseFloat(bgPos[0]) || 0;
-      startYPx = parseFloat(bgPos[1]) || 0;
-      document.body.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      headerPos.x = startXPx + dx;
-      headerPos.y = startYPx + dy;
-      headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        document.body.style.cursor = 'default';
-        if (!isProfileSaved) {
-          localStorage.setItem('headerPos', JSON.stringify(headerPos));
-        }
-      }
-    });
-  }
-
-  function renderViewMode() {
-    const el = document.getElementById('profileContent');
-    el.innerHTML = `
-      <div class="name">@cryptobros</div>
-      <div class="rank">Degen (Master)</div>
-      ${profileData.name ? `<div class="field-label">Full Name</div><div class="field-value">${profileData.name}</div>` : ''}
-      ${profileData.about ? `<div class="field-label">About</div><div class="field-value">${profileData.about}</div>` : ''}
-      ${profileData.city ? `<div class="field-label">City</div><div class="field-value">${profileData.city}</div>` : ''}
-    `;
-  }
-
-  function renderEditMode() {
-    const el = document.getElementById('profileContent');
-    el.innerHTML = `
-      <div class="name">@cryptobros</div>
-      <div class="rank">Degen (Master)</div>
-      
-      <div class="field-label">Full Name</div>
-      <input type="text" id="inpName" value="${profileData.name}" placeholder="Enter your name">
-      
-      <div class="field-label">About</div>
-      <textarea id="inpAbout" placeholder="Tell us about yourself...">${profileData.about}</textarea>
-      
-      <div class="field-label">City</div>
-      <input type="text" id="inpCity" value="${profileData.city}" placeholder="Your city">
-      
-      <button class="btn" onclick="saveProfile()">SAVE PROFILE</button>
-    `;
-  }
-
-  function saveProfile() {
-    profileData = {
-      name: document.getElementById('inpName').value,
-      about: document.getElementById('inpAbout').value,
-      city: document.getElementById('inpCity').value
-    };
-    localStorage.setItem('profileData', JSON.stringify(profileData));
-    isProfileSaved = true;
-    renderViewMode();
-  }
-
-  function buildEditMenu() {
-    const names = ['Neural Core','Cyber Grid','Dark Void','Quantum Flow','Matrix','Solana Nexus','AI Tribunal','Crypto Void','Phantom Glow','DeFi Circuit','Token Storm','Web3 Horizon','Degen Realm'];
-    let html = '<button onclick="toggleEdit()" style="display:inline-block;">Edit Profile</button>';
-    html += '<button onclick="showBgMenu()" style="display:inline-block;">Choose Background</button>';
-    document.getElementById('editMenu').innerHTML = html;
-  }
-
-  function showBgMenu() {
-    const names = ['Neural Core','Cyber Grid','Dark Void','Quantum Flow','Matrix','Solana Nexus','AI Tribunal','Crypto Void','Phantom Glow','DeFi Circuit','Token Storm','Web3 Horizon','Degen Realm'];
-    let html = '<div style="margin:4px 0;color:#666;font-size:12px;">Background:</div>';
-    for (let i = 1; i <= 13; i++) {
-      const sel = (currentBg === `bg${i}.jpg` && !customBg) ? ' style="color:#00ff9d;"' : '';
-      html += `<button onclick="setBg('bg${i}.jpg')"${sel}>${names[i-1]}</button>`;
-    }
-    html += `<button onclick="document.getElementById('bg-upload').click()">+ Upload Custom</button>`;
-    document.getElementById('editMenu').innerHTML = html;
-    document.getElementById('editMenu').querySelectorAll('button').forEach(b => b.style.display = 'inline-block');
-  }
-
-  function setBg(bg) {
-    currentBg = bg;
-    customBg = null;
-    localStorage.setItem('pageBg', bg);
-    localStorage.removeItem('customBg');
-    applyBackground();
-    buildEditMenu();
-  }
-
-  document.getElementById('bg-upload').addEventListener('change', e => {
-    const f = e.target.files[0];
-    if (f) {
-      const r = new FileReader();
-      r.onload = ev => {
-        customBg = ev.target.result;
-        localStorage.setItem('customBg', customBg);
-        applyBackground();
-        buildEditMenu();
-      };
-      r.readAsDataURL(f);
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const isDark = document.body.classList.contains('dark-theme');
+    if (isDark) {
+      document.body.classList.remove('dark-theme');
+      localStorage.setItem('theme', 'light');
+      document.getElementById('themeToggle').textContent = '🌙';
+    } else {
+      document.body.classList.add('dark-theme');
+      localStorage.setItem('theme', 'dark');
+      document.getElementById('themeToggle').textContent = '☀️';
     }
   });
 
-  document.getElementById('header-upload').addEventListener('change', e => {
-    const f = e.target.files[0];
-    if (f) {
-      const r = new FileReader();
-      r.onload = ev => {
-        document.getElementById('header').style.backgroundImage = `url(${ev.target.result})`;
-        localStorage.setItem('header', ev.target.result);
-        document.getElementById('header').classList.add('loaded');
-        if (!isProfileSaved) {
-          document.getElementById('header').style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-        }
-      };
-      r.readAsDataURL(f);
-    }
-  });
-
-  document.getElementById('avatar-upload').addEventListener('change', e => {
-    const f = e.target.files[0];
-    if (f) {
-      const r = new FileReader();
-      r.onload = ev => {
-        document.getElementById('avatar').style.backgroundImage = `url(${ev.target.result})`;
-        localStorage.setItem('avatar', ev.target.result);
-      };
-      r.readAsDataURL(f);
-    }
-  });
-
-  document.getElementById('header').onclick = () => document.getElementById('header-upload').click();
-  document.getElementById('avatar').onclick = () => document.getElementById('avatar-upload').click();
-
-  const btn = document.getElementById('editBtn');
-  const tt = document.getElementById('editTooltip');
-  const menu = document.getElementById('editMenu');
-  btn.onmouseenter = () => tt.style.opacity = '1';
-  btn.onmouseleave = () => tt.style.opacity = '0';
-  btn.onclick = () => menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-
-  function toggleEdit() {
-    menu.style.display = 'none';
-    renderEditMode();
-    isProfileSaved = false;
-    setupDragToPan();
-  }
-
-  document.addEventListener('click', e => {
-    if (!btn.contains(e.target) && !menu.contains(e.target)) {
-      menu.style.display = 'none';
-    }
-  });
-
-  window.onload = init;
+  document.addEventListener('DOMContentLoaded', initTheme);
 </script>
 
 </body>
