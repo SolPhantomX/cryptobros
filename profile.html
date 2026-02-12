@@ -7,7 +7,8 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Arial, sans-serif;
-      background: #f0f0f0;
+      background-size: cover;
+      background-attachment: fixed;
     }
     .top-section {
       position: relative;
@@ -75,6 +76,29 @@
       transition: opacity 0.2s;
       z-index: 100;
     }
+    .edit-menu {
+      position: absolute;
+      top: 50px;
+      right: 16px;
+      background: #000;
+      border: 1px solid #ffcc00;
+      border-radius: 6px;
+      padding: 8px;
+      display: none;
+      z-index: 100;
+      min-width: 180px;
+    }
+    .edit-menu button {
+      background: #222;
+      color: #ffcc00;
+      border: 1px solid #555;
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin: 2px;
+      cursor: pointer;
+      font-size: 12px;
+      display: inline-block;
+    }
     .sidebar { width: 200px; }
     .nav-item {
       padding: 10px 0;
@@ -111,7 +135,7 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    #header-upload, #avatar-upload { display: none; }
+    #header-upload, #avatar-upload, #bg-upload { display: none; }
   </style>
 </head>
 <body>
@@ -121,6 +145,7 @@
   <div class="avatar" id="avatar"></div>
   <div class="edit-btn" id="editBtn">⚙️</div>
   <div class="edit-tooltip" id="editTooltip">Edit Profile</div>
+  <div class="edit-menu" id="editMenu"></div>
 </div>
 
 <div class="main-layout">
@@ -136,11 +161,22 @@
 
 <input type="file" id="header-upload" accept="image/*">
 <input type="file" id="avatar-upload" accept="image/*">
+<input type="file" id="bg-upload" accept="image/*">
 
 <script>
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
   let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
   let isProfileSaved = !!localStorage.getItem('profileData');
+  let currentBg = localStorage.getItem('pageBg') || 'bg3.jpg';
+  let customBg = localStorage.getItem('customBg');
+
+  function applyBackground() {
+    if (customBg) {
+      document.body.style.backgroundImage = `url(${customBg})`;
+    } else {
+      document.body.style.backgroundImage = `url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/${currentBg}')`;
+    }
+  }
 
   function init() {
     const headerImg = localStorage.getItem('header') || 'https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg';
@@ -154,7 +190,9 @@
       document.getElementById('header').classList.add('loaded');
     }
 
+    applyBackground();
     renderViewMode();
+    buildEditMenu();
 
     if (!isProfileSaved) {
       setupDragToPan();
@@ -229,6 +267,49 @@
     renderViewMode();
   }
 
+  // Фоны
+  function buildEditMenu() {
+    const names = ['Neural Core','Cyber Grid','Dark Void','Quantum Flow','Matrix','Solana Nexus','AI Tribunal','Crypto Void','Phantom Glow','DeFi Circuit','Token Storm','Web3 Horizon','Degen Realm'];
+    let html = '<button onclick="toggleEdit()" style="display:inline-block;">Edit Profile</button>';
+    html += '<button onclick="showBgMenu()" style="display:inline-block;">Choose Background</button>';
+    document.getElementById('editMenu').innerHTML = html;
+  }
+
+  function showBgMenu() {
+    const names = ['Neural Core','Cyber Grid','Dark Void','Quantum Flow','Matrix','Solana Nexus','AI Tribunal','Crypto Void','Phantom Glow','DeFi Circuit','Token Storm','Web3 Horizon','Degen Realm'];
+    let html = '<div style="margin:4px 0;color:#666;font-size:12px;">Background:</div>';
+    for (let i = 1; i <= 13; i++) {
+      const sel = (currentBg === `bg${i}.jpg` && !customBg) ? ' style="color:#00ff9d;"' : '';
+      html += `<button onclick="setBg('bg${i}.jpg')"${sel}>${names[i-1]}</button>`;
+    }
+    html += `<button onclick="document.getElementById('bg-upload').click()">+ Upload Custom</button>`;
+    document.getElementById('editMenu').innerHTML = html;
+    document.getElementById('editMenu').querySelectorAll('button').forEach(b => b.style.display = 'inline-block');
+  }
+
+  function setBg(bg) {
+    currentBg = bg;
+    customBg = null;
+    localStorage.setItem('pageBg', bg);
+    localStorage.removeItem('customBg');
+    applyBackground();
+    buildEditMenu();
+  }
+
+  document.getElementById('bg-upload').addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (f) {
+      const r = new FileReader();
+      r.onload = ev => {
+        customBg = ev.target.result;
+        localStorage.setItem('customBg', customBg);
+        applyBackground();
+        buildEditMenu();
+      };
+      r.readAsDataURL(f);
+    }
+  });
+
   document.getElementById('header-upload').addEventListener('change', e => {
     const f = e.target.files[0];
     if (f) {
@@ -262,9 +343,16 @@
 
   const btn = document.getElementById('editBtn');
   const tt = document.getElementById('editTooltip');
+  const menu = document.getElementById('editMenu');
   btn.onmouseenter = () => tt.style.opacity = '1';
   btn.onmouseleave = () => tt.style.opacity = '0';
-  btn.onclick = () => renderEditMode();
+  btn.onclick = () => menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+
+  document.addEventListener('click', e => {
+    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+      menu.style.display = 'none';
+    }
+  });
 
   window.onload = init;
 </script>
