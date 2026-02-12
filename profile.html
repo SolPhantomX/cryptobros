@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CRYPTOBROS — Profile</title>
+  <title>CRYPTOBROS</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -16,8 +16,6 @@
       margin: 0 auto;
       padding: 0 16px;
     }
-
-    /* Шапка */
     .profile-header {
       height: 300px;
       background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg') center/cover no-repeat;
@@ -34,8 +32,23 @@
       left: 50px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-
-    /* Профиль */
+    .sidebar {
+      width: 200px;
+      float: left;
+      margin-right: 20px;
+    }
+    .nav-list {
+      list-style: none;
+    }
+    .nav-item {
+      padding: 12px 0;
+      font-weight: 600;
+      color: #4c75a3;
+      cursor: pointer;
+    }
+    .main-content {
+      margin-left: 220px;
+    }
     .profile-info {
       margin-top: 100px;
       padding: 0 50px;
@@ -59,7 +72,8 @@
       color: #555;
       font-weight: 600;
     }
-    .form-group input, .form-group textarea {
+    .form-group input,
+    .form-group textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -75,52 +89,24 @@
       cursor: pointer;
       font-weight: 600;
     }
-
-    /* Боковая панель */
-    .sidebar {
-      width: 200px;
-      float: left;
-      margin-right: 20px;
-    }
-    .nav-list {
-      list-style: none;
-    }
-    .nav-item {
-      padding: 12px 0;
-      cursor: pointer;
-      font-weight: 600;
-      color: #4c75a3;
-    }
-    .nav-item:hover {
-      text-decoration: underline;
-    }
-
-    /* Основной контент */
-    .main-content {
-      margin-left: 220px;
-    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <!-- Шапка -->
     <div class="profile-header">
       <div class="avatar"></div>
     </div>
 
-    <!-- Боковая панель -->
     <div class="sidebar">
       <ul class="nav-list">
         <li class="nav-item">News Feed</li>
         <li class="nav-item">Messages</li>
         <li class="nav-item">My Groups</li>
         <li class="nav-item">Tribunal</li>
-        <li class="nav-item">Friends</li>
       </ul>
     </div>
 
-    <!-- Профиль -->
     <div class="main-content">
       <div class="profile-info">
         <div class="profile-name">@cryptobros</div>
