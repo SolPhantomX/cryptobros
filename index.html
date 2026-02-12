@@ -19,7 +19,6 @@
       position: relative;
       overflow: hidden;
     }
-    /* Логотип на всю страницу */
     #full-logo {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -37,7 +36,7 @@
     #slogan {
       font-size: 24px;
       color: #ffcc00;
-      margin-bottom: 40px;
+      margin-bottom: 60px; /* ← увеличен отступ */
       text-align: center;
       letter-spacing: 1px;
       position: relative;
@@ -133,6 +132,7 @@
   <div id="footer"></div>
 
   <script>
+    // ... (остальной JS без изменений)
     const translations = {
       en: { slogan: "BROS IN. NOISE OUT.", enter: "Enter the Club", footer: "Cryptobros 2026 &copy;" },
       ru: { slogan: "СВОИ ВНУТРИ. ШУМ СНАРУЖИ.", enter: "Войти в Клуб", footer: "Cryptobros 2026 &copy;" },
