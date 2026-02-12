@@ -1,360 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Join CRYPTOBROS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- Preload background -->
-  <link rel="preload" href="bg5.jpg" as="image">
-  
-  <!-- Fonts -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join CryptoBros – Bros In, Noise Out</title>
+  <!-- Исправлено: убраны пробелы -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    :root {
-      --bg: #0A0A0F;
-      --gold: #FFD700;
-      --gold-light: #FFEA00;
-      --cyan: #00FFFF;
-      --teal: #00F0FF;
-      --purple: #9D00FF;
-      --white: #ffffff;
-      --gray: #cccccc; /* улучшен контраст */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-
     body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0f 0%, #0f001a 100%);
+      color: #e0e0ff;
       min-height: 100vh;
       overflow-x: hidden;
-      position: relative;
     }
 
-    #particles-js {
+    /* Particles background — совместимый с Firefox/Safari */
+    .particles {
       position: fixed;
       inset: 0;
-      z-index: -1;
       pointer-events: none;
+      z-index: -1;
+    }
+    .particles::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(255,215,0,0.1) 2px, transparent 3px),
+        radial-gradient(circle at 90% 80%, rgba(0,240,255,0.1) 2px, transparent 3px);
+      background-size: 100px 100px;
+      animation: float 60s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(-100px,-100px); }
     }
 
+    /* Hero */
     .hero {
       min-height: 100vh;
+      max-height: 100svh; /* Безопасно для мобильных */
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 20px;
+      padding: 0 20px;
       position: relative;
+      overflow-y: auto;
     }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url('bg5.jpg') center/cover no-repeat;
-      opacity: 0.15;
-      filter: hue-rotate(180deg) saturate(1.5);
-      z-index: -1;
-    }
-
     .hero h1 {
-      font-family: 'Orbitron', 'Arial Black', sans-serif;
-      font-size: clamp(2.8rem, 10vw, 5.5rem);
-      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      font-family: 'Orbitron', 'Courier New', monospace; /* fallback для Tor */
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      background: linear-gradient(90deg, #FFD700, #FFEA00, #FFD700);
       -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 15px rgba(255,215,0,0.6);
-      margin-bottom: 1.2rem;
-      animation: fadeInUp 1.2s ease-out;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(255,215,0,0.6);
+      margin-bottom: 1rem;
+      animation: glow 3s ease-in-out infinite alternate;
     }
-
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+      to   { text-shadow: 0 0 60px rgba(255,215,0,0.9), 0 0 100px rgba(255,215,0,0.4); }
+    }
     .hero p {
-      font-size: clamp(1.1rem, 4vw, 1.4rem);
-      max-width: 720px;
-      line-height: 1.6;
-      color: var(--gray);
-      margin-bottom: 2.5rem;
-      animation: fadeInUp 1.2s ease-out 0.3s both;
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      max-width: 800px;
+      margin-bottom: 3rem;
+      opacity: 0.9;
     }
-
     .cta-btn {
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      color: #000;
+      padding: 1rem 3rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(45deg, #FFD700, #FFEA00);
+      color: #0a0a0f;
       border: none;
       border-radius: 50px;
-      padding: 1rem 3rem;
-      font-family: 'Orbitron', monospace;
-      font-size: 1.2rem;
-      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(255,215,0,0.6);
+      box-shadow: 0 0 40px rgba(255,215,0,0.5);
       transition: all 0.3s ease;
-      animation: fadeInUp 1.2s ease-out 0.6s both;
     }
-
     .cta-btn:hover {
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 0 40px rgba(255,215,0,0.8);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 0 80px rgba(255,215,0,0.8);
     }
 
+    /* Tiers section */
     .tiers {
-      padding: 6rem 1.5rem;
-      max-width: 1280px;
+      padding: 6rem 2rem;
+      max-width: 1400px;
       margin: 0 auto;
     }
-
     .tiers h2 {
       text-align: center;
-      font-family: 'Orbitron', monospace;
-      font-size: 2.8rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      color: #FFD700;
       margin-bottom: 4rem;
-      color: var(--gold);
-      text-shadow: 0 0 15px rgba(255,215,0,0.4);
+      text-shadow: 0 0 20px rgba(255,215,0,0.4);
     }
-
-    .tier-grid {
+    .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2rem;
     }
-
-    .tier-card {
-      background: rgba(20,20,40,0.45);
+    .card {
+      background: rgba(20, 20, 40, 0.4);
       backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,215,0,0.2);
       border-radius: 20px;
-      padding: 2.2rem 1.8rem;
+      padding: 2.5rem 2rem;
       text-align: center;
       transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
     }
-
-    .tier-card:hover {
-      transform: translateY(-12px) scale(1.03);
-      box-shadow: 0 20px 50px rgba(255,215,0,0.25);
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: radial-gradient(circle at 50% 50%, rgba(255,215,0,0.15) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s;
     }
-
-    .tier-card.free    { border: 2px solid var(--cyan); }
-    .tier-card.master  { border: 2px solid var(--gold); }
-    .tier-card.pro     { border: 2px solid var(--teal); background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(255,215,0,0.08)); }
-    .tier-card.premium { border: 2px solid var(--purple); background: linear-gradient(135deg, rgba(157,0,255,0.15), rgba(255,215,0,0.15)); box-shadow: 0 0 25px rgba(157,0,255,0.3); }
-
-    .tier-card h3 {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
+    .card:hover::before {
+      opacity: 1;
     }
-
-    .price {
-      font-family: 'Orbitron', monospace;
-      font-size: 2.4rem;
-      font-weight: 700;
+    .card:hover {
+      transform: translateY(-15px);
+      border-color: #FFD700;
+      box-shadow: 0 0 60px rgba(255,215,0,0.3);
+    }
+    .card.free { border-color: #00F0FF; }
+    .card.free:hover { box-shadow: 0 0 60px rgba(0,240,255,0.4); }
+    .card.premium {
+      border: 2px solid #FFD700;
+      background: linear-gradient(135deg, rgba(20,20,40,0.6), rgba(40,20,60,0.4));
+    }
+    .card .price {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: #FFD700;
       margin: 1rem 0;
-      animation: subtlePulse 5s infinite ease-in-out;
+      text-shadow: 0 0 20px rgba(255,215,0,0.6);
     }
-
-    .free    .price { color: var(--cyan); }
-    .master  .price { color: var(--gold); }
-    .pro     .price { color: var(--teal); }
-    .premium .price { color: var(--purple); }
-
-    @keyframes subtlePulse {
-      0%,100% { transform: scale(1); }
-      50%     { transform: scale(1.04); }
+    .card.free .price { color: #00F0FF; }
+    .card ul {
+      list-style: none;
+      margin: 2rem 0;
+      text-align: left;
     }
-
-    .desc {
-      font-size: 1rem;
-      color: var(--gray);
-      line-height: 1.6;
-      margin: 1.2rem 0;
+    .card ul li {
+      margin: 1rem 0;
+      font-size: 1.1rem;
+      position: relative;
+      padding-left: 1.8rem;
     }
-
-    .btn-tier {
+    .card ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #FFD700;
+    }
+    .card .btn {
+      padding: 1rem 2.5rem;
       background: transparent;
-      border: 2px solid currentColor;
-      color: currentColor;
-      padding: 0.8rem 2rem;
+      border: 2px solid #FFD700;
+      color: #FFD700;
+      font-size: 1.2rem;
       border-radius: 50px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 1.05rem;
       transition: all 0.3s;
-      margin-top: 1.2rem;
     }
-
-    .btn-tier:hover {
-      background: currentColor;
+    .card .btn:hover {
+      background: #FFD700;
       color: #0a0a0f;
     }
+    .card.free .btn { border-color: #00F0FF; color: #00F0FF; }
+    .card.free .btn:hover { background: #00F0FF; color: #0a0a0f; }
 
+    /* FOMO teaser */
     .coming-soon {
       text-align: center;
-      padding: 3rem 1.5rem;
-      color: var(--gray);
-      font-size: 1.1rem;
+      color: #666;
+      margin-top: 4rem;
       font-style: italic;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
+    /* Footer */
     .footer {
       text-align: center;
-      padding: 3rem 1.5rem 2rem;
-    }
-
-    .footer-text {
-      font-size: 1.4rem;
-      font-weight: bold;
-      background: linear-gradient(90deg, var(--gold), var(--cyan), var(--purple));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: rainbow-flicker 4s infinite alternate;
-    }
-
-    .lang-switch {
-      margin-top: 1rem;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid var(--gray);
-      color: var(--gray);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes rainbow-flicker {
-      0%,100% { opacity: 1; }
-      50%     { opacity: 0.85; }
-    }
-
-    @media (max-width: 768px) {
-      #particles-js { display: none; } /* отключаем частицы на мобильных */
-      .hero h1 { font-size: 3.2rem; }
-      .tiers { padding: 4rem 1rem; }
+      padding: 3rem 2rem 2rem;
+      color: #666;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
+  <div class="particles"></div>
 
-  <div id="particles-js"></div>
-
+  <!-- Hero -->
   <section class="hero">
-    <h1>Join CryptoBros – Bros In. Noise Out.</h1>
-    <p>Elite roast community. No fake gurus, no paid signals.<br>Only truth, memes & real alpha. AUS Token drops incoming.</p>
-    <button class="cta-btn" type="button" onclick="connectWallet()" aria-label="Connect Phantom Wallet">Connect Phantom & Claim Your Spot</button>
+    <h1>Join CryptoBros</h1>
+    <p>Bros In. Noise Out.<br>Elite roast community. No fake gurus, no paid signals.<br>Only truth, memes & real alpha. <strong>AUS Token drops incoming 🔥</strong></p>
+    <button class="cta-btn">Connect Phantom & Claim Your Spot</button>
   </section>
 
+  <!-- Tiers -->
   <section class="tiers">
     <h2>Choose Your Tier</h2>
-    <div class="tier-grid">
-      <div class="tier-card free">
+    <div class="cards-grid">
+      <!-- Free -->
+      <div class="card free">
         <h3>Free Bro</h3>
         <div class="price">0 AUS</div>
-        <div class="desc">Taste the roast & memes<br>Teaser AUS drop: 150–200 upon signup</div>
-        <button class="btn-tier" type="button" onclick="selectTier('free')">Start Free</button>
+        <ul>
+          <li>Taste the roast & memes</li>
+          <li>Public feed & read-only chat</li>
+          <li>Teaser AUS drop: 150–200 on signup</li>
+        </ul>
+        <button class="btn">Start Free</button>
       </div>
 
-      <div class="tier-card master">
+      <!-- Master -->
+      <div class="card">
         <h3>Master Bro</h3>
         <div class="price">5,000 AUS</div>
-        <div class="desc">Full access + early drop perks<br>No ads, weekly deep dives</div>
-        <button class="btn-tier" type="button" onclick="selectTier('master')">Claim 5K AUS Tier</button>
+        <ul>
+          <li>Full access + no ads</li>
+          <li>Weekly deep dives & extra roasts</li>
+          <li>Basic Tribunal votes</li>
+        </ul>
+        <button class="btn">Claim 5K Tier</button>
       </div>
 
-      <div class="tier-card pro">
+      <!-- Pro -->
+      <div class="card">
         <h3>Pro Bro</h3>
         <div class="price">12,000 AUS</div>
-        <div class="desc">Priority alpha + governance power<br>Revenue share vibes incoming</div>
-        <button class="btn-tier" type="button" onclick="selectTier('pro')">Unlock Pro</button>
+        <ul>
+          <li>Priority alpha & early access</li>
+          <li>Governance power & custom memes</li>
+          <li>Revenue share vibes incoming</li>
+        </ul>
+        <button class="btn">Unlock Pro</button>
       </div>
 
-      <div class="tier-card premium">
+      <!-- Premium -->
+      <div class="card premium">
         <h3>Premium Bro</h3>
-        <div class="price">30,000 AUS</div>
-        <div class="desc">Own the club forever<br>Personal roast, max AUS drop (20k+)</div>
-        <button class="btn-tier" type="button" onclick="selectTier('premium')">Lifetime Elite – Join Now</button>
+        <div class="price">30,000 AUS Lifetime</div>
+        <ul>
+          <li>Own the club forever</li>
+          <li>Personal roast & 1-on-1</li>
+          <li>Max AUS drop + VIP yield</li>
+        </ul>
+        <button class="btn">Lifetime Elite</button>
       </div>
     </div>
   </section>
 
   <div class="coming-soon">
-    AUS Token Launch Soon – Hold your spot & get vested drops.<br>
+    AUS Token Launch Soon — Hold your spot & get vested drops.<br>
     Connect Phantom to see your future balance tease.
   </div>
 
-  <footer class="footer">
-    <div class="footer-text">Cryptobros 2026 ©</div>
-    <button class="lang-switch" type="button" onclick="toggleLang()">LANGUAGE</button>
-  </footer>
+  <div class="footer">
+    Cryptobros 2026 &copy;
+  </div>
 
-  <!-- tsParticles -->
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
   <script>
-    // Particles only on desktop
-    if (window.innerWidth > 768) {
-      tsParticles.load("particles-js", {
-        fpsLimit: 60,
-        particles: {
-          number: { value: 60, density: { enable: true, area: 800 } },
-          color: { value: ["#FFD700", "#00FFFF", "#9D00FF"] },
-          shape: { type: "circle" },
-          opacity: { value: 0.35, random: true },
-          size: { value: { min: 1, max: 3.5 } },
-          move: {
-            enable: true,
-            speed: 0.8,
-            direction: "none",
-            random: true,
-            straight: false,
-            outModes: { default: "out" }
-          }
-        },
-        interactivity: {
-          detectsOn: "canvas",
-          events: {
-            onHover: { enable: true, mode: "repulse" },
-            onClick: { enable: true, mode: "push" }
-          }
-        },
-        detectRetina: true
-      }).catch(err => console.error("tsParticles failed to load:", err));
-    }
-
-    // Wallet connect
-    async function connectWallet() {
-      const provider = window.solana || (window.phantom && window.phantom.solana);
-      if (provider?.isPhantom) {
-        try {
-          await provider.connect();
-          alert("✅ Wallet connected!\nWelcome, Bro.\nYour AUS teaser drop is ready.");
-        } catch (err) {
-          alert("❌ Connection failed: " + (err.message || "Unknown error"));
+    // Counter-up с защитой от "Lifetime"
+    document.querySelectorAll('.price').forEach(el => {
+      const fullText = el.textContent.trim();
+      if (fullText.includes('Lifetime')) return; // Пропускаем Premium
+      
+      const targetMatch = fullText.match(/[\d,]+/);
+      if (!targetMatch) return;
+      
+      const target = parseInt(targetMatch[0].replace(/,/g, ''));
+      let count = 0;
+      const increment = target / 60;
+      const timer = setInterval(() => {
+        count += increment;
+        if (count >= target) {
+          el.textContent = target.toLocaleString() + ' AUS';
+          clearInterval(timer);
+        } else {
+          el.textContent = Math.floor(count).toLocaleString() + ' AUS';
         }
+      }, 16);
+    });
+
+    // Placeholder для Phantom
+    document.querySelector('.cta-btn').addEventListener('click', () => {
+      if (typeof window.solana !== 'undefined' && window.solana.isPhantom) {
+        window.solana.connect().then(() => {
+          alert("✅ Wallet connected!\nWelcome, Bro.\nYour AUS teaser drop is ready.");
+        }).catch(e => {
+          alert("❌ Connection failed.");
+        });
       } else {
-        alert("⚠️ Phantom wallet not detected.\nInstall it at phantom.app");
+        alert("⚠️ Install Phantom wallet at phantom.app");
       }
-    }
-
-    function selectTier(tier) {
-      alert(`Selected tier: ${tier.toUpperCase()}\n(Implementation coming soon)`);
-    }
-
-    function toggleLang() {
-      alert("Language switch – coming soon");
-    }
+    });
   </script>
 </body>
 </html>
