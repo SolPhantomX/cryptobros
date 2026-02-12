@@ -22,29 +22,23 @@
       content: '';
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.65);
+      background: rgba(0,0,0,0.7);
       z-index: -1;
     }
     .logo {
-      text-align: center;
-      font-weight: 900;
-      font-size: 56px;
-      background: linear-gradient(90deg, #FFD700, #D4AF37);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 20px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      width: 240px;
+      height: 80px;
+      background: url('logo.png') center/contain no-repeat;
+      margin-bottom: 30px;
     }
-    .slogan {
-      font-size: 22px;
+    #slogan {
+      font-size: 24px;
       color: #ffcc00;
       margin-bottom: 40px;
       text-align: center;
-      max-width: 700px;
-      line-height: 1.5;
+      letter-spacing: 1px;
     }
-    .enter-btn {
+    #enter-btn {
       background: linear-gradient(135deg, #FFD700, #C0A040);
       border: none;
       border-radius: 50px;
@@ -56,54 +50,202 @@
       box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
       transition: transform 0.2s;
     }
-    .enter-btn:hover {
+    #enter-btn:hover {
       transform: scale(1.03);
-    }
-    .hint {
-      margin-top: 24px;
-      font-size: 14px;
-      color: #aaa;
     }
     .lang-btn {
       position: absolute;
       top: 24px;
       right: 24px;
-      background: rgba(255,215,0,0.15);
-      border: 1px solid rgba(255,215,0,0.5);
-      color: #ffcc00;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
       padding: 8px 16px;
-      border-radius: 8px;
+      border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
+      z-index: 100;
     }
-    .footer {
+    #lang-menu {
+      position: absolute;
+      top: 60px;
+      right: 24px;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 8px;
+      display: none;
+      z-index: 100;
+      min-width: 140px;
+    }
+    #lang-menu button {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    #lang-menu button:hover {
+      background: rgba(255,215,0,0.2);
+    }
+    #footer {
       position: absolute;
       bottom: 20px;
       font-size: 18px;
       font-weight: bold;
-      background: linear-gradient(90deg, #FFD700, #D4AF37);
+      background: linear-gradient(90deg, 
+        #ff0000, #ff8000, #ffff00, 
+        #80ff00, #00ff80, #00ffff, 
+        #0080ff, #0000ff, #8000ff, 
+        #ff00ff, #ff0080
+      );
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: flicker 2s infinite alternate;
+      animation: rainbow-flicker 3s infinite alternate;
     }
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
-      20%,24%,55%,81%,85% { opacity:0.8; }
+    @keyframes rainbow-flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 80%, 82%, 84%, 86%, 100% { opacity: 1; }
+      20%, 24%, 55%, 81%, 85% { opacity: 0.8; }
     }
   </style>
 </head>
 <body>
 
-  <button class="lang-btn">🌐 LANGUAGE</button>
+  <button class="lang-btn" id="langToggle">LANGUAGE</button>
+  <div id="lang-menu"></div>
 
-  <div class="logo">CRYPTOBROS</div>
-  <div class="slogan">BROS IN. NOISE OUT.<br>Разоблачаем фейковых гуру. Режем хайп. Спасаем новичков.</div>
+  <div class="logo"></div>
+  <div id="slogan"></div>
   
-  <button class="enter-btn" onclick="location.href='onboarding.html'">Enter the Club</button>
-  <div class="hint">No KYC. No noise. Just truth.</div>
+  <button id="enter-btn"></button>
 
-  <div class="footer">Cryptobros 2026 &copy;</div>
+  <div id="footer"></div>
+
+  <script>
+    // Переводы
+    const translations = {
+      en: {
+        slogan: "BROS IN. NOISE OUT.",
+        enter: "Enter the Club",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      ru: {
+        slogan: "СВОИ ВНУТРИ. ШУМ СНАРУЖИ.",
+        enter: "Войти в Клуб",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      es: {
+        slogan: "LOS BROZ ADENTRO. EL RUIDO AFUERA.",
+        enter: "Entrar al Club",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      pt: {
+        slogan: "OS BROZ DENTRO. O RUÍDO FORA.",
+        enter: "Entrar no Clube",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      ja: {
+        slogan: "ブロズ・イン。ノイズ・アウト。",
+        enter: "クラブに入る",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      zh: {
+        slogan: "兄弟在内，噪音在外。",
+        enter: "加入俱乐部",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      de: {
+        slogan: "BROS DRIN. LÄRM RAUS.",
+        enter: "In den Club eintreten",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      fr: {
+        slogan: "LES BROZ DEDANS. LE BRUIT DEHORS.",
+        enter: "Rejoindre le Club",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      it: {
+        slogan: "I BROZ DENTRO. IL RUMORE FUORI.",
+        enter: "Entra nel Club",
+        footer: "Cryptobros 2026 &copy;"
+      },
+      ko: {
+        slogan: "브로즈 인. 노이즈 아웃.",
+        enter: "클럽 입장",
+        footer: "Cryptobros 2026 &copy;"
+      }
+    };
+
+    // Языки и их названия
+    const languages = {
+      en: 'English',
+      ru: 'Русский',
+      es: 'Español',
+      pt: 'Português',
+      ja: '日本語',
+      zh: '中文',
+      de: 'Deutsch',
+      fr: 'Français',
+      it: 'Italiano',
+      ko: '한국어'
+    };
+
+    // Текущий язык
+    let currentLang = localStorage.getItem('language') || 'en';
+
+    // Применить перевод
+    function applyLanguage(lang) {
+      if (!translations[lang]) lang = 'en';
+      currentLang = lang;
+      localStorage.setItem('language', lang);
+      
+      document.getElementById('slogan').textContent = translations[lang].slogan;
+      document.getElementById('enter-btn').textContent = translations[lang].enter;
+      document.getElementById('footer').innerHTML = translations[lang].footer;
+      document.querySelector('.lang-btn').textContent = languages[lang];
+    }
+
+    // Построить меню языков
+    function buildLangMenu() {
+      const menu = document.getElementById('lang-menu');
+      menu.innerHTML = '';
+      Object.keys(languages).forEach(code => {
+        const btn = document.createElement('button');
+        btn.textContent = languages[code];
+        btn.onclick = () => {
+          applyLanguage(code);
+          menu.style.display = 'none';
+        };
+        menu.appendChild(btn);
+      });
+    }
+
+    // Переключение меню
+    document.getElementById('langToggle').onclick = function(e) {
+      const menu = document.getElementById('lang-menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      e.stopPropagation();
+    };
+
+    // Закрыть меню при клике вне
+    document.addEventListener('click', () => {
+      document.getElementById('lang-menu').style.display = 'none';
+    });
+
+    // Инициализация
+    buildLangMenu();
+    applyLanguage(currentLang);
+
+    // Кнопка входа
+    document.getElementById('enter-btn').onclick = () => {
+      window.location.href = 'onboarding.html';
+    };
+  </script>
 
 </body>
 </html>
