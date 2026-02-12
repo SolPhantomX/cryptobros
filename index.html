@@ -8,7 +8,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       min-height: 100vh;
-      background: #000;
       font-family: system-ui, sans-serif;
       color: white;
       display: flex;
@@ -17,12 +16,15 @@
       align-items: center;
       padding: 20px;
       position: relative;
+      overflow: hidden;
     }
     #logo {
-      width: 100%;
-      max-width: 600px;
-      height: auto;
-      margin-bottom: 60px;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('logo.jpg') center/cover no-repeat;
+      z-index: -1;
     }
     #enter-btn {
       background: linear-gradient(135deg, #FFD700, #C0A040);
@@ -35,6 +37,7 @@
       cursor: pointer;
       box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
       transition: transform 0.2s;
+      z-index: 1;
     }
     #enter-btn:hover {
       transform: scale(1.04);
@@ -61,6 +64,7 @@
       animation: color-cycle 6s infinite;
       -webkit-background-clip: text;
       background-clip: text;
+      z-index: 1;
     }
     @keyframes color-cycle {
       0%   { background-color: #FFD700; }
@@ -73,16 +77,15 @@
 </head>
 <body>
 
-  <button class="lang-btn" id="langToggle">LANGUAGE</button>
+  <div id="logo"></div>
 
-  <img id="logo" src="logo.jpg" alt="CRYPTOBROS">
+  <button class="lang-btn" id="langToggle">LANGUAGE</button>
 
   <button id="enter-btn">Enter the Club</button>
 
   <div id="footer">Cryptobros 2026 &copy;</div>
 
   <script>
-    // Языки — только для кнопки, слоган на логотипе — не меняем
     const languages = {
       en: 'English',
       ru: 'Русский',
@@ -106,7 +109,7 @@
     }
 
     const langBtn = document.getElementById('langToggle');
-    let langMenu = document.createElement('div');
+    const langMenu = document.createElement('div');
     langMenu.id = 'lang-menu';
     langMenu.style.cssText = `
       position: absolute;
