@@ -1,1 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join CryptoBros – Bros In, Noise Out</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0f 0%, #0f001a 100%);
+      color: #e0e0ff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .particles {
+      position: fixed; inset: 0; pointer-events: none; z-index: -1;
+    }
+    .particles::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 10% 20%, rgba(255,215,0,0.1) 2px, transparent 3px),
+                  radial-gradient(circle at 90% 80%, rgba(0,240,255,0.1) 2px, transparent 3px);
+      background-size: 100px 100px;
+      animation: float 60s linear infinite;
+    }
+    @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(-100px,-100px); } }
 
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+    }
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      background: linear-gradient(90deg, #FFD700, #FFEA00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(255,215,0,0.6);
+      margin-bottom: 1rem;
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+      to   { text-shadow: 0 0 60px rgba(255,215,0,0.9), 0 0 100px rgba(255,215,0,0.4); }
+    }
+    .hero p {
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      max-width: 800px;
+      margin-bottom: 3rem;
+      opacity: 0.9;
+    }
+    .cta-btn {
+      padding: 1rem 3rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(45deg, #FFD700, #FFEA00);
+      color: #0a0a0f;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(255,215,0,0.5);
+      transition: all 0.3s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 0 80px rgba(255,215,0,0.8);
+    }
+
+    .tiers {
+      padding: 6rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .tiers h2 {
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      color: #FFD700;
+      margin-bottom: 4rem;
+      text-shadow: 0 0 20px rgba(255,215,0,0.4);
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: rgba(20,20,40,0.4);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,215,0,0.2);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.4s ease;
+    }
+    .card:hover {
+      transform: translateY(-15px);
+      border-color: #FFD700;
+      box-shadow: 0 0 60px rgba(255,215,0,0.3);
+    }
+    .card.free { border-color: #00F0FF; }
+    .card.premium {
+      border: 2px solid #FFD700;
+      background: linear-gradient(135deg, rgba(20,20,40,0.6), rgba(40,20,60,0.4));
+    }
+    .card .price {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: #FFD700;
+      margin: 1rem 0;
+      text-shadow: 0 0 20px rgba(255,215,0,0.6);
+    }
+    .card.free .price { color: #00F0FF; }
+    .card ul {
+      list-style: none;
+      margin: 2rem 0;
+      text-align: left;
+    }
+    .card ul li {
+      margin: 1rem 0;
+      font-size: 1.1rem;
+      position: relative;
+      padding-left: 1.8rem;
+    }
+    .card ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #FFD700;
+    }
+    .card .btn {
+      padding: 1rem 2.5rem;
+      background: transparent;
+      border: 2px solid #FFD700;
+      color: #FFD700;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .card .btn:hover {
+      background: #FFD700;
+      color: #0a0a0f;
+    }
+    .card.free .btn { border-color: #00F0FF; color: #00F0FF; }
+    .card.free .btn:hover { background: #00F0FF; color: #0a0a0f; }
+  </style>
+</head>
+<body>
+  <div class="particles"></div>
+
+  <section class="hero">
+    <h1>Join CryptoBros</h1>
+    <p>Bros In. Noise Out.<br>Elite roast community. No fake gurus, no paid signals.<br>Only truth, memes & real alpha. <strong>AUS Token drops incoming 🔥</strong></p>
+    <button class="cta-btn">Connect Phantom & Claim Your Spot</button>
+  </section>
+
+  <section class="tiers">
+    <h2>Choose Your Tier</h2>
+    <div class="cards-grid">
+      <div class="card free">
+        <h3>Free Bro</h3>
+        <div class="price">0 AUS</div>
+        <ul>
+          <li>Taste the roast & memes</li>
+          <li>Public feed & read-only chat</li>
+          <li>Teaser AUS drop: 150–200 on signup</li>
+        </ul>
+        <button class="btn">Start Free</button>
+      </div>
+      <div class="card">
+        <h3>Master Bro</h3>
+        <div class="price">5,000 AUS</div>
+        <ul>
+          <li>Full access + no ads</li>
+          <li>Weekly deep dives & extra roasts</li>
+          <li>Basic Tribunal votes</li>
+        </ul>
+        <button class="btn">Claim 5K Tier</button>
+      </div>
+      <div class="card">
+        <h3>Pro Bro</h3>
+        <div class="price">12,000 AUS</div>
+        <ul>
+          <li>Priority alpha & early access</li>
+          <li>Governance power & custom memes</li>
+          <li>Revenue share vibes incoming</li>
+        </ul>
+        <button class="btn">Unlock Pro</button>
+      </div>
+      <div class="card premium">
+        <h3>Premium Bro</h3>
+        <div class="price">30,000 AUS Lifetime</div>
+        <ul>
+          <li>Own the club forever</li>
+          <li>Personal roast & 1-on-1</li>
+          <li>Max AUS drop + VIP yield</li>
+        </ul>
+        <button class="btn">Lifetime Elite</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelector('.cta-btn').onclick = () => {
+      alert('Phantom connect coming soon!');
+    };
+  </script>
+</body>
+</html>
