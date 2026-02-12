@@ -28,7 +28,7 @@
     .logo {
       width: 240px;
       height: 80px;
-      background: url('logo.png') center/contain no-repeat;
+      background: url('logo.jpg') center/contain no-repeat;
       margin-bottom: 30px;
     }
     #slogan {
@@ -97,20 +97,15 @@
       bottom: 20px;
       font-size: 18px;
       font-weight: bold;
-      background: linear-gradient(90deg, 
-        #ff0000, #ff8000, #ffff00, 
-        #80ff00, #00ff80, #00ffff, 
-        #0080ff, #0000ff, #8000ff, 
-        #ff00ff, #ff0080
-      );
+      background: linear-gradient(90deg, #FFD700, #8A2BE2, #00FFFF);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: rainbow-flicker 3s infinite alternate;
+      animation: flicker 2s infinite alternate;
     }
-    @keyframes rainbow-flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 80%, 82%, 84%, 86%, 100% { opacity: 1; }
-      20%, 24%, 55%, 81%, 85% { opacity: 0.8; }
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
+      20%,24%,55%,81%,85% { opacity:0.8; }
     }
   </style>
 </head>
@@ -127,61 +122,19 @@
   <div id="footer"></div>
 
   <script>
-    // Переводы
     const translations = {
-      en: {
-        slogan: "BROS IN. NOISE OUT.",
-        enter: "Enter the Club",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      ru: {
-        slogan: "СВОИ ВНУТРИ. ШУМ СНАРУЖИ.",
-        enter: "Войти в Клуб",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      es: {
-        slogan: "LOS BROZ ADENTRO. EL RUIDO AFUERA.",
-        enter: "Entrar al Club",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      pt: {
-        slogan: "OS BROZ DENTRO. O RUÍDO FORA.",
-        enter: "Entrar no Clube",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      ja: {
-        slogan: "ブロズ・イン。ノイズ・アウト。",
-        enter: "クラブに入る",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      zh: {
-        slogan: "兄弟在内，噪音在外。",
-        enter: "加入俱乐部",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      de: {
-        slogan: "BROS DRIN. LÄRM RAUS.",
-        enter: "In den Club eintreten",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      fr: {
-        slogan: "LES BROZ DEDANS. LE BRUIT DEHORS.",
-        enter: "Rejoindre le Club",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      it: {
-        slogan: "I BROZ DENTRO. IL RUMORE FUORI.",
-        enter: "Entra nel Club",
-        footer: "Cryptobros 2026 &copy;"
-      },
-      ko: {
-        slogan: "브로즈 인. 노이즈 아웃.",
-        enter: "클럽 입장",
-        footer: "Cryptobros 2026 &copy;"
-      }
+      en: { slogan: "BROS IN. NOISE OUT.", enter: "Enter the Club", footer: "Cryptobros 2026 &copy;" },
+      ru: { slogan: "СВОИ ВНУТРИ. ШУМ СНАРУЖИ.", enter: "Войти в Клуб", footer: "Cryptobros 2026 &copy;" },
+      es: { slogan: "LOS BROZ ADENTRO. EL RUIDO AFUERA.", enter: "Entrar al Club", footer: "Cryptobros 2026 &copy;" },
+      pt: { slogan: "OS BROZ DENTRO. O RUÍDO FORA.", enter: "Entrar no Clube", footer: "Cryptobros 2026 &copy;" },
+      ja: { slogan: "ブロズ・イン。ノイズ・アウト。", enter: "クラブに入る", footer: "Cryptobros 2026 &copy;" },
+      zh: { slogan: "兄弟在内，噪音在外。", enter: "加入俱乐部", footer: "Cryptobros 2026 &copy;" },
+      de: { slogan: "BROS DRIN. LÄRM RAUS.", enter: "In den Club eintreten", footer: "Cryptobros 2026 &copy;" },
+      fr: { slogan: "LES BROZ DEDANS. LE BRUIT DEHORS.", enter: "Rejoindre le Club", footer: "Cryptobros 2026 &copy;" },
+      it: { slogan: "I BROZ DENTRO. IL RUMORE FUORI.", enter: "Entra nel Club", footer: "Cryptobros 2026 &copy;" },
+      ko: { slogan: "브로즈 인. 노이즈 아웃.", enter: "클럽 입장", footer: "Cryptobros 2026 &copy;" }
     };
 
-    // Языки и их названия
     const languages = {
       en: 'English',
       ru: 'Русский',
@@ -195,10 +148,8 @@
       ko: '한국어'
     };
 
-    // Текущий язык
     let currentLang = localStorage.getItem('language') || 'en';
 
-    // Применить перевод
     function applyLanguage(lang) {
       if (!translations[lang]) lang = 'en';
       currentLang = lang;
@@ -210,7 +161,6 @@
       document.querySelector('.lang-btn').textContent = languages[lang];
     }
 
-    // Построить меню языков
     function buildLangMenu() {
       const menu = document.getElementById('lang-menu');
       menu.innerHTML = '';
@@ -225,23 +175,19 @@
       });
     }
 
-    // Переключение меню
     document.getElementById('langToggle').onclick = function(e) {
       const menu = document.getElementById('lang-menu');
       menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
       e.stopPropagation();
     };
 
-    // Закрыть меню при клике вне
     document.addEventListener('click', () => {
       document.getElementById('lang-menu').style.display = 'none';
     });
 
-    // Инициализация
     buildLangMenu();
     applyLanguage(currentLang);
 
-    // Кнопка входа
     document.getElementById('enter-btn').onclick = () => {
       window.location.href = 'onboarding.html';
     };
