@@ -7,13 +7,23 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f0f0f0;
+      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/bg3.jpg') center/cover fixed;
+    }
+    .header-container {
+      position: relative;
+      margin-bottom: 60px; /* отступ под аватарку */
     }
     .header {
       height: 300px;
       background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg') center/cover;
       border: 2px dashed #ccc;
-      position: relative;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 16px;
     }
     .avatar {
       width: 200px;
@@ -25,14 +35,12 @@
       bottom: -100px;
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
     }
     .wrapper {
-      /* Поднимаем ВЕСЬ контент на 40px вверх */
       position: relative;
-      top: -40px;
-    }
-    .content {
+      top: -20px; /* опущено на 20px */
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
@@ -44,6 +52,7 @@
       padding: 10px 0;
       color: #385898;
       font-weight: bold;
+      cursor: pointer;
     }
     .main { flex: 1; }
     .name {
@@ -69,41 +78,96 @@
       padding: 10px 20px;
       border-radius: 4px;
     }
+    #header-upload, #avatar-upload {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="avatar"></div>
+<div class="header-container">
+  <div class="header" onclick="document.getElementById('header-upload').click()">
+    Загрузите шапку (1200×400 px)
+  </div>
+  <div class="avatar" onclick="document.getElementById('avatar-upload').click()"></div>
 </div>
 
-<!-- Обёртка с top: -40px -->
 <div class="wrapper">
-  <div class="content">
-    <div class="sidebar">
-      <div class="nav-item">News Feed</div>
-      <div class="nav-item">Messages</div>
-      <div class="nav-item">My Groups</div>
-      <div class="nav-item">Tribunal</div>
-    </div>
+  <div class="sidebar">
+    <div class="nav-item">News Feed</div>
+    <div class="nav-item">Messages</div>
+    <div class="nav-item">My Groups</div>
+    <div class="nav-item">Tribunal</div>
+    <div class="nav-item">Мои друзья</div>
+  </div>
 
-    <div class="main">
-      <div class="name">@cryptobros</div>
-      <div class="rank">Degen (Master)</div>
-      
-      <label>Full Name</label>
-      <input type="text" placeholder="Enter your name">
-      
-      <label>About</label>
-      <textarea placeholder="Tell us about yourself..."></textarea>
-      
-      <label>City</label>
-      <input type="text" placeholder="Your city">
-      
-      <button>SAVE PROFILE</button>
-    </div>
+  <div class="main">
+    <div class="name">@cryptobros</div>
+    <div class="rank">Degen (Master)</div>
+    
+    <label>Full Name</label>
+    <input type="text" placeholder="Enter your name">
+    
+    <label>About</label>
+    <textarea placeholder="Tell us about yourself..."></textarea>
+    
+    <label>City</label>
+    <input type="text" placeholder="Your city">
+    
+    <button>SAVE PROFILE</button>
   </div>
 </div>
+
+<input type="file" id="header-upload" accept="image/*">
+<input type="file" id="avatar-upload" accept="image/*">
+
+<script>
+  // Загрузка из localStorage или фолбэк
+  window.onload = () => {
+    const h = localStorage.getItem('header');
+    const a = localStorage.getItem('avatar');
+    if (h) document.querySelector('.header').style.backgroundImage = `url(${h})`;
+    if (a) document.querySelector('.avatar').style.backgroundImage = `url(${a})`;
+  };
+
+  document.getElementById('header-upload').onchange = e => {
+    const f = e.target.files[0];
+    if (f) {
+      const r = new FileReader();
+      r.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          if (img.width >= 1200 && img.height >= 400) {
+            const el = document.querySelector('.header');
+            el.style.backgroundImage = `url(${ev.target.result})`;
+            el.textContent = '';
+            localStorage.setItem('header', ev.target.result);
+          } else alert('Шапка: минимум 1200×400 px');
+        };
+        img.src = ev.target.result;
+      };
+      r.readAsDataURL(f);
+    }
+  };
+
+  document.getElementById('avatar-upload').onchange = e => {
+    const f = e.target.files[0];
+    if (f) {
+      const r = new FileReader();
+      r.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          if (Math.abs(img.width - img.height) <= 10) {
+            document.querySelector('.avatar').style.backgroundImage = `url(${ev.target.result})`;
+            localStorage.setItem('avatar', ev.target.result);
+          } else alert('Аватарка должна быть квадратной');
+        };
+        img.src = ev.target.result;
+      };
+      r.readAsDataURL(f);
+    }
+  };
+</script>
 
 </body>
 </html>
