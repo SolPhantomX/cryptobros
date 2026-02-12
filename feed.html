@@ -1,465 +1,501 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CryptoBros News Feed – Bros In, Noise Out</title>
-  
-  <!-- Fonts -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoBros Feed</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      /* Светлая тема по умолчанию */
+      --bg-body: #f8f9fa;
+      --bg-card: #ffffff;
+      --text-primary: #212529;
+      --text-secondary: #6c757d;
+      --border-color: #e9ecef;
+      --shadow: 0 4px 12px rgba(0,0,0,0.05);
+      --accent-gold: #FFD700;
+      --accent-cyan: #00F0FF;
+      --accent-purple: #9D00FF;
+      --hover-bg: #f1f3f5;
+      --active-sidebar: #fff9e6;
+    }
+
+    .dark-theme {
+      /* Тёмная тема */
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --border-color: #333333;
+      --shadow: 0 4px 12px rgba(0,0,0,0.3);
+      --hover-bg: #2a2a2a;
+      --active-sidebar: #2a2515;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: linear-gradient(135deg, #0a0a0f 0%, #0f001a 100%);
-      color: #e0e0ff;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-body);
+      color: var(--text-primary);
       min-height: 100vh;
-      overflow-x: hidden;
+      transition: background 0.3s ease;
     }
 
-    /* Particles background */
-    .particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-    }
-    .particles::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: 
-        radial-gradient(circle at 10% 20%, rgba(255,215,0,0.1) 2px, transparent 3px),
-        radial-gradient(circle at 90% 80%, rgba(0,240,255,0.1) 2px, transparent 3px);
-      background-size: 100px 100px;
-      animation: float 60s linear infinite;
-    }
-    @keyframes float {
-      0% { transform: translate(0,0); }
-      100% { transform: translate(-100px,-100px); }
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: rgba(10,10,15,0.75);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,215,0,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      z-index: 1000;
-    }
-
-    .logo {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 2rem;
-      background: linear-gradient(90deg, #FFD700, #FFEA00);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .lang-btn, .profile-btn {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,215,0,0.3);
-      color: #FFD700;
-      padding: 0.5rem 1rem;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .lang-btn:hover, .profile-btn:hover {
-      background: rgba(255,215,0,0.2);
-      transform: scale(1.05);
-    }
-
-    .container {
+    .layout {
       display: flex;
       max-width: 1400px;
-      margin: 80px auto 0;
-      padding: 2rem;
-      gap: 2rem;
+      margin: 0 auto;
+      padding: 0 1rem;
     }
 
     aside {
-      width: 260px;
+      width: 280px;
       flex-shrink: 0;
+      padding: 2rem 0;
       position: sticky;
-      top: 100px;
-      height: calc(100vh - 100px);
-      overflow-y: auto;
+      top: 20px;
     }
 
-    .sidebar-item {
-      padding: 1rem 1.5rem;
-      margin-bottom: 0.5rem;
-      border-radius: 12px;
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--accent-gold), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #0a0a0f;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.4rem;
+    }
+
+    .user-info h3 {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+    }
+    .user-info p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-menu {
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 1.2rem 1.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
       cursor: pointer;
       transition: all 0.3s;
-      font-weight: 500;
+      color: var(--text-primary);
     }
 
-    .sidebar-item:hover,
-    .sidebar-item.active {
-      background: rgba(255,215,0,0.15);
-      color: #FFD700;
+    .menu-item:hover {
+      background: var(--hover-bg);
+      color: var(--accent-gold);
+    }
+
+    .menu-item.active {
+      background: var(--active-sidebar);
+      color: var(--accent-gold);
+      border-left: 4px solid var(--accent-gold);
     }
 
     main {
       flex: 1;
-      max-width: 680px;
+      max-width: 720px;
+      padding: 0 1rem;
     }
 
-    .post {
-      background: rgba(20,20,40,0.55);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,215,0,0.15);
+    .create-post {
+      background: var(--bg-card);
       border-radius: 16px;
+      padding: 1.5rem;
       margin-bottom: 2rem;
-      overflow: hidden;
-    }
-
-    .post-header {
+      box-shadow: var(--shadow);
       display: flex;
-      align-items: center;
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      gap: 1rem;
     }
 
-    .post-avatar {
-      width: 48px;
-      height: 48px;
+    .create-avatar {
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      background: linear-gradient(45deg, #FFD700, #00FFFF);
-      margin-right: 1rem;
+      background: linear-gradient(45deg, var(--accent-gold), var(--accent-cyan));
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #0a0a0f;
       font-weight: bold;
-      font-family: 'Rajdhani', monospace;
+      font-family: 'Roboto Mono';
+      font-size: 1.3rem;
+    }
+
+    .create-input {
+      flex: 1;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      resize: none;
+      outline: none;
+    }
+
+    .post {
+      background: var(--bg-card);
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .post-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--accent-gold), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0a0a0f;
+      font-weight: bold;
+      font-family: 'Roboto Mono';
+      font-size: 1.2rem;
+      margin-right: 1rem;
     }
 
     .post-user {
       font-weight: 600;
-      color: #FFD700;
+      font-size: 1.1rem;
+      color: var(--text-primary);
     }
 
     .post-time {
-      color: #888;
-      font-size: 0.85rem;
-      margin-left: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-left: 0.8rem;
     }
 
     .post-content {
-      padding: 1.2rem 1.5rem;
+      padding: 1.5rem;
       line-height: 1.6;
+      font-size: 1.05rem;
+      color: var(--text-primary);
     }
 
     .post-actions {
       display: flex;
       justify-content: space-between;
-      padding: 0.8rem 1.5rem;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      color: #aaa;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-secondary);
     }
 
     .action-btn {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-size: 0.95rem;
       cursor: pointer;
-      transition: all 0.2s;
       padding: 0.5rem 1rem;
-      border-radius: 50px;
+      border-radius: 12px;
+      transition: all 0.2s;
     }
 
     .action-btn:hover {
-      background: rgba(255,215,0,0.1);
+      background: var(--hover-bg);
     }
 
-    .action-btn.liked {
-      color: #ff3b5c;
-      transform: scale(1.15);
-    }
-
-    .action-btn.commented {
-      color: #00F0FF;
-    }
-
-    .action-btn.reposted {
-      color: #00FFFF;
-    }
-
-    .comment-input {
-      display: none;
-      margin: 1rem 1.5rem;
-      padding: 0.8rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,215,0,0.2);
-      border-radius: 12px;
-      color: #e0e0ff;
-      font-size: 1rem;
-    }
-
-    .comment-input.active {
-      display: block;
-    }
+    .action-btn.liked { color: #ff3b5c; }
+    .action-btn.reposted { color: var(--accent-cyan); }
+    .action-btn.commented { color: var(--accent-purple); }
 
     .right-sidebar {
       width: 300px;
       flex-shrink: 0;
+      padding-left: 1rem;
       position: sticky;
-      top: 100px;
-      height: calc(100vh - 100px);
-      overflow-y: auto;
+      top: 20px;
     }
 
     .trends-card {
-      background: rgba(20,20,40,0.55);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,215,0,0.15);
+      background: var(--bg-card);
       border-radius: 16px;
       padding: 1.5rem;
+      box-shadow: var(--shadow);
       margin-bottom: 1.5rem;
     }
 
     .trends-title {
-      font-family: 'Rajdhani', sans-serif;
       font-weight: 700;
-      font-size: 1.5rem;
-      color: #FFD700;
+      font-size: 1.2rem;
+      color: var(--text-primary);
       margin-bottom: 1rem;
     }
 
     .trend-item {
       padding: 0.8rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
     }
-
-    .trend-item:last-child { border-bottom: none; }
 
     .trend-name {
-      color: #00FFFF;
       font-weight: 600;
+      color: var(--accent-gold);
     }
 
-    .trend-desc {
-      color: #aaa;
+    .trend-count {
+      color: var(--text-secondary);
       font-size: 0.9rem;
-      margin-top: 0.3rem;
+    }
+
+    /* Кнопка темы */
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
     }
 
     @media (max-width: 1024px) {
-      .container { flex-direction: column; }
-      aside, .right-sidebar { width: 100%; position: static; height: auto; }
+      .layout { flex-direction: column; }
+      aside, .right-sidebar { width: 100%; }
     }
 
     @media (max-width: 768px) {
-      .particles { display: none; }
-      header { padding: 0 1rem; }
-      .container { padding: 1rem; }
+      .sidebar-menu { display: none; }
+      main { padding: 0; }
     }
   </style>
 </head>
 <body>
 
-  <div class="particles"></div>
-
-  <!-- Header -->
-  <header>
-    <div class="logo">CRYPTOBROS</div>
-    <div class="header-right">
-      <button class="lang-btn" type="button">LANGUAGE</button>
-      <button class="profile-btn" type="button">@YourBro</button>
+<div class="layout">
+  <!-- Левая панель -->
+  <aside>
+    <div class="sidebar-user">
+      <div class="avatar">C</div>
+      <div class="user-info">
+        <h3>@cryptobros</h3>
+        <p>Degen (Master)</p>
+      </div>
     </div>
-  </header>
 
-  <div class="container">
-    <!-- Left Sidebar -->
-    <aside>
-      <div class="sidebar-item active">Home</div>
-      <div class="sidebar-item">Roasts</div>
-      <div class="sidebar-item">Tribunal</div>
-      <div class="sidebar-item">AUS Token</div>
-      <div class="sidebar-item">Wallet</div>
-      <div class="sidebar-item">Settings</div>
-    </aside>
+    <div class="sidebar-menu">
+      <div class="menu-item active">📰 News Feed</div>
+      <div class="menu-item">💬 Messages</div>
+      <div class="menu-item">👥 My Groups</div>
+      <div class="menu-item">⚙️ Settings</div>
+      <div class="menu-item">💡 Tribunal</div>
+      <div class="menu-item">💰 AUS Token</div>
+    </div>
+  </aside>
 
-    <!-- Main Feed -->
-    <main>
-      <!-- Post 1 -->
-      <article class="post">
-        <div class="post-header">
-          <div class="post-avatar">GR</div>
-          <div>
-            <span class="post-user">@GuruRoaster</span>
-            <span class="post-time">· 2h ago</span>
-          </div>
-        </div>
-        <div class="post-content">
-          Just caught another "millionaire coach" selling a $997 course while his Lambo is rented from Turo 😂<br><br>
-          Screenshots attached. DYOR gang — don’t be exit liquidity.<br><br>
-          NGMI if you buy this, WAGMI if you roast it 🔥
-        </div>
-        <div class="post-actions">
-          <div class="action-btn" onclick="toggleLike(this)">
-            ❤️ <span class="count">142</span>
-          </div>
-          <div class="action-btn" onclick="toggleComment(this)">
-            💬 <span class="count">38</span>
-          </div>
-          <div class="action-btn" onclick="toggleRepost(this)">
-            🔁 <span class="count">21</span>
-          </div>
-        </div>
-        <textarea class="comment-input" placeholder="Write a comment..."></textarea>
-      </article>
+  <!-- Центральная лента -->
+  <main>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+      <div class="theme-toggle" id="themeToggle">🌙</div>
+    </div>
 
-      <!-- Post 2 -->
-      <article class="post">
-        <div class="post-header">
-          <div class="post-avatar">AS</div>
-          <div>
-            <span class="post-user">@AlphaSniper</span>
-            <span class="post-time">· 45m ago</span>
-          </div>
-        </div>
-        <div class="post-content">
-          Wen signal? Bro has DMed me for the 5th time today.<br><br>
-          Reminder: real alpha is in the whitepaper — not in some guru’s paid Telegram group.<br><br>
-          HODL your brain, not their hopium 🧠💪
-        </div>
-        <div class="post-actions">
-          <div class="action-btn" onclick="toggleLike(this)">
-            ❤️ <span class="count">89</span>
-          </div>
-          <div class="action-btn" onclick="toggleComment(this)">
-            💬 <span class="count">17</span>
-          </div>
-          <div class="action-btn" onclick="toggleRepost(this)">
-            🔁 <span class="count">12</span>
-          </div>
-        </div>
-        <textarea class="comment-input" placeholder="Write a comment..."></textarea>
-      </article>
-
-      <!-- Post 3 -->
-      <article class="post">
-        <div class="post-header">
-          <div class="post-avatar">ML</div>
-          <div>
-            <span class="post-user">@MemeLord</span>
-            <span class="post-time">· 1h ago</span>
-          </div>
-        </div>
-        <div class="post-content">
-          [Meme: fake guru with rented Lambo and caption "Trust the process bro"]<br><br>
-          This one never gets old 😭🚀
-        </div>
-        <div class="post-actions">
-          <div class="action-btn" onclick="toggleLike(this)">
-            ❤️ <span class="count">210</span>
-          </div>
-          <div class="action-btn" onclick="toggleComment(this)">
-            💬 <span class="count">45</span>
-          </div>
-          <div class="action-btn" onclick="toggleRepost(this)">
-            🔁 <span class="count">67</span>
-          </div>
-        </div>
-        <textarea class="comment-input" placeholder="Write a comment..."></textarea>
-      </article>
-    </main>
-
-    <!-- Right Sidebar -->
-    <div class="right-sidebar">
-      <div class="trends-card">
-        <div class="trends-title">Hot Roasts</div>
-        <div class="trend-item">
-          <div class="trend-name">#GuruRug</div>
-          <div class="trend-desc">1.2k posts</div>
-        </div>
-        <div class="trend-item">
-          <div class="trend-name">#WenSignal</div>
-          <div class="trend-desc">847 posts</div>
-        </div>
-        <div class="trend-item">
-          <div class="trend-name">@FakeCoachX exposed</div>
-          <div class="trend-desc">Trending</div>
-        </div>
+    <div class="create-post">
+      <div class="create-avatar">C</div>
+      <textarea class="create-input" placeholder="What’s on your mind?"></textarea>
+      <div style="display: flex; gap: 0.8rem; margin-top: 1rem;">
+        <button style="padding: 0.6rem 1.2rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; font-weight: 600;">Photo</button>
+        <button style="padding: 0.6rem 1.2rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600;">Post</button>
       </div>
+    </div>
 
-      <div class="trends-card">
-        <div class="trends-title">Your Wallet</div>
-        <div style="color: #FFD700; font-size: 1.3rem; margin: 0.5rem 0;">
-          0.00 SOL
-        </div>
-        <div style="color: #aaa; font-size: 0.9rem;">
-          AUS balance: pending launch
-        </div>
-        <button style="margin-top: 1rem; width: 100%; padding: 0.8rem; background: rgba(255,215,0,0.15); border: 1px solid #FFD700; color: #FFD700; border-radius: 12px; cursor: pointer;">
-          Connect Phantom
-        </button>
+    <!-- Посты (как раньше) -->
+    <article class="post">
+      <div class="post-header">
+        <div class="post-avatar">U</div>
+        <div><div class="post-user">@user123 · Pro</div><div class="post-time">2h ago</div></div>
       </div>
+      <div class="post-content">$WIF just pumped! Analysis needed.</div>
+      <div class="post-actions">
+        <div class="action-btn" onclick="toggleLike(this)">❤️ <span class="count">142</span></div>
+        <div class="action-btn" onclick="toggleComment(this)">💬 <span class="count">38</span></div>
+        <div class="action-btn" onclick="toggleRepost(this)">🔁 <span class="count">21</span></div>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="post-header">
+        <div class="post-avatar">T</div>
+        <div><div class="post-user">@trader_sol · Premium</div><div class="post-time">45m ago</div></div>
+      </div>
+      <div class="post-content">Is $SOL safe to buy now?</div>
+      <div class="post-actions">
+        <div class="action-btn" onclick="toggleLike(this)">❤️ <span class="count">89</span></div>
+        <div class="action-btn" onclick="toggleComment(this)">💬 <span class="count">17</span></div>
+        <div class="action-btn" onclick="toggleRepost(this)">🔁 <span class="count">12</span></div>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="post-header">
+        <div class="post-avatar">M</div>
+        <div><div class="post-user">@meme_king</div><div class="post-time">1h ago</div></div>
+      </div>
+      <div class="post-content">When the chart looks like a rollercoaster but you’re still holding… 🎢<br><br>[Image: meme of bear riding a rocket]</div>
+      <div class="post-actions">
+        <div class="action-btn" onclick="toggleLike(this)">❤️ <span class="count">210</span></div>
+        <div class="action-btn" onclick="toggleComment(this)">💬 <span class="count">45</span></div>
+        <div class="action-btn" onclick="toggleRepost(this)">🔁 <span class="count">67</span></div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Правая колонка -->
+  <div class="right-sidebar">
+    <div class="trends-card">
+      <div class="trends-title">Hot Topics</div>
+      <div class="trend-item"><div class="trend-name">#WIF Pump</div><div class="trend-count">2.1k</div></div>
+      <div class="trend-item"><div class="trend-name">#SOL Buy</div><div class="trend-count">1.8k</div></div>
+      <div class="trend-item"><div class="trend-name">#TribunalVote</div><div class="trend-count">942</div></div>
+    </div>
+
+    <div class="trends-card">
+      <div class="trends-title">Your Wallet</div>
+      <div style="font-weight: 600; color: var(--accent-gold); margin: 0.8rem 0;">0.00 SOL</div>
+      <div style="color: var(--text-secondary); font-size: 0.95rem;">AUS: pending launch</div>
+      <button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600;">
+        Connect Phantom
+      </button>
     </div>
   </div>
+</div>
 
-  <script>
-    // Like
-    function toggleLike(btn) {
-      const countEl = btn.querySelector('.count');
-      let count = parseInt(countEl.textContent);
-      if (btn.classList.contains('liked')) {
-        count--;
-        btn.classList.remove('liked');
-      } else {
-        count++;
-        btn.classList.add('liked');
-      }
-      countEl.textContent = count;
+<script>
+  // Инициализация темы
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.body.classList.add('dark-theme');
+      document.getElementById('themeToggle').textContent = '☀️';
+    } else {
+      document.body.classList.remove('dark-theme');
+      document.getElementById('themeToggle').textContent = '🌙';
     }
+  }
 
-    // Comment
-    function toggleComment(btn) {
-      const post = btn.closest('.post');
-      const input = post.querySelector('.comment-input');
-      input.classList.toggle('active');
-      if (input.classList.contains('active')) {
-        input.focus();
-      }
+  // Переключение темы
+  function toggleTheme() {
+    const isDark = document.body.classList.contains('dark-theme');
+    if (isDark) {
+      document.body.classList.remove('dark-theme');
+      localStorage.setItem('theme', 'light');
+      document.getElementById('themeToggle').textContent = '🌙';
+    } else {
+      document.body.classList.add('dark-theme');
+      localStorage.setItem('theme', 'dark');
+      document.getElementById('themeToggle').textContent = '☀️';
     }
+  }
 
-    // Repost
-    function toggleRepost(btn) {
-      const countEl = btn.querySelector('.count');
-      let count = parseInt(countEl.textContent);
-      if (btn.classList.contains('reposted')) {
-        count--;
-        btn.classList.remove('reposted');
-      } else {
-        count++;
-        btn.classList.add('reposted');
-      }
-      countEl.textContent = count;
+  // Обработчики
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+  // Функции постов
+  function toggleLike(btn) {
+    const countEl = btn.querySelector('.count');
+    let count = +countEl.textContent;
+    if (btn.classList.contains('liked')) {
+      count--;
+      btn.classList.remove('liked');
+    } else {
+      count++;
+      btn.classList.add('liked');
     }
-  </script>
+    countEl.textContent = count;
+  }
+
+  function toggleComment(btn) {
+    const post = btn.closest('.post');
+    const input = document.createElement('textarea');
+    input.placeholder = 'Write a comment...';
+    Object.assign(input.style, {
+      width: '100%',
+      margin: '0.8rem 0',
+      padding: '0.8rem',
+      border: '1px solid var(--border-color)',
+      borderRadius: '12px',
+      outline: 'none',
+      fontSize: '1rem',
+      backgroundColor: 'var(--bg-body)',
+      color: 'var(--text-primary)'
+    });
+    post.appendChild(input);
+    input.focus();
+    input.addEventListener('blur', () => input.remove());
+  }
+
+  function toggleRepost(btn) {
+    const countEl = btn.querySelector('.count');
+    let count = +countEl.textContent;
+    if (btn.classList.contains('reposted')) {
+      count--;
+      btn.classList.remove('reposted');
+    } else {
+      count++;
+      btn.classList.add('reposted');
+    }
+    countEl.textContent = count;
+  }
+
+  // Запуск
+  document.addEventListener('DOMContentLoaded', initTheme);
+</script>
+
 </body>
 </html>
