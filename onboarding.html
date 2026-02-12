@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Join CryptoBros – Bros In, Noise Out</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -161,7 +161,7 @@
   <section class="hero">
     <h1>Join CryptoBros</h1>
     <p>Bros In. Noise Out.<br>Elite roast community. No fake gurus, no paid signals.<br>Only truth, memes & real alpha. <strong>AUS Token drops incoming 🔥</strong></p>
-    <button class="cta-btn" onclick="connectWallet()">Connect Phantom & Claim Your Spot</button>
+    <button class="cta-btn">Connect Phantom & Claim Your Spot</button>
   </section>
 
   <section class="tiers">
@@ -175,7 +175,7 @@
           <li>Public feed & read-only chat</li>
           <li>Teaser AUS drop: 150–200 on signup</li>
         </ul>
-        <button class="btn" onclick="selectTier('free')">Start Free</button>
+        <button class="btn">Start Free</button>
       </div>
       <div class="card">
         <h3>Master Bro</h3>
@@ -185,7 +185,7 @@
           <li>Weekly deep dives & extra roasts</li>
           <li>Basic Tribunal votes</li>
         </ul>
-        <button class="btn" onclick="selectTier('master')">Claim 5K Tier</button>
+        <button class="btn">Claim 5K Tier</button>
       </div>
       <div class="card">
         <h3>Pro Bro</h3>
@@ -195,7 +195,7 @@
           <li>Governance power & custom memes</li>
           <li>Revenue share vibes incoming</li>
         </ul>
-        <button class="btn" onclick="selectTier('pro')">Unlock Pro</button>
+        <button class="btn">Unlock Pro</button>
       </div>
       <div class="card premium">
         <h3>Premium Bro</h3>
@@ -205,18 +205,15 @@
           <li>Personal roast & 1-on-1</li>
           <li>Max AUS drop + VIP yield</li>
         </ul>
-        <button class="btn" onclick="selectTier('premium')">Lifetime Elite</button>
+        <button class="btn">Lifetime Elite</button>
       </div>
     </div>
   </section>
 
   <script>
-    function connectWallet() {
-      alert("Phantom connect coming soon!");
-    }
-    function selectTier(tier) {
-      alert(`Selected: ${tier}`);
-    }
+    document.querySelector('.cta-btn').onclick = () => {
+      alert('Phantom connect coming soon!');
+    };
   </script>
 </body>
 </html>
