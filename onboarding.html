@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Join CRYPTOBROS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a1a;
+      color: white;
+      font-family: system-ui, sans-serif;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 40px;
+      color: #ffcc00;
+    }
+    .tiers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .tier {
+      background: rgba(20,20,40,0.7);
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+    .tier h2 {
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+    .price {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .free .price { color: #00ff9d; }
+    .master .price { color: #ffd700; }
+    .pro .price { color: #ff6b6b; }
+    .premium .price { color: #c7254e; }
+    .desc {
+      font-size: 14px;
+      color: #bbb;
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+    .btn {
+      background: rgba(255,215,0,0.1);
+      color: #ffcc00;
+      border: 1px solid rgba(255,215,0,0.4);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 12px;
+      width: 100%;
+    }
+    .back {
+      display: block;
+      margin: 30px auto 0;
+      color: #666;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Choose Your Path</h1>
+    
+    <div class="tiers">
+      <div class="tier free">
+        <h2>Free Bro</h2>
+        <div class="price">0 $AUS</div>
+        <div class="desc">14-day trial<br>+150 $AUS teaser drop<br><small>⚠️ After 14 days — upgrade or goodbye</small></div>
+        <div class="btn" onclick="connectWallet()">Start Free</div>
+      </div>
+      
+      <div class="tier master">
+        <h2>Master Bro</h2>
+        <div class="price">5,000 $AUS (lifetime)</div>
+        <div class="desc">Full access<br>+1,500 $AUS drop<br>Vested over 4 months</div>
+        <div class="btn" onclick="connectWallet()">Unlock</div>
+      </div>
+      
+      <div class="tier pro">
+        <h2>Pro Bro</h2>
+        <div class="price">12,000 $AUS (lifetime)</div>
+        <div class="desc">Governance + revenue share<br>+6,000 $AUS drop<br>Vested over 8 months</div>
+        <div class="btn" onclick="connectWallet()">Go Pro</div>
+      </div>
+      
+      <div class="tier premium">
+        <h2>Premium Bro</h2>
+        <div class="price">30,000 $AUS (lifetime)</div>
+        <div class="desc">Personal roast + DAO control<br>+20,000 $AUS drop<br>Vested over 16 months</div>
+        <div class="btn" onclick="connectWallet()">Own the Club</div>
+      </div>
+    </div>
+
+    <a href="index.html" class="back">← Back to homepage</a>
+  </div>
+
+  <script>
+    function connectWallet() {
+      if (typeof window.solana !== 'undefined' && window.solana.isPhantom) {
+        window.solana.connect().then(() => {
+          alert("✅ Wallet connected!\n\nYou’ll receive your $AUS drop after tier selection.");
+          // Здесь будет редирект в profile.html или feed
+        }).catch(e => {
+          alert("❌ Connection failed.");
+        });
+      } else {
+        alert("⚠️ Please install Phantom wallet at phantom.app");
+      }
+    }
+  </script>
+
+</body>
+</html>
