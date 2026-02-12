@@ -17,7 +17,7 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    h1 {
+    #page-title {
       text-align: center;
       font-size: 32px;
       margin-bottom: 40px;
@@ -71,56 +71,327 @@
       color: #666;
       text-decoration: underline;
     }
+    .lang-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #lang-menu {
+      position: absolute;
+      top: 60px;
+      right: 24px;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 6px;
+      display: none;
+      z-index: 100;
+      min-width: 120px;
+    }
+    #lang-menu button {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      color: white;
+      padding: 4px 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #lang-menu button:hover {
+      background: rgba(255,215,0,0.2);
+    }
   </style>
 </head>
 <body>
 
+  <button class="lang-btn" id="langToggle">LANGUAGE</button>
+  <div id="lang-menu"></div>
+
   <div class="container">
-    <h1>Choose Your Tier</h1>
+    <h1 id="page-title"></h1>
     
     <div class="tiers">
       <div class="tier free">
-        <h2>Free</h2>
+        <h2 id="tier-free"></h2>
         <div class="price">0 $AUS</div>
-        <div class="desc">14-day trial<br>+150 $AUS teaser drop<br><small>⚠️ After 14 days — upgrade or goodbye</small></div>
-        <div class="btn" onclick="connectWallet()">Start Free</div>
+        <div class="desc" id="desc-free"></div>
+        <div class="btn" onclick="connectWallet()" id="btn-free"></div>
       </div>
       
       <div class="tier master">
-        <h2>Master</h2>
+        <h2 id="tier-master"></h2>
         <div class="price">5,000 $AUS (lifetime)</div>
-        <div class="desc">Full access<br>+1,500 $AUS drop<br>Vested over 4 months</div>
-        <div class="btn" onclick="connectWallet()">Unlock</div>
+        <div class="desc" id="desc-master"></div>
+        <div class="btn" onclick="connectWallet()" id="btn-master"></div>
       </div>
       
       <div class="tier pro">
-        <h2>Pro</h2>
+        <h2 id="tier-pro"></h2>
         <div class="price">12,000 $AUS (lifetime)</div>
-        <div class="desc">Governance + revenue share<br>+6,000 $AUS drop<br>Vested over 8 months</div>
-        <div class="btn" onclick="connectWallet()">Go Pro</div>
+        <div class="desc" id="desc-pro"></div>
+        <div class="btn" onclick="connectWallet()" id="btn-pro"></div>
       </div>
       
       <div class="tier premium">
-        <h2>Premium</h2>
+        <h2 id="tier-premium"></h2>
         <div class="price">30,000 $AUS (lifetime)</div>
-        <div class="desc">Personal roast + DAO control<br>+20,000 $AUS drop<br>Vested over 16 months</div>
-        <div class="btn" onclick="connectWallet()">Own the Club</div>
+        <div class="desc" id="desc-premium"></div>
+        <div class="btn" onclick="connectWallet()" id="btn-premium"></div>
       </div>
     </div>
 
-    <a href="index.html" class="back">← Back to homepage</a>
+    <a href="index.html" class="back" id="back-link"></a>
   </div>
 
   <script>
+    const translations = {
+      en: {
+        title: "Choose Your Tier",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: '14-day trial<br>+150 $AUS teaser drop<br><small>⚠️ After 14 days — upgrade or goodbye</small>',
+        descMaster: 'Full access<br>+1,500 $AUS drop<br>Vested over 4 months',
+        descPro: 'Governance + revenue share<br>+6,000 $AUS drop<br>Vested over 8 months',
+        descPremium: 'Personal roast + DAO control<br>+20,000 $AUS drop<br>Vested over 16 months',
+        btnFree: "Start Free",
+        btnMaster: "Unlock",
+        btnPro: "Go Pro",
+        btnPremium: "Own the Club",
+        back: "← Back to homepage"
+      },
+      ru: {
+        title: "Выберите свой уровень",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: '14-дневный пробный период<br>+150 $AUS в подарок<br><small>⚠️ После — обновите или покиньте</small>',
+        descMaster: 'Полный доступ<br>+1,500 $AUS<br>Вестинг 4 месяца',
+        descPro: 'Голосование + доход<br>+6,000 $AUS<br>Вестинг 8 месяцев',
+        descPremium: 'Персональный roast + контроль<br>+20,000 $AUS<br>Вестинг 16 месяцев',
+        btnFree: "Начать бесплатно",
+        btnMaster: "Разблокировать",
+        btnPro: "Стать Pro",
+        btnPremium: "Владеть клубом",
+        back: "← Назад на главную"
+      },
+      es: {
+        title: "Elige tu nivel",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: 'Prueba de 14 días<br>+150 $AUS de regalo<br><small>⚠️ Después — actualiza o vete</small>',
+        descMaster: 'Acceso completo<br>+1,500 $AUS<br>Vesting 4 meses',
+        descPro: 'Gobernanza + ingresos<br>+6,000 $AUS<br>Vesting 8 meses',
+        descPremium: 'Roast personal + control<br>+20,000 $AUS<br>Vesting 16 meses',
+        btnFree: "Empezar gratis",
+        btnMaster: "Desbloquear",
+        btnPro: "Ir a Pro",
+        btnPremium: "Poseer el club",
+        back: "← Volver al inicio"
+      },
+      pt: {
+        title: "Escolha seu nível",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: 'Teste de 14 dias<br>+150 $AUS de presente<br><small>⚠️ Depois — atualize ou saia</small>',
+        descMaster: 'Acesso total<br>+1,500 $AUS<br>Vesting 4 meses',
+        descPro: 'Governança + receita<br>+6,000 $AUS<br>Vesting 8 meses',
+        descPremium: 'Roast pessoal + controle<br>+20,000 $AUS<br>Vesting 16 meses',
+        btnFree: "Começar grátis",
+        btnMaster: "Desbloquear",
+        btnPro: "Tornar-se Pro",
+        btnPremium: "Possuir o clube",
+        back: "← Voltar à página inicial"
+      },
+      ja: {
+        title: "プランを選択",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: '14日間無料トライアル<br>+150 $AUS プレゼント<br><small>⚠️ 14日後 — アップグレードしないと終了</small>',
+        descMaster: 'フルアクセス<br>+1,500 $AUS<br>4か月でアンロック',
+        descPro: 'ガバナンス + 収益分配<br>+6,000 $AUS<br>8か月でアンロック',
+        descPremium: 'パーソナルロースト + コントロール<br>+20,000 $AUS<br>16か月でアンロック',
+        btnFree: "無料で開始",
+        btnMaster: "アンロック",
+        btnPro: "Proになる",
+        btnPremium: "クラブを所有",
+        back: "← ホームに戻る"
+      },
+      zh: {
+        title: "选择您的等级",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: '14天免费试用<br>+150 $AUS 空投<br><small>⚠️ 14天后需升级，否则退出</small>',
+        descMaster: '完整访问权限<br>+1,500 $AUS<br>4个月线性解锁',
+        descPro: '治理权 + 收益分成<br>+6,000 $AUS<br>8个月线性解锁',
+        descPremium: '专属吐槽 + 控制权<br>+20,000 $AUS<br>16个月线性解锁',
+        btnFree: "免费开始",
+        btnMaster: "解锁",
+        btnPro: "升级为Pro",
+        btnPremium: "拥有俱乐部",
+        back: "← 返回主页"
+      },
+      de: {
+        title: "Wähle deinen Tier",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: '14-tägige Testphase<br>+150 $AUS Drop<br><small>⚠️ Danach — upgraden oder raus</small>',
+        descMaster: 'Voller Zugang<br>+1,500 $AUS<br>Über 4 Monate freigeschaltet',
+        descPro: 'Governance + Einnahmen<br>+6,000 $AUS<br>Über 8 Monate freigeschaltet',
+        descPremium: 'Persönlicher Roast + Kontrolle<br>+20,000 $AUS<br>Über 16 Monate freigeschaltet',
+        btnFree: "Kostenlos starten",
+        btnMaster: "Freischalten",
+        btnPro: "Pro werden",
+        btnPremium: "Den Club besitzen",
+        back: "← Zurück zur Startseite"
+      },
+      fr: {
+        title: "Choisissez votre niveau",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: 'Essai gratuit 14 jours<br>+150 $AUS offerts<br><small>⚠️ Après — mettez à niveau ou partez</small>',
+        descMaster: 'Accès complet<br>+1,500 $AUS<br>Débloqué sur 4 mois',
+        descPro: 'Gouvernance + revenus<br>+6,000 $AUS<br>Débloqué sur 8 mois',
+        descPremium: 'Roast personnalisé + contrôle<br>+20,000 $AUS<br>Débloqué sur 16 mois',
+        btnFree: "Commencer gratuitement",
+        btnMaster: "Débloquer",
+        btnPro: "Devenir Pro",
+        btnPremium: "Posséder le club",
+        back: "← Retour à l'accueil"
+      },
+      it: {
+        title: "Scegli il tuo piano",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: 'Prova gratuita 14 giorni<br>+150 $AUS in omaggio<br><small>⚠️ Dopo — aggiorna o esci</small>',
+        descMaster: 'Accesso completo<br>+1,500 $AUS<br>Sbloccato in 4 mesi',
+        descPro: 'Governance + ricavi<br>+6,000 $AUS<br>Sbloccato in 8 mesi',
+        descPremium: 'Roast personale + controllo<br>+20,000 $AUS<br>Sbloccato in 16 mesi',
+        btnFree: "Inizia gratis",
+        btnMaster: "Sblocca",
+        btnPro: "Passa a Pro",
+        btnPremium: "Possiedi il club",
+        back: "← Torna alla home"
+      },
+      ko: {
+        title: "플랜 선택",
+        free: "Free",
+        master: "Master",
+        pro: "Pro",
+        premium: "Premium",
+        descFree: '14일 무료 체험<br>+150 $AUS 에어드랍<br><small>⚠️ 이후 — 업그레이드 또는 종료</small>',
+        descMaster: '전체 접근 권한<br>+1,500 $AUS<br>4개월에 걸쳐 해제',
+        descPro: '거버넌스 + 수익 분배<br>+6,000 $AUS<br>8개월에 걸쳐 해제',
+        descPremium: '개인 맞춤 roast + 통제권<br>+20,000 $AUS<br>16개월에 걸쳐 해제',
+        btnFree: "무료로 시작",
+        btnMaster: "언락",
+        btnPro: "Pro로 전환",
+        btnPremium: "클럽 소유",
+        back: "← 홈으로 돌아가기"
+      }
+    };
+
+    const languages = {
+      en: 'English',
+      ru: 'Русский',
+      es: 'Español',
+      pt: 'Português',
+      ja: '日本語',
+      zh: '中文',
+      de: 'Deutsch',
+      fr: 'Français',
+      it: 'Italiano',
+      ko: '한국어'
+    };
+
+    let currentLang = localStorage.getItem('language') || 'en';
+
+    function applyLanguage(lang) {
+      if (!translations[lang]) lang = 'en';
+      currentLang = lang;
+      
+      document.getElementById('page-title').textContent = translations[lang].title;
+      document.getElementById('tier-free').textContent = translations[lang].free;
+      document.getElementById('tier-master').textContent = translations[lang].master;
+      document.getElementById('tier-pro').textContent = translations[lang].pro;
+      document.getElementById('tier-premium').textContent = translations[lang].premium;
+      
+      document.getElementById('desc-free').innerHTML = translations[lang].descFree;
+      document.getElementById('desc-master').innerHTML = translations[lang].descMaster;
+      document.getElementById('desc-pro').innerHTML = translations[lang].descPro;
+      document.getElementById('desc-premium').innerHTML = translations[lang].descPremium;
+      
+      document.getElementById('btn-free').textContent = translations[lang].btnFree;
+      document.getElementById('btn-master').textContent = translations[lang].btnMaster;
+      document.getElementById('btn-pro').textContent = translations[lang].btnPro;
+      document.getElementById('btn-premium').textContent = translations[lang].btnPremium;
+      
+      document.getElementById('back-link').textContent = translations[lang].back;
+      document.querySelector('.lang-btn').textContent = languages[lang] || 'LANGUAGE';
+    }
+
+    function buildLangMenu() {
+      const menu = document.getElementById('lang-menu');
+      menu.innerHTML = '';
+      Object.keys(languages).forEach(code => {
+        const btn = document.createElement('button');
+        btn.textContent = languages[code];
+        btn.onclick = () => {
+          localStorage.setItem('language', code);
+          applyLanguage(code);
+          menu.style.display = 'none';
+        };
+        menu.appendChild(btn);
+      });
+    }
+
+    document.getElementById('langToggle').onclick = function(e) {
+      const menu = document.getElementById('lang-menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      e.stopPropagation();
+    };
+
+    document.addEventListener('click', () => {
+      document.getElementById('lang-menu').style.display = 'none';
+    });
+
+    buildLangMenu();
+    applyLanguage(currentLang);
+
     function connectWallet() {
       if (typeof window.solana !== 'undefined' && window.solana.isPhantom) {
         window.solana.connect().then(() => {
-          alert("✅ Wallet connected!\n\nYou’ll receive your $AUS drop after tier selection.");
+          alert("✅ Wallet connected!");
         }).catch(e => {
           alert("❌ Connection failed.");
         });
       } else {
-        alert("⚠️ Please install Phantom wallet at phantom.app");
+        alert("⚠️ Install Phantom wallet at phantom.app");
       }
     }
   </script>
