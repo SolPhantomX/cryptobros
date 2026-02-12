@@ -17,25 +17,18 @@
       align-items: center;
       padding: 20px;
       position: relative;
-      overflow: hidden;
     }
-    #full-logo {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
+    .logo {
+      width: 240px;
+      height: 80px;
       background: url('logo.jpg') center/contain no-repeat;
-      opacity: 0.08;
-      pointer-events: none;
-      z-index: 1;
-    }
-    #content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
+      margin-bottom: 40px;
     }
     #slogan {
       font-size: 24px;
       color: #ffcc00;
-      margin-bottom: 60px;
+      margin-bottom: 40px;
+      text-align: center;
       letter-spacing: 1px;
     }
     #enter-btn {
@@ -64,7 +57,7 @@
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
-      z-index: 100;
+      z-index: 10;
     }
     #lang-menu {
       position: absolute;
@@ -101,7 +94,6 @@
       animation: color-cycle 8s infinite;
       -webkit-background-clip: text;
       background-clip: text;
-      z-index: 2;
     }
     @keyframes color-cycle {
       0%   { background-color: #FFD700; }
@@ -115,16 +107,12 @@
 </head>
 <body>
 
-  <div id="full-logo"></div>
-
   <button class="lang-btn" id="langToggle">LANGUAGE</button>
   <div id="lang-menu"></div>
 
-  <div id="content">
-    <div id="slogan"></div>
-    <button id="enter-btn"></button>
-  </div>
-
+  <div class="logo"></div>
+  <div id="slogan"></div>
+  <button id="enter-btn"></button>
   <div id="footer"></div>
 
   <script>
