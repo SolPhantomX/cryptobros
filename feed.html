@@ -1,260 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CRYPTOBROS — Feed</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CryptoBros News Feed – Bros In, Noise Out</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/bg1.jpg') center/cover fixed;
-      color: #00ff9d;
       font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0a0a0f 0%, #0f001a 100%);
+      color: #e0e0ff;
       min-height: 100vh;
-    }
-    .overlay {
-      min-height: 100vh;
-      background: rgba(0, 5, 42, 0.85);
+      overflow-x: hidden;
     }
 
-    /* Шапка */
-    .topbar {
+    /* Particles background */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .particles::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(255,215,0,0.1) 2px, transparent 3px),
+        radial-gradient(circle at 90% 80%, rgba(0,240,255,0.1) 2px, transparent 3px);
+      background-size: 100px 100px;
+      animation: float 60s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(-100px,-100px); }
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(10,10,15,0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,215,0,0.15);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
-      height: 60px;
-      background: rgba(0, 0, 0, 0.6);
-      border-bottom: 1px solid #00ff9d;
+      padding: 0 2rem;
+      z-index: 1000;
     }
+
     .logo {
-      font-family: 'Orbitron', monospace;
-      font-weight: 900;
-      font-size: 24px;
-      text-shadow: 0 0 8px #00ff9d;
-    }
-    .lang-select {
-      background: rgba(0, 20, 40, 0.8);
-      color: #00ff9d;
-      border: 1px solid #00ff9d;
-      padding: 5px;
-      border-radius: 5px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      background: linear-gradient(90deg, #FFD700, #FFEA00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    /* Основной контент */
-    .main {
-      display: flex;
-      max-width: 1200px;
-      margin: 0 auto;
-      gap: 20px;
-      padding: 20px;
-    }
-
-    /* Левая панель */
-    .left-panel {
-      width: 200px;
-    }
-    .user-card {
+    .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px;
-      margin-bottom: 20px;
-      background: rgba(0, 10, 30, 0.6);
-      border-radius: 10px;
-    }
-    .avatar {
-      width: 40px;
-      height: 40px;
-      background: #00ff9d;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: #000;
+      gap: 1.5rem;
     }
 
-    /* Лента */
-    .feed {
-      flex: 1;
+    .lang-btn, .profile-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,215,0,0.3);
+      color: #FFD700;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
     }
-    .post {
-      background: rgba(0, 10, 30, 0.6);
-      border: 1px solid #00ff9d;
+
+    .lang-btn:hover, .profile-btn:hover {
+      background: rgba(255,215,0,0.2);
+      transform: scale(1.05);
+    }
+
+    .container {
+      display: flex;
+      max-width: 1400px;
+      margin: 80px auto 0;
+      padding: 2rem;
+      gap: 2rem;
+    }
+
+    aside {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 100px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+    }
+
+    .sidebar-item {
+      padding: 1rem 1.5rem;
+      margin-bottom: 0.5rem;
       border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
     }
+
+    .sidebar-item:hover,
+    .sidebar-item.active {
+      background: rgba(255,215,0,0.15);
+      color: #FFD700;
+    }
+
+    main {
+      flex: 1;
+      max-width: 680px;
+    }
+
+    .post {
+      background: rgba(20,20,40,0.55);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
     .post-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-    .post-author {
-      font-family: 'Orbitron', monospace;
-      color: #d700ff;
+
+    .post-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #FFD700, #00FFFF);
+      margin-right: 1rem;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0a0a0f;
+      font-weight: bold;
+      font-family: 'Rajdhani', monospace;
     }
-    .ai-response {
-      margin-top: 10px;
-      padding: 10px;
-      background: rgba(0, 20, 40, 0.7);
-      border-left: 3px solid #d700ff;
-      font-family: 'Inter', monospace;
-      white-space: pre-wrap;
+
+    .post-user {
+      font-weight: 600;
+      color: #FFD700;
     }
-    .btn {
-      background: linear-gradient(90deg, #00ff9d, #66ffff);
-      color: #000;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-family: 'Orbitron', monospace;
-      font-size: 0.9rem;
+
+    .post-time {
+      color: #888;
+      font-size: 0.85rem;
+      margin-left: 0.5rem;
+    }
+
+    .post-content {
+      padding: 1.2rem 1.5rem;
+      line-height: 1.6;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: #aaa;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       cursor: pointer;
+      transition: all 0.2s;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+    }
+
+    .action-btn:hover {
+      background: rgba(255,215,0,0.1);
+    }
+
+    .action-btn.liked {
+      color: #ff3b5c;
+      transform: scale(1.15);
+    }
+
+    .action-btn.commented {
+      color: #00F0FF;
+    }
+
+    .action-btn.reposted {
+      color: #00FFFF;
+    }
+
+    .comment-input {
+      display: none;
+      margin: 1rem 1.5rem;
+      padding: 0.8rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,215,0,0.2);
+      border-radius: 12px;
+      color: #e0e0ff;
+      font-size: 1rem;
+    }
+
+    .comment-input.active {
+      display: block;
+    }
+
+    .right-sidebar {
+      width: 300px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 100px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+    }
+
+    .trends-card {
+      background: rgba(20,20,40,0.55);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .trends-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #FFD700;
+      margin-bottom: 1rem;
+    }
+
+    .trend-item {
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .trend-item:last-child { border-bottom: none; }
+
+    .trend-name {
+      color: #00FFFF;
+      font-weight: 600;
+    }
+
+    .trend-desc {
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    @media (max-width: 1024px) {
+      .container { flex-direction: column; }
+      aside, .right-sidebar { width: 100%; position: static; height: auto; }
+    }
+
+    @media (max-width: 768px) {
+      .particles { display: none; }
+      header { padding: 0 1rem; }
+      .container { padding: 1rem; }
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="overlay">
-    <div class="topbar">
-      <div class="logo">CRYPTOBROS</div>
-      <select class="lang-select" id="lang-select">
-        <option value="en">English</option>
-        <option value="es">Español</option>
-        <option value="pt">Português</option>
-        <option value="zh">中文</option>
-        <option value="ru">Русский</option>
-      </select>
-    </div>
 
-    <div class="main">
-      <div class="left-panel">
-        <div class="user-card">
-          <div class="avatar">C</div>
+  <div class="particles"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">CRYPTOBROS</div>
+    <div class="header-right">
+      <button class="lang-btn" type="button">LANGUAGE</button>
+      <button class="profile-btn" type="button">@YourBro</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Left Sidebar -->
+    <aside>
+      <div class="sidebar-item active">Home</div>
+      <div class="sidebar-item">Roasts</div>
+      <div class="sidebar-item">Tribunal</div>
+      <div class="sidebar-item">AUS Token</div>
+      <div class="sidebar-item">Wallet</div>
+      <div class="sidebar-item">Settings</div>
+    </aside>
+
+    <!-- Main Feed -->
+    <main>
+      <!-- Post 1 -->
+      <article class="post">
+        <div class="post-header">
+          <div class="post-avatar">GR</div>
           <div>
-            <div id="display-name">@cryptobros</div>
-            <div style="font-size:12px; color:#d700ff;" id="display-rank">Degen (Master)</div>
+            <span class="post-user">@GuruRoaster</span>
+            <span class="post-time">· 2h ago</span>
           </div>
         </div>
-        <div class="nav-item">• News Feed</div>
-        <div class="nav-item">• Messages</div>
-        <div class="nav-item">• My Groups</div>
+        <div class="post-content">
+          Just caught another "millionaire coach" selling a $997 course while his Lambo is rented from Turo 😂<br><br>
+          Screenshots attached. DYOR gang — don’t be exit liquidity.<br><br>
+          NGMI if you buy this, WAGMI if you roast it 🔥
+        </div>
+        <div class="post-actions">
+          <div class="action-btn" onclick="toggleLike(this)">
+            ❤️ <span class="count">142</span>
+          </div>
+          <div class="action-btn" onclick="toggleComment(this)">
+            💬 <span class="count">38</span>
+          </div>
+          <div class="action-btn" onclick="toggleRepost(this)">
+            🔁 <span class="count">21</span>
+          </div>
+        </div>
+        <textarea class="comment-input" placeholder="Write a comment..."></textarea>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="post">
+        <div class="post-header">
+          <div class="post-avatar">AS</div>
+          <div>
+            <span class="post-user">@AlphaSniper</span>
+            <span class="post-time">· 45m ago</span>
+          </div>
+        </div>
+        <div class="post-content">
+          Wen signal? Bro has DMed me for the 5th time today.<br><br>
+          Reminder: real alpha is in the whitepaper — not in some guru’s paid Telegram group.<br><br>
+          HODL your brain, not their hopium 🧠💪
+        </div>
+        <div class="post-actions">
+          <div class="action-btn" onclick="toggleLike(this)">
+            ❤️ <span class="count">89</span>
+          </div>
+          <div class="action-btn" onclick="toggleComment(this)">
+            💬 <span class="count">17</span>
+          </div>
+          <div class="action-btn" onclick="toggleRepost(this)">
+            🔁 <span class="count">12</span>
+          </div>
+        </div>
+        <textarea class="comment-input" placeholder="Write a comment..."></textarea>
+      </article>
+
+      <!-- Post 3 -->
+      <article class="post">
+        <div class="post-header">
+          <div class="post-avatar">ML</div>
+          <div>
+            <span class="post-user">@MemeLord</span>
+            <span class="post-time">· 1h ago</span>
+          </div>
+        </div>
+        <div class="post-content">
+          [Meme: fake guru with rented Lambo and caption "Trust the process bro"]<br><br>
+          This one never gets old 😭🚀
+        </div>
+        <div class="post-actions">
+          <div class="action-btn" onclick="toggleLike(this)">
+            ❤️ <span class="count">210</span>
+          </div>
+          <div class="action-btn" onclick="toggleComment(this)">
+            💬 <span class="count">45</span>
+          </div>
+          <div class="action-btn" onclick="toggleRepost(this)">
+            🔁 <span class="count">67</span>
+          </div>
+        </div>
+        <textarea class="comment-input" placeholder="Write a comment..."></textarea>
+      </article>
+    </main>
+
+    <!-- Right Sidebar -->
+    <div class="right-sidebar">
+      <div class="trends-card">
+        <div class="trends-title">Hot Roasts</div>
+        <div class="trend-item">
+          <div class="trend-name">#GuruRug</div>
+          <div class="trend-desc">1.2k posts</div>
+        </div>
+        <div class="trend-item">
+          <div class="trend-name">#WenSignal</div>
+          <div class="trend-desc">847 posts</div>
+        </div>
+        <div class="trend-item">
+          <div class="trend-name">@FakeCoachX exposed</div>
+          <div class="trend-desc">Trending</div>
+        </div>
       </div>
 
-      <div class="feed" id="feed-container">
-        <!-- Посты будут здесь -->
+      <div class="trends-card">
+        <div class="trends-title">Your Wallet</div>
+        <div style="color: #FFD700; font-size: 1.3rem; margin: 0.5rem 0;">
+          0.00 SOL
+        </div>
+        <div style="color: #aaa; font-size: 0.9rem;">
+          AUS balance: pending launch
+        </div>
+        <button style="margin-top: 1rem; width: 100%; padding: 0.8rem; background: rgba(255,215,0,0.15); border: 1px solid #FFD700; color: #FFD700; border-radius: 12px; cursor: pointer;">
+          Connect Phantom
+        </button>
       </div>
     </div>
   </div>
 
   <script>
-    // Переводы
-    const translations = {
-      en: { askAI: "Ask AI", post1: "$WIF just pumped! Analysis needed.", post2: "Is $SOL safe to buy now?" },
-      es: { askAI: "Preguntar a IA", post1: "¡$WIF acaba de subir! Se necesita análisis.", post2: "¿Es seguro comprar $SOL ahora?" },
-      pt: { askAI: "Perguntar à IA", post1: "$WIF acabou de subir! Análise necessária.", post2: "É seguro comprar $SOL agora?" },
-      zh: { askAI: "询问AI", post1: "$WIF 刚刚暴涨！需要分析。", post2: "现在买入 $SOL 安全吗？" },
-      ru: { askAI: "Спросить ИИ", post1: "$WIF только что взлетел! Нужен анализ.", post2: "Безопасно ли покупать $SOL сейчас?" }
-    };
-
-    // Текущий язык
-    let currentLang = localStorage.getItem('lang') || 'en';
-    document.getElementById('lang-select').value = currentLang;
-
-    // Ранг пользователя (временно — вы Master)
-    const YOUR_WALLET = "HxAbc123..."; // ← ваш адрес
-    const userAddress = YOUR_WALLET;
-    const userRank = (userAddress === YOUR_WALLET) ? 'master' : 'free';
-
-    // Примеры постов
-    const samplePosts = [
-      { id: 1, author: "@user123", rank: "Pro", textKey: "post1", token: "$WIF" },
-      { id: 2, author: "@trader_sol", rank: "Premium", textKey: "post2", token: "$SOL" }
-    ];
-
-    // Форматирование вердикта по рангу
-    function formatVerdict(risk, fullOutput, userRank) {
-      if (userRank === 'master' || userRank === 'premium') {
-        return fullOutput;
-      } else if (userRank === 'pro') {
-        return `Risk: ${risk.toFixed(2)}\nSummary: High confidence`;
+    // Like
+    function toggleLike(btn) {
+      const countEl = btn.querySelector('.count');
+      let count = parseInt(countEl.textContent);
+      if (btn.classList.contains('liked')) {
+        count--;
+        btn.classList.remove('liked');
       } else {
-        return risk.toFixed(2); // Free видит только цифру
+        count++;
+        btn.classList.add('liked');
+      }
+      countEl.textContent = count;
+    }
+
+    // Comment
+    function toggleComment(btn) {
+      const post = btn.closest('.post');
+      const input = post.querySelector('.comment-input');
+      input.classList.toggle('active');
+      if (input.classList.contains('active')) {
+        input.focus();
       }
     }
 
-    // Запуск Tribunal (имитация)
-    async function runTribunal(token) {
-      // Здесь будет вызов реального Tribunal
-      // Пока — симуляция
-      const riskMap = { '$WIF': 0.87, '$SOL': 0.15, '$AUS': 0.05 };
-      const risk = riskMap[token] || 0.95;
-      
-      const fullOutput = 
-        `[Phi-3] On-Chain Hunter:\n→ Mint authority: ACTIVE ⚠️\n→ Top holder: 42%\n\n` +
-        `[Qwen1.5] Sentiment Oracle:\n→ Extreme FOMO on X\n→ Pump groups active\n\n` +
-        `[DeepSeek] Price Action Judge:\n→ Whale accumulation detected\n→ Low liquidity\n\n` +
-        `⚠️ CONSENSUS: HIGH RISK (${risk.toFixed(2)})`;
-
-      return { risk, fullOutput };
+    // Repost
+    function toggleRepost(btn) {
+      const countEl = btn.querySelector('.count');
+      let count = parseInt(countEl.textContent);
+      if (btn.classList.contains('reposted')) {
+        count--;
+        btn.classList.remove('reposted');
+      } else {
+        count++;
+        btn.classList.add('reposted');
+      }
+      countEl.textContent = count;
     }
-
-    // Обработка Ask AI
-    async function handleAskAI(postId, token) {
-      const response = await runTribunal(token);
-      const displayText = formatVerdict(response.risk, response.fullOutput, userRank);
-      
-      const aiDiv = document.getElementById(`ai-${postId}`);
-      aiDiv.textContent = displayText;
-      aiDiv.style.display = 'block';
-    }
-
-    // Рендер поста
-    function renderPost(post) {
-      const t = translations[currentLang];
-      const div = document.createElement('div');
-      div.className = 'post';
-      div.innerHTML = `
-        <div class="post-header">
-          <div class="avatar" style="background:#d700ff;">U</div>
-          <div>
-            <div class="post-author">${post.author} · ${post.rank}</div>
-          </div>
-        </div>
-        <div>${t[post.textKey]}</div>
-        <div style="margin-top:10px;">
-          <button class="btn" onclick="handleAskAI(${post.id}, '${post.token}')">${translations[currentLang].askAI}</button>
-        </div>
-        <div class="ai-response" id="ai-${post.id}" style="display:none;"></div>
-      `;
-      document.getElementById('feed-container').appendChild(div);
-    }
-
-    // Инициализация
-    window.onload = () => {
-      // Установка языка
-      document.getElementById('lang-select').onchange = (e) => {
-        currentLang = e.target.value;
-        localStorage.setItem('lang', currentLang);
-        location.reload();
-      };
-
-      // Отображение профиля
-      document.getElementById('display-name').textContent = '@cryptobros';
-      document.getElementById('display-rank').textContent = 
-        (userRank === 'master') ? 'Degen (Master)' : 
-        (userRank === 'premium') ? 'Premium' : 
-        (userRank === 'pro') ? 'Pro' : 'Free';
-
-      // Рендер постов
-      samplePosts.forEach(renderPost);
-    };
-
-    // Экспорт функции для глобального доступа
-    window.handleAskAI = handleAskAI;
   </script>
 </body>
 </html>
