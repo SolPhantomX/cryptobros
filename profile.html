@@ -6,7 +6,6 @@
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
       background: #f0f0f0;
     }
@@ -28,24 +27,25 @@
       transform: translateX(-50%);
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
+    .wrapper {
+      /* Поднимаем ВЕСЬ контент на 40px вверх */
+      position: relative;
+      top: -40px;
+    }
     .content {
       max-width: 1200px;
-      margin: 320px auto 0; /* ← поднято на 40px */
+      margin: 0 auto;
       display: flex;
       gap: 20px;
       padding: 0 20px;
     }
-    .sidebar {
-      width: 200px;
-    }
+    .sidebar { width: 200px; }
     .nav-item {
       padding: 10px 0;
       color: #385898;
       font-weight: bold;
     }
-    .main {
-      flex: 1;
-    }
+    .main { flex: 1; }
     .name {
       font-size: 28px;
       font-weight: bold;
@@ -77,28 +77,31 @@
   <div class="avatar"></div>
 </div>
 
-<div class="content">
-  <div class="sidebar">
-    <div class="nav-item">News Feed</div>
-    <div class="nav-item">Messages</div>
-    <div class="nav-item">My Groups</div>
-    <div class="nav-item">Tribunal</div>
-  </div>
+<!-- Обёртка с top: -40px -->
+<div class="wrapper">
+  <div class="content">
+    <div class="sidebar">
+      <div class="nav-item">News Feed</div>
+      <div class="nav-item">Messages</div>
+      <div class="nav-item">My Groups</div>
+      <div class="nav-item">Tribunal</div>
+    </div>
 
-  <div class="main">
-    <div class="name">@cryptobros</div>
-    <div class="rank">Degen (Master)</div>
-    
-    <label>Full Name</label>
-    <input type="text" placeholder="Enter your name">
-    
-    <label>About</label>
-    <textarea placeholder="Tell us about yourself..."></textarea>
-    
-    <label>City</label>
-    <input type="text" placeholder="Your city">
-    
-    <button>SAVE PROFILE</button>
+    <div class="main">
+      <div class="name">@cryptobros</div>
+      <div class="rank">Degen (Master)</div>
+      
+      <label>Full Name</label>
+      <input type="text" placeholder="Enter your name">
+      
+      <label>About</label>
+      <textarea placeholder="Tell us about yourself..."></textarea>
+      
+      <label>City</label>
+      <input type="text" placeholder="Your city">
+      
+      <button>SAVE PROFILE</button>
+    </div>
   </div>
 </div>
 
