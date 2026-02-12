@@ -1,7 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CRYPTOBROS</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    .top-section {
+      position: relative;
+      height: 300px;
+    }
+    .header {
+      width: 100%;
+      height: 100%;
+      background: center/cover;
+      border: 2px dashed #555;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .header.loaded {
+      border: none;
+    }
+    .avatar {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 4px solid white;
+      background: center/cover;
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .main-layout {
+      max-width: 1200px;
+      margin: 220px auto 0;
+      display: flex;
+      gap: 20px;
+      padding: 0 20px;
+    }
+    .edit-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: #333;
+      border: 1px solid #666;
+      border-radius: 50%;
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+    }
+    .edit-tooltip {
+      position: absolute;
+      top: 50px;
+      right: 16px;
+      background: #000;
+      color: #ffcc00;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 100;
+    }
+    .sidebar { width: 200px; }
+    .nav-item {
+      padding: 10px 0;
+      color: #385898;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .main { flex: 1; }
+    .name, .rank, .field-value {
+      color: #ffcc00;
+      animation: flicker 3s infinite alternate;
+    }
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
+      20%,24%,55%,81%,85% { opacity:0.8; }
+    }
+    .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
+    .rank { margin-bottom: 20px; }
+    .field-label { color: #aaa; margin: 10px 0 4px; font-weight: bold; }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      background: rgba(0,0,0,0.3);
+      color: #ffcc00;
+      border: 1px solid #555;
+      border-radius: 4px;
+    }
+    .btn {
+      background: #4267B2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #header-upload, #avatar-upload { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="top-section">
+  <div class="header" id="header"></div>
+  <div class="avatar" id="avatar"></div>
+  <div class="edit-btn" id="editBtn">⚙️</div>
+  <div class="edit-tooltip" id="editTooltip">Edit Profile</div>
+</div>
+
+<div class="main-layout">
+  <div class="sidebar">
+    <div class="nav-item">News Feed</div>
+    <div class="nav-item">Messages</div>
+    <div class="nav-item">My Groups</div>
+    <div class="nav-item">Tribunal</div>
+    <div class="nav-item">My Friends</div>
+  </div>
+  <div class="main" id="profileContent"></div>
+</div>
+
+<input type="file" id="header-upload" accept="image/*">
+<input type="file" id="avatar-upload" accept="image/*">
+
 <script>
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
   let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
-  let isCustomHeader = !!localStorage.getItem('header'); // true если загружена своя шапка
+  let isCustomHeader = !!localStorage.getItem('header');
 
   function applyBackground() {
     document.body.style.backgroundImage = `url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/bg3.jpg')`;
@@ -23,7 +163,6 @@
     applyBackground();
     renderViewMode();
 
-    // Устанавливаем drag-to-pan ТОЛЬКО если шапка НЕ загружена пользователем
     if (!isCustomHeader) {
       setupDragToPan();
     }
@@ -96,7 +235,6 @@
     renderViewMode();
   }
 
-  // Upload header
   document.getElementById('header-upload').addEventListener('change', e => {
     const f = e.target.files[0];
     if (f) {
@@ -105,20 +243,15 @@
         document.getElementById('header').style.backgroundImage = `url(${ev.target.result})`;
         localStorage.setItem('header', ev.target.result);
         document.getElementById('header').classList.add('loaded');
-        
-        // Сброс позиции и ОТКЛЮЧЕНИЕ drag-to-pan
         headerPos = { x: 0, y: 0 };
         localStorage.setItem('headerPos', JSON.stringify(headerPos));
         document.getElementById('header').style.backgroundPosition = '0px 0px';
-        
-        // После загрузки — drag больше не работает
         isCustomHeader = true;
       };
       r.readAsDataURL(f);
     }
   });
 
-  // Upload avatar
   document.getElementById('avatar-upload').addEventListener('change', e => {
     const f = e.target.files[0];
     if (f) {
@@ -134,7 +267,6 @@
   document.getElementById('header').onclick = () => document.getElementById('header-upload').click();
   document.getElementById('avatar').onclick = () => document.getElementById('avatar-upload').click();
 
-  // Шестерёнка
   const btn = document.getElementById('editBtn');
   const tt = document.getElementById('editTooltip');
   btn.onmouseenter = () => tt.style.opacity = '1';
@@ -143,3 +275,6 @@
 
   window.onload = init;
 </script>
+
+</body>
+</html>
