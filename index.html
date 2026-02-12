@@ -8,7 +8,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       min-height: 100vh;
-      background: url('bg5.jpg') center/cover fixed;
+      background: #000;
       font-family: system-ui, sans-serif;
       color: white;
       display: flex;
@@ -18,39 +18,32 @@
       padding: 20px;
       position: relative;
     }
-    .logo {
-      width: 240px;
-      height: 80px;
-      background: url('logo.jpg') center/contain no-repeat;
-      margin-bottom: 40px;
-    }
-    #slogan {
-      font-size: 24px;
-      color: #ffcc00;
-      margin-bottom: 40px;
-      text-align: center;
-      letter-spacing: 1px;
+    #logo {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      margin-bottom: 60px;
     }
     #enter-btn {
       background: linear-gradient(135deg, #FFD700, #C0A040);
       border: none;
       border-radius: 50px;
-      padding: 16px 50px;
-      font-size: 20px;
+      padding: 18px 60px;
+      font-size: 22px;
       font-weight: bold;
       color: #000;
       cursor: pointer;
-      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
       transition: transform 0.2s;
     }
     #enter-btn:hover {
-      transform: scale(1.03);
+      transform: scale(1.04);
     }
     .lang-btn {
       position: absolute;
       top: 24px;
       right: 24px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.3);
       color: white;
       padding: 8px 16px;
@@ -59,48 +52,21 @@
       cursor: pointer;
       z-index: 10;
     }
-    #lang-menu {
-      position: absolute;
-      top: 60px;
-      right: 24px;
-      background: rgba(0,0,0,0.9);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      padding: 8px;
-      display: none;
-      z-index: 100;
-      min-width: 140px;
-    }
-    #lang-menu button {
-      display: block;
-      width: 100%;
-      background: none;
-      border: none;
-      color: white;
-      padding: 6px 10px;
-      text-align: left;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    #lang-menu button:hover {
-      background: rgba(255,215,0,0.2);
-    }
     #footer {
       position: absolute;
       bottom: 20px;
       font-size: 18px;
       font-weight: bold;
       color: transparent;
-      animation: color-cycle 8s infinite;
+      animation: color-cycle 6s infinite;
       -webkit-background-clip: text;
       background-clip: text;
     }
     @keyframes color-cycle {
       0%   { background-color: #FFD700; }
-      20%  { background-color: #8A2BE2; }
-      40%  { background-color: #00FFFF; }
-      60%  { background-color: #FF4500; }
-      80%  { background-color: #32CD32; }
+      25%  { background-color: #8A2BE2; }
+      50%  { background-color: #00FFFF; }
+      75%  { background-color: #FF4500; }
       100% { background-color: #FFD700; }
     }
   </style>
@@ -108,27 +74,15 @@
 <body>
 
   <button class="lang-btn" id="langToggle">LANGUAGE</button>
-  <div id="lang-menu"></div>
 
-  <div class="logo"></div>
-  <div id="slogan"></div>
-  <button id="enter-btn"></button>
-  <div id="footer"></div>
+  <img id="logo" src="logo.jpg" alt="CRYPTOBROS">
+
+  <button id="enter-btn">Enter the Club</button>
+
+  <div id="footer">Cryptobros 2026 &copy;</div>
 
   <script>
-    const translations = {
-      en: { slogan: "BROS IN. NOISE OUT.", enter: "Enter the Club", footer: "Cryptobros 2026 &copy;" },
-      ru: { slogan: "СВОИ ВНУТРИ. ШУМ СНАРУЖИ.", enter: "Войти в Клуб", footer: "Cryptobros 2026 &copy;" },
-      es: { slogan: "LOS BROZ ADENTRO. EL RUIDO AFUERA.", enter: "Entrar al Club", footer: "Cryptobros 2026 &copy;" },
-      pt: { slogan: "OS BROZ DENTRO. O RUÍDO FORA.", enter: "Entrar no Clube", footer: "Cryptobros 2026 &copy;" },
-      ja: { slogan: "ブロズ・イン。ノイズ・アウト。", enter: "クラブに入る", footer: "Cryptobros 2026 &copy;" },
-      zh: { slogan: "兄弟在内，噪音在外。", enter: "加入俱乐部", footer: "Cryptobros 2026 &copy;" },
-      de: { slogan: "BROS DRIN. LÄRM RAUS.", enter: "In den Club eintreten", footer: "Cryptobros 2026 &copy;" },
-      fr: { slogan: "LES BROZ DEDANS. LE BRUIT DEHORS.", enter: "Rejoindre le Club", footer: "Cryptobros 2026 &copy;" },
-      it: { slogan: "I BROZ DENTRO. IL RUMORE FUORI.", enter: "Entra nel Club", footer: "Cryptobros 2026 &copy;" },
-      ko: { slogan: "브로즈 인. 노이즈 아웃.", enter: "클럽 입장", footer: "Cryptobros 2026 &copy;" }
-    };
-
+    // Языки — только для кнопки, слоган на логотипе — не меняем
     const languages = {
       en: 'English',
       ru: 'Русский',
@@ -145,41 +99,48 @@
     let currentLang = localStorage.getItem('language') || 'en';
 
     function applyLanguage(lang) {
-      if (!translations[lang]) lang = 'en';
+      if (!languages[lang]) lang = 'en';
       currentLang = lang;
       localStorage.setItem('language', lang);
-      
-      document.getElementById('slogan').textContent = translations[lang].slogan;
-      document.getElementById('enter-btn').textContent = translations[lang].enter;
-      document.getElementById('footer').innerHTML = translations[lang].footer;
       document.querySelector('.lang-btn').textContent = languages[lang];
     }
 
-    function buildLangMenu() {
-      const menu = document.getElementById('lang-menu');
-      menu.innerHTML = '';
-      Object.keys(languages).forEach(code => {
-        const btn = document.createElement('button');
-        btn.textContent = languages[code];
-        btn.onclick = () => {
-          applyLanguage(code);
-          menu.style.display = 'none';
-        };
-        menu.appendChild(btn);
-      });
-    }
+    const langBtn = document.getElementById('langToggle');
+    let langMenu = document.createElement('div');
+    langMenu.id = 'lang-menu';
+    langMenu.style.cssText = `
+      position: absolute;
+      top: 60px;
+      right: 24px;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 8px;
+      display: none;
+      z-index: 100;
+      min-width: 140px;
+    `;
+    document.body.appendChild(langMenu);
 
-    document.getElementById('langToggle').onclick = function(e) {
-      const menu = document.getElementById('lang-menu');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    Object.keys(languages).forEach(code => {
+      const btn = document.createElement('button');
+      btn.textContent = languages[code];
+      btn.onclick = () => {
+        applyLanguage(code);
+        langMenu.style.display = 'none';
+      };
+      langMenu.appendChild(btn);
+    });
+
+    langBtn.onclick = function(e) {
+      langMenu.style.display = langMenu.style.display === 'block' ? 'none' : 'block';
       e.stopPropagation();
     };
 
     document.addEventListener('click', () => {
-      document.getElementById('lang-menu').style.display = 'none';
+      langMenu.style.display = 'none';
     });
 
-    buildLangMenu();
     applyLanguage(currentLang);
 
     document.getElementById('enter-btn').onclick = () => {
