@@ -4,397 +4,357 @@
   <meta charset="utf-8">
   <title>Join CRYPTOBROS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Preload background -->
+  <link rel="preload" href="bg5.jpg" as="image">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #0a0a1a;
-      color: white;
-      font-family: system-ui, sans-serif;
-      padding: 40px 20px;
-      min-height: 100vh;
+    
+    :root {
+      --bg: #0A0A0F;
+      --gold: #FFD700;
+      --gold-light: #FFEA00;
+      --cyan: #00FFFF;
+      --teal: #00F0FF;
+      --purple: #9D00FF;
+      --white: #ffffff;
+      --gray: #cccccc; /* улучшен контраст */
     }
-    .container {
-      max-width: 1000px;
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #particles-js {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('bg5.jpg') center/cover no-repeat;
+      opacity: 0.15;
+      filter: hue-rotate(180deg) saturate(1.5);
+      z-index: -1;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', 'Arial Black', sans-serif;
+      font-size: clamp(2.8rem, 10vw, 5.5rem);
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 15px rgba(255,215,0,0.6);
+      margin-bottom: 1.2rem;
+      animation: fadeInUp 1.2s ease-out;
+    }
+
+    .hero p {
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      max-width: 720px;
+      line-height: 1.6;
+      color: var(--gray);
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 1.2s ease-out 0.3s both;
+    }
+
+    .cta-btn {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #000;
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 3rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255,215,0,0.6);
+      transition: all 0.3s ease;
+      animation: fadeInUp 1.2s ease-out 0.6s both;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 0 40px rgba(255,215,0,0.8);
+    }
+
+    .tiers {
+      padding: 6rem 1.5rem;
+      max-width: 1280px;
       margin: 0 auto;
     }
-    #page-title {
+
+    .tiers h2 {
       text-align: center;
-      font-size: 32px;
-      margin-bottom: 40px;
-      color: #ffcc00;
+      font-family: 'Orbitron', monospace;
+      font-size: 2.8rem;
+      margin-bottom: 4rem;
+      color: var(--gold);
+      text-shadow: 0 0 15px rgba(255,215,0,0.4);
     }
-    .tiers {
+
+    .tier-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
     }
-    .tier {
-      background: rgba(20,20,40,0.7);
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 24px;
+
+    .tier-card {
+      background: rgba(20,20,40,0.45);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 2.2rem 1.8rem;
       text-align: center;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
     }
-    .tier h2 {
-      font-size: 22px;
-      margin-bottom: 16px;
+
+    .tier-card:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: 0 20px 50px rgba(255,215,0,0.25);
     }
+
+    .tier-card.free    { border: 2px solid var(--cyan); }
+    .tier-card.master  { border: 2px solid var(--gold); }
+    .tier-card.pro     { border: 2px solid var(--teal); background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(255,215,0,0.08)); }
+    .tier-card.premium { border: 2px solid var(--purple); background: linear-gradient(135deg, rgba(157,0,255,0.15), rgba(255,215,0,0.15)); box-shadow: 0 0 25px rgba(157,0,255,0.3); }
+
+    .tier-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
     .price {
-      font-size: 20px;
-      font-weight: bold;
-      margin: 10px 0;
+      font-family: 'Orbitron', monospace;
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin: 1rem 0;
+      animation: subtlePulse 5s infinite ease-in-out;
     }
-    .free .price { color: #00ff9d; }
-    .master .price { color: #ffd700; }
-    .pro .price { color: #ff6b6b; }
-    .premium .price { color: #c7254e; }
+
+    .free    .price { color: var(--cyan); }
+    .master  .price { color: var(--gold); }
+    .pro     .price { color: var(--teal); }
+    .premium .price { color: var(--purple); }
+
+    @keyframes subtlePulse {
+      0%,100% { transform: scale(1); }
+      50%     { transform: scale(1.04); }
+    }
+
     .desc {
-      font-size: 14px;
-      color: #bbb;
-      margin: 12px 0;
-      line-height: 1.5;
+      font-size: 1rem;
+      color: var(--gray);
+      line-height: 1.6;
+      margin: 1.2rem 0;
     }
-    .btn {
-      background: rgba(255,215,0,0.1);
-      color: #ffcc00;
-      border: 1px solid rgba(255,215,0,0.4);
-      padding: 10px 20px;
+
+    .btn-tier {
+      background: transparent;
+      border: 2px solid currentColor;
+      color: currentColor;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.3s;
+      margin-top: 1.2rem;
+    }
+
+    .btn-tier:hover {
+      background: currentColor;
+      color: #0a0a0f;
+    }
+
+    .coming-soon {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--gray);
+      font-size: 1.1rem;
+      font-style: italic;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    .footer-text {
+      font-size: 1.4rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, var(--gold), var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbow-flicker 4s infinite alternate;
+    }
+
+    .lang-switch {
+      margin-top: 1rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--gray);
+      color: var(--gray);
+      padding: 0.5rem 1rem;
       border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
-      margin-top: 12px;
-      width: 100%;
+      font-size: 0.95rem;
     }
-    .back {
-      display: block;
-      margin: 30px auto 0;
-      color: #666;
-      text-decoration: underline;
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    .lang-btn {
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
+
+    @keyframes rainbow-flicker {
+      0%,100% { opacity: 1; }
+      50%     { opacity: 0.85; }
     }
-    #lang-menu {
-      position: absolute;
-      top: 60px;
-      right: 24px;
-      background: rgba(0,0,0,0.9);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 6px;
-      padding: 6px;
-      display: none;
-      z-index: 100;
-      min-width: 120px;
-    }
-    #lang-menu button {
-      display: block;
-      width: 100%;
-      background: none;
-      border: none;
-      color: white;
-      padding: 4px 8px;
-      text-align: left;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    #lang-menu button:hover {
-      background: rgba(255,215,0,0.2);
+
+    @media (max-width: 768px) {
+      #particles-js { display: none; } /* отключаем частицы на мобильных */
+      .hero h1 { font-size: 3.2rem; }
+      .tiers { padding: 4rem 1rem; }
     }
   </style>
 </head>
 <body>
 
-  <button class="lang-btn" id="langToggle">LANGUAGE</button>
-  <div id="lang-menu"></div>
+  <div id="particles-js"></div>
 
-  <div class="container">
-    <h1 id="page-title"></h1>
-    
-    <div class="tiers">
-      <div class="tier free">
-        <h2 id="tier-free"></h2>
-        <div class="price">0 $AUS</div>
-        <div class="desc" id="desc-free"></div>
-        <div class="btn" onclick="connectWallet()" id="btn-free"></div>
+  <section class="hero">
+    <h1>Join CryptoBros – Bros In. Noise Out.</h1>
+    <p>Elite roast community. No fake gurus, no paid signals.<br>Only truth, memes & real alpha. AUS Token drops incoming.</p>
+    <button class="cta-btn" type="button" onclick="connectWallet()" aria-label="Connect Phantom Wallet">Connect Phantom & Claim Your Spot</button>
+  </section>
+
+  <section class="tiers">
+    <h2>Choose Your Tier</h2>
+    <div class="tier-grid">
+      <div class="tier-card free">
+        <h3>Free Bro</h3>
+        <div class="price">0 AUS</div>
+        <div class="desc">Taste the roast & memes<br>Teaser AUS drop: 150–200 upon signup</div>
+        <button class="btn-tier" type="button" onclick="selectTier('free')">Start Free</button>
       </div>
-      
-      <div class="tier master">
-        <h2 id="tier-master"></h2>
-        <div class="price">5,000 $AUS (lifetime)</div>
-        <div class="desc" id="desc-master"></div>
-        <div class="btn" onclick="connectWallet()" id="btn-master"></div>
+
+      <div class="tier-card master">
+        <h3>Master Bro</h3>
+        <div class="price">5,000 AUS</div>
+        <div class="desc">Full access + early drop perks<br>No ads, weekly deep dives</div>
+        <button class="btn-tier" type="button" onclick="selectTier('master')">Claim 5K AUS Tier</button>
       </div>
-      
-      <div class="tier pro">
-        <h2 id="tier-pro"></h2>
-        <div class="price">12,000 $AUS (lifetime)</div>
-        <div class="desc" id="desc-pro"></div>
-        <div class="btn" onclick="connectWallet()" id="btn-pro"></div>
+
+      <div class="tier-card pro">
+        <h3>Pro Bro</h3>
+        <div class="price">12,000 AUS</div>
+        <div class="desc">Priority alpha + governance power<br>Revenue share vibes incoming</div>
+        <button class="btn-tier" type="button" onclick="selectTier('pro')">Unlock Pro</button>
       </div>
-      
-      <div class="tier premium">
-        <h2 id="tier-premium"></h2>
-        <div class="price">30,000 $AUS (lifetime)</div>
-        <div class="desc" id="desc-premium"></div>
-        <div class="btn" onclick="connectWallet()" id="btn-premium"></div>
+
+      <div class="tier-card premium">
+        <h3>Premium Bro</h3>
+        <div class="price">30,000 AUS</div>
+        <div class="desc">Own the club forever<br>Personal roast, max AUS drop (20k+)</div>
+        <button class="btn-tier" type="button" onclick="selectTier('premium')">Lifetime Elite – Join Now</button>
       </div>
     </div>
+  </section>
 
-    <a href="index.html" class="back" id="back-link"></a>
+  <div class="coming-soon">
+    AUS Token Launch Soon – Hold your spot & get vested drops.<br>
+    Connect Phantom to see your future balance tease.
   </div>
 
+  <footer class="footer">
+    <div class="footer-text">Cryptobros 2026 ©</div>
+    <button class="lang-switch" type="button" onclick="toggleLang()">LANGUAGE</button>
+  </footer>
+
+  <!-- tsParticles -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
   <script>
-    const translations = {
-      en: {
-        title: "Choose Your Tier",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: '14-day trial<br>+150 $AUS teaser drop<br><small>⚠️ After 14 days — upgrade or goodbye</small>',
-        descMaster: 'Full access<br>+1,500 $AUS drop<br>Vested over 4 months',
-        descPro: 'Governance + revenue share<br>+6,000 $AUS drop<br>Vested over 8 months',
-        descPremium: 'Personal roast + DAO control<br>+20,000 $AUS drop<br>Vested over 16 months',
-        btnFree: "Start Free",
-        btnMaster: "Unlock",
-        btnPro: "Go Pro",
-        btnPremium: "Own the Club",
-        back: "← Back to homepage"
-      },
-      ru: {
-        title: "Выберите свой уровень",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: '14-дневный пробный период<br>+150 $AUS в подарок<br><small>⚠️ После — обновите или покиньте</small>',
-        descMaster: 'Полный доступ<br>+1,500 $AUS<br>Вестинг 4 месяца',
-        descPro: 'Голосование + доход<br>+6,000 $AUS<br>Вестинг 8 месяцев',
-        descPremium: 'Персональный roast + контроль<br>+20,000 $AUS<br>Вестинг 16 месяцев',
-        btnFree: "Начать бесплатно",
-        btnMaster: "Разблокировать",
-        btnPro: "Стать Pro",
-        btnPremium: "Владеть клубом",
-        back: "← Назад на главную"
-      },
-      es: {
-        title: "Elige tu nivel",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: 'Prueba de 14 días<br>+150 $AUS de regalo<br><small>⚠️ Después — actualiza o vete</small>',
-        descMaster: 'Acceso completo<br>+1,500 $AUS<br>Vesting 4 meses',
-        descPro: 'Gobernanza + ingresos<br>+6,000 $AUS<br>Vesting 8 meses',
-        descPremium: 'Roast personal + control<br>+20,000 $AUS<br>Vesting 16 meses',
-        btnFree: "Empezar gratis",
-        btnMaster: "Desbloquear",
-        btnPro: "Ir a Pro",
-        btnPremium: "Poseer el club",
-        back: "← Volver al inicio"
-      },
-      pt: {
-        title: "Escolha seu nível",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: 'Teste de 14 dias<br>+150 $AUS de presente<br><small>⚠️ Depois — atualize ou saia</small>',
-        descMaster: 'Acesso total<br>+1,500 $AUS<br>Vesting 4 meses',
-        descPro: 'Governança + receita<br>+6,000 $AUS<br>Vesting 8 meses',
-        descPremium: 'Roast pessoal + controle<br>+20,000 $AUS<br>Vesting 16 meses',
-        btnFree: "Começar grátis",
-        btnMaster: "Desbloquear",
-        btnPro: "Tornar-se Pro",
-        btnPremium: "Possuir o clube",
-        back: "← Voltar à página inicial"
-      },
-      ja: {
-        title: "プランを選択",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: '14日間無料トライアル<br>+150 $AUS プレゼント<br><small>⚠️ 14日後 — アップグレードしないと終了</small>',
-        descMaster: 'フルアクセス<br>+1,500 $AUS<br>4か月でアンロック',
-        descPro: 'ガバナンス + 収益分配<br>+6,000 $AUS<br>8か月でアンロック',
-        descPremium: 'パーソナルロースト + コントロール<br>+20,000 $AUS<br>16か月でアンロック',
-        btnFree: "無料で開始",
-        btnMaster: "アンロック",
-        btnPro: "Proになる",
-        btnPremium: "クラブを所有",
-        back: "← ホームに戻る"
-      },
-      zh: {
-        title: "选择您的等级",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: '14天免费试用<br>+150 $AUS 空投<br><small>⚠️ 14天后需升级，否则退出</small>',
-        descMaster: '完整访问权限<br>+1,500 $AUS<br>4个月线性解锁',
-        descPro: '治理权 + 收益分成<br>+6,000 $AUS<br>8个月线性解锁',
-        descPremium: '专属吐槽 + 控制权<br>+20,000 $AUS<br>16个月线性解锁',
-        btnFree: "免费开始",
-        btnMaster: "解锁",
-        btnPro: "升级为Pro",
-        btnPremium: "拥有俱乐部",
-        back: "← 返回主页"
-      },
-      de: {
-        title: "Wähle deinen Tier",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: '14-tägige Testphase<br>+150 $AUS Drop<br><small>⚠️ Danach — upgraden oder raus</small>',
-        descMaster: 'Voller Zugang<br>+1,500 $AUS<br>Über 4 Monate freigeschaltet',
-        descPro: 'Governance + Einnahmen<br>+6,000 $AUS<br>Über 8 Monate freigeschaltet',
-        descPremium: 'Persönlicher Roast + Kontrolle<br>+20,000 $AUS<br>Über 16 Monate freigeschaltet',
-        btnFree: "Kostenlos starten",
-        btnMaster: "Freischalten",
-        btnPro: "Pro werden",
-        btnPremium: "Den Club besitzen",
-        back: "← Zurück zur Startseite"
-      },
-      fr: {
-        title: "Choisissez votre niveau",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: 'Essai gratuit 14 jours<br>+150 $AUS offerts<br><small>⚠️ Après — mettez à niveau ou partez</small>',
-        descMaster: 'Accès complet<br>+1,500 $AUS<br>Débloqué sur 4 mois',
-        descPro: 'Gouvernance + revenus<br>+6,000 $AUS<br>Débloqué sur 8 mois',
-        descPremium: 'Roast personnalisé + contrôle<br>+20,000 $AUS<br>Débloqué sur 16 mois',
-        btnFree: "Commencer gratuitement",
-        btnMaster: "Débloquer",
-        btnPro: "Devenir Pro",
-        btnPremium: "Posséder le club",
-        back: "← Retour à l'accueil"
-      },
-      it: {
-        title: "Scegli il tuo piano",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: 'Prova gratuita 14 giorni<br>+150 $AUS in omaggio<br><small>⚠️ Dopo — aggiorna o esci</small>',
-        descMaster: 'Accesso completo<br>+1,500 $AUS<br>Sbloccato in 4 mesi',
-        descPro: 'Governance + ricavi<br>+6,000 $AUS<br>Sbloccato in 8 mesi',
-        descPremium: 'Roast personale + controllo<br>+20,000 $AUS<br>Sbloccato in 16 mesi',
-        btnFree: "Inizia gratis",
-        btnMaster: "Sblocca",
-        btnPro: "Passa a Pro",
-        btnPremium: "Possiedi il club",
-        back: "← Torna alla home"
-      },
-      ko: {
-        title: "플랜 선택",
-        free: "Free",
-        master: "Master",
-        pro: "Pro",
-        premium: "Premium",
-        descFree: '14일 무료 체험<br>+150 $AUS 에어드랍<br><small>⚠️ 이후 — 업그레이드 또는 종료</small>',
-        descMaster: '전체 접근 권한<br>+1,500 $AUS<br>4개월에 걸쳐 해제',
-        descPro: '거버넌스 + 수익 분배<br>+6,000 $AUS<br>8개월에 걸쳐 해제',
-        descPremium: '개인 맞춤 roast + 통제권<br>+20,000 $AUS<br>16개월에 걸쳐 해제',
-        btnFree: "무료로 시작",
-        btnMaster: "언락",
-        btnPro: "Pro로 전환",
-        btnPremium: "클럽 소유",
-        back: "← 홈으로 돌아가기"
-      }
-    };
-
-    const languages = {
-      en: 'English',
-      ru: 'Русский',
-      es: 'Español',
-      pt: 'Português',
-      ja: '日本語',
-      zh: '中文',
-      de: 'Deutsch',
-      fr: 'Français',
-      it: 'Italiano',
-      ko: '한국어'
-    };
-
-    let currentLang = localStorage.getItem('language') || 'en';
-
-    function applyLanguage(lang) {
-      if (!translations[lang]) lang = 'en';
-      currentLang = lang;
-      
-      document.getElementById('page-title').textContent = translations[lang].title;
-      document.getElementById('tier-free').textContent = translations[lang].free;
-      document.getElementById('tier-master').textContent = translations[lang].master;
-      document.getElementById('tier-pro').textContent = translations[lang].pro;
-      document.getElementById('tier-premium').textContent = translations[lang].premium;
-      
-      document.getElementById('desc-free').innerHTML = translations[lang].descFree;
-      document.getElementById('desc-master').innerHTML = translations[lang].descMaster;
-      document.getElementById('desc-pro').innerHTML = translations[lang].descPro;
-      document.getElementById('desc-premium').innerHTML = translations[lang].descPremium;
-      
-      document.getElementById('btn-free').textContent = translations[lang].btnFree;
-      document.getElementById('btn-master').textContent = translations[lang].btnMaster;
-      document.getElementById('btn-pro').textContent = translations[lang].btnPro;
-      document.getElementById('btn-premium').textContent = translations[lang].btnPremium;
-      
-      document.getElementById('back-link').textContent = translations[lang].back;
-      document.querySelector('.lang-btn').textContent = languages[lang] || 'LANGUAGE';
+    // Particles only on desktop
+    if (window.innerWidth > 768) {
+      tsParticles.load("particles-js", {
+        fpsLimit: 60,
+        particles: {
+          number: { value: 60, density: { enable: true, area: 800 } },
+          color: { value: ["#FFD700", "#00FFFF", "#9D00FF"] },
+          shape: { type: "circle" },
+          opacity: { value: 0.35, random: true },
+          size: { value: { min: 1, max: 3.5 } },
+          move: {
+            enable: true,
+            speed: 0.8,
+            direction: "none",
+            random: true,
+            straight: false,
+            outModes: { default: "out" }
+          }
+        },
+        interactivity: {
+          detectsOn: "canvas",
+          events: {
+            onHover: { enable: true, mode: "repulse" },
+            onClick: { enable: true, mode: "push" }
+          }
+        },
+        detectRetina: true
+      }).catch(err => console.error("tsParticles failed to load:", err));
     }
 
-    function buildLangMenu() {
-      const menu = document.getElementById('lang-menu');
-      menu.innerHTML = '';
-      Object.keys(languages).forEach(code => {
-        const btn = document.createElement('button');
-        btn.textContent = languages[code];
-        btn.onclick = () => {
-          localStorage.setItem('language', code);
-          applyLanguage(code);
-          menu.style.display = 'none';
-        };
-        menu.appendChild(btn);
-      });
-    }
-
-    document.getElementById('langToggle').onclick = function(e) {
-      const menu = document.getElementById('lang-menu');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-      e.stopPropagation();
-    };
-
-    document.addEventListener('click', () => {
-      document.getElementById('lang-menu').style.display = 'none';
-    });
-
-    buildLangMenu();
-    applyLanguage(currentLang);
-
-    function connectWallet() {
-      if (typeof window.solana !== 'undefined' && window.solana.isPhantom) {
-        window.solana.connect().then(() => {
-          alert("✅ Wallet connected!");
-        }).catch(e => {
-          alert("❌ Connection failed.");
-        });
+    // Wallet connect
+    async function connectWallet() {
+      const provider = window.solana || (window.phantom && window.phantom.solana);
+      if (provider?.isPhantom) {
+        try {
+          await provider.connect();
+          alert("✅ Wallet connected!\nWelcome, Bro.\nYour AUS teaser drop is ready.");
+        } catch (err) {
+          alert("❌ Connection failed: " + (err.message || "Unknown error"));
+        }
       } else {
-        alert("⚠️ Install Phantom wallet at phantom.app");
+        alert("⚠️ Phantom wallet not detected.\nInstall it at phantom.app");
       }
+    }
+
+    function selectTier(tier) {
+      alert(`Selected tier: ${tier.toUpperCase()}\n(Implementation coming soon)`);
+    }
+
+    function toggleLang() {
+      alert("Language switch – coming soon");
     }
   </script>
-
 </body>
 </html>
