@@ -3,189 +3,92 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CRYPTOBROS — Profile</title>
+  <title>CRYPTOBROS</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/bg2.jpg') center/cover fixed;
-      color: #00ff9d;
-      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0a1a; /* Нейтральный фон — вы замените на свой */
+      color: #e0f7fa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
       min-height: 100vh;
+      padding: 0;
     }
-    .overlay {
-      min-height: 100vh;
-      background: rgba(0, 5, 42, 0.85);
+    .header {
+      text-align: center;
+      padding: 40px 20px 30px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid #00bcd4;
     }
-
-    /* Шапка профиля */
-    .profile-header {
-      height: 300px;
-      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg') center/cover;
-      position: relative;
-      border-bottom: 2px solid #00ff9d;
+    .logo {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #00e5ff;
+      text-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
     }
-
-    /* Аватарка поверх шапки */
-    .profile-avatar {
-      width: 160px;
-      height: 160px;
-      border: 4px solid #00ff9d;
-      border-radius: 50%;
-      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/avatar.png') center/cover;
-      position: absolute;
-      bottom: -80px;
-      left: 50px;
+    .content {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
     }
-
-    /* Информация профиля */
-    .profile-info {
-      margin-top: 90px;
-      padding: 0 50px;
-    }
-    .profile-name {
-      font-family: 'Orbitron', monospace;
+    h1 {
       font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .profile-rank {
-      color: #d700ff;
-      font-family: 'Orbitron', monospace;
-      font-size: 16px;
       margin-bottom: 20px;
+      color: #00e5ff;
     }
-    .profile-fields {
-      max-width: 600px;
-      background: rgba(0, 10, 30, 0.7);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid #00ff9d;
-    }
-    .field {
+    p {
+      font-size: 18px;
       margin-bottom: 15px;
+      color: #b3e5fc;
     }
-    .field label {
-      display: block;
-      margin-bottom: 5px;
-      color: #66ffff;
-      font-weight: 500;
+    .section {
+      margin-bottom: 40px;
+      padding: 25px;
+      background: rgba(10, 20, 40, 0.6);
+      border-radius: 16px;
+      border: 1px solid #00838f;
     }
-    .field input, .field textarea {
-      width: 100%;
-      padding: 10px;
-      background: rgba(0, 20, 40, 0.8);
-      color: #00ff9d;
-      border: 1px solid #00ff9d;
-      border-radius: 8px;
-      font-family: 'Inter', sans-serif;
-    }
-    .field textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-    .btn {
-      background: linear-gradient(90deg, #00ff9d, #66ffff);
-      color: #000;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-family: 'Orbitron', monospace;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    /* Боковая панель как в ВК */
-    .main {
-      display: flex;
-      max-width: 1200px;
-      margin: 0 auto;
-      gap: 20px;
-      padding: 20px;
-    }
-    .left-panel {
-      width: 200px;
-    }
-    .nav-item {
-      padding: 8px 0;
-      cursor: pointer;
-    }
-    .nav-item:hover {
-      color: #66ffff;
+    .upload-hint {
+      background: rgba(0, 30, 60, 0.7);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #80deea;
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="overlay">
-    <!-- Шапка профиля -->
-    <div class="profile-header">
-      <div class="profile-avatar"></div>
-    </div>
-
-    <div class="main">
-      <!-- Левая панель -->
-      <div class="left-panel">
-        <div class="nav-item">• News Feed</div>
-        <div class="nav-item">• Messages</div>
-        <div class="nav-item">• My Groups</div>
-        <div class="nav-item">• Friends</div>
-        <div class="nav-item">• Tribunal</div>
-      </div>
-
-      <!-- Профиль -->
-      <div class="profile-info">
-        <div class="profile-name">@cryptobros</div>
-        <div class="profile-rank">Degen (Master)</div>
-
-        <div class="profile-fields">
-          <div class="field">
-            <label>Full Name</label>
-            <input type="text" id="full-name" placeholder="Enter your name">
-          </div>
-          <div class="field">
-            <label>About</label>
-            <textarea id="about" placeholder="Tell us about yourself..."></textarea>
-          </div>
-          <div class="field">
-            <label>City</label>
-            <input type="text" id="city" placeholder="Your city">
-          </div>
-          <button class="btn" onclick="saveProfile()">SAVE PROFILE</button>
-        </div>
-
-        <div style="margin-top: 20px; color: #66ffff; font-size: 14px;">
-          🔹 Header: 1200×400 px<br>
-          🔹 Avatar: 200×200 px, круглая
-        </div>
-      </div>
-    </div>
+  <div class="header">
+    <div class="logo">CRYPTOBROS</div>
   </div>
 
-  <script>
-    // Загрузка сохранённого профиля
-    window.onload = () => {
-      const name = localStorage.getItem('profile_name') || '';
-      const about = localStorage.getItem('profile_about') || '';
-      const city = localStorage.getItem('profile_city') || '';
+  <div class="content">
+    <div class="section">
+      <h1>Ваш профиль</h1>
+      <p>Здесь будет ваша шапка (header.jpg — 1200×400 px).</p>
+      <p>Аватарка поверх неё (avatar.png — 200×200 px, круглая).</p>
+      <p>Имя, город, описание — всё редактируется.</p>
       
-      document.getElementById('full-name').value = name;
-      document.getElementById('about').value = about;
-      document.getElementById('city').value = city;
-    };
+      <div class="upload-hint">
+        🔹 Загрузите файлы в репозиторий:<br>
+        – header.jpg (1200×400)<br>
+        – avatar.png (200×200, круглая)<br>
+        – bg2.jpg (фон профиля)
+      </div>
+    </div>
 
-    // Сохранение профиля
-    function saveProfile() {
-      const name = document.getElementById('full-name').value;
-      const about = document.getElementById('about').value;
-      const city = document.getElementById('city').value;
-      
-      localStorage.setItem('profile_name', name);
-      localStorage.setItem('profile_about', about);
-      localStorage.setItem('profile_city', city);
-      
-      alert('Profile saved!');
-    }
-  </script>
+    <div class="section">
+      <h1>Ранг</h1>
+      <p><strong>@cryptobros · Degen (Master)</strong></p>
+      <p>Вы — создатель сети. У вас есть «Free Invitation» и полный доступ.</p>
+    </div>
+  </div>
 </body>
 </html>
