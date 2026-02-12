@@ -17,212 +17,28 @@
       padding: 0 16px;
     }
 
+    /* Обёртка профиля */
+    .profile-wrapper {
+      position: relative;
+      margin-bottom: 40px;
+    }
+
     /* Шапка */
     .profile-header {
       height: 300px;
-      background-size: cover;
-      background-position: center;
+      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg') center/cover no-repeat;
       position: relative;
-      overflow: hidden;
-      cursor: pointer;
     }
 
-    /* Аватарка */
-    .avatar-wrapper {
+    /* Аватарка — строго в центре шапки по X, сдвинута вниз */
+    .avatar-container {
       position: absolute;
       bottom: -60px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 5;
-      cursor: pointer;
+      z-index: 10;
     }
     .avatar {
       width: 200px;
       height: 200px;
-      border: 4px solid #fff;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    /* Текст ниже */
-    .profile-info {
-      margin-top: 280px;
-      padding: 0 50px;
-    }
-    .profile-name {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .profile-rank {
-      color: #d700ff;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-
-    /* Боковая панель */
-    .sidebar {
-      width: 200px;
-      float: left;
-      margin-right: 20px;
-    }
-    .nav-item {
-      padding: 12px 0;
-      font-weight: 600;
-      color: #4c75a3;
-      cursor: pointer;
-    }
-
-    /* Основной контент */
-    .main-content {
-      margin-left: 220px;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      color: #555;
-      font-weight: 600;
-    }
-    .form-group input, textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-    }
-    .btn {
-      background: #4c75a3;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    /* Скрытые инпуты для аплоада */
-    #header-upload, #avatar-upload {
-      display: none;
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-  <div class="container">
-    <!-- Шапка -->
-    <div class="profile-header" id="header" onclick="document.getElementById('header-upload').click()">
-    </div>
-
-    <!-- Аватарка -->
-    <div class="avatar-wrapper" onclick="document.getElementById('avatar-upload').click()">
-      <div class="avatar" id="avatar"></div>
-    </div>
-
-    <!-- Скрытые инпуты -->
-    <input type="file" id="header-upload" accept="image/*">
-    <input type="file" id="avatar-upload" accept="image/*">
-
-    <!-- Боковая панель -->
-    <div class="sidebar">
-      <div class="nav-item">News Feed</div>
-      <div class="nav-item">Messages</div>
-      <div class="nav-item">My Groups</div>
-      <div class="nav-item">Tribunal</div>
-    </div>
-
-    <!-- Профиль -->
-    <div class="main-content">
-      <div class="profile-info">
-        <div class="profile-name">@cryptobros</div>
-        <div class="profile-rank">Degen (Master)</div>
-
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" placeholder="Enter your name">
-        </div>
-        <div class="form-group">
-          <label>About</label>
-          <textarea placeholder="Tell us about yourself..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>City</label>
-          <input type="text" placeholder="Your city">
-        </div>
-        <button class="btn">SAVE PROFILE</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Загрузка сохранённых изображений
-    window.onload = () => {
-      const headerImg = localStorage.getItem('profile_header');
-      const avatarImg = localStorage.getItem('profile_avatar');
-      
-      if (headerImg) {
-        document.getElementById('header').style.backgroundImage = `url(${headerImg})`;
-      } else {
-        // Фолбэк — ваш репозиторий
-        document.getElementById('header').style.backgroundImage = 
-          `url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg')`;
-      }
-      
-      if (avatarImg) {
-        document.getElementById('avatar').style.backgroundImage = `url(${avatarImg})`;
-      } else {
-        document.getElementById('avatar').style.backgroundImage = 
-          `url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/avatar.png')`;
-      }
-    };
-
-    // Аплоад шапки
-    document.getElementById('header-upload').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = ev => {
-          const img = new Image();
-          img.onload = () => {
-            // Проверка размера: 1200×400
-            if (img.width >= 1000 && img.height >= 300) {
-              document.getElementById('header').style.backgroundImage = `url(${ev.target.result})`;
-              localStorage.setItem('profile_header', ev.target.result);
-            } else {
-              alert('Header should be at least 1000×300 px');
-            }
-          };
-          img.src = ev.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // Аплоад аватарки
-    document.getElementById('avatar-upload').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = ev => {
-          const img = new Image();
-          img.onload = () => {
-            // Проверка: квадратная
-            if (Math.abs(img.width - img.height) < 10) {
-              document.getElementById('avatar').style.backgroundImage = `url(${ev.target.result})`;
-              localStorage.setItem('profile_avatar', ev.target.result);
-            } else {
-              alert('Avatar should be square (e.g., 200×200)');
-            }
-          };
-          img.src = ev.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  </script>
-</body>
-</html>
+      border: 4 p
