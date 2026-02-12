@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CRYPTOBROS — Feed</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: url('https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/bg1.jpg') center/cover fixed;
+      color: #00ff9d;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    .overlay {
+      min-height: 100vh;
+      background: rgba(0, 5, 42, 0.85);
+    }
+
+    /* Шапка */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 60px;
+      background: rgba(0, 0, 0, 0.6);
+      border-bottom: 1px solid #00ff9d;
+    }
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 24px;
+      text-shadow: 0 0 8px #00ff9d;
+    }
+    .lang-select {
+      background: rgba(0, 20, 40, 0.8);
+      color: #00ff9d;
+      border: 1px solid #00ff9d;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+    /* Основной контент */
+    .main {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    /* Левая панель */
+    .left-panel {
+      width: 200px;
+    }
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      margin-bottom: 20px;
+      background: rgba(0, 10, 30, 0.6);
+      border-radius: 10px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background: #00ff9d;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #000;
+    }
+
+    /* Лента */
+    .feed {
+      flex: 1;
+    }
+    .post {
+      background: rgba(0, 10, 30, 0.6);
+      border: 1px solid #00ff9d;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .post-author {
+      font-family: 'Orbitron', monospace;
+      color: #d700ff;
+    }
+    .ai-response {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(0, 20, 40, 0.7);
+      border-left: 3px solid #d700ff;
+      font-family: 'Inter', monospace;
+      white-space: pre-wrap;
+    }
+    .btn {
+      background: linear-gradient(90deg, #00ff9d, #66ffff);
+      color: #000;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="overlay">
+    <div class="topbar">
+      <div class="logo">CRYPTOBROS</div>
+      <select class="lang-select" id="lang-select">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="pt">Português</option>
+        <option value="zh">中文</option>
+        <option value="ru">Русский</option>
+      </select>
+    </div>
+
+    <div class="main">
+      <div class="left-panel">
+        <div class="user-card">
+          <div class="avatar">C</div>
+          <div>
+            <div id="display-name">@cryptobros</div>
+            <div style="font-size:12px; color:#d700ff;" id="display-rank">Degen (Master)</div>
+          </div>
+        </div>
+        <div class="nav-item">• News Feed</div>
+        <div class="nav-item">• Messages</div>
+        <div class="nav-item">• My Groups</div>
+      </div>
+
+      <div class="feed" id="feed-container">
+        <!-- Посты будут здесь -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Переводы
+    const translations = {
+      en: { askAI: "Ask AI", post1: "$WIF just pumped! Analysis needed.", post2: "Is $SOL safe to buy now?" },
+      es: { askAI: "Preguntar a IA", post1: "¡$WIF acaba de subir! Se necesita análisis.", post2: "¿Es seguro comprar $SOL ahora?" },
+      pt: { askAI: "Perguntar à IA", post1: "$WIF acabou de subir! Análise necessária.", post2: "É seguro comprar $SOL agora?" },
+      zh: { askAI: "询问AI", post1: "$WIF 刚刚暴涨！需要分析。", post2: "现在买入 $SOL 安全吗？" },
+      ru: { askAI: "Спросить ИИ", post1: "$WIF только что взлетел! Нужен анализ.", post2: "Безопасно ли покупать $SOL сейчас?" }
+    };
+
+    // Текущий язык
+    let currentLang = localStorage.getItem('lang') || 'en';
+    document.getElementById('lang-select').value = currentLang;
+
+    // Ранг пользователя (временно — вы Master)
+    const YOUR_WALLET = "HxAbc123..."; // ← ваш адрес
+    const userAddress = YOUR_WALLET;
+    const userRank = (userAddress === YOUR_WALLET) ? 'master' : 'free';
+
+    // Примеры постов
+    const samplePosts = [
+      { id: 1, author: "@user123", rank: "Pro", textKey: "post1", token: "$WIF" },
+      { id: 2, author: "@trader_sol", rank: "Premium", textKey: "post2", token: "$SOL" }
+    ];
+
+    // Форматирование вердикта по рангу
+    function formatVerdict(risk, fullOutput, userRank) {
+      if (userRank === 'master' || userRank === 'premium') {
+        return fullOutput;
+      } else if (userRank === 'pro') {
+        return `Risk: ${risk.toFixed(2)}\nSummary: High confidence`;
+      } else {
+        return risk.toFixed(2); // Free видит только цифру
+      }
+    }
+
+    // Запуск Tribunal (имитация)
+    async function runTribunal(token) {
+      // Здесь будет вызов реального Tribunal
+      // Пока — симуляция
+      const riskMap = { '$WIF': 0.87, '$SOL': 0.15, '$AUS': 0.05 };
+      const risk = riskMap[token] || 0.95;
+      
+      const fullOutput = 
+        `[Phi-3] On-Chain Hunter:\n→ Mint authority: ACTIVE ⚠️\n→ Top holder: 42%\n\n` +
+        `[Qwen1.5] Sentiment Oracle:\n→ Extreme FOMO on X\n→ Pump groups active\n\n` +
+        `[DeepSeek] Price Action Judge:\n→ Whale accumulation detected\n→ Low liquidity\n\n` +
+        `⚠️ CONSENSUS: HIGH RISK (${risk.toFixed(2)})`;
+
+      return { risk, fullOutput };
+    }
+
+    // Обработка Ask AI
+    async function handleAskAI(postId, token) {
+      const response = await runTribunal(token);
+      const displayText = formatVerdict(response.risk, response.fullOutput, userRank);
+      
+      const aiDiv = document.getElementById(`ai-${postId}`);
+      aiDiv.textContent = displayText;
+      aiDiv.style.display = 'block';
+    }
+
+    // Рендер поста
+    function renderPost(post) {
+      const t = translations[currentLang];
+      const div = document.createElement('div');
+      div.className = 'post';
+      div.innerHTML = `
+        <div class="post-header">
+          <div class="avatar" style="background:#d700ff;">U</div>
+          <div>
+            <div class="post-author">${post.author} · ${post.rank}</div>
+          </div>
+        </div>
+        <div>${t[post.textKey]}</div>
+        <div style="margin-top:10px;">
+          <button class="btn" onclick="handleAskAI(${post.id}, '${post.token}')">${translations[currentLang].askAI}</button>
+        </div>
+        <div class="ai-response" id="ai-${post.id}" style="display:none;"></div>
+      `;
+      document.getElementById('feed-container').appendChild(div);
+    }
+
+    // Инициализация
+    window.onload = () => {
+      // Установка языка
+      document.getElementById('lang-select').onchange = (e) => {
+        currentLang = e.target.value;
+        localStorage.setItem('lang', currentLang);
+        location.reload();
+      };
+
+      // Отображение профиля
+      document.getElementById('display-name').textContent = '@cryptobros';
+      document.getElementById('display-rank').textContent = 
+        (userRank === 'master') ? 'Degen (Master)' : 
+        (userRank === 'premium') ? 'Premium' : 
+        (userRank === 'pro') ? 'Pro' : 'Free';
+
+      // Рендер постов
+      samplePosts.forEach(renderPost);
+    };
+
+    // Экспорт функции для глобального доступа
+    window.handleAskAI = handleAskAI;
+  </script>
+</body>
+</html>
