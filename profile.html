@@ -182,21 +182,23 @@
     const headerImg = localStorage.getItem('header') || 'https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/header.jpg';
     const avatarImg = localStorage.getItem('avatar') || 'https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/avatar.png';
     
-    document.getElementById('header').style.backgroundImage = `url(${headerImg})`;
+    const headerEl = document.getElementById('header');
+    headerEl.style.backgroundImage = `url(${headerImg})`;
+    headerEl.style.backgroundSize = 'auto'; // ← КЛЮЧЕВОЕ: не cover!
+    headerEl.style.backgroundRepeat = 'no-repeat';
     document.getElementById('avatar').style.backgroundImage = `url(${avatarImg})`;
-    document.getElementById('header').style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+    headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
     
     if (localStorage.getItem('header')) {
-      document.getElementById('header').classList.add('loaded');
+      headerEl.classList.add('loaded');
     }
 
     applyBackground();
     renderViewMode();
     buildEditMenu();
 
-    if (!isProfileSaved) {
-      setupDragToPan();
-    }
+    // ВСЕГДА разрешаем двигать, НО если профиль сохранён — не сохраняем позицию
+    setupDragToPan();
   }
 
   function setupDragToPan() {
@@ -205,23 +207,36 @@
     
     headerEl.addEventListener('mousedown', e => {
       isDragging = true;
-      startX = e.clientX - headerPos.x;
-      startY = e.clientY - headerPos.y;
+      startX = e.clientX;
+      startY = e.clientY;
+      // Сохраняем текущую позицию
+      const style = getComputedStyle(headerEl);
+      const bgPos = style.backgroundPosition;
+      const parts = bgPos.split(' ');
+      headerPos.x = parseFloat(parts[0]) || 0;
+      headerPos.y = parseFloat(parts[1]) || 0;
       document.body.style.cursor = 'grabbing';
     });
 
     document.addEventListener('mousemove', e => {
       if (!isDragging) return;
-      headerPos.x = e.clientX - startX;
-      headerPos.y = e.clientY - startY;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      headerPos.x += dx;
+      headerPos.y += dy;
       headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+      startX = e.clientX;
+      startY = e.clientY;
     });
 
     document.addEventListener('mouseup', () => {
       if (isDragging) {
         isDragging = false;
         document.body.style.cursor = 'default';
-        localStorage.setItem('headerPos', JSON.stringify(headerPos));
+        // Сохраняем ТОЛЬКО если профиль ещё не сохранён
+        if (!isProfileSaved) {
+          localStorage.setItem('headerPos', JSON.stringify(headerPos));
+        }
       }
     });
   }
@@ -267,7 +282,6 @@
     renderViewMode();
   }
 
-  // Фоны
   function buildEditMenu() {
     const names = ['Neural Core','Cyber Grid','Dark Void','Quantum Flow','Matrix','Solana Nexus','AI Tribunal','Crypto Void','Phantom Glow','DeFi Circuit','Token Storm','Web3 Horizon','Degen Realm'];
     let html = '<button onclick="toggleEdit()" style="display:inline-block;">Edit Profile</button>';
@@ -318,9 +332,8 @@
         document.getElementById('header').style.backgroundImage = `url(${ev.target.result})`;
         localStorage.setItem('header', ev.target.result);
         document.getElementById('header').classList.add('loaded');
-        if (!isProfileSaved) {
-          document.getElementById('header').style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-        }
+        // Не сбрасываем позицию
+        document.getElementById('header').style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
       };
       r.readAsDataURL(f);
     }
