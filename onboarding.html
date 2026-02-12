@@ -76,32 +76,32 @@
 <body>
 
   <div class="container">
-    <h1>Choose Your Path</h1>
+    <h1>Choose Your Tier</h1>
     
     <div class="tiers">
       <div class="tier free">
-        <h2>Free Bro</h2>
+        <h2>Free</h2>
         <div class="price">0 $AUS</div>
         <div class="desc">14-day trial<br>+150 $AUS teaser drop<br><small>⚠️ After 14 days — upgrade or goodbye</small></div>
         <div class="btn" onclick="connectWallet()">Start Free</div>
       </div>
       
       <div class="tier master">
-        <h2>Master Bro</h2>
+        <h2>Master</h2>
         <div class="price">5,000 $AUS (lifetime)</div>
         <div class="desc">Full access<br>+1,500 $AUS drop<br>Vested over 4 months</div>
         <div class="btn" onclick="connectWallet()">Unlock</div>
       </div>
       
       <div class="tier pro">
-        <h2>Pro Bro</h2>
+        <h2>Pro</h2>
         <div class="price">12,000 $AUS (lifetime)</div>
         <div class="desc">Governance + revenue share<br>+6,000 $AUS drop<br>Vested over 8 months</div>
         <div class="btn" onclick="connectWallet()">Go Pro</div>
       </div>
       
       <div class="tier premium">
-        <h2>Premium Bro</h2>
+        <h2>Premium</h2>
         <div class="price">30,000 $AUS (lifetime)</div>
         <div class="desc">Personal roast + DAO control<br>+20,000 $AUS drop<br>Vested over 16 months</div>
         <div class="btn" onclick="connectWallet()">Own the Club</div>
@@ -116,7 +116,6 @@
       if (typeof window.solana !== 'undefined' && window.solana.isPhantom) {
         window.solana.connect().then(() => {
           alert("✅ Wallet connected!\n\nYou’ll receive your $AUS drop after tier selection.");
-          // Здесь будет редирект в profile.html или feed
         }).catch(e => {
           alert("❌ Connection failed.");
         });
