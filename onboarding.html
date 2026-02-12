@@ -4,41 +4,60 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Join CryptoBros – Bros In, Noise Out</title>
-  
-  <!-- Preload fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0a0a0f 0%, #0f001a 100%);
       color: #e0e0ff;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    #particles-js {
+    /* Particles background */
+    .particles {
       position: fixed;
       inset: 0;
-      z-index: -1;
       pointer-events: none;
+      z-index: -1;
+    }
+    .particles::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(255,215,0,0.1) 2px, transparent 3px),
+        radial-gradient(circle at 90% 80%, rgba(0,240,255,0.1) 2px, transparent 3px);
+      background-size: 100px 100px;
+      animation: float 60s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(-100px,-100px); }
     }
 
+    /* Hero */
     .hero {
       min-height: 100vh;
+      max-height: 100svh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       padding: 0 20px;
+      position: relative;
+      overflow-y: auto;
     }
-
     .hero h1 {
-      font-family: 'Orbitron', 'Arial Black', sans-serif;
+      font-family: 'Orbitron', 'Courier New', monospace;
       font-size: clamp(3.5rem, 10vw, 8rem);
       background: linear-gradient(90deg, #FFD700, #FFEA00, #FFD700);
       -webkit-background-clip: text;
@@ -47,19 +66,16 @@
       margin-bottom: 1rem;
       animation: glow 3s ease-in-out infinite alternate;
     }
-
     @keyframes glow {
       from { text-shadow: 0 0 20px rgba(255,215,0,0.5); }
       to   { text-shadow: 0 0 60px rgba(255,215,0,0.9), 0 0 100px rgba(255,215,0,0.4); }
     }
-
     .hero p {
       font-size: clamp(1.2rem, 4vw, 1.8rem);
       max-width: 800px;
       margin-bottom: 3rem;
       opacity: 0.9;
     }
-
     .cta-btn {
       padding: 1rem 3rem;
       font-size: 1.5rem;
@@ -72,18 +88,17 @@
       box-shadow: 0 0 40px rgba(255,215,0,0.5);
       transition: all 0.3s ease;
     }
-
     .cta-btn:hover {
       transform: translateY(-5px) scale(1.05);
       box-shadow: 0 0 80px rgba(255,215,0,0.8);
     }
 
+    /* Tiers */
     .tiers {
       padding: 6rem 2rem;
       max-width: 1400px;
       margin: 0 auto;
     }
-
     .tiers h2 {
       text-align: center;
       font-family: 'Orbitron', sans-serif;
@@ -92,13 +107,11 @@
       margin-bottom: 4rem;
       text-shadow: 0 0 20px rgba(255,215,0,0.4);
     }
-
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2rem;
     }
-
     .card {
       background: rgba(20, 20, 40, 0.4);
       backdrop-filter: blur(12px);
@@ -110,21 +123,17 @@
       position: relative;
       overflow: hidden;
     }
-
     .card:hover {
       transform: translateY(-15px);
       border-color: #FFD700;
       box-shadow: 0 0 60px rgba(255,215,0,0.3);
     }
-
     .card.free { border-color: #00F0FF; }
     .card.free:hover { box-shadow: 0 0 60px rgba(0,240,255,0.4); }
-
     .card.premium {
       border: 2px solid #FFD700;
       background: linear-gradient(135deg, rgba(20,20,40,0.6), rgba(40,20,60,0.4));
     }
-
     .card .price {
       font-size: 3.5rem;
       font-weight: bold;
@@ -132,29 +141,24 @@
       margin: 1rem 0;
       text-shadow: 0 0 20px rgba(255,215,0,0.6);
     }
-
     .card.free .price { color: #00F0FF; }
-
     .card ul {
       list-style: none;
       margin: 2rem 0;
       text-align: left;
     }
-
     .card ul li {
       margin: 1rem 0;
       font-size: 1.1rem;
       position: relative;
       padding-left: 1.8rem;
     }
-
     .card ul li::before {
       content: '→';
       position: absolute;
       left: 0;
       color: #FFD700;
     }
-
     .card .btn {
       padding: 1rem 2.5rem;
       background: transparent;
@@ -165,49 +169,45 @@
       cursor: pointer;
       transition: all 0.3s;
     }
-
     .card .btn:hover {
       background: #FFD700;
       color: #0a0a0f;
     }
-
     .card.free .btn { border-color: #00F0FF; color: #00F0FF; }
     .card.free .btn:hover { background: #00F0FF; color: #0a0a0f; }
 
+    /* FOMO */
     .coming-soon {
       text-align: center;
-      color: #aaa;
-      margin: 4rem 2rem;
+      color: #666;
+      margin-top: 4rem;
       font-style: italic;
-      font-size: 1.1rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
+    /* Footer */
     .footer {
       text-align: center;
       padding: 3rem 2rem 2rem;
-      color: #aaa;
-      font-size: 0.95rem;
-    }
-
-    @media (max-width: 768px) {
-      #particles-js { display: none; }
+      color: #666;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-
-  <div id="particles-js"></div>
+  <div class="particles"></div>
 
   <section class="hero">
     <h1>Join CryptoBros</h1>
     <p>Bros In. Noise Out.<br>Elite roast community. No fake gurus, no paid signals.<br>Only truth, memes & real alpha. <strong>AUS Token drops incoming 🔥</strong></p>
-    <button class="cta-btn" type="button" onclick="connectWallet()">Connect Phantom & Claim Your Spot</button>
+    <button class="cta-btn" onclick="connectWallet()">Connect Phantom & Claim Your Spot</button>
   </section>
 
   <section class="tiers">
     <h2>Choose Your Tier</h2>
     <div class="cards-grid">
-      <!-- карточки остаются такими же, как у тебя -->
       <div class="card free">
         <h3>Free Bro</h3>
         <div class="price">0 AUS</div>
@@ -216,7 +216,7 @@
           <li>Public feed & read-only chat</li>
           <li>Teaser AUS drop: 150–200 on signup</li>
         </ul>
-        <button class="btn" type="button" onclick="selectTier('free')">Start Free</button>
+        <button class="btn" onclick="selectTier('free')">Start Free</button>
       </div>
 
       <div class="card">
@@ -227,7 +227,7 @@
           <li>Weekly deep dives & extra roasts</li>
           <li>Basic Tribunal votes</li>
         </ul>
-        <button class="btn" type="button" onclick="selectTier('master')">Claim 5K Tier</button>
+        <button class="btn" onclick="selectTier('master')">Claim 5K Tier</button>
       </div>
 
       <div class="card">
@@ -238,7 +238,7 @@
           <li>Governance power & custom memes</li>
           <li>Revenue share vibes incoming</li>
         </ul>
-        <button class="btn" type="button" onclick="selectTier('pro')">Unlock Pro</button>
+        <button class="btn" onclick="selectTier('pro')">Unlock Pro</button>
       </div>
 
       <div class="card premium">
@@ -249,7 +249,7 @@
           <li>Personal roast & 1-on-1</li>
           <li>Max AUS drop + VIP yield</li>
         </ul>
-        <button class="btn" type="button" onclick="selectTier('premium')">Lifetime Elite</button>
+        <button class="btn" onclick="selectTier('premium')">Lifetime Elite</button>
       </div>
     </div>
   </section>
@@ -260,55 +260,24 @@
   </div>
 
   <div class="footer">
-    Cryptobros 2026 ©
+    Cryptobros 2026 &copy;
   </div>
 
-  <!-- tsParticles CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
   <script>
-    // Particles только на десктопе
-    if (window.innerWidth > 768) {
-      tsParticles.load("particles-js", {
-        fpsLimit: 60,
-        particles: {
-          number: { value: 70, density: { enable: true, area: 800 } },
-          color: { value: ["#FFD700", "#00FFFF", "#9D00FF"] },
-          shape: { type: "circle" },
-          opacity: { value: 0.4, random: true },
-          size: { value: { min: 1, max: 4 } },
-          move: {
-            enable: true,
-            speed: 1.2,
-            direction: "none",
-            random: true,
-            straight: false,
-            outModes: { default: "out" }
-          }
-        },
-        interactivity: {
-          detectsOn: "canvas",
-          events: {
-            onHover: { enable: true, mode: "repulse" },
-            onClick: { enable: true, mode: "push" }
-          }
-        },
-        detectRetina: true
-      });
-    }
-
     function connectWallet() {
-      const provider = window.solana || (window.phantom && window.phantom.solana);
-      if (provider && provider.isPhantom) {
-        provider.connect()
-          .then(() => alert("✅ Wallet connected!\nWelcome, Bro.\nYour AUS teaser drop is ready."))
-          .catch(err => alert("❌ Connection failed: " + (err.message || "Cancelled")));
+      if (typeof window.solana !== 'undefined' && window.solana.isPhantom) {
+        window.solana.connect().then(() => {
+          alert("✅ Wallet connected!\nWelcome, Bro.\nYour AUS teaser drop is ready.");
+        }).catch(e => {
+          alert("❌ Connection failed.");
+        });
       } else {
         alert("⚠️ Install Phantom wallet at phantom.app");
       }
     }
 
     function selectTier(tier) {
-      alert(`Selected: ${tier.toUpperCase()} tier\n(Coming soon)`);
+      alert(`Selected: ${tier.toUpperCase()} tier`);
     }
   </script>
 </body>
