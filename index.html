@@ -1,156 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
+      background: #000;
+      color: white;
+      font-family: 'Inter', sans-serif;
       min-height: 100vh;
-      font-family: system-ui, sans-serif;
-      color: white;
-      position: relative;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
     }
-    #logo {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: url('logo.jpg') center/cover no-repeat;
-      z-index: -1;
+    .logo-container {
+      margin-bottom: 3rem;
     }
-    #enter-btn {
-      position: absolute;
-      bottom: 3cm;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, #FFD700, #C0A040);
-      border: none;
-      border-radius: 50px;
-      padding: 18px 60px;
-      font-size: 22px;
-      font-weight: bold;
+    .slogan {
+      font-family: 'Rijdhani', sans-serif; /* исправлено на Rajdhani */
+      font-size: 2.2rem;
+      margin-bottom: 2.5rem;
+      letter-spacing: 1px;
+      color: #00ff9d;
+      text-shadow: 0 0 10px rgba(0, 255, 157, 0.7);
+    }
+    .sign-in-btn {
+      background: linear-gradient(45deg, #00ff9d, #66ffff);
       color: #000;
-      cursor: pointer;
-      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
-      transition: transform 0.2s;
-      z-index: 1;
-    }
-    #enter-btn:hover {
-      transform: scale(1.04) translateX(-50%);
-    }
-    .lang-btn {
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 6px;
+      border: none;
+      padding: 1rem 2.5rem;
+      font-size: 1.2rem;
       font-weight: bold;
+      border-radius: 8px;
       cursor: pointer;
-      z-index: 10;
+      transition: all 0.3s;
+      font-family: 'Rajdhani', sans-serif;
+      /* ↓↓↓ ОПУЩЕНА НА 7px ↓↓↓ */
+      margin-top: 7px;
     }
-    #footer {
+    .sign-in-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ff9d;
+    }
+    footer {
       position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 18px;
-      font-weight: bold;
-      color: transparent;
-      animation: color-cycle 6s infinite;
-      -webkit-background-clip: text;
-      background-clip: text;
-      z-index: 1;
+      bottom: 1.5rem;
+      width: 100%;
+      text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      animation: flickerFooter 4s infinite alternate;
     }
-    @keyframes color-cycle {
-      0%   { background-color: #FFD700; }
-      25%  { background-color: #8A2BE2; }
-      50%  { background-color: #00FFFF; }
-      75%  { background-color: #FF4500; }
-      100% { background-color: #FFD700; }
+    @keyframes flickerFooter {
+      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; color:#00ff9d; }
+      20%,24%,55%,81%,85% { opacity:0.8; color:#ffd700; }
+      30%,40%,70% { color:#ff00ff; }
+      45%,65% { color:#00f0ff; }
     }
   </style>
 </head>
 <body>
 
-  <div id="logo"></div>
+  <div class="logo-container">
+    <!-- Если есть logo.png — он подгрузится -->
+    <div style="font-size: 0; width: 300px; height: 80px; background: url('logo.png') center/contain no-repeat;"></div>
+  </div>
 
-  <button class="lang-btn" id="langToggle">LANGUAGE</button>
+  <div class="slogan">BROS IN. NOISE OUT.</div>
 
-  <button id="enter-btn">Enter the Club</button>
+  <!-- Кнопка опущена на 7px -->
+  <button class="sign-in-btn" onclick="window.location.href='onboarding.html'">
+    Enter the Club
+  </button>
 
-  <div id="footer">Cryptobros 2026 &copy;</div>
-
-  <script>
-    const languages = {
-      en: 'English',
-      ru: 'Русский',
-      es: 'Español',
-      pt: 'Português',
-      ja: '日本語',
-      zh: '中文',
-      de: 'Deutsch',
-      fr: 'Français',
-      it: 'Italiano',
-      ko: '한국어'
-    };
-
-    let currentLang = localStorage.getItem('language') || 'en';
-
-    function applyLanguage(lang) {
-      if (!languages[lang]) lang = 'en';
-      currentLang = lang;
-      localStorage.setItem('language', lang);
-      document.querySelector('.lang-btn').textContent = languages[lang];
-    }
-
-    const langBtn = document.getElementById('langToggle');
-    const langMenu = document.createElement('div');
-    langMenu.id = 'lang-menu';
-    langMenu.style.cssText = `
-      position: absolute;
-      top: 60px;
-      right: 24px;
-      background: rgba(0,0,0,0.9);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      padding: 8px;
-      display: none;
-      z-index: 100;
-      min-width: 140px;
-    `;
-    document.body.appendChild(langMenu);
-
-    Object.keys(languages).forEach(code => {
-      const btn = document.createElement('button');
-      btn.textContent = languages[code];
-      btn.onclick = () => {
-        applyLanguage(code);
-        langMenu.style.display = 'none';
-      };
-      langMenu.appendChild(btn);
-    });
-
-    langBtn.onclick = function(e) {
-      langMenu.style.display = langMenu.style.display === 'block' ? 'none' : 'block';
-      e.stopPropagation();
-    };
-
-    document.addEventListener('click', () => {
-      langMenu.style.display = 'none';
-    });
-
-    applyLanguage(currentLang);
-
-    document.getElementById('enter-btn').onclick = () => {
-      window.location.href = 'onboarding.html';
-    };
-  </script>
+  <footer>Cryptobros 2026 ©</footer>
 
 </body>
 </html>
