@@ -5,7 +5,6 @@
   <title>CRYPTOBROS Profile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -239,78 +238,41 @@
 <script>
   const bgList = Array.from({length: 13}, (_, i) => `bg${i+1}.jpg`);
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
-  let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
 
-  // Запуск после полной загрузки
-  document.addEventListener('DOMContentLoaded', () => {
-    init();
-  });
+  document.addEventListener('DOMContentLoaded', init);
 
   function init() {
-    const header = document.getElementById('header');
-    const avatar = document.getElementById('avatar');
-
-    // Шапка
-    const savedHeader = localStorage.getItem('header');
-    if (savedHeader) {
-      header.style.backgroundImage = `url(${savedHeader})`;
-      header.classList.add('loaded');
-    }
-    header.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-
-    // Аватар
-    const savedAvatar = localStorage.getItem('avatar');
-    if (savedAvatar) avatar.style.backgroundImage = `url(${savedAvatar})`;
-
-    // Фон страницы
-    const savedBg = localStorage.getItem('pageBg') || 'bg1.jpg';
-    document.body.style.backgroundImage = `url(${savedBg})`;
-
+    loadSavedData();
     renderViewMode();
     setupEvents();
   }
 
-  function setupEvents() {
-    const header = document.getElementById('header');
+  function loadSavedData() {
+    // Фон страницы
+    const savedBg = localStorage.getItem('pageBg');
+    if (savedBg) document.body.style.backgroundImage = `url(${savedBg})`;
 
-    // Drag для шапки
-    let isDragging = false;
-    let startX, startY, startXPx, startYPx;
-
-    header.addEventListener('mousedown', e => {
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      header.classList.add('dragging');
-
-      const bgPos = getComputedStyle(header).backgroundPosition.split(' ');
-      startXPx = parseFloat(bgPos[0]) || 0;
-      startYPx = parseFloat(bgPos[1]) || 0;
-    });
-
-    document.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      headerPos.x = startXPx + dx;
-      headerPos.y = startYPx + dy;
-      header.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        header.classList.remove('dragging');
-        localStorage.setItem('headerPos', JSON.stringify(headerPos));
-      }
-    });
-
-    // Клик по шапке → загрузка
-    header.addEventListener('click', e => {
-      if (!isDragging) document.getElementById('header-upload').click();
-    });
+    // Шапка
+    const savedHeader = localStorage.getItem('header');
+    if (savedHeader) {
+      document.getElementById('header').style.backgroundImage = `url(${savedHeader})`;
+      document.getElementById('header').classList.add('loaded');
+    }
 
     // Аватар
+    const savedAvatar = localStorage.getItem('avatar');
+    if (savedAvatar) {
+      document.getElementById('avatar').style.backgroundImage = `url(${savedAvatar})`;
+    }
+  }
+
+  function setupEvents() {
+    // Шапка клик
+    document.getElementById('header').addEventListener('click', () => {
+      document.getElementById('header-upload').click();
+    });
+
+    // Аватар клик
     document.getElementById('avatar').addEventListener('click', () => {
       document.getElementById('avatar-upload').click();
     });
@@ -323,7 +285,6 @@
       if (menu.style.display === 'block') showMainMenu();
     });
 
-    // Закрытие меню при клике вне
     document.addEventListener('click', e => {
       if (!document.getElementById('editBtn').contains(e.target) && !document.getElementById('editMenu').contains(e.target)) {
         document.getElementById('editMenu').style.display = 'none';
@@ -334,34 +295,39 @@
     document.getElementById('header-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
-        const url = URL.createObjectURL(file);
-        header.style.backgroundImage = `url(${url})`;
-        header.classList.add('loaded');
-        localStorage.setItem('header', url);
+        const reader = new FileReader();
+        reader.onload = ev => {
+          document.getElementById('header').style.backgroundImage = `url(${ev.target.result})`;
+          document.getElementById('header').classList.add('loaded');
+          localStorage.setItem('header', ev.target.result);
+        };
+        reader.readAsDataURL(file);
       }
     });
 
     document.getElementById('avatar-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
-        const url = URL.createObjectURL(file);
-        document.getElementById('avatar').style.backgroundImage = `url(${url})`;
-        localStorage.setItem('avatar', url);
+        const reader = new FileReader();
+        reader.onload = ev => {
+          document.getElementById('avatar').style.backgroundImage = `url(${ev.target.result})`;
+          localStorage.setItem('avatar', ev.target.result);
+        };
+        reader.readAsDataURL(file);
       }
     });
 
     document.getElementById('bg-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
-        const url = URL.createObjectURL(file);
-        setPageBg(url);
+        const reader = new FileReader();
+        reader.onload = ev => {
+          document.body.style.backgroundImage = `url(${ev.target.result})`;
+          localStorage.setItem('pageBg', ev.target.result);
+        };
+        reader.readAsDataURL(file);
       }
     });
-  }
-
-  function setPageBg(src) {
-    document.body.style.backgroundImage = `url(${src})`;
-    localStorage.setItem('pageBg', src);
   }
 
   function showMainMenu() {
@@ -379,6 +345,11 @@
       <div style="max-height:300px;overflow-y:auto;">${buttons}</div>
       <button style="margin-top:12px;background:#444;color:#fff;width:100%;" onclick="showMainMenu()">Back</button>
     `;
+  }
+
+  function setPageBg(src) {
+    document.body.style.backgroundImage = `url(${src})`;
+    localStorage.setItem('pageBg', src);
   }
 
   function showEditProfile() {
@@ -411,15 +382,11 @@
     document.querySelectorAll('.field-value')[1].textContent = profileData.city || '—';
   }
 
-  // Глобальные функции
   window.showBgMenu = showBgMenu;
   window.showEditProfile = showEditProfile;
   window.showMainMenu = showMainMenu;
   window.saveProfile = saveProfile;
   window.setPageBg = setPageBg;
-
-  // Запуск
-  window.addEventListener('load', init);
 </script>
 </body>
 </html>
