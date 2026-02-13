@@ -4,9 +4,8 @@
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
       background: #000;
       color: white;
@@ -80,9 +79,10 @@
       font-size: 14px;
     }
     .sidebar {
+      position: fixed;
+      top: 20px;
+      left: 20px;
       width: 200px;
-      float: left;
-      padding: 20px;
     }
     .nav-item {
       padding: 10px 0;
@@ -91,8 +91,9 @@
       cursor: pointer;
     }
     .main {
-      margin-left: 240px;
-      padding: 20px;
+      max-width: 800px;
+      margin: 220px auto 0;
+      padding: 0 20px;
     }
     .name, .rank, .field-value {
       color: #ffcc00;
@@ -121,7 +122,7 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    #bg-upload, #avatar-upload { display: none; }
+    #bg-upload, #avatar-upload, #header-upload { display: none; }
   </style>
 </head>
 <body>
@@ -130,10 +131,7 @@
   <div class="header" id="header"></div>
   <div class="avatar" id="avatar"></div>
   <div class="edit-btn" id="editBtn">⚙️</div>
-  <div class="edit-menu" id="editMenu">
-    <button onclick="showBgOptions()">Change Background</button>
-    <button onclick="showEditProfile()">Edit Profile</button>
-  </div>
+  <div class="edit-menu" id="editMenu"></div>
 </div>
 
 <div class="sidebar">
@@ -143,66 +141,127 @@
   <div class="nav-item">Tribunal</div>
   <div class="nav-item">My Friends</div>
 </div>
+
 <div class="main" id="profileContent">
-  <div class="name">@cryptobros</div>
+  <div class="name">—</div>
   <div class="rank">Degen (Master)</div>
   <div class="field-label">About</div>
-  <div class="field-value">Founder of Cryptobroz...</div>
+  <div class="field-value">—</div>
   <div class="field-label">City</div>
-  <div class="field-value">San Diego</div>
+  <div class="field-value">—</div>
 </div>
 
 <input type="file" id="bg-upload" accept="image/*">
 <input type="file" id="avatar-upload" accept="image/*">
+<input type="file" id="header-upload" accept="image/*">
 
 <script>
-  // Инициализация
-  document.getElementById('header').addEventListener('click', () => {
-    const url = prompt('Введите URL фона шапки (или оставьте пустым для удаления):');
-    if (url !== null) {
-      document.getElementById('header').style.backgroundImage = url ? `url(${url})` : '';
-      document.getElementById('header').classList.toggle('loaded', !!url);
+  // Генерация списка фонов: bg1.jpg ... bg13.jpg
+  const bgList = Array.from({length: 13}, (_, i) => `bg${i + 1}.jpg`);
+  let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
+  let currentBg = localStorage.getItem('pageBg') || '';
+  let currentHeader = localStorage.getItem('header') || '';
+  let currentAvatar = localStorage.getItem('avatar') || '';
+
+  function init() {
+    if (currentBg) document.body.style.backgroundImage = `url(${currentBg})`;
+    if (currentHeader) {
+      document.getElementById('header').style.backgroundImage = `url(${currentHeader})`;
+      document.getElementById('header').classList.add('loaded');
     }
-  });
-
-  document.getElementById('avatar').addEventListener('click', () => {
-    document.getElementById('avatar-upload').click();
-  });
-
-  document.getElementById('avatar-upload').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      document.getElementById('avatar').style.backgroundImage = `url(${url})`;
+    if (currentAvatar) {
+      document.getElementById('avatar').style.backgroundImage = `url(${currentAvatar})`;
     }
-  });
+    renderViewMode();
+    setupEvents();
+  }
 
-  document.getElementById('editBtn').addEventListener('click', () => {
-    const menu = document.getElementById('editMenu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-  });
+  function setupEvents() {
+    // Шапка — клик → загрузить фон шапки
+    document.getElementById('header').addEventListener('click', () => {
+      document.getElementById('header-upload').click();
+    });
 
-  function showBgOptions() {
-    const menu = document.getElementById('editMenu');
-    menu.innerHTML = `
+    // Аватар — клик → загрузить
+    document.getElementById('avatar').addEventListener('click', () => {
+      document.getElementById('avatar-upload').click();
+    });
+
+    // Шестерёнка — меню
+    document.getElementById('editBtn').addEventListener('click', () => {
+      const menu = document.getElementById('editMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      if (menu.style.display === 'block') {
+        menu.innerHTML = `
+          <button onclick="showBgMenu()">Change Background</button>
+          <button onclick="showEditProfile()">Edit Profile</button>
+        `;
+      }
+    });
+
+    // Закрытие меню при клике вне
+    document.addEventListener('click', e => {
+      const btn = document.getElementById('editBtn');
+      const menu = document.getElementById('editMenu');
+      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.style.display = 'none';
+      }
+    });
+
+    // Upload обработчики
+    document.getElementById('header-upload').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        document.getElementById('header').style.backgroundImage = `url(${url})`;
+        document.getElementById('header').classList.add('loaded');
+        localStorage.setItem('header', url);
+      }
+    });
+
+    document.getElementById('avatar-upload').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        document.getElementById('avatar').style.backgroundImage = `url(${url})`;
+        localStorage.setItem('avatar', url);
+      }
+    });
+
+    document.getElementById('bg-upload').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        setBg(url);
+      }
+    });
+  }
+
+  function setBg(src) {
+    document.body.style.backgroundImage = `url(${src})`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundAttachment = 'fixed';
+    localStorage.setItem('pageBg', src);
+  }
+
+  function showBgMenu() {
+    let buttons = bgList.map(bg => `<button onclick="setBg('${bg}')">${bg}</button>`).join('');
+    buttons += `<button onclick="document.getElementById('bg-upload').click()">Upload Custom</button>`;
+    document.getElementById('editMenu').innerHTML = `
       <div style="color:#ffcc00;margin-bottom:8px;">Select Page Background</div>
-      <button onclick="setBg('bg1.jpg')">bg1.jpg</button>
-      <button onclick="setBg('bg2.jpg')">bg2.jpg</button>
-      <button onclick="setBg('bg3.jpg')">bg3.jpg</button>
-      <button onclick="document.getElementById('bg-upload').click()">Upload Custom</button>
+      <div style="display:flex;flex-direction:column;gap:4px;">${buttons}</div>
       <button class="btn" style="margin-top:10px;background:#666;" onclick="showMainMenu()">Back</button>
     `;
   }
 
   function showEditProfile() {
-    const menu = document.getElementById('editMenu');
-    menu.innerHTML = `
-      <input type="text" id="nameInput" value="@cryptobros" placeholder="Name" />
+    document.getElementById('editMenu').innerHTML = `
+      <input type="text" id="nameInput" value="${profileData.name}" placeholder="Name" />
       <div class="rank">Degen (Master)</div>
       <div class="field-label">About</div>
-      <textarea id="aboutInput" placeholder="About">Founder of Cryptobroz...</textarea>
+      <textarea id="aboutInput" placeholder="About">${profileData.about}</textarea>
       <div class="field-label">City</div>
-      <input type="text" id="cityInput" value="San Diego" placeholder="City" />
+      <input type="text" id="cityInput" value="${profileData.city}" placeholder="City" />
       <button class="btn" onclick="saveProfile()">Save</button>
       <button class="btn" style="background:#666;margin-left:10px;" onclick="showMainMenu()">Cancel</button>
     `;
@@ -210,31 +269,41 @@
 
   function showMainMenu() {
     document.getElementById('editMenu').innerHTML = `
-      <button onclick="showBgOptions()">Change Background</button>
+      <button onclick="showBgMenu()">Change Background</button>
       <button onclick="showEditProfile()">Edit Profile</button>
     `;
-    document.getElementById('editMenu').style.display = 'block';
-  }
-
-  function setBg(src) {
-    document.body.style.backgroundImage = `url(${src})`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundAttachment = 'fixed';
   }
 
   function saveProfile() {
-    alert('Profile saved.');
+    profileData = {
+      name: document.getElementById('nameInput').value,
+      about: document.getElementById('aboutInput').value,
+      city: document.getElementById('cityInput').value
+    };
+    localStorage.setItem('profileData', JSON.stringify(profileData));
+    renderViewMode();
     showMainMenu();
   }
 
-  // Закрытие меню при клике вне
-  document.addEventListener('click', e => {
-    const editBtn = document.getElementById('editBtn');
-    const editMenu = document.getElementById('editMenu');
-    if (!editBtn.contains(e.target) && !editMenu.contains(e.target)) {
-      editMenu.style.display = 'none';
-    }
-  });
+  function renderViewMode() {
+    const el = document.getElementById('profileContent');
+    el.innerHTML = `
+      <div class="name">${profileData.name || '—'}</div>
+      <div class="rank">Degen (Master)</div>
+      <div class="field-label">About</div>
+      <div class="field-value">${profileData.about || '—'}</div>
+      <div class="field-label">City</div>
+      <div class="field-value">${profileData.city || '—'}</div>
+    `;
+  }
+
+  window.showBgMenu = showBgMenu;
+  window.showEditProfile = showEditProfile;
+  window.showMainMenu = showMainMenu;
+  window.saveProfile = saveProfile;
+  window.setBg = setBg;
+
+  init();
 </script>
 
 </body>
