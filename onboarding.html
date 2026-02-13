@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS ACCESS</title>
-  <!-- Шрифты: Rajdhani ExtraBold (округлый, пропорциональный), Inter для текста -->
+  <!-- Только Rajdhani и Inter — никакого Orbitron -->
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
   <style>
@@ -47,7 +47,6 @@
       text-align: center;
       margin-bottom: 2.5rem;
     }
-    /* ОКРУГЛЫЙ, ПРОПОРЦИОНАЛЬНЫЙ, ЖИРНЫЙ */
     h1 {
       font-family: 'Rajdhani', sans-serif;
       font-weight: 800;
@@ -65,7 +64,6 @@
       letter-spacing: 1px;
     }
 
-    /* АДАПТИВНАЯ СЕТКА: 4 → 2 → 1 */
     .plans {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -205,7 +203,6 @@
       color: #00ff9d;
     }
 
-    /* ФУТЕР: меньше, реже мигает */
     footer {
       position: fixed;
       bottom: 0;
@@ -220,7 +217,6 @@
       letter-spacing: 1.5px;
       color: #66ffff;
       z-index: 5;
-      /* Меняет цвет каждые 6 секунд, плавно */
       animation: flickerFooter 6s infinite alternate;
     }
     @keyframes flickerFooter {
