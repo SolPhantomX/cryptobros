@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
       background: #000;
       color: white;
@@ -78,21 +79,21 @@
       text-align: left;
       font-size: 14px;
     }
-    .sidebar { width: 200px; }
+    .sidebar {
+      width: 200px;
+      float: left;
+      padding: 20px;
+    }
     .nav-item {
       padding: 10px 0;
       color: #385898;
       font-weight: bold;
       cursor: pointer;
     }
-    .main-layout {
-      max-width: 1200px;
-      margin: 220px auto 0;
-      display: flex;
-      gap: 20px;
-      padding: 0 20px;
+    .main {
+      margin-left: 240px;
+      padding: 20px;
     }
-    .main { flex: 1; }
     .name, .rank, .field-value {
       color: #ffcc00;
       animation: flicker 3s infinite alternate;
@@ -119,9 +120,8 @@
       padding: 10px 20px;
       border-radius: 4px;
       cursor: pointer;
-      margin-top: 10px;
     }
-    #bg-upload { display: none; }
+    #bg-upload, #avatar-upload { display: none; }
   </style>
 </head>
 <body>
@@ -130,147 +130,111 @@
   <div class="header" id="header"></div>
   <div class="avatar" id="avatar"></div>
   <div class="edit-btn" id="editBtn">⚙️</div>
-  <div class="edit-menu" id="editMenu"></div>
+  <div class="edit-menu" id="editMenu">
+    <button onclick="showBgOptions()">Change Background</button>
+    <button onclick="showEditProfile()">Edit Profile</button>
+  </div>
 </div>
 
-<div class="main-layout">
-  <div class="sidebar">
-    <div class="nav-item">News Feed</div>
-    <div class="nav-item">Messages</div>
-    <div class="nav-item">My Groups</div>
-    <div class="nav-item">Tribunal</div>
-    <div class="nav-item">My Friends</div>
-  </div>
-  <div class="main" id="profileContent"></div>
+<div class="sidebar">
+  <div class="nav-item">News Feed</div>
+  <div class="nav-item">Messages</div>
+  <div class="nav-item">My Groups</div>
+  <div class="nav-item">Tribunal</div>
+  <div class="nav-item">My Friends</div>
+</div>
+<div class="main" id="profileContent">
+  <div class="name">@cryptobros</div>
+  <div class="rank">Degen (Master)</div>
+  <div class="field-label">About</div>
+  <div class="field-value">Founder of Cryptobroz...</div>
+  <div class="field-label">City</div>
+  <div class="field-value">San Diego</div>
 </div>
 
 <input type="file" id="bg-upload" accept="image/*">
+<input type="file" id="avatar-upload" accept="image/*">
 
 <script>
-  const bgOptions = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg'];
-  let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
-  let currentHeader = localStorage.getItem('header') || '';
-  let currentBg = localStorage.getItem('pageBg') || '';
+  // Инициализация
+  document.getElementById('header').addEventListener('click', () => {
+    const url = prompt('Введите URL фона шапки (или оставьте пустым для удаления):');
+    if (url !== null) {
+      document.getElementById('header').style.backgroundImage = url ? `url(${url})` : '';
+      document.getElementById('header').classList.toggle('loaded', !!url);
+    }
+  });
 
-  // Установить фон страницы
-  function setBg(src) {
-    document.body.style.backgroundImage = `url(${src})`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundAttachment = 'fixed';
-    localStorage.setItem('pageBg', src);
-  }
+  document.getElementById('avatar').addEventListener('click', () => {
+    document.getElementById('avatar-upload').click();
+  });
 
-  // Установить фон шапки
-  function setHeader(src) {
-    document.getElementById('header').style.backgroundImage = `url(${src})`;
-    document.getElementById('header').classList.add('loaded');
-    localStorage.setItem('header', src);
-  }
+  document.getElementById('avatar-upload').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      document.getElementById('avatar').style.backgroundImage = `url(${url})`;
+    }
+  });
 
-  function init() {
-    const headerEl = document.getElementById('header');
-    const avatarEl = document.getElementById('avatar');
-    
-    const avatarImg = localStorage.getItem('avatar') || 'avatar.png';
-    
-    if (currentHeader) setHeader(currentHeader);
-    if (currentBg) setBg(currentBg);
-    avatarEl.style.backgroundImage = `url(${avatarImg})`;
+  document.getElementById('editBtn').addEventListener('click', () => {
+    const menu = document.getElementById('editMenu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  });
 
-    renderViewMode();
-    setupEditButton();
-  }
-
-  function setupEditButton() {
-    const editBtn = document.getElementById('editBtn');
-    const editMenu = document.getElementById('editMenu');
-
-    editBtn.addEventListener('click', () => {
-      if (editMenu.style.display === 'block') {
-        editMenu.style.display = 'none';
-      } else {
-        editMenu.innerHTML = `
-          <button onclick="showBgMenu()">Change Background</button>
-          <button onclick="showEditProfile()">Edit Profile</button>
-        `;
-        editMenu.style.display = 'block';
-      }
-    });
-
-    document.addEventListener('click', e => {
-      if (!editBtn.contains(e.target) && !editMenu.contains(e.target)) {
-        editMenu.style.display = 'none';
-      }
-    });
-  }
-
-  function showBgMenu() {
-    const editMenu = document.getElementById('editMenu');
-    let list = bgOptions.map(bg => 
-      `<button onclick="setBg('${bg}')">${bg}</button>`
-    ).join('');
-    list += `<button onclick="document.getElementById('bg-upload').click()">Upload Custom</button>`;
-    
-    editMenu.innerHTML = `
-      <div style="color:#ffcc00; margin-bottom:8px;">Select Page Background</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">${list}</div>
-      <button class="btn" style="margin-top:12px;background:#666;" onclick="showMainMenu()">Back</button>
+  function showBgOptions() {
+    const menu = document.getElementById('editMenu');
+    menu.innerHTML = `
+      <div style="color:#ffcc00;margin-bottom:8px;">Select Page Background</div>
+      <button onclick="setBg('bg1.jpg')">bg1.jpg</button>
+      <button onclick="setBg('bg2.jpg')">bg2.jpg</button>
+      <button onclick="setBg('bg3.jpg')">bg3.jpg</button>
+      <button onclick="document.getElementById('bg-upload').click()">Upload Custom</button>
+      <button class="btn" style="margin-top:10px;background:#666;" onclick="showMainMenu()">Back</button>
     `;
   }
 
   function showEditProfile() {
-    const editMenu = document.getElementById('editMenu');
-    editMenu.innerHTML = `
-      <input type="text" id="nameInput" value="${profileData.name}" placeholder="Name" />
+    const menu = document.getElementById('editMenu');
+    menu.innerHTML = `
+      <input type="text" id="nameInput" value="@cryptobros" placeholder="Name" />
       <div class="rank">Degen (Master)</div>
       <div class="field-label">About</div>
-      <textarea id="aboutInput" placeholder="About">${profileData.about}</textarea>
+      <textarea id="aboutInput" placeholder="About">Founder of Cryptobroz...</textarea>
       <div class="field-label">City</div>
-      <input type="text" id="cityInput" value="${profileData.city}" placeholder="City" />
+      <input type="text" id="cityInput" value="San Diego" placeholder="City" />
       <button class="btn" onclick="saveProfile()">Save</button>
       <button class="btn" style="background:#666;margin-left:10px;" onclick="showMainMenu()">Cancel</button>
     `;
   }
 
   function showMainMenu() {
-    const editMenu = document.getElementById('editMenu');
-    editMenu.innerHTML = `
-      <button onclick="showBgMenu()">Change Background</button>
+    document.getElementById('editMenu').innerHTML = `
+      <button onclick="showBgOptions()">Change Background</button>
       <button onclick="showEditProfile()">Edit Profile</button>
     `;
+    document.getElementById('editMenu').style.display = 'block';
+  }
+
+  function setBg(src) {
+    document.body.style.backgroundImage = `url(${src})`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundAttachment = 'fixed';
   }
 
   function saveProfile() {
-    profileData = {
-      name: document.getElementById('nameInput').value,
-      about: document.getElementById('aboutInput').value,
-      city: document.getElementById('cityInput').value
-    };
-    localStorage.setItem('profileData', JSON.stringify(profileData));
-    renderViewMode();
+    alert('Profile saved.');
     showMainMenu();
   }
 
-  function renderViewMode() {
-    const content = document.getElementById('profileContent');
-    content.innerHTML = `
-      <div class="name">${profileData.name || '—'}</div>
-      <div class="rank">Degen (Master)</div>
-      <div class="field-label">About</div>
-      <div class="field-value">${profileData.about || '—'}</div>
-      <div class="field-label">City</div>
-      <div class="field-value">${profileData.city || '—'}</div>
-    `;
-  }
-
-  window.showBgMenu = showBgMenu;
-  window.showEditProfile = showEditProfile;
-  window.showMainMenu = showMainMenu;
-  window.saveProfile = saveProfile;
-  window.setBg = setBg;
-  window.setHeader = setHeader;
-
-  init();
+  // Закрытие меню при клике вне
+  document.addEventListener('click', e => {
+    const editBtn = document.getElementById('editBtn');
+    const editMenu = document.getElementById('editMenu');
+    if (!editBtn.contains(e.target) && !editMenu.contains(e.target)) {
+      editMenu.style.display = 'none';
+    }
+  });
 </script>
 
 </body>
