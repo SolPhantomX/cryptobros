@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -13,14 +13,13 @@
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       overflow: hidden;
+      position: relative;
     }
 
-    /* ЛОГОТИП НА ВСЮ СТРАНИЦУ — как у тебя */
     .hero {
       position: fixed;
       top: 0;
@@ -29,40 +28,38 @@
       height: 100%;
       background: url('logo.jpg') center/cover no-repeat;
       z-index: -1;
-      filter: brightness(0.8);
+      filter: brightness(0.9);
     }
 
-    .content {
-      position: relative;
-      z-index: 2;
-      padding: 2rem;
-    }
-
-    .slogan {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 2.4rem;
-      margin-bottom: 3rem;
-      letter-spacing: 1px;
-      color: #00ff9d;
-      text-shadow: 0 0 12px rgba(0, 255, 157, 0.7);
+    /* ЦЕЛЕВАЯ ОБЛАСТЬ ДЛЯ КНОПКИ — как на скрине */
+    .btn-slot {
+      width: 240px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
     }
 
     .btn {
       background: linear-gradient(45deg, #00ff9d, #66ffff);
       color: #000;
       border: none;
-      padding: 1.2rem 3rem;
+      padding: 0.8rem 2.2rem;
       font-size: 1.3rem;
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s;
-      font-family: 'Rajdhani', sans-serif;
-      margin-top: 7px; /* ← ровно 7px вниз */
+      font-family: 'Quicksand', sans-serif;
+      letter-spacing: 1px;
+      box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+      width: 100%;
+      max-width: 220px;
     }
     .btn:hover {
       transform: scale(1.06);
-      box-shadow: 0 0 25px #00ff9d;
+      box-shadow: 0 0 30px #00ff9d;
     }
 
     footer {
@@ -70,25 +67,24 @@
       bottom: 1.5rem;
       width: 100%;
       text-align: center;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
       font-size: 1.2rem;
-      animation: flickerFooter 4s infinite alternate;
+      color: #00ff9d;
+      animation: flickerFooter 5s infinite alternate;
     }
     @keyframes flickerFooter {
-      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; color:#00ff9d; }
-      20%,24%,55%,81%,85% { opacity:0.8; color:#ffd700; }
-      30%,40%,70% { color:#ff00ff; }
-      45%,65% { color:#00f0ff; }
+      0%,100% { opacity: 1; color: #00ff9d; }
+      50% { opacity: 0.8; color: #66ffff; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ✅ ЛОГОТИП НА ВСЮ СТРАНИЦУ -->
   <div class="hero"></div>
 
-  <div class="content">
-    <div class="slogan">BROS IN. NOISE OUT.</div>
+  <!-- КНОПКА ТОЧНО В РАМКЕ -->
+  <div class="btn-slot">
     <button class="btn" onclick="window.location.href='onboarding.html'">
       Enter the Club
     </button>
