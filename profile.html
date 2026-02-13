@@ -4,16 +4,15 @@
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background: #121212;
+      background: #000;
       color: white;
     }
     .top-section {
       position: relative;
       height: 300px;
-      background: #222;
     }
     .header {
       width: 100%;
@@ -37,13 +36,6 @@
       transform: translateX(-50%);
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       cursor: pointer;
-    }
-    .main-layout {
-      max-width: 1200px;
-      margin: 220px auto 0;
-      display: flex;
-      gap: 20px;
-      padding: 0 20px;
     }
     .edit-btn {
       position: absolute;
@@ -83,8 +75,8 @@
       padding: 8px 12px;
       margin: 4px 0;
       cursor: pointer;
-      font-size: 14px;
       text-align: left;
+      font-size: 14px;
     }
     .sidebar { width: 200px; }
     .nav-item {
@@ -92,6 +84,13 @@
       color: #385898;
       font-weight: bold;
       cursor: pointer;
+    }
+    .main-layout {
+      max-width: 1200px;
+      margin: 220px auto 0;
+      display: flex;
+      gap: 20px;
+      padding: 0 20px;
     }
     .main { flex: 1; }
     .name, .rank, .field-value {
@@ -104,7 +103,6 @@
     }
     .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
     .rank { margin-bottom: 20px; }
-    .field-label { color: #aaa; margin: 10px 0 4px; font-weight: bold; }
     input, textarea {
       width: 100%;
       padding: 10px;
@@ -123,7 +121,7 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    #header-upload, #avatar-upload { display: none; }
+    #bg-upload { display: none; }
   </style>
 </head>
 <body>
@@ -146,15 +144,28 @@
   <div class="main" id="profileContent"></div>
 </div>
 
-<input type="file" id="header-upload" accept="image/*">
-<input type="file" id="avatar-upload" accept="image/*">
+<input type="file" id="bg-upload" accept="image/*">
 
 <script>
   const bgOptions = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg'];
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
-  let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
-  let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
   let currentHeader = localStorage.getItem('header') || '';
+  let currentBg = localStorage.getItem('pageBg') || '';
+
+  // Установить фон страницы
+  function setBg(src) {
+    document.body.style.backgroundImage = `url(${src})`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundAttachment = 'fixed';
+    localStorage.setItem('pageBg', src);
+  }
+
+  // Установить фон шапки
+  function setHeader(src) {
+    document.getElementById('header').style.backgroundImage = `url(${src})`;
+    document.getElementById('header').classList.add('loaded');
+    localStorage.setItem('header', src);
+  }
 
   function init() {
     const headerEl = document.getElementById('header');
@@ -162,106 +173,25 @@
     
     const avatarImg = localStorage.getItem('avatar') || 'avatar.png';
     
-    if (currentHeader) {
-      headerEl.style.backgroundImage = `url(${currentHeader})`;
-      headerEl.classList.add('loaded');
-    }
+    if (currentHeader) setHeader(currentHeader);
+    if (currentBg) setBg(currentBg);
     avatarEl.style.backgroundImage = `url(${avatarImg})`;
-    headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-    
+
     renderViewMode();
-    setupUploads();
     setupEditButton();
-    
-    if (!isProfileSaved) {
-      setupDragToPan();
-    }
-  }
-
-  function setupDragToPan() {
-    const headerEl = document.getElementById('header');
-    if (!headerEl) return;
-    
-    let isDragging = false;
-    let startX, startY, startXPx, startYPx;
-
-    headerEl.addEventListener('mousedown', e => {
-      if (isProfileSaved) return;
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      
-      const bgPos = getComputedStyle(headerEl).backgroundPosition.split(' ');
-      startXPx = parseFloat(bgPos[0]) || 0;
-      startYPx = parseFloat(bgPos[1]) || 0;
-      
-      document.body.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      headerPos.x = startXPx + dx;
-      headerPos.y = startYPx + dy;
-      headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        document.body.style.cursor = 'default';
-        if (!isProfileSaved) {
-          localStorage.setItem('headerPos', JSON.stringify(headerPos));
-        }
-      }
-    });
-  }
-
-  function setupUploads() {
-    document.getElementById('header').addEventListener('click', () => {
-      if (!isProfileSaved) document.getElementById('header-upload').click();
-    });
-    document.getElementById('avatar').addEventListener('click', () => {
-      document.getElementById('avatar-upload').click();
-    });
-    
-    document.getElementById('header-upload').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (file) {
-        const url = URL.createObjectURL(file);
-        setHeader(url);
-      }
-    });
-    
-    document.getElementById('avatar-upload').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (file) {
-        const url = URL.createObjectURL(file);
-        document.getElementById('avatar').style.backgroundImage = `url(${url})`;
-        localStorage.setItem('avatar', url);
-      }
-    });
-  }
-
-  function setHeader(src) {
-    document.getElementById('header').style.backgroundImage = `url(${src})`;
-    document.getElementById('header').classList.add('loaded');
-    currentHeader = src;
-    localStorage.setItem('header', src);
   }
 
   function setupEditButton() {
     const editBtn = document.getElementById('editBtn');
     const editMenu = document.getElementById('editMenu');
-    
+
     editBtn.addEventListener('click', () => {
       if (editMenu.style.display === 'block') {
         editMenu.style.display = 'none';
       } else {
         editMenu.innerHTML = `
+          <button onclick="showBgMenu()">Change Background</button>
           <button onclick="showEditProfile()">Edit Profile</button>
-          <button onclick="showChangeHeader()">Change Header</button>
         `;
         editMenu.style.display = 'block';
       }
@@ -274,34 +204,51 @@
     });
   }
 
+  function showBgMenu() {
+    const editMenu = document.getElementById('editMenu');
+    let list = bgOptions.map(bg => 
+      `<button onclick="setBg('${bg}')">${bg}</button>`
+    ).join('');
+    list += `<button onclick="document.getElementById('bg-upload').click()">Upload Custom</button>`;
+    
+    editMenu.innerHTML = `
+      <div style="color:#ffcc00; margin-bottom:8px;">Select Page Background</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">${list}</div>
+      <button class="btn" style="margin-top:12px;background:#666;" onclick="showMainMenu()">Back</button>
+    `;
+  }
+
   function showEditProfile() {
-    document.getElementById('editMenu').style.display = 'none';
-    const content = document.getElementById('profileContent');
-    content.innerHTML = `
+    const editMenu = document.getElementById('editMenu');
+    editMenu.innerHTML = `
       <input type="text" id="nameInput" value="${profileData.name}" placeholder="Name" />
       <div class="rank">Degen (Master)</div>
       <div class="field-label">About</div>
       <textarea id="aboutInput" placeholder="About">${profileData.about}</textarea>
       <div class="field-label">City</div>
       <input type="text" id="cityInput" value="${profileData.city}" placeholder="City" />
-      <button class="btn" onclick="saveProfile()">Save Profile</button>
-      <button class="btn" style="background:#666;margin-left:10px;" onclick="renderViewMode()">Cancel</button>
+      <button class="btn" onclick="saveProfile()">Save</button>
+      <button class="btn" style="background:#666;margin-left:10px;" onclick="showMainMenu()">Cancel</button>
     `;
   }
 
-  function showChangeHeader() {
-    document.getElementById('editMenu').style.display = 'none';
-    let bgList = bgOptions.map(bg => 
-      `<button onclick="setHeader('${bg}')">${bg}</button>`
-    ).join('');
-    bgList += `<button onclick="document.getElementById('header-upload').click()">Upload Custom</button>`;
-    
-    const content = document.getElementById('profileContent');
-    content.innerHTML = `
-      <div class="field-label">Select Header Background</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">${bgList}</div>
-      <button class="btn" style="background:#666;margin-top:15px;" onclick="renderViewMode()">Back</button>
+  function showMainMenu() {
+    const editMenu = document.getElementById('editMenu');
+    editMenu.innerHTML = `
+      <button onclick="showBgMenu()">Change Background</button>
+      <button onclick="showEditProfile()">Edit Profile</button>
     `;
+  }
+
+  function saveProfile() {
+    profileData = {
+      name: document.getElementById('nameInput').value,
+      about: document.getElementById('aboutInput').value,
+      city: document.getElementById('cityInput').value
+    };
+    localStorage.setItem('profileData', JSON.stringify(profileData));
+    renderViewMode();
+    showMainMenu();
   }
 
   function renderViewMode() {
@@ -316,23 +263,12 @@
     `;
   }
 
-  function saveProfile() {
-    profileData = {
-      name: document.getElementById('nameInput').value,
-      about: document.getElementById('aboutInput').value,
-      city: document.getElementById('cityInput').value
-    };
-    localStorage.setItem('profileData', JSON.stringify(profileData));
-    localStorage.setItem('isProfileSaved', 'true');
-    isProfileSaved = true;
-    renderViewMode();
-  }
-
+  window.showBgMenu = showBgMenu;
   window.showEditProfile = showEditProfile;
-  window.showChangeHeader = showChangeHeader;
-  window.setHeader = setHeader;
-  window.renderViewMode = renderViewMode;
+  window.showMainMenu = showMainMenu;
   window.saveProfile = saveProfile;
+  window.setBg = setBg;
+  window.setHeader = setHeader;
 
   init();
 </script>
