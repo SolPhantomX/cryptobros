@@ -19,18 +19,20 @@
       padding: 2rem;
       text-align: center;
     }
-    .logo-container {
-      margin-bottom: 3rem;
+    .logo {
+      width: 300px;
+      height: auto;
+      margin-bottom: 2.5rem;
     }
     .slogan {
-      font-family: 'Rijdhani', sans-serif; /* исправлено на Rajdhani */
+      font-family: 'Rajdhani', sans-serif;
       font-size: 2.2rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 3rem;
       letter-spacing: 1px;
       color: #00ff9d;
       text-shadow: 0 0 10px rgba(0, 255, 157, 0.7);
     }
-    .sign-in-btn {
+    .btn {
       background: linear-gradient(45deg, #00ff9d, #66ffff);
       color: #000;
       border: none;
@@ -41,10 +43,9 @@
       cursor: pointer;
       transition: all 0.3s;
       font-family: 'Rajdhani', sans-serif;
-      /* ↓↓↓ ОПУЩЕНА НА 7px ↓↓↓ */
-      margin-top: 7px;
+      margin-top: 7px; /* ← ровно 7px вниз */
     }
-    .sign-in-btn:hover {
+    .btn:hover {
       transform: scale(1.05);
       box-shadow: 0 0 20px #00ff9d;
     }
@@ -67,15 +68,12 @@
 </head>
 <body>
 
-  <div class="logo-container">
-    <!-- Если есть logo.png — он подгрузится -->
-    <div style="font-size: 0; width: 300px; height: 80px; background: url('logo.png') center/contain no-repeat;"></div>
-  </div>
+  <!-- ✅ ТОЧНО КАК БЫЛО: logo.jpg -->
+  <img src="logo.jpg" alt="CRYPTOBROS" class="logo">
 
   <div class="slogan">BROS IN. NOISE OUT.</div>
 
-  <!-- Кнопка опущена на 7px -->
-  <button class="sign-in-btn" onclick="window.location.href='onboarding.html'">
+  <button class="btn" onclick="window.location.href='onboarding.html'">
     Enter the Club
   </button>
 
