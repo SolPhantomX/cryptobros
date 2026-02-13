@@ -98,6 +98,8 @@
       cursor: pointer;
       font-size: 12px;
       display: inline-block;
+      width: 100%;
+      text-align: left;
     }
     .sidebar { width: 200px; }
     .nav-item {
@@ -105,10 +107,11 @@
       color: #385898;
       font-weight: bold;
       cursor: pointer;
+      font-size: 18px;
     }
     .main { flex: 1; }
-    .name, .rank, .field-value {
-      color: #ffcc00;
+    .name, .rank, .field-value, .field-label {
+      color: var(--text-color, #ffcc00);
       animation: flicker 3s infinite alternate;
     }
     @keyframes flicker {
@@ -123,7 +126,7 @@
       padding: 10px;
       margin: 5px 0 15px;
       background: rgba(0,0,0,0.3);
-      color: #ffcc00;
+      color: var(--text-color, #ffcc00);
       border: 1px solid #555;
       border-radius: 4px;
     }
@@ -163,6 +166,7 @@
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
   let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
   let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
+  let textColor = localStorage.getItem('textColor') || '#ffcc00';
 
   function init() {
     const headerEl = document.getElementById('header');
@@ -180,11 +184,11 @@
     }
 
     headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+    document.documentElement.style.setProperty('--text-color', textColor);
 
     renderViewMode();
     buildEditMenu();
 
-    // Всегда разрешаем двигать, но сохраняем позицию ТОЛЬКО если профиль не сохранён
     setupDragToPan();
   }
 
@@ -197,6 +201,7 @@
     let startXPx, startYPx;
 
     headerEl.addEventListener('mousedown', e => {
+      if (isProfileSaved) return;
       isDragging = true;
       startX = e.clientX;
       startY = e.clientY;
@@ -233,6 +238,7 @@
     menu.innerHTML = `
       <button onclick="toggleEdit()">Edit Profile</button>
       <button onclick="changeBackground()">Change Background</button>
+      <button onclick="chooseTextColor()">Text Color</button>
     `;
   }
 
@@ -248,14 +254,57 @@
     const content = document.getElementById('profileContent');
     let buttons = '';
     for (let i = 1; i <= 13; i++) {
-      buttons += `<button onclick="setBg('bg${i}.jpg')">bg${i}.jpg</button>`;
+      buttons += `<div style="margin:4px 0;"><button onclick="setBg('bg${i}.jpg')" style="width:100%;text-align:left;">bg${i}.jpg</button></div>`;
     }
-    buttons += `<button onclick="document.getElementById('bg-upload').click()">Upload Custom</button>`;
+    buttons += `<div style="margin:4px 0;"><button onclick="document.getElementById('bg-upload').click()" style="width:100%;text-align:left;">Upload Custom</button></div>`;
     content.innerHTML = `
-      <div style="color:#ffcc00;margin-bottom:10px;">Select Page Background</div>
+      <div style="color:var(--text-color);margin-bottom:10px;font-weight:bold;">Select Page Background</div>
       <div>${buttons}</div>
       <button class="btn" style="margin-top:10px;background:#666;" onclick="renderViewMode()">Back</button>
     `;
+  }
+
+  function chooseTextColor() {
+    document.getElementById('editMenu').style.display = 'none';
+    const content = document.getElementById('profileContent');
+
+    const colors = [
+      { name: 'Black', hex: '#000000' },
+      { name: 'Red', hex: '#FF0000' },
+      { name: 'Green', hex: '#00FF00' },
+      { name: 'Blue', hex: '#0000FF' },
+      { name: 'Yellow', hex: '#FFFF00' },
+      { name: 'Magenta', hex: '#FF00FF' },
+      { name: 'Cyan', hex: '#00FFFF' },
+      { name: 'White', hex: '#FFFFFF' }
+    ];
+
+    let colorButtons = '';
+    colors.forEach(c => {
+      const textContrast = (c.hex === '#000000' || c.hex === '#FFFFFF') ? 
+        (c.hex === '#000000' ? '#FFFFFF' : '#000000') : '#FFFFFF';
+      colorButtons += `
+        <div style="margin:6px 0;">
+          <button 
+            onclick="setTextColor('${c.hex}')" 
+            style="width:100%; font-weight:bold; color:${textContrast}; background:${c.hex}; border:1px solid #555; padding:8px;"
+          >${c.name}</button>
+        </div>
+      `;
+    });
+
+    content.innerHTML = `
+      <div style="color:var(--text-color);margin-bottom:10px;font-weight:bold;">Choose Text Color</div>
+      <div>${colorButtons}</div>
+      <button class="btn" style="margin-top:10px;background:#666;" onclick="renderViewMode()">Back</button>
+    `;
+  }
+
+  function setTextColor(hex) {
+    textColor = hex;
+    localStorage.setItem('textColor', hex);
+    document.documentElement.style.setProperty('--text-color', textColor);
+    renderViewMode();
   }
 
   function setBg(filename) {
@@ -310,7 +359,6 @@
     renderViewMode();
   }
 
-  // Upload handlers
   document.getElementById('header').addEventListener('click', () => {
     document.getElementById('header-upload').click();
   });
@@ -359,13 +407,11 @@
     }
   });
 
-  // Шестерёнка
   document.getElementById('editBtn').addEventListener('click', () => {
     const menu = document.getElementById('editMenu');
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
   });
 
-  // Закрытие меню при клике вне
   document.addEventListener('click', e => {
     const btn = document.getElementById('editBtn');
     const menu = document.getElementById('editMenu');
@@ -376,7 +422,8 @@
 
   window.toggleEdit = toggleEdit;
   window.changeBackground = changeBackground;
-  window.setBg = setBg;
+  window.chooseTextColor = chooseTextColor;
+  window.setTextColor = setTextColor;
   window.renderViewMode = renderViewMode;
   window.saveProfile = saveProfile;
 
