@@ -7,19 +7,19 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Arial, sans-serif;
-      background-size: cover;
-      background-attachment: fixed;
+      background: #121212;
+      color: white;
     }
     .top-section {
       position: relative;
       height: 300px;
+      background: #222;
     }
     .header {
       width: 100%;
       height: 100%;
-      background: center/cover;
+      background: center/cover no-repeat;
       border: 2px dashed #555;
-      border-radius: 8px;
       cursor: pointer;
     }
     .header.loaded {
@@ -30,7 +30,7 @@
       height: 200px;
       border-radius: 50%;
       border: 4px solid white;
-      background: center/cover;
+      background: center/cover no-repeat;
       position: absolute;
       bottom: -100px;
       left: 50%;
@@ -60,6 +60,31 @@
       justify-content: center;
       cursor: pointer;
       z-index: 100;
+    }
+    .edit-menu {
+      position: absolute;
+      top: 50px;
+      right: 16px;
+      background: #000;
+      border: 1px solid #ffcc00;
+      border-radius: 6px;
+      padding: 8px;
+      display: none;
+      z-index: 100;
+      min-width: 180px;
+    }
+    .edit-menu button {
+      display: block;
+      width: 100%;
+      background: #222;
+      color: #ffcc00;
+      border: 1px solid #555;
+      border-radius: 4px;
+      padding: 8px 12px;
+      margin: 4px 0;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: left;
     }
     .sidebar { width: 200px; }
     .nav-item {
@@ -96,16 +121,20 @@
       padding: 10px 20px;
       border-radius: 4px;
       cursor: pointer;
+      margin-top: 10px;
     }
-    #header-upload, #avatar-upload, #bg-upload { display: none; }
+    #header-upload, #avatar-upload { display: none; }
   </style>
 </head>
 <body>
+
 <div class="top-section">
   <div class="header" id="header"></div>
   <div class="avatar" id="avatar"></div>
   <div class="edit-btn" id="editBtn">⚙️</div>
+  <div class="edit-menu" id="editMenu"></div>
 </div>
+
 <div class="main-layout">
   <div class="sidebar">
     <div class="nav-item">News Feed</div>
@@ -116,37 +145,34 @@
   </div>
   <div class="main" id="profileContent"></div>
 </div>
+
 <input type="file" id="header-upload" accept="image/*">
 <input type="file" id="avatar-upload" accept="image/*">
-<input type="file" id="bg-upload" accept="image/*">
+
 <script>
+  const bgOptions = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg'];
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
   let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
   let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
+  let currentHeader = localStorage.getItem('header') || '';
 
   function init() {
     const headerEl = document.getElementById('header');
     const avatarEl = document.getElementById('avatar');
     
-    if (!headerEl || !avatarEl) return;
-
-    const headerImg = localStorage.getItem('header') || '';
-    const avatarImg = localStorage.getItem('avatar') || '';
-
-    if (headerImg) {
-      headerEl.style.backgroundImage = `url(${headerImg})`;
+    const avatarImg = localStorage.getItem('avatar') || 'avatar.png';
+    
+    if (currentHeader) {
+      headerEl.style.backgroundImage = `url(${currentHeader})`;
       headerEl.classList.add('loaded');
     }
-    if (avatarImg) {
-      avatarEl.style.backgroundImage = `url(${avatarImg})`;
-    }
-
+    avatarEl.style.backgroundImage = `url(${avatarImg})`;
     headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-
+    
     renderViewMode();
     setupUploads();
     setupEditButton();
-
+    
     if (!isProfileSaved) {
       setupDragToPan();
     }
@@ -155,7 +181,7 @@
   function setupDragToPan() {
     const headerEl = document.getElementById('header');
     if (!headerEl) return;
-
+    
     let isDragging = false;
     let startX, startY, startXPx, startYPx;
 
@@ -194,22 +220,20 @@
 
   function setupUploads() {
     document.getElementById('header').addEventListener('click', () => {
-      document.getElementById('header-upload').click();
+      if (!isProfileSaved) document.getElementById('header-upload').click();
     });
     document.getElementById('avatar').addEventListener('click', () => {
       document.getElementById('avatar-upload').click();
     });
-
+    
     document.getElementById('header-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
         const url = URL.createObjectURL(file);
-        document.getElementById('header').style.backgroundImage = `url(${url})`;
-        document.getElementById('header').classList.add('loaded');
-        localStorage.setItem('header', url);
+        setHeader(url);
       }
     });
-
+    
     document.getElementById('avatar-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
@@ -220,26 +244,38 @@
     });
   }
 
+  function setHeader(src) {
+    document.getElementById('header').style.backgroundImage = `url(${src})`;
+    document.getElementById('header').classList.add('loaded');
+    currentHeader = src;
+    localStorage.setItem('header', src);
+  }
+
   function setupEditButton() {
-    document.getElementById('editBtn').addEventListener('click', () => {
-      renderEditMode();
+    const editBtn = document.getElementById('editBtn');
+    const editMenu = document.getElementById('editMenu');
+    
+    editBtn.addEventListener('click', () => {
+      if (editMenu.style.display === 'block') {
+        editMenu.style.display = 'none';
+      } else {
+        editMenu.innerHTML = `
+          <button onclick="showEditProfile()">Edit Profile</button>
+          <button onclick="showChangeHeader()">Change Header</button>
+        `;
+        editMenu.style.display = 'block';
+      }
+    });
+
+    document.addEventListener('click', e => {
+      if (!editBtn.contains(e.target) && !editMenu.contains(e.target)) {
+        editMenu.style.display = 'none';
+      }
     });
   }
 
-  function renderViewMode() {
-    const content = document.getElementById('profileContent');
-    content.innerHTML = `
-      <div class="name">${profileData.name || '—'}</div>
-      <div class="rank">Degen (Master)</div>
-      <div class="field-label">About</div>
-      <div class="field-value">${profileData.about || '—'}</div>
-      <div class="field-label">City</div>
-      <div class="field-value">${profileData.city || '—'}</div>
-      <button class="btn" onclick="toggleEdit()">Edit Profile</button>
-    `;
-  }
-
-  function renderEditMode() {
+  function showEditProfile() {
+    document.getElementById('editMenu').style.display = 'none';
     const content = document.getElementById('profileContent');
     content.innerHTML = `
       <input type="text" id="nameInput" value="${profileData.name}" placeholder="Name" />
@@ -253,8 +289,31 @@
     `;
   }
 
-  function toggleEdit() {
-    renderEditMode();
+  function showChangeHeader() {
+    document.getElementById('editMenu').style.display = 'none';
+    let bgList = bgOptions.map(bg => 
+      `<button onclick="setHeader('${bg}')">${bg}</button>`
+    ).join('');
+    bgList += `<button onclick="document.getElementById('header-upload').click()">Upload Custom</button>`;
+    
+    const content = document.getElementById('profileContent');
+    content.innerHTML = `
+      <div class="field-label">Select Header Background</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">${bgList}</div>
+      <button class="btn" style="background:#666;margin-top:15px;" onclick="renderViewMode()">Back</button>
+    `;
+  }
+
+  function renderViewMode() {
+    const content = document.getElementById('profileContent');
+    content.innerHTML = `
+      <div class="name">${profileData.name || '—'}</div>
+      <div class="rank">Degen (Master)</div>
+      <div class="field-label">About</div>
+      <div class="field-value">${profileData.about || '—'}</div>
+      <div class="field-label">City</div>
+      <div class="field-value">${profileData.city || '—'}</div>
+    `;
   }
 
   function saveProfile() {
@@ -269,10 +328,14 @@
     renderViewMode();
   }
 
-  window.toggleEdit = toggleEdit;
+  window.showEditProfile = showEditProfile;
+  window.showChangeHeader = showChangeHeader;
+  window.setHeader = setHeader;
+  window.renderViewMode = renderViewMode;
   window.saveProfile = saveProfile;
 
   init();
 </script>
+
 </body>
 </html>
