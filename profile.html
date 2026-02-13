@@ -1,207 +1,245 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@cryptobros – CRYPTOBROS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>CRYPTOBROS</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: #ffffff;
-      color: #000000;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: white;
     }
-
-    /* Фон с падающими купюрами */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
+    .top-section {
+      position: relative;
+      height: 300px;
+      background: #222;
+    }
+    .header {
       width: 100%;
       height: 100%;
-      background: 
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23e0e0e0" stroke-width="0.5"/><text x="50" y="55" text-anchor="middle" font-size="12" fill="%23999">100</text></svg>') repeat,
-        linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-      opacity: 0.12;
-      z-index: -1;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    /* Левое меню */
-    aside {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      width: 240px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      padding: 1.5rem;
-      z-index: 10;
-    }
-
-    .menu-item {
-      padding: 1rem 1.2rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      background: center/cover no-repeat;
+      border: 2px dashed #555;
       cursor: pointer;
-      border-radius: 12px;
-      transition: all 0.3s;
-      color: #333;
-      text-decoration: none;
     }
-
-    .menu-item:hover {
-      background: #f8f9fa;
-      color: #FFD700;
+    .header.loaded {
+      border: none;
     }
-
-    .menu-item.active {
-      background: #fff9e6;
-      color: #FFD700;
-      border-left: 4px solid #FFD700;
-    }
-
-    /* Центральный блок */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding-top: 80px;
-      text-align: center;
-    }
-
-    .logo-circle {
+    .avatar {
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #00F0FF, #9D00FF);
+      border: 4px solid white;
+      background: center/cover no-repeat;
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .main-layout {
+      max-width: 1200px;
+      margin: 220px auto 0;
+      display: flex;
+      gap: 20px;
+      padding: 0 20px;
+    }
+    .edit-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: #333;
+      border: 1px solid #666;
+      border-radius: 50%;
+      color: #ffcc00;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 2rem;
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
-      position: relative;
+      cursor: pointer;
+      z-index: 100;
     }
-
-    .logo-circle::after {
-      content: "C";
-      font-family: 'Orbitron', sans-serif;
-      font-size: 80px;
-      font-weight: 700;
-      color: #0a0a0f;
-      text-shadow: 0 0 10px rgba(255,255,255,0.7);
+    .sidebar { width: 200px; }
+    .nav-item {
+      padding: 10px 0;
+      color: #385898;
+      font-weight: bold;
+      cursor: pointer;
     }
-
-    .brand-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      background: linear-gradient(90deg, #FFD700, #FFEA00);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(255,215,0,0.5);
+    .main { flex: 1; }
+    .name, .rank, .field-value {
+      color: #ffcc00;
+      animation: flicker 3s infinite alternate;
     }
-
-    .tagline {
-      font-size: 1.8rem;
-      color: #FFD700;
-      font-weight: 600;
-      margin-bottom: 3rem;
-      letter-spacing: 2px;
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
+      20%,24%,55%,81%,85% { opacity:0.8; }
     }
-
-    .bio {
-      max-width: 600px;
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      margin-bottom: 2rem;
-      text-align: left;
+    .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
+    .rank { margin-bottom: 20px; }
+    .field-label { color: #aaa; margin: 10px 0 4px; font-weight: bold; }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      background: rgba(0,0,0,0.3);
+      color: #ffcc00;
+      border: 1px solid #555;
+      border-radius: 4px;
     }
-
-    .bio h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: #FFD700;
+    .btn {
+      background: #4267B2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
     }
-
-    .bio p {
-      line-height: 1.6;
-      color: #333;
-      font-size: 1.1rem;
-    }
-
-    .city {
-      font-size: 1.2rem;
-      color: #666;
-      margin-top: 1rem;
-    }
-
-    @media (max-width: 768px) {
-      .logo-circle { width: 140px; height: 140px; }
-      .brand-name { font-size: 3.5rem; }
-      .tagline { font-size: 1.4rem; }
-      aside { position: static; width: 100%; margin-bottom: 2rem; }
-    }
+    #header-upload, #avatar-upload, #bg-upload { display: none; }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <!-- Левое меню -->
-  <aside>
-    <a href="feed.html" class="menu-item active">📰 News Feed</a>
-    <a href="messages.html" class="menu-item">💬 Messages</a>
-    <a href="groups.html" class="menu-item">👥 My Groups</a>
-    <a href="tribunal.html" class="menu-item">💡 Tribunal</a>
-    <a href="friends.html" class="menu-item">🤝 My Friends</a>
-  </aside>
-
-  <!-- Центральный блок -->
-  <div class="hero">
-    <div class="logo-circle"></div>
-    <h1 class="brand-name">AURASPACE</h1>
-    <p class="tagline">STAY REAL. PAY AUS.</p>
-
-    <div class="bio">
-      <h2>About</h2>
-      <p>
-        Founder of Cryptobroz Here to bury fake coaches, their $2k "inner circle" Discords, and endless zombie armies crying 24/7: "wen signal? wen moon? wen lambo?" Lambo pics? Stolen from Google Images 2018 "Exclusive alpha" in paid chat? Pump for their wallet — dump for yours Their merch? Perfect for wiping tears after "trust the process" and another 90% drawdown Shoutout to that classic coach who in 2021 screamed "100x on shitcoins, FOMO now or NGMI forever", and by 2025 is selling NFT mindset courses and "spiritual wealth" for SOL & ETH Superpower: turning $997 "become millionaire in 30 days" courses into pure meme gold, laughing emojis, and endless copium supply HODL your braincells, not their hopium! Sell the course dream — buy real alpha Saving confused newbies: DYOR > paid signals Whitepaper > Telegram motivational spam Real alpha = figuring it out yourself, not waiting for Rolex uncle to say "buy this shitcoin for 100x" No financial advice. Just truth, memes, takedowns, and lulz. Welcome to Cryptobroz — where coaches cry and you laugh your ass off #ExposeTheScam #RugTheGurus #DYORgang #NGMIforCoaches
-      </p>
-      <div class="city">San Diego</div>
-    </div>
-  </div>
+<div class="top-section">
+  <div class="header" id="header"></div>
+  <div class="avatar" id="avatar"></div>
+  <div class="edit-btn" id="editBtn">⚙️</div>
 </div>
 
+<div class="main-layout">
+  <div class="sidebar">
+    <div class="nav-item">News Feed</div>
+    <div class="nav-item">Messages</div>
+    <div class="nav-item">My Groups</div>
+    <div class="nav-item">Tribunal</div>
+    <div class="nav-item">My Friends</div>
+  </div>
+  <div class="main" id="profileContent"></div>
+</div>
+
+<input type="file" id="header-upload" accept="image/*">
+<input type="file" id="avatar-upload" accept="image/*">
+<input type="file" id="bg-upload" accept="image/*">
+
 <script>
-  // Активация меню
-  document.querySelectorAll('.menu-item').forEach(el => {
-    el.addEventListener('click', () => {
-      document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-      el.classList.add('active');
+  let profileData = JSON.parse(localStorage.getItem('profileData')) || { 
+    name: '@cryptobros', 
+    about: 'Founder of Cryptobroz. San Diego.', 
+    city: 'San Diego' 
+  };
+  let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
+  let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
+
+  function init() {
+    const headerEl = document.getElementById('header');
+    const avatarEl = document.getElementById('avatar');
+    
+    // Загрузка изображений
+    const headerImg = localStorage.getItem('header') || '';
+    const avatarImg = localStorage.getItem('avatar') || 'https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/avatar.png';
+    
+    if (headerImg) {
+      headerEl.style.backgroundImage = `url(${headerImg})`;
+      headerEl.classList.add('loaded');
+    }
+    if (avatarImg) {
+      avatarEl.style.backgroundImage = `url(${avatarImg})`;
+    }
+    
+    headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+    
+    renderViewMode();
+    setupUploads();
+    
+    if (!isProfileSaved) {
+      setupDragToPan();
+    }
+  }
+
+  function setupDragToPan() {
+    const headerEl = document.getElementById('header');
+    if (!headerEl) return;
+    
+    let isDragging = false;
+    let startX, startY;
+    let startXPx, startYPx;
+
+    headerEl.addEventListener('mousedown', e => {
+      if (isProfileSaved) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      
+      const bgPos = getComputedStyle(headerEl).backgroundPosition.split(' ');
+      startXPx = parseFloat(bgPos[0]) || 0;
+      startYPx = parseFloat(bgPos[1]) || 0;
+      
+      document.body.style.cursor = 'grabbing';
     });
-  });
+
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      headerPos.x = startXPx + dx;
+      headerPos.y = startYPx + dy;
+      headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        document.body.style.cursor = 'default';
+        if (!isProfileSaved) {
+          localStorage.setItem('headerPos', JSON.stringify(headerPos));
+        }
+      }
+    });
+  }
+
+  function setupUploads() {
+    document.getElementById('header').addEventListener('click', () => {
+      document.getElementById('header-upload').click();
+    });
+    document.getElementById('avatar').addEventListener('click', () => {
+      document.getElementById('avatar-upload').click();
+    });
+    
+    document.getElementById('header-upload').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        document.getElementById('header').style.backgroundImage = `url(${url})`;
+        document.getElementById('header').classList.add('loaded');
+        localStorage.setItem('header', url);
+      }
+    });
+    
+    document.getElementById('avatar-upload').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        document.getElementById('avatar').style.backgroundImage = `url(${url})`;
+        localStorage.setItem('avatar', url);
+      }
+    });
+  }
+
+  function renderViewMode() {
+    const content = document.getElementById('profileContent');
+    content.innerHTML = `
+      <div class="name">${profileData.name}</div>
+      <div class="rank">Degen (Master)</div>
+      <div class="field-label">About</div>
+      <div class="field-value">${profileData.about}</div>
+      <div class="field-label">City</div>
+      <div class="field-value">${profileData.city}</div>
+    `;
+  }
+
+  init();
 </script>
 
 </body>
