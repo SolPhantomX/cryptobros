@@ -7,19 +7,19 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Arial, sans-serif;
-      background: #121212;
-      color: white;
+      background-size: cover;
+      background-attachment: fixed;
     }
     .top-section {
       position: relative;
       height: 300px;
-      background: #222;
     }
     .header {
       width: 100%;
       height: 100%;
-      background: center/cover no-repeat;
+      background: center/cover;
       border: 2px dashed #555;
+      border-radius: 8px;
       cursor: pointer;
     }
     .header.loaded {
@@ -30,7 +30,7 @@
       height: 200px;
       border-radius: 50%;
       border: 4px solid white;
-      background: center/cover no-repeat;
+      background: center/cover;
       position: absolute;
       bottom: -100px;
       left: 50%;
@@ -101,13 +101,11 @@
   </style>
 </head>
 <body>
-
 <div class="top-section">
   <div class="header" id="header"></div>
   <div class="avatar" id="avatar"></div>
   <div class="edit-btn" id="editBtn">⚙️</div>
 </div>
-
 <div class="main-layout">
   <div class="sidebar">
     <div class="nav-item">News Feed</div>
@@ -118,17 +116,11 @@
   </div>
   <div class="main" id="profileContent"></div>
 </div>
-
 <input type="file" id="header-upload" accept="image/*">
 <input type="file" id="avatar-upload" accept="image/*">
 <input type="file" id="bg-upload" accept="image/*">
-
 <script>
-  let profileData = JSON.parse(localStorage.getItem('profileData')) || { 
-    name: '@cryptobros', 
-    about: 'Founder of Cryptobroz. San Diego.', 
-    city: 'San Diego' 
-  };
+  let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
   let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
   let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
 
@@ -136,10 +128,11 @@
     const headerEl = document.getElementById('header');
     const avatarEl = document.getElementById('avatar');
     
-    // Загрузка изображений
+    if (!headerEl || !avatarEl) return;
+
     const headerImg = localStorage.getItem('header') || '';
-    const avatarImg = localStorage.getItem('avatar') || 'https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/avatar.png';
-    
+    const avatarImg = localStorage.getItem('avatar') || '';
+
     if (headerImg) {
       headerEl.style.backgroundImage = `url(${headerImg})`;
       headerEl.classList.add('loaded');
@@ -147,12 +140,13 @@
     if (avatarImg) {
       avatarEl.style.backgroundImage = `url(${avatarImg})`;
     }
-    
+
     headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-    
+
     renderViewMode();
     setupUploads();
-    
+    setupEditButton();
+
     if (!isProfileSaved) {
       setupDragToPan();
     }
@@ -161,10 +155,9 @@
   function setupDragToPan() {
     const headerEl = document.getElementById('header');
     if (!headerEl) return;
-    
+
     let isDragging = false;
-    let startX, startY;
-    let startXPx, startYPx;
+    let startX, startY, startXPx, startYPx;
 
     headerEl.addEventListener('mousedown', e => {
       if (isProfileSaved) return;
@@ -206,7 +199,7 @@
     document.getElementById('avatar').addEventListener('click', () => {
       document.getElementById('avatar-upload').click();
     });
-    
+
     document.getElementById('header-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
@@ -216,7 +209,7 @@
         localStorage.setItem('header', url);
       }
     });
-    
+
     document.getElementById('avatar-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
@@ -227,20 +220,59 @@
     });
   }
 
+  function setupEditButton() {
+    document.getElementById('editBtn').addEventListener('click', () => {
+      renderEditMode();
+    });
+  }
+
   function renderViewMode() {
     const content = document.getElementById('profileContent');
     content.innerHTML = `
-      <div class="name">${profileData.name}</div>
+      <div class="name">${profileData.name || '—'}</div>
       <div class="rank">Degen (Master)</div>
       <div class="field-label">About</div>
-      <div class="field-value">${profileData.about}</div>
+      <div class="field-value">${profileData.about || '—'}</div>
       <div class="field-label">City</div>
-      <div class="field-value">${profileData.city}</div>
+      <div class="field-value">${profileData.city || '—'}</div>
+      <button class="btn" onclick="toggleEdit()">Edit Profile</button>
     `;
   }
 
+  function renderEditMode() {
+    const content = document.getElementById('profileContent');
+    content.innerHTML = `
+      <input type="text" id="nameInput" value="${profileData.name}" placeholder="Name" />
+      <div class="rank">Degen (Master)</div>
+      <div class="field-label">About</div>
+      <textarea id="aboutInput" placeholder="About">${profileData.about}</textarea>
+      <div class="field-label">City</div>
+      <input type="text" id="cityInput" value="${profileData.city}" placeholder="City" />
+      <button class="btn" onclick="saveProfile()">Save Profile</button>
+      <button class="btn" style="background:#666;margin-left:10px;" onclick="renderViewMode()">Cancel</button>
+    `;
+  }
+
+  function toggleEdit() {
+    renderEditMode();
+  }
+
+  function saveProfile() {
+    profileData = {
+      name: document.getElementById('nameInput').value,
+      about: document.getElementById('aboutInput').value,
+      city: document.getElementById('cityInput').value
+    };
+    localStorage.setItem('profileData', JSON.stringify(profileData));
+    localStorage.setItem('isProfileSaved', 'true');
+    isProfileSaved = true;
+    renderViewMode();
+  }
+
+  window.toggleEdit = toggleEdit;
+  window.saveProfile = saveProfile;
+
   init();
 </script>
-
 </body>
 </html>
