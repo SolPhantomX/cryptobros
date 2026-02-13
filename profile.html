@@ -1,128 +1,214 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>CRYPTOBROS</title>
+  <title>CRYPTOBROS Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #000 url('bg1.jpg') center/cover fixed;
+      color: #e0e0ff;
+      min-height: 100vh;
+      transition: background 0.5s ease;
     }
+
     .top-section {
       position: relative;
       height: 300px;
     }
+
     .header {
       width: 100%;
       height: 100%;
       background: center/cover no-repeat;
       border: 2px dashed #555;
       cursor: pointer;
+      transition: all 0.3s;
     }
+
     .header.loaded {
       border: none;
     }
+
     .avatar {
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      border: 4px solid white;
-      background: center/cover no-repeat;
+      border: 4px solid #FFD700;
+      background: center/cover no-repeat #333;
       position: absolute;
       bottom: -100px;
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 20px rgba(255,215,0,0.3);
       cursor: pointer;
+      transition: transform 0.3s;
     }
+
+    .avatar:hover {
+      transform: translateX(-50%) scale(1.05);
+    }
+
     .edit-btn {
       position: absolute;
       top: 16px;
       right: 16px;
-      width: 32px;
-      height: 32px;
-      background: #333;
-      border: 1px solid #666;
+      width: 40px;
+      height: 40px;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid #FFD700;
       border-radius: 50%;
-      color: #ffcc00;
+      color: #FFD700;
+      font-size: 1.4rem;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       z-index: 100;
+      transition: all 0.3s;
     }
+
+    .edit-btn:hover {
+      background: #FFD700;
+      color: #000;
+      transform: rotate(90deg);
+    }
+
     .edit-menu {
       position: absolute;
-      top: 50px;
+      top: 60px;
       right: 16px;
-      background: #000;
-      border: 1px solid #ffcc00;
-      border-radius: 6px;
-      padding: 8px;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid #FFD700;
+      border-radius: 8px;
+      padding: 10px;
       display: none;
       z-index: 100;
-      min-width: 180px;
+      min-width: 200px;
+      box-shadow: 0 4px 20px rgba(255,215,0,0.3);
     }
+
     .edit-menu button {
       display: block;
       width: 100%;
-      background: #222;
-      color: #ffcc00;
-      border: 1px solid #555;
-      border-radius: 4px;
-      padding: 8px 12px;
-      margin: 4px 0;
-      cursor: pointer;
+      background: transparent;
+      color: #FFD700;
+      border: none;
+      padding: 10px 15px;
       text-align: left;
-      font-size: 14px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
     }
+
+    .edit-menu button:hover {
+      background: rgba(255,215,0,0.15);
+    }
+
     .sidebar {
       position: fixed;
-      top: 20px;
+      top: 100px;
       left: 20px;
-      width: 200px;
+      width: 220px;
+      z-index: 50;
     }
+
     .nav-item {
-      padding: 10px 0;
-      color: #385898;
-      font-weight: bold;
+      padding: 14px 20px;
+      color: #00F0FF;
+      font-size: 1.1rem; /* чуть крупнее */
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 8px;
+      margin-bottom: 8px;
     }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: rgba(0,240,255,0.15);
+      color: #fff;
+    }
+
     .main {
       max-width: 800px;
       margin: 220px auto 0;
       padding: 0 20px;
     }
-    .name, .rank, .field-value {
-      color: #ffcc00;
-      animation: flicker 3s infinite alternate;
+
+    .name {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #FFD700;
+      margin-bottom: 10px;
+      text-shadow: 0 0 15px rgba(255,215,0,0.5);
     }
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
-      20%,24%,55%,81%,85% { opacity:0.8; }
+
+    .rank {
+      font-size: 1.3rem;
+      color: #00FFFF;
+      margin-bottom: 20px;
     }
-    .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
-    .rank { margin-bottom: 20px; }
+
+    .field-label {
+      font-size: 1.1rem;
+      color: #aaa;
+      margin: 15px 0 5px;
+    }
+
+    .field-value {
+      font-size: 1.1rem;
+      color: #e0e0ff;
+      background: rgba(255,255,255,0.05);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,215,0,0.2);
+    }
+
     input, textarea {
       width: 100%;
-      padding: 10px;
-      margin: 5px 0 15px;
-      background: rgba(0,0,0,0.3);
-      color: #ffcc00;
+      padding: 12px;
+      margin: 8px 0 15px;
+      background: rgba(0,0,0,0.5);
+      color: #FFD700;
       border: 1px solid #555;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-size: 1rem;
     }
+
+    textarea {
+      min-height: 120px;
+    }
+
     .btn {
       background: #4267B2;
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
+      padding: 12px 24px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      margin: 10px 10px 0 0;
     }
+
+    .btn.cancel {
+      background: #555;
+    }
+
     #bg-upload, #avatar-upload, #header-upload { display: none; }
+
+    @media (max-width: 768px) {
+      .sidebar { position: static; width: 100%; top: 0; padding: 10px; }
+      .main { margin-top: 180px; }
+    }
   </style>
 </head>
 <body>
@@ -135,7 +221,7 @@
 </div>
 
 <div class="sidebar">
-  <div class="nav-item">News Feed</div>
+  <div class="nav-item active">News Feed</div>
   <div class="nav-item">Messages</div>
   <div class="nav-item">My Groups</div>
   <div class="nav-item">Tribunal</div>
@@ -156,59 +242,95 @@
 <input type="file" id="header-upload" accept="image/*">
 
 <script>
-  // Генерация списка фонов: bg1.jpg ... bg13.jpg
-  const bgList = Array.from({length: 13}, (_, i) => `bg${i + 1}.jpg`);
+  const bgList = Array.from({length: 13}, (_, i) => `bg${i+1}.jpg`);
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
-  let currentBg = localStorage.getItem('pageBg') || '';
-  let currentHeader = localStorage.getItem('header') || '';
-  let currentAvatar = localStorage.getItem('avatar') || '';
+  let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
 
   function init() {
-    if (currentBg) document.body.style.backgroundImage = `url(${currentBg})`;
-    if (currentHeader) {
-      document.getElementById('header').style.backgroundImage = `url(${currentHeader})`;
-      document.getElementById('header').classList.add('loaded');
+    const header = document.getElementById('header');
+    const avatar = document.getElementById('avatar');
+
+    // Шапка
+    const savedHeader = localStorage.getItem('header');
+    if (savedHeader) {
+      header.style.backgroundImage = `url(${savedHeader})`;
+      header.classList.add('loaded');
     }
-    if (currentAvatar) {
-      document.getElementById('avatar').style.backgroundImage = `url(${currentAvatar})`;
-    }
+    header.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+
+    // Аватар
+    const savedAvatar = localStorage.getItem('avatar');
+    if (savedAvatar) avatar.style.backgroundImage = `url(${savedAvatar})`;
+
+    // Фон страницы
+    const savedBg = localStorage.getItem('pageBg') || 'bg1.jpg';
+    document.body.style.backgroundImage = `url(${savedBg})`;
+
     renderViewMode();
     setupEvents();
   }
 
   function setupEvents() {
-    // Шапка — клик → загрузить фон шапки
-    document.getElementById('header').addEventListener('click', () => {
-      document.getElementById('header-upload').click();
+    const header = document.getElementById('header');
+
+    // Drag для шапки
+    let isDragging = false;
+    let startX, startY, startXPx, startYPx;
+
+    header.addEventListener('mousedown', e => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      header.classList.add('dragging');
+
+      const bgPos = getComputedStyle(header).backgroundPosition.split(' ');
+      startXPx = parseFloat(bgPos[0]) || 0;
+      startYPx = parseFloat(bgPos[1]) || 0;
     });
 
-    // Аватар — клик → загрузить
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      headerPos.x = startXPx + dx;
+      headerPos.y = startYPx + dy;
+      header.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        header.classList.remove('dragging');
+        localStorage.setItem('headerPos', JSON.stringify(headerPos));
+      }
+    });
+
+    // Клик по шапке → загрузка
+    header.addEventListener('click', e => {
+      if (!isDragging) document.getElementById('header-upload').click();
+    });
+
+    // Аватар клик
     document.getElementById('avatar').addEventListener('click', () => {
       document.getElementById('avatar-upload').click();
     });
 
-    // Шестерёнка — меню
-    document.getElementById('editBtn').addEventListener('click', () => {
+    // Шестерёнка
+    document.getElementById('editBtn').addEventListener('click', e => {
+      e.stopPropagation();
       const menu = document.getElementById('editMenu');
       menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-      if (menu.style.display === 'block') {
-        menu.innerHTML = `
-          <button onclick="showBgMenu()">Change Background</button>
-          <button onclick="showEditProfile()">Edit Profile</button>
-        `;
-      }
+      if (menu.style.display === 'block') showMainMenu();
     });
 
-    // Закрытие меню при клике вне
+    // Закрытие меню
     document.addEventListener('click', e => {
-      const btn = document.getElementById('editBtn');
-      const menu = document.getElementById('editMenu');
-      if (!btn.contains(e.target) && !menu.contains(e.target)) {
-        menu.style.display = 'none';
+      if (!document.getElementById('editBtn').contains(e.target) && !document.getElementById('editMenu').contains(e.target)) {
+        document.getElementById('editMenu').style.display = 'none';
       }
     });
 
-    // Upload обработчики
+    // Upload
     document.getElementById('header-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
@@ -232,25 +354,30 @@
       const file = e.target.files[0];
       if (file) {
         const url = URL.createObjectURL(file);
-        setBg(url);
+        setPageBg(url);
       }
     });
   }
 
-  function setBg(src) {
+  function setPageBg(src) {
     document.body.style.backgroundImage = `url(${src})`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundAttachment = 'fixed';
     localStorage.setItem('pageBg', src);
   }
 
+  function showMainMenu() {
+    document.getElementById('editMenu').innerHTML = `
+      <button onclick="showBgMenu()">Change Background</button>
+      <button onclick="showEditProfile()">Edit Profile</button>
+    `;
+  }
+
   function showBgMenu() {
-    let buttons = bgList.map(bg => `<button onclick="setBg('${bg}')">${bg}</button>`).join('');
+    let buttons = bgList.map(bg => `<button onclick="setPageBg('${bg}')">${bg}</button>`).join('');
     buttons += `<button onclick="document.getElementById('bg-upload').click()">Upload Custom</button>`;
     document.getElementById('editMenu').innerHTML = `
-      <div style="color:#ffcc00;margin-bottom:8px;">Select Page Background</div>
-      <div style="display:flex;flex-direction:column;gap:4px;">${buttons}</div>
-      <button class="btn" style="margin-top:10px;background:#666;" onclick="showMainMenu()">Back</button>
+      <div style="color:#FFD700;margin-bottom:10px;font-weight:600;">Select Page Background</div>
+      <div style="max-height:300px;overflow-y:auto;">${buttons}</div>
+      <button style="margin-top:10px;background:#444;color:#fff;" onclick="showMainMenu()">Back</button>
     `;
   }
 
@@ -263,22 +390,15 @@
       <div class="field-label">City</div>
       <input type="text" id="cityInput" value="${profileData.city}" placeholder="City" />
       <button class="btn" onclick="saveProfile()">Save</button>
-      <button class="btn" style="background:#666;margin-left:10px;" onclick="showMainMenu()">Cancel</button>
-    `;
-  }
-
-  function showMainMenu() {
-    document.getElementById('editMenu').innerHTML = `
-      <button onclick="showBgMenu()">Change Background</button>
-      <button onclick="showEditProfile()">Edit Profile</button>
+      <button class="btn cancel" onclick="showMainMenu()">Cancel</button>
     `;
   }
 
   function saveProfile() {
     profileData = {
-      name: document.getElementById('nameInput').value,
-      about: document.getElementById('aboutInput').value,
-      city: document.getElementById('cityInput').value
+      name: document.getElementById('nameInput').value.trim(),
+      about: document.getElementById('aboutInput').value.trim(),
+      city: document.getElementById('cityInput').value.trim()
     };
     localStorage.setItem('profileData', JSON.stringify(profileData));
     renderViewMode();
@@ -286,25 +406,19 @@
   }
 
   function renderViewMode() {
-    const el = document.getElementById('profileContent');
-    el.innerHTML = `
-      <div class="name">${profileData.name || '—'}</div>
-      <div class="rank">Degen (Master)</div>
-      <div class="field-label">About</div>
-      <div class="field-value">${profileData.about || '—'}</div>
-      <div class="field-label">City</div>
-      <div class="field-value">${profileData.city || '—'}</div>
-    `;
+    document.querySelector('.name').textContent = profileData.name || '—';
+    document.querySelector('.field-value:nth-of-type(1)').textContent = profileData.about || '—';
+    document.querySelector('.field-value:nth-of-type(2)').textContent = profileData.city || '—';
   }
 
+  // Глобальные функции для кнопок
   window.showBgMenu = showBgMenu;
   window.showEditProfile = showEditProfile;
   window.showMainMenu = showMainMenu;
   window.saveProfile = saveProfile;
-  window.setBg = setBg;
+  window.setPageBg = setPageBg;
 
   init();
 </script>
-
 </body>
 </html>
