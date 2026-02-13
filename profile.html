@@ -31,7 +31,7 @@
       background: center/cover no-repeat #111;
       border: 2px dashed #555;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
     }
 
     .header.loaded {
@@ -50,7 +50,7 @@
       transform: translateX(-50%);
       box-shadow: 0 4px 20px rgba(255,215,0,0.3);
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s;
     }
 
     .avatar:hover {
@@ -124,7 +124,7 @@
     .nav-item {
       padding: 16px 20px;
       color: #00F0FF;
-      font-size: 1.15rem; /* чуть крупнее */
+      font-size: 1.15rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
@@ -241,14 +241,14 @@
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
   let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
 
-  // Инициализация после полной загрузки DOM
+  // Запуск после полной загрузки страницы
   window.addEventListener('load', init);
 
   function init() {
     const header = document.getElementById('header');
     const avatar = document.getElementById('avatar');
 
-    // Восстановление шапки
+    // Шапка
     const savedHeader = localStorage.getItem('header');
     if (savedHeader) {
       header.style.backgroundImage = `url(${savedHeader})`;
@@ -328,13 +328,13 @@
       }
     });
 
-    // Upload обработчики
+    // Upload
     document.getElementById('header-upload').addEventListener('change', e => {
       const file = e.target.files[0];
       if (file) {
         const url = URL.createObjectURL(file);
-        document.getElementById('header').style.backgroundImage = `url(${url})`;
-        document.getElementById('header').classList.add('loaded');
+        header.style.backgroundImage = `url(${url})`;
+        header.classList.add('loaded');
         localStorage.setItem('header', url);
       }
     });
@@ -387,7 +387,7 @@
       <textarea id="aboutInput" placeholder="About">${profileData.about}</textarea>
       <div class="field-label">City</div>
       <input type="text" id="cityInput" value="${profileData.city}" placeholder="City" />
-      <button class="btn" onclick="saveProfile()">Save</button>
+      <button class="btn" onclick="saveProfile()">Save Profile</button>
       <button class="btn cancel" onclick="showMainMenu()">Cancel</button>
     `;
   }
@@ -419,6 +419,5 @@
   // Запуск после полной загрузки
   window.addEventListener('load', init);
 </script>
-
 </body>
 </html>
