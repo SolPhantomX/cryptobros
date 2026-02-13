@@ -3,242 +3,315 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Join CryptoBros – Bros In, Noise Out</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>CRYPTOBROS • Onboarding</title>
+  <!-- Шрифты: Rajdhani вместо Orbitron -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Solana Web3.js для Phantom -->
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
+      background: #00052a;
+      color: #00ff9d;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0a0a0f 0%, #0f001a 100%);
-      color: #e0e0ff;
+      padding: 2rem;
       min-height: 100vh;
-      overflow-x: hidden;
     }
-
-    /* Particles background */
-    .particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-    }
-    .particles::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: 
-        radial-gradient(circle at 10% 20%, rgba(255,215,0,0.1) 2px, transparent 3px),
-        radial-gradient(circle at 90% 80%, rgba(0,240,255,0.1) 2px, transparent 3px);
-      background-size: 100px 100px;
-      animation: float 60s linear infinite;
-    }
-    @keyframes float {
-      0% { transform: translate(0,0); }
-      100% { transform: translate(-100px,-100px); }
-    }
-
-    /* Hero */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 0 20px;
-      position: relative;
-    }
-    .hero h1 {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(3.5rem, 10vw, 8rem);
-      background: linear-gradient(90deg, #FFD700, #FFEA00, #FFD700);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 40px rgba(255,215,0,0.6);
-      margin-bottom: 1rem;
-      animation: glow 3s ease-in-out infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 20px rgba(255,215,0,0.5); }
-      to   { text-shadow: 0 0 60px rgba(255,215,0,0.9), 0 0 100px rgba(255,215,0,0.4); }
-    }
-    .hero p {
-      font-size: clamp(1.2rem, 4vw, 1.8rem);
-      max-width: 800px;
-      margin-bottom: 3rem;
-      opacity: 0.9;
-    }
-    .cta-btn {
-      padding: 1rem 3rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      background: linear-gradient(45deg, #FFD700, #FFEA00);
-      color: #0a0a0f;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 0 40px rgba(255,215,0,0.5);
-      transition: all 0.3s ease;
-    }
-    .cta-btn:hover {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 0 80px rgba(255,215,0,0.8);
-    }
-
-    /* Tiers */
-    .tiers {
-      padding: 6rem 2rem;
-      max-width: 1400px;
+    .container {
+      max-width: 1000px;
       margin: 0 auto;
     }
-    .tiers h2 {
+    header {
       text-align: center;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 3.5rem;
-      color: #FFD700;
-      margin-bottom: 4rem;
-      text-shadow: 0 0 20px rgba(255,215,0,0.4);
+      margin-bottom: 3rem;
     }
-    .cards-grid {
+    h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #00ff9d;
+      letter-spacing: 0.5px;
+    }
+    .subtitle {
+      color: #66ffff;
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 500;
+    }
+    .plans {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
     }
-    .card {
-      background: rgba(20, 20, 40, 0.4);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,215,0,0.2);
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
+    .plan {
+      background: rgba(0, 5, 42, 0.85);
+      border: 1px solid #00ff9d;
+      border-radius: 12px;
+      padding: 1.5rem;
       text-align: center;
-      transition: all 0.4s ease;
-      position: relative;
-      overflow: hidden;
+      transition: all 0.3s ease;
     }
-    .card:hover {
-      transform: translateY(-15px);
-      border-color: #FFD700;
-      box-shadow: 0 0 60px rgba(255,215,0,0.3);
+    .plan:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 25px rgba(0, 255, 157, 0.4);
     }
-    .card.free { border-color: #00F0FF; }
-    .card.free:hover { box-shadow: 0 0 60px rgba(0,240,255,0.4); }
-    .card.premium {
-      border: 2px solid #FFD700;
-      background: linear-gradient(135deg, rgba(20,20,40,0.6), rgba(40,20,60,0.4));
+    .plan.free { border-color: #aaa; }
+    .plan.master { border-color: #00ff9d; }
+    .plan.pro { border-color: #66ffff; }
+    .plan.premium { 
+      border-color: #d700ff; 
+      background: rgba(215, 0, 255, 0.12); 
     }
-    .card .price {
-      font-size: 3.5rem;
-      font-weight: bold;
-      color: #FFD700;
+
+    .plan-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.3px;
+    }
+    .free .plan-name { color: #aaa; }
+    .master .plan-name { color: #00ff9d; }
+    .pro .plan-name { color: #66ffff; }
+    .premium .plan-name { color: #d700ff; }
+
+    .price { 
+      font-size: 1.2rem; 
+      margin: 0.5rem 0; 
+      font-weight: 600;
+      font-family: 'Rajdhani', sans-serif;
+    }
+    .features {
       margin: 1rem 0;
-      text-shadow: 0 0 20px rgba(255,215,0,0.6);
-    }
-    .card.free .price { color: #00F0FF; }
-    .card ul {
+      font-size: 0.95rem;
+      color: #ccc;
       list-style: none;
-      margin: 2rem 0;
-      text-align: left;
     }
-    .card ul li {
-      margin: 1rem 0;
-      font-size: 1.1rem;
+    .features li { 
+      margin: 0.4rem 0; 
       position: relative;
-      padding-left: 1.8rem;
+      padding-left: 1.5rem;
     }
-    .card ul li::before {
-      content: '→';
+    .features li:before {
+      content: "✓";
       position: absolute;
       left: 0;
-      color: #FFD700;
+      color: #00ff9d;
     }
-    .card .btn {
-      padding: 1rem 2.5rem;
-      background: transparent;
-      border: 2px solid #FFD700;
-      color: #FFD700;
-      font-size: 1.2rem;
-      border-radius: 50px;
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 1rem;
+      background: linear-gradient(45deg, #00ff9d, #66ffff);
+      color: #00052a;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
+      font-size: 1rem;
+      font-family: 'Rajdhani', sans-serif;
     }
-    .card .btn:hover {
-      background: #FFD700;
-      color: #0a0a0f;
+    .btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px #00ff9d;
     }
-    .card.free .btn { border-color: #00F0FF; color: #00F0FF; }
-    .card.free .btn:hover { background: #00F0FF; color: #0a0a0f; }
+    .btn-free {
+      background: #333;
+      color: #fff;
+    }
+    .btn-premium {
+      background: linear-gradient(45deg, #d700ff, #66ffff);
+    }
 
-    /* Footer */
-    .footer {
+    .invite-banner {
+      background: rgba(215, 0, 255, 0.2);
+      border: 1px solid #d700ff;
+      border-radius: 12px;
+      padding: 1.5rem;
       text-align: center;
-      padding: 3rem 2rem 2rem;
-      color: #666;
+      margin-bottom: 2rem;
+      display: none;
+    }
+    .invite-banner h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      color: #d700ff;
+      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+    }
+
+    #wallet-info {
+      text-align: center;
+      margin: 2rem 0;
+      font-size: 1.1rem;
+      color: #66ffff;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #66ffff;
       font-size: 0.9rem;
+      opacity: 0.7;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .plans { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="particles"></div>
 
-  <section class="hero">
-    <h1>Join CryptoBros</h1>
-    <p>Bros In. Noise Out.<br>Elite roast community. No fake gurus, no paid signals.<br>Only truth, memes & real alpha. <strong>AUS Token drops incoming 🔥</strong></p>
-    <button class="cta-btn">Connect Phantom & Claim Your Spot</button>
-  </section>
+<div class="container">
+  <header>
+    <h1>CRYPTOBROS ACCESS</h1>
+    <div class="subtitle">Choose your tier to join the network</div>
+  </header>
 
-  <section class="tiers">
-    <h2>Choose Your Tier</h2>
-    <div class="cards-grid">
-      <div class="card free">
-        <h3>Free Bro</h3>
-        <div class="price">0 AUS</div>
-        <ul>
-          <li>Taste the roast & memes</li>
-          <li>Public feed & read-only chat</li>
-          <li>Teaser AUS drop: 150–200 on signup</li>
-        </ul>
-        <button class="btn">Start Free</button>
-      </div>
+  <div class="invite-banner" id="inviteBanner"></div>
 
-      <div class="card">
-        <h3>Master Bro</h3>
-        <div class="price">5,000 AUS</div>
-        <ul>
-          <li>Full access + no ads</li>
-          <li>Weekly deep dives & extra roasts</li>
-          <li>Basic Tribunal votes</li>
-        </ul>
-        <button class="btn">Claim 5K Tier</button>
-      </div>
-
-      <div class="card">
-        <h3>Pro Bro</h3>
-        <div class="price">12,000 AUS</div>
-        <ul>
-          <li>Priority alpha & early access</li>
-          <li>Governance power & custom memes</li>
-          <li>Revenue share vibes incoming</li>
-        </ul>
-        <button class="btn">Unlock Pro</button>
-      </div>
-
-      <div class="card premium">
-        <h3>Premium Bro</h3>
-        <div class="price">30,000 AUS Lifetime</div>
-        <ul>
-          <li>Own the club forever</li>
-          <li>Personal roast & 1-on-1</li>
-          <li>Max AUS drop + VIP yield</li>
-        </ul>
-        <button class="btn">Lifetime Elite</button>
-      </div>
+  <div class="plans">
+    <div class="plan free">
+      <div class="plan-name">Free</div>
+      <div class="price">0 AUS</div>
+      <ul class="features">
+        <li>2-week access</li>
+        <li>Basic profile</li>
+        <li>Limited tribunal</li>
+      </ul>
+      <button class="btn btn-free" onclick="selectTier('Free')">Select</button>
     </div>
-  </section>
 
-  <div class="footer">
-    Cryptobros 2026 &copy;
+    <div class="plan master">
+      <div class="plan-name">Master</div>
+      <div class="price">500 AUS</div>
+      <ul class="features">
+        <li>Unlimited access</li>
+        <li>Custom profile</li>
+        <li>Full tribunal</li>
+      </ul>
+      <button class="btn" onclick="selectTier('Master')">Select</button>
+    </div>
+
+    <div class="plan pro">
+      <div class="plan-name">Pro</div>
+      <div class="price">2,000 AUS</div>
+      <ul class="features">
+        <li>All Master features</li>
+        <li>AI feed filtering</li>
+        <li>Staking rewards</li>
+      </ul>
+      <button class="btn" onclick="selectTier('Pro')">Select</button>
+    </div>
+
+    <div class="plan premium">
+      <div class="plan-name">Premium</div>
+      <div class="price">10,000 AUS</div>
+      <ul class="features">
+        <li>All Pro features</li>
+        <li>Free invites</li>
+        <li>Governance rights</li>
+      </ul>
+      <button class="btn btn-premium" onclick="selectTier('Premium')">Select</button>
+    </div>
   </div>
+
+  <div id="wallet-info">
+    <button id="connect-btn" class="btn" style="padding: 1rem 2rem; font-size: 1.2rem;">
+      Connect Phantom Wallet
+    </button>
+    <div id="wallet-address" style="margin-top: 1rem; word-break: break-all;"></div>
+  </div>
+
+  <footer>Cryptobros 2026 ©</footer>
+</div>
+
+<script>
+  // Parse URL params for invites
+  const urlParams = new URLSearchParams(window.location.search);
+  const inviter = urlParams.get('inviter');
+  const requestedTier = urlParams.get('tier');
+  const isFree = urlParams.get('free') === '1';
+
+  const inviteBanner = document.getElementById('inviteBanner');
+
+  // Show banner ONLY for @cryptobros
+  if (inviter === 'cryptobros' && requestedTier && isFree) {
+    inviteBanner.style.display = 'block';
+    inviteBanner.innerHTML = `
+      <h2>✨ FREE INVITATION</h2>
+      <p>You've been invited by @cryptobros to the <strong>${requestedTier}</strong> tier — completely free!</p>
+      <button class="btn btn-premium" style="margin-top:1rem;" onclick="activateFreeTier('${requestedTier}')">
+        Activate ${requestedTier} Access
+      </button>
+    `;
+  }
+
+  function activateFreeTier(tier) {
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = 'Activating...';
+
+    localStorage.setItem('cryptobrosTier', tier);
+    localStorage.setItem('accessExpiry', 'never');
+
+    setTimeout(() => {
+      window.location.href = 'profile.html';
+    }, 800);
+  }
+
+  function selectTier(tier) {
+    if (tier === 'Free') {
+      const twoWeeks = Date.now() + 14 * 24 * 60 * 60 * 1000;
+      localStorage.setItem('cryptobrosTier', 'Free');
+      localStorage.setItem('accessExpiry', twoWeeks.toString());
+      alert('✅ Free access activated for 2 weeks!');
+      window.location.href = 'profile.html';
+    } else {
+      alert(`🔒 To unlock ${tier}, connect Phantom wallet and pay in AUS/SOL/USDC.\n\nComing soon!`);
+    }
+  }
+
+  // Phantom Wallet Integration
+  const connectBtn = document.getElementById('connect-btn');
+  const walletAddressDiv = document.getElementById('wallet-address');
+
+  connectBtn.addEventListener('click', async () => {
+    if (window.solana && window.solana.isPhantom) {
+      try {
+        const provider = window.solana;
+        const response = await provider.connect();
+        const publicKey = response.publicKey.toString();
+        
+        walletAddressDiv.textContent = `Connected: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
+        walletAddressDiv.style.color = '#00ff9d';
+        
+        localStorage.setItem('phantomAddress', publicKey);
+        alert('Phantom connected! Your address: ' + publicKey);
+      } catch (err) {
+        console.error(err);
+        alert('Connection failed: ' + (err.message || 'Unknown error'));
+      }
+    } else {
+      alert('Phantom wallet not found! Please install it: https://phantom.app/');
+    }
+  });
+
+  // Restore wallet state on page load
+  if (localStorage.getItem('phantomAddress')) {
+    const savedAddress = localStorage.getItem('phantomAddress');
+    walletAddressDiv.textContent = `Connected: ${savedAddress.slice(0, 6)}...${savedAddress.slice(-4)}`;
+    walletAddressDiv.style.color = '#00ff9d';
+  }
+</script>
+
 </body>
 </html>
