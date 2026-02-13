@@ -12,13 +12,13 @@
       background: #000;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       overflow: hidden;
       position: relative;
     }
 
-    /* ЛОГОТИП — ВСЁ В НЁМ: ИЗОБРАЖЕНИЕ + СЛОГАН */
     .hero {
       position: fixed;
       top: 0;
@@ -30,7 +30,7 @@
       filter: brightness(0.9);
     }
 
-    /* КНОПКА — ВМЕСТО РАМКИ (точно где стрелка) */
+    /* КНОПКА — ТОЧНО ПОД ВСЕМ ЛОГОТИПОМ, В МЕСТЕ РАМКИ */
     .btn {
       position: relative;
       background: linear-gradient(45deg, #00ff9d, #66ffff);
@@ -45,8 +45,8 @@
       font-family: 'Quicksand', sans-serif;
       letter-spacing: 1px;
       box-shadow: 0 0 25px rgba(0, 255, 157, 0.6);
-      /* ↓↓↓ ЭТО ПОЗИЦИЯ — как на твоём скрине: кнопка под логотипом, в центре */
-      margin-top: 220px;
+      /* ↓↓↓ СМЕЩЕНИЕ ВНИЗ — чтобы не перекрывать логотип */
+      margin-top: 320px;
     }
     .btn:hover {
       transform: scale(1.07);
@@ -71,10 +71,8 @@
   </style>
 </head>
 <body>
-
   <div class="hero"></div>
   <button class="btn" onclick="window.location.href='onboarding.html'">Enter the Club</button>
   <footer>Cryptobros 2026 ©</footer>
-
 </body>
 </html>
