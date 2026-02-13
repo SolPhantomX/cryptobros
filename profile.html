@@ -115,7 +115,7 @@
 
     .sidebar {
       position: fixed;
-      top: 340px; /* опущено ниже шапки и аватара */
+      top: 340px;
       left: 20px;
       width: 220px;
       z-index: 50;
@@ -242,7 +242,9 @@
   let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
 
   // Запуск после полной загрузки
-  window.addEventListener('load', init);
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+  });
 
   function init() {
     const header = document.getElementById('header');
@@ -321,7 +323,7 @@
       if (menu.style.display === 'block') showMainMenu();
     });
 
-    // Закрытие меню
+    // Закрытие меню при клике вне
     document.addEventListener('click', e => {
       if (!document.getElementById('editBtn').contains(e.target) && !document.getElementById('editMenu').contains(e.target)) {
         document.getElementById('editMenu').style.display = 'none';
@@ -419,6 +421,5 @@
   // Запуск
   window.addEventListener('load', init);
 </script>
-
 </body>
 </html>
