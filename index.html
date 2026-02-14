@@ -111,6 +111,18 @@
       background: rgba(102, 255, 255, 0.3);
       color: #fff;
     }
+    body[dir="rtl"] .language-btn {
+      right: auto;
+      left: 20px;
+    }
+    body[dir="rtl"] .language-menu {
+      right: auto;
+      left: 20px;
+      text-align: left;
+    }
+    body[dir="rtl"] .language-option {
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -124,6 +136,8 @@
     <div class="language-option" data-lang="es">Español</div>
     <div class="language-option" data-lang="pt">Português</div>
     <div class="language-option" data-lang="zh">简体中文</div>
+    <div class="language-option" data-lang="ar">العربية</div>
+    <div class="language-option" data-lang="he">עברית</div>
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
   
@@ -137,6 +151,8 @@
       es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
       pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
       zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
+      ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
+      he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
       ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
     };
 
@@ -154,6 +170,13 @@
       opt.addEventListener('click', () => {
         const lang = opt.dataset.lang;
         document.documentElement.lang = lang;
+        
+        // Установка RTL для арабского и иврита
+        if (lang === 'ar' || lang === 'he') {
+          document.body.setAttribute('dir', 'rtl');
+        } else {
+          document.body.removeAttribute('dir');
+        }
         
         options.forEach(o => o.classList.remove('active'));
         opt.classList.add('active');
