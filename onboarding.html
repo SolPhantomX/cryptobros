@@ -53,6 +53,7 @@
       padding-bottom: 80px;
       position: relative;
       overflow-x: hidden;
+      overflow-y: auto;
       transition: all 0.4s ease;
     }
 
@@ -238,15 +239,6 @@
       }
       to { 
         text-shadow: 0 0 25px rgba(0, 240, 255, 0.9), 0 0 50px rgba(255, 215, 0, 0.7);
-      }
-    }
-
-    .dark-theme @keyframes glowHeader {
-      from { 
-        text-shadow: 0 0 15px rgba(0, 255, 157, 0.8), 0 0 30px rgba(102, 255, 255, 0.6);
-      }
-      to { 
-        text-shadow: 0 0 25px rgba(0, 255, 157, 1), 0 0 50px rgba(102, 255, 255, 0.9);
       }
     }
 
@@ -745,9 +737,427 @@
       100% { color: #ffff00; }
     }
 
-    @media (min-width: 1200px) {
-      .plans { grid-template-columns: repeat(4, 1fr); }
+    /* Модальное окно правил */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.4s ease;
     }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .rules-modal {
+      background: linear-gradient(145deg, #0f0f1a 0%, #151525 100%);
+      border-radius: 28px;
+      padding: 2.5rem;
+      max-width: 850px;
+      width: 92%;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.85),
+        0 0 40px rgba(255, 0, 0, 0.25),
+        0 0 25px rgba(0, 255, 157, 0.15);
+      border: 3px solid rgba(255, 0, 0, 0.6);
+      position: relative;
+      animation: modalSlideUp 0.5s ease-out;
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.8rem;
+      border-bottom: 3px solid rgba(255, 0, 0, 0.7);
+      position: relative;
+    }
+
+    .modal-header::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.9), transparent);
+      border-radius: 3px;
+    }
+
+    .modal-header h2 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(90deg, #ff0000, #ff6b6b, #ff0000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+      letter-spacing: -0.5px;
+    }
+
+    .modal-header p {
+      color: #ff9d9d;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      font-weight: 600;
+      margin-top: 0.8rem;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    }
+
+    .rules-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title.danger {
+      border-bottom-color: #ff0000;
+      color: #ff0000;
+    }
+
+    .section-title.danger::before {
+      content: '⚠️';
+      font-size: 1.8rem;
+    }
+
+    .section-title.system::before {
+      content: '⚙️';
+      font-size: 1.6rem;
+    }
+
+    .rule-item {
+      background: rgba(20, 10, 30, 0.65);
+      border-radius: 16px;
+      padding: 1.4rem;
+      margin-bottom: 1.3rem;
+      border-left: 5px solid #ff0000;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rule-item:hover {
+      transform: translateX(6px);
+      border-left-width: 8px;
+      box-shadow: 0 5px 20px rgba(255, 0, 0, 0.35);
+    }
+
+    .rule-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, rgba(255, 0, 0, 0.08), transparent 70%);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .rule-item:hover::before {
+      opacity: 1;
+    }
+
+    .rule-item h3 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.9rem;
+      color: #ff4d4d;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .rule-item h3::before {
+      content: '•';
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+
+    .rule-item p {
+      color: #d0d0ff;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    .rule-item p strong {
+      color: #ff6b6b;
+      font-weight: 700;
+    }
+
+    .rule-item.principle {
+      background: rgba(10, 25, 20, 0.75);
+      border-left-color: #00ff9d;
+      border-left-width: 6px;
+    }
+
+    .rule-item.principle h3 {
+      color: #00ff9d;
+      font-size: 1.5rem;
+    }
+
+    .rule-item.principle h3::before {
+      content: '💎';
+      font-size: 1.8rem;
+    }
+
+    .rule-item.principle:hover {
+      transform: translateX(6px);
+      border-left-width: 9px;
+      box-shadow: 0 5px 20px rgba(0, 255, 157, 0.35);
+    }
+
+    .rule-item.principle::before {
+      background: linear-gradient(90deg, rgba(0, 255, 157, 0.12), transparent 70%);
+    }
+
+    .rule-item.warning {
+      background: rgba(40, 10, 10, 0.8);
+      border-left-color: #ff0000;
+      border-left-width: 8px;
+      margin-top: 2rem;
+      padding: 1.8rem;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+      animation: pulseWarning 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseWarning {
+      0%, 100% { box-shadow: 0 0 25px rgba(255, 0, 0, 0.4); }
+      50% { box-shadow: 0 0 45px rgba(255, 0, 0, 0.75); }
+    }
+
+    .rule-item.warning h3 {
+      color: #ff0000;
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .rule-item.warning h3::before {
+      content: '⚡';
+      font-size: 2rem;
+    }
+
+    .rule-item.warning p {
+      color: #ff9d9d;
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.9;
+    }
+
+    .rule-item.warning p strong {
+      color: #ff0000;
+      font-size: 1.3rem;
+      display: block;
+      margin: 0.8rem 0;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin: 2.8rem 0 2.2rem;
+      padding: 1.8rem;
+      background: rgba(45, 5, 5, 0.85);
+      border-radius: 20px;
+      border: 4px solid #ff0000;
+      position: relative;
+      overflow: hidden;
+      animation: pulseRedBorder 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseRedBorder {
+      0%, 100% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); }
+      50% { box-shadow: 0 0 35px rgba(255, 0, 0, 0.9); }
+    }
+
+    .checkbox-container::before {
+      content: '❗';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-size: 3rem;
+      color: #ff0000;
+      opacity: 0.3;
+      transform: rotate(-15deg);
+    }
+
+    .checkbox-container input {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      accent-color: #ff0000;
+      border: 3px solid #ff4d4d;
+      border-radius: 6px;
+      transform: scale(1.2);
+    }
+
+    .checkbox-container label {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ff3333;
+      cursor: pointer;
+      line-height: 1.6;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 1.4rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 3px solid rgba(0, 255, 157, 0.4);
+    }
+
+    .modal-btn {
+      padding: 1.1rem 2.8rem;
+      border-radius: 16px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      letter-spacing: -0.5px;
+      min-width: 180px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+
+    .modal-btn:hover::after {
+      transform: translateX(100%);
+    }
+
+    .modal-btn.cancel {
+      background: rgba(255, 50, 50, 0.25);
+      color: #ff6b6b;
+      border: 3px solid #ff6b6b;
+      font-weight: 700;
+    }
+
+    .modal-btn.cancel:hover {
+      background: rgba(255, 50, 50, 0.4);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+    }
+
+    .modal-btn.continue {
+      background: linear-gradient(45deg, #00ff9d, #66ffff, #00ff9d);
+      color: #0a0a0f;
+      font-weight: 900;
+      box-shadow: 0 8px 30px rgba(0, 255, 157, 0.45);
+    }
+
+    .modal-btn.continue:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 12px 40px rgba(0, 255, 157, 0.75);
+    }
+
+    .modal-btn.continue:active {
+      transform: translateY(2px) scale(0.98);
+    }
+
+    .modal-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .tier-info {
+      background: rgba(5, 20, 15, 0.7);
+      border-radius: 18px;
+      padding: 1.6rem;
+      margin-bottom: 2.2rem;
+      border: 2px solid var(--accent-cyan);
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0, 255, 157, 0.15);
+    }
+
+    .tier-info h4 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-bottom: 0.9rem;
+      color: var(--accent-cyan);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tier-info h4::before {
+      content: '🎯';
+      font-size: 1.9rem;
+    }
+
+    .tier-info p {
+      color: #a0ffff;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      font-weight: 600;
+      margin-top: 0.6rem;
+    }
+
+    .tier-info p strong {
+      color: #fff;
+      font-size: 1.4rem;
+    }
+
+    @media (max-width: 900px) {
+      .rules-modal { padding: 2rem; }
+      .modal-header h2 { font-size: 2rem; }
+      .section-title { font-size: 1.4rem; }
+      .rule-item { padding: 1.2rem; }
+      .rule-item h3 { font-size: 1.25rem; }
+      .rule-item p { font-size: 1rem; }
+      .checkbox-container { flex-direction: column; align-items: center; text-align: center; }
+      .modal-footer { flex-direction: column; gap: 1rem; }
+      .modal-btn { width: 100%; min-width: auto; }
+    }
+
     @media (max-width: 768px) {
       h1 { font-size: 2.8rem; letter-spacing: 2px; }
       .subtitle { font-size: 1.4rem; letter-spacing: 1.5px; }
@@ -758,11 +1168,17 @@
       .theme-toggle-container { top: 20px; right: 20px; width: 70px; height: 35px; }
       .theme-toggle { width: 28px; height: 28px; }
     }
+
     @media (max-width: 480px) {
       h1 { font-size: 2.3rem; }
       .subtitle { font-size: 1.2rem; }
       .plans { grid-template-columns: 1fr; }
       #connect-btn { width: 90%; font-size: 1.2rem; }
+      .modal-header h2 { font-size: 1.8rem; }
+      .section-title { font-size: 1.3rem; }
+      .rule-item.warning p { font-size: 1.05rem; }
+      .checkbox-container label { font-size: 1.1rem; }
+      .modal-btn { padding: 1rem 2rem; font-size: 1.05rem; }
     }
   </style>
 </head>
@@ -792,7 +1208,7 @@
         <li>Basic profile</li>
         <li>Limited tribunal</li>
       </ul>
-      <button class="btn" onclick="selectTier('Free')">SELECT</button>
+      <button class="btn" onclick="showRulesModal('Free')">SELECT</button>
     </div>
 
     <div class="plan master">
@@ -803,7 +1219,7 @@
         <li>Custom profile</li>
         <li>Full tribunal</li>
       </ul>
-      <button class="btn" onclick="selectTier('Master')">SELECT</button>
+      <button class="btn" onclick="showRulesModal('Master')">SELECT</button>
     </div>
 
     <div class="plan pro">
@@ -814,7 +1230,7 @@
         <li>AI feed filtering</li>
         <li>Staking rewards</li>
       </ul>
-      <button class="btn" onclick="selectTier('Pro')">SELECT</button>
+      <button class="btn" onclick="showRulesModal('Pro')">SELECT</button>
     </div>
 
     <div class="plan premium">
@@ -825,7 +1241,7 @@
         <li>Free invites</li>
         <li>Governance rights</li>
       </ul>
-      <button class="btn" onclick="selectTier('Premium')">SELECT</button>
+      <button class="btn" onclick="showRulesModal('Premium')">SELECT</button>
     </div>
   </div>
 
@@ -835,31 +1251,132 @@
   </div>
 </div>
 
+<!-- Модальное окно правил -->
+<div class="modal-overlay" id="rulesModal">
+  <div class="rules-modal">
+    <div class="modal-header">
+      <h2>ПРАВИЛА CRYPTOBROS</h2>
+      <p>НАРУШЕНИЕ ЛЮБОГО ПУНКТА = БАН НАВСЕГДА + КОНФИСКАЦИЯ 100% AUS В КАЗНУ КЛУБА</p>
+    </div>
+
+    <div class="tier-info" id="tierInfo">
+      <!-- Заполнится динамически -->
+    </div>
+
+    <div class="rules-section">
+      <div class="section-title danger">ЧАСТЬ 1: ПРАВИЛА ПОВЕДЕНИЯ</div>
+      
+      <div class="rule-item">
+        <h3>СКАМ И МАНИПУЛЯЦИИ</h3>
+        <p>Запрещено любое продвижение скама, фишинга, rug-pull, pump&amp;dump без доказательств и прозрачного раскрытия позиции. Посты с подозрением на манипуляции удаляются без предупреждения.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>ШИЛЛИНГ БЕЗ ОБОСНОВАНИЯ</h3>
+        <p>Запрещено шиллинг токенов/проектов без DYOR-обоснования (анализ, данные, логика) и обязательного раскрытия вашей позиции («Я держу 10к токенов»). Без этого — бан.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>РЕФЕРАЛЫ И «ГАРАНТИРОВАННЫЕ 100X»</h3>
+        <p>Запрещено размещение реферальных ссылок, платных курсов, торговых сигналов, обещаний «гарантированной прибыли» без крупного предупреждения: «ЭТО РИСКОВАННО, МОЖЕТЕ ПОТЕРЯТЬ ВСЁ».</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>ТОКСИЧНОСТЬ И СПАМ</h3>
+        <p>Запрещено оскорбления, травля, доксинг, спам, флуд, оффтоп в ленте/чатах/трибунале. Уважение к другим — обязательное условие пребывания в клубе.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>БОТЫ И НАКРУТКА</h3>
+        <p>Запрещено использование ботов, мультиаккаунтов, накрутка лайков/репостов/комментариев. Все подозрительные аккаунты проверяются ИИ-трибуналом. Обнаружение = мгновенный бан.</p>
+      </div>
+
+      <div class="rule-item principle">
+        <h3>ПРИНЦИП КЛУБА</h3>
+        <p><strong>«ПРАВДА &gt; ХАЙП»</strong><br>Все посты/комментарии должны соответствовать этому принципу. Хайп без фактов = удаление + штраф репутации. Факты без хайпа = уважение клуба.</p>
+      </div>
+    </div>
+
+    <div class="rules-section">
+      <div class="section-title system">ЧАСТЬ 2: ПРАВИЛА СИСТЕМЫ</div>
+      
+      <div class="rule-item">
+        <h3>ТОКЕНЫ ЗА АКТИВНОСТЬ</h3>
+        <p>+5 AUS за пост (макс. 3/день) • +2 AUS за комментарий (макс. 10/день) • +1 AUS за лайк (макс. 20/день)<br>Нарушение лимитов = временная блокировка функций.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>ПРЕМИУМ-ПОСТЫ И БУСТЫ</h3>
+        <p>100 AUS → пост в топе 24ч • 25 AUS → ×3 видимость на 6ч<br>Премиум-статус не гарантирует прибыль — только видимость.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>ЭКСКЛЮЗИВНЫЙ КОНТЕНТ</h3>
+        <p>Посты с замком 🔒 видны только холдерам 10к+ AUS. Попытка обхода защиты = бан.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>ВЕРИФИКАЦИЯ ТРЕЙДЕРОВ</h3>
+        <p>Верифицированные трейдеры обязаны раскрывать статистику успеха (процент прибыльных сделок, средний профит). Сокрытие данных = отзыв верификации.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>ДОНАТЫ И ПЕРЕВОДЫ</h3>
+        <p>Донаты авторам (кнопка 💸) и переводы AUS <strong>НЕ ВОЗВРАЩАЮТСЯ</strong>. Перед отправкой убедитесь в доверии к получателю.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>КАЗНА КЛУБА</h3>
+        <p>25% от всех платежей за премиум-посты и бусты идут в казну. Ежедневно 50 AUS распределяются за лучший пост дня. Попытки манипуляции голосованием = бан + конфискация.</p>
+      </div>
+    </div>
+
+    <div class="rule-item warning">
+      <h3>ФИНАЛЬНОЕ ПРЕДУПРЕЖДЕНИЕ</h3>
+      <p>
+        <strong>НЕТ АПЕЛЛЯЦИЙ.</strong><br>
+        Решение модераторов и ИИ-трибунала окончательно.<br>
+        Нарушение любого пункта Части 1 → <strong>БАН НАВСЕГДА + СПИСАНИЕ 100% БАЛАНСА AUS В КАЗНУ КЛУБА</strong><br>
+        Ваш кошелёк привязан к аккаунту. Бан = потеря всех токенов навсегда.
+      </p>
+    </div>
+
+    <div class="checkbox-container">
+      <input type="checkbox" id="agreeRules">
+      <label for="agreeRules">Я ПОДТВЕРЖДАЮ: ознакомлен со всеми правилами. Нарушение = БАН НАВСЕГДА + 100% КОНФИСКАЦИЯ AUS. АПЕЛЛЯЦИЙ НЕТ.</label>
+    </div>
+
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeRulesModal()">Отмена</button>
+      <button class="modal-btn continue" id="continueBtn" disabled onclick="proceedToProfile()">Принять и продолжить</button>
+    </div>
+  </div>
+</div>
+
 <footer>Cryptobros 2026 ©</footer>
 
 <script>
+  let selectedTier = null;
+
   // Инициализация темы
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    // Если тема не сохранена, используем системные настройки
     if (!savedTheme) {
       if (prefersDark) {
         document.body.classList.add('dark-theme');
-        document.body.classList.remove('light-theme');
       } else {
-        document.body.classList.add('light-theme');
         document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
       }
     } else {
-      // Если тема сохранена, применяем её
       if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
         document.body.classList.remove('light-theme');
       } else {
-        document.body.classList.add('light-theme');
         document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
       }
     }
   }
@@ -879,57 +1396,124 @@
     }
   }
 
-  // Обработчик клика
-  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-  // Инициализация при загрузке
-  document.addEventListener('DOMContentLoaded', initTheme);
-
-  // Остальной код (кошелёк, выбор тарифа)
-  const urlParams = new URLSearchParams(window.location.search);
-  const inviter = urlParams.get('inviter');
-  const requestedTier = urlParams.get('tier');
-  const isFree = urlParams.get('free') === '1';
-
-  const connectBtn = document.getElementById('connect-btn');
-  const walletAddressDiv = document.getElementById('wallet-address');
-
-  connectBtn.addEventListener('click', async () => {
-    if (window.solana && window.solana.isPhantom) {
-      try {
-        const provider = window.solana;
-        const response = await provider.connect();
-        const publicKey = response.publicKey.toString();
-        walletAddressDiv.textContent = `Connected: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
-        walletAddressDiv.style.color = '#00ff9d';
-        localStorage.setItem('phantomAddress', publicKey);
-        alert('Phantom connected! Your address: ' + publicKey);
-      } catch (err) {
-        console.error(err);
-        alert('Connection failed: ' + (err.message || 'Unknown error'));
+  // Показ модального окна правил
+  function showRulesModal(tier) {
+    selectedTier = tier;
+    const tierInfo = document.getElementById('tierInfo');
+    
+    // Информация о тарифе
+    const tierData = {
+      'Free': {
+        price: '0 AUS',
+        access: '2-week limited access',
+        color: '#00ff9d'
+      },
+      'Master': {
+        price: '500 AUS',
+        access: 'Unlimited access',
+        color: '#66ffff'
+      },
+      'Pro': {
+        price: '2,000 AUS',
+        access: 'Unlimited access + AI features',
+        color: '#ff6b6b'
+      },
+      'Premium': {
+        price: '10,000 AUS',
+        access: 'Full access + governance rights',
+        color: '#d700ff'
       }
-    } else {
-      alert('Phantom wallet not found! Please install it: https://phantom.app/');
+    };
+
+    tierInfo.innerHTML = `
+      <h4>ВЫБРАННЫЙ ТАРИФ: <strong style="color: ${tierData[tier].color};">${tier}</strong></h4>
+      <p><strong>Цена:</strong> ${tierData[tier].price}<br>
+      <strong>Доступ:</strong> ${tierData[tier].access}</p>
+    `;
+
+    // Сброс чекбокса и кнопки
+    document.getElementById('agreeRules').checked = false;
+    document.getElementById('continueBtn').disabled = true;
+
+    // Показ модалки
+    document.getElementById('rulesModal').classList.add('active');
+  }
+
+  // Закрытие модалки
+  function closeRulesModal() {
+    document.getElementById('rulesModal').classList.remove('active');
+    selectedTier = null;
+  }
+
+  // Разблокировка кнопки при согласии
+  document.getElementById('agreeRules').addEventListener('change', function() {
+    document.getElementById('continueBtn').disabled = !this.checked;
+  });
+
+  // Продолжение к профилю
+  function proceedToProfile() {
+    if (!selectedTier) return;
+
+    // Сохранение согласия и тарифа
+    localStorage.setItem('rulesAccepted', 'true');
+    localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
+    localStorage.setItem('selectedTier', selectedTier);
+
+    // Редирект в профиль
+    alert(`✅ Правила приняты!\nТариф: ${selectedTier}\nПереход к созданию профиля...`);
+    window.location.href = 'profile.html';
+  }
+
+  // Обработчик клика вне модалки (закрытие запрещено — чтобы не пропустить правила!)
+  document.getElementById('rulesModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      // Не закрываем модалку при клике снаружи — пользователь ДОЛЖЕН прочитать правила
+      alert('❗ Вы должны принять правила для продолжения. Прокрутите до конца и поставьте галочку.');
     }
   });
 
-  if (localStorage.getItem('phantomAddress')) {
-    const addr = localStorage.getItem('phantomAddress');
-    walletAddressDiv.textContent = `Connected: ${addr.slice(0, 6)}...${addr.slice(-4)}`;
-    walletAddressDiv.style.color = '#00ff9d';
-  }
-
-  function selectTier(tier) {
-    if (tier === 'Free') {
-      const twoWeeks = Date.now() + 14 * 24 * 60 * 60 * 1000;
-      localStorage.setItem('cryptobrosTier', 'Free');
-      localStorage.setItem('accessExpiry', twoWeeks.toString());
-      alert('✅ Free access activated for 2 weeks!');
-      window.location.href = 'profile.html';
-    } else {
-      alert(`🔒 To unlock ${tier}, connect Phantom wallet and pay in AUS/SOL/USDC.\n\nComing soon!`);
+  // Обработчик нажатия Escape (закрытие запрещено)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('rulesModal').classList.contains('active')) {
+      e.preventDefault();
+      alert('❗ Вы должны принять правила для продолжения.');
     }
-  }
+  });
+
+  // Инициализация при загрузке
+  document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    
+    // Кошелёк
+    const connectBtn = document.getElementById('connect-btn');
+    const walletAddressDiv = document.getElementById('wallet-address');
+
+    connectBtn.addEventListener('click', async () => {
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          const provider = window.solana;
+          const response = await provider.connect();
+          const publicKey = response.publicKey.toString();
+          walletAddressDiv.textContent = `Connected: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
+          walletAddressDiv.style.color = '#00ff9d';
+          localStorage.setItem('phantomAddress', publicKey);
+          alert('Phantom connected! Your address: ' + publicKey);
+        } catch (err) {
+          console.error(err);
+          alert('Connection failed: ' + (err.message || 'Unknown error'));
+        }
+      } else {
+        alert('Phantom wallet not found! Please install it: https://phantom.app/');
+      }
+    });
+
+    if (localStorage.getItem('phantomAddress')) {
+      const addr = localStorage.getItem('phantomAddress');
+      walletAddressDiv.textContent = `Connected: ${addr.slice(0, 6)}...${addr.slice(-4)}`;
+      walletAddressDiv.style.color = '#00ff9d';
+    }
+  });
 </script>
 
 </body>
