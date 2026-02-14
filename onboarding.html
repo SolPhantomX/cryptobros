@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS ACCESS</title>
-  <!-- Quicksand вместо Rajdhani -->
+  <!-- Quicksand instead of Rajdhani -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      /* Светлая тема (переменные) */
+      /* Light theme (variables) */
       --bg-primary: #f8f9fa;
       --bg-secondary: #ffffff;
       --bg-tertiary: #e9ecef;
@@ -31,7 +31,7 @@
     }
 
     .dark-theme {
-      /* Тёмная тема (переменные) */
+      /* Dark theme (variables) */
       --bg-primary: #0a0a1a;
       --bg-secondary: #111122;
       --bg-tertiary: #1a1a2a;
@@ -120,7 +120,7 @@
       box-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
     }
 
-    /* Переключатель темы */
+    /* Theme toggle */
     .theme-toggle-container {
       position: absolute;
       top: 30px;
@@ -213,7 +213,7 @@
       border-radius: 3px;
     }
 
-    /* ГЛОБАЛЬНАЯ ЗАМЕНА ШРИФТА НА QUICKSAND */
+    /* GLOBAL FONT REPLACEMENT TO QUICKSAND */
     h1, .subtitle, .plan-header, .price, .btn, footer, .back-btn, #connect-btn {
       font-family: 'Quicksand', sans-serif !important;
       font-weight: 700 !important;
@@ -732,7 +732,7 @@
       100% { color: #9d00ff; }
     }
 
-    /* Адаптивность */
+    /* Responsive */
     @media (max-width: 768px) {
       h1 { font-size: 2.8rem; }
       .subtitle { font-size: 1.4rem; }
@@ -756,7 +756,7 @@
 
 <a href="index.html" class="back-btn">← Back to Home</a>
 
-<!-- Переключатель темы -->
+<!-- Theme toggle -->
 <div class="theme-toggle-container" id="themeToggle">
   <span class="theme-toggle-label sun">☀️</span>
   <div class="theme-toggle" id="themeSlider"></div>
@@ -821,104 +821,104 @@
   </div>
 </div>
 
-<!-- Модальное окно правил -->
+<!-- Rules modal -->
 <div class="modal-overlay" id="rulesModal">
   <div class="rules-modal">
     <div class="modal-header">
-      <h2>ПРАВИЛА CRYPTOBROS</h2>
-      <p>НАРУШЕНИЕ ЛЮБОГО ПУНКТА = БАН НАВСЕГДА + КОНФИСКАЦИЯ 100% AUS В КАЗНУ КЛУБА</p>
+      <h2>CRYPTOBROS COMMUNITY RULES</h2>
+      <p><strong>READ CAREFULLY BEFORE PROCEEDING</strong><br>Violation of any rule results in <span style="color: #ff0000; font-weight: 700;">PERMANENT BAN</span> and token confiscation.</p>
     </div>
 
     <div class="tier-info" id="tierInfo">
-      <!-- Заполнится динамически -->
+      <!-- Will be filled dynamically -->
     </div>
 
     <div class="rules-section">
-      <div class="section-title danger">ЧАСТЬ 1: ПРАВИЛА ПОВЕДЕНИЯ</div>
+      <div class="section-title danger">PART 1: BEHAVIOR RULES</div>
       
       <div class="rule-item">
-        <h3>СКАМ И МАНИПУЛЯЦИИ</h3>
-        <p>Запрещено любое продвижение скама, фишинга, rug-pull, pump&amp;dump без доказательств и прозрачного раскрытия позиции. Посты с подозрением на манипуляции удаляются без предупреждения.</p>
+        <h3>NO SCAM OR PHISHING</h3>
+        <p>Sharing fake giveaways, phishing links, fraudulent schemes, or misleading financial advice is <strong>STRICTLY PROHIBITED</strong>. Violation results in <strong>IMMEDIATE PERMANENT BAN</strong> and confiscation of 100% of your AUS token balance to the community treasury.</p>
       </div>
 
       <div class="rule-item">
-        <h3>ШИЛЛИНГ БЕЗ ОБОСНОВАНИЯ</h3>
-        <p>Запрещено шиллинг токенов/проектов без DYOR-обоснования (анализ, данные, логика) и обязательного раскрытия вашей позиции («Я держу 10к токенов»). Без этого — бан.</p>
+        <h3>NO SHILLING WITHOUT DYOR</h3>
+        <p>Shilling tokens/projects without proper DYOR-based justification (analysis, data, logic) and mandatory position disclosure (e.g., "I hold 10k tokens") is forbidden. Without this — <strong>BAN</strong>.</p>
       </div>
 
       <div class="rule-item">
-        <h3>РЕФЕРАЛЫ И «ГАРАНТИРОВАННЫЕ 100X»</h3>
-        <p>Запрещено размещение реферальных ссылок, платных курсов, торговых сигналов, обещаний «гарантированной прибыли» без крупного предупреждения: «ЭТО РИСКОВАННО, МОЖЕТЕ ПОТЕРЯТЬ ВСЁ».</p>
+        <h3>NO REFERRALS OR "GUARANTEED 100X"</h3>
+        <p>Posting referral links, paid courses, trading signals, or "guaranteed profit" promises without prominent warning: <strong>"THIS IS RISKY, YOU MAY LOSE EVERYTHING"</strong> is prohibited.</p>
       </div>
 
       <div class="rule-item">
-        <h3>ТОКСИЧНОСТЬ И СПАМ</h3>
-        <p>Запрещено оскорбления, травля, доксинг, спам, флуд, оффтоп в ленте/чатах/трибунале. Уважение к другим — обязательное условие пребывания в клубе.</p>
+        <h3>NO TOXICITY OR SPAM</h3>
+        <p>Insults, harassment, doxxing, spam, flooding, off-topic in feed/chats/tribunal are forbidden. Respect for others is mandatory for club membership.</p>
       </div>
 
       <div class="rule-item">
-        <h3>БОТЫ И НАКРУТКА</h3>
-        <p>Запрещено использование ботов, мультиаккаунтов, накрутка лайков/репостов/комментариев. Все подозрительные аккаунты проверяются ИИ-трибуналом. Обнаружение = мгновенный бан.</p>
+        <h3>NO BOTS OR MANIPULATION</h3>
+        <p>Using bots, multi-accounts, or manipulating likes/reposts/comments is prohibited. All suspicious accounts are checked by AI Tribunal. Detection = <strong>instant ban</strong>.</p>
       </div>
 
       <div class="rule-item principle">
-        <h3>ПРИНЦИП КЛУБА</h3>
-        <p><strong>«ПРАВДА &gt; ХАЙП»</strong><br>Все посты/комментарии должны соответствовать этому принципу. Хайп без фактов = удаление + штраф репутации. Факты без хайпа = уважение клуба.</p>
+        <h3>CLUB PRINCIPLE</h3>
+        <p><strong>"TRUTH &gt; HYPE"</strong><br>All posts/comments must follow this principle. Hype without facts = removal + reputation penalty. Facts without hype = club respect.</p>
       </div>
     </div>
 
     <div class="rules-section">
-      <div class="section-title system">ЧАСТЬ 2: ПРАВИЛА СИСТЕМЫ</div>
+      <div class="section-title system">PART 2: SYSTEM RULES</div>
       
       <div class="rule-item">
-        <h3>ТОКЕНЫ ЗА АКТИВНОСТЬ</h3>
-        <p>+5 AUS за пост (макс. 3/день) • +2 AUS за комментарий (макс. 10/день) • +1 AUS за лайк (макс. 20/день)<br>Нарушение лимитов = временная блокировка функций.</p>
+        <h3>TOKENS FOR ACTIVITY</h3>
+        <p>+5 AUS per post (max 3/day) • +2 AUS per comment (max 10/day) • +1 AUS per like (max 20/day)<br>Violating limits = temporary feature lock.</p>
       </div>
 
       <div class="rule-item">
-        <h3>ПРЕМИУМ-ПОСТЫ И БУСТЫ</h3>
-        <p>100 AUS → пост в топе 24ч • 25 AUS → ×3 видимость на 6ч<br>Премиум-статус не гарантирует прибыль — только видимость.</p>
+        <h3>PREMIUM POSTS & BOOSTS</h3>
+        <p>100 AUS → post in top 24h • 25 AUS → ×3 visibility for 6h<br>Premium status does not guarantee profit — only visibility.</p>
       </div>
 
       <div class="rule-item">
-        <h3>ЭКСКЛЮЗИВНЫЙ КОНТЕНТ</h3>
-        <p>Посты с замком 🔒 видны только холдерам 10к+ AUS. Попытка обхода защиты = бан.</p>
+        <h3>EXCLUSIVE CONTENT</h3>
+        <p>Posts with lock 🔒 visible only to holders of 10k+ AUS. Attempt to bypass protection = <strong>BAN</strong>.</p>
       </div>
 
       <div class="rule-item">
-        <h3>ВЕРИФИКАЦИЯ ТРЕЙДЕРОВ</h3>
-        <p>Верифицированные трейдеры обязаны раскрывать статистику успеха (процент прибыльных сделок, средний профит). Сокрытие данных = отзыв верификации.</p>
+        <h3>TRADER VERIFICATION</h3>
+        <p>Verified traders must disclose success statistics (percentage of profitable trades, average profit). Hiding data = verification revoked.</p>
       </div>
 
       <div class="rule-item">
-        <h3>ДОНАТЫ И ПЕРЕВОДЫ</h3>
-        <p>Донаты авторам (кнопка 💸) и переводы AUS <strong>НЕ ВОЗВРАЩАЮТСЯ</strong>. Перед отправкой убедитесь в доверии к получателю.</p>
+        <h3>TIPS & TRANSFERS</h3>
+        <p>Tips to authors (💸 button) and AUS transfers <strong>ARE NON-REFUNDABLE</strong>. Ensure you trust the recipient before sending.</p>
       </div>
 
       <div class="rule-item">
-        <h3>КАЗНА КЛУБА</h3>
-        <p>25% от всех платежей за премиум-посты и бусты идут в казну. Ежедневно 50 AUS распределяются за лучший пост дня. Попытки манипуляции голосованием = бан + конфискация.</p>
+        <h3>CLUB TREASURY</h3>
+        <p>25% of all premium post fees and boosts go to treasury. Daily 50 AUS distributed for best post of the day. Attempting to manipulate voting = <strong>BAN + confiscation</strong>.</p>
       </div>
     </div>
 
     <div class="rule-item warning">
-      <h3>ФИНАЛЬНОЕ ПРЕДУПРЕЖДЕНИЕ</h3>
+      <h3>FINAL WARNING</h3>
       <p>
-        <strong>НЕТ АПЕЛЛЯЦИЙ.</strong><br>
-        Решение модераторов и ИИ-трибунала окончательно.<br>
-        Нарушение любого пункта Части 1 → <strong>БАН НАВСЕГДА + СПИСАНИЕ 100% БАЛАНСА AUS В КАЗНУ КЛУБА</strong><br>
-        Ваш кошелёк привязан к аккаунту. Бан = потеря всех токенов навсегда.
+        <strong>NO APPEALS.</strong><br>
+        Decision of moderators and AI Tribunal is final.<br>
+        Violation of any Part 1 rule → <strong>PERMANENT BAN + 100% AUS BALANCE CONFISCATED TO CLUB TREASURY</strong><br>
+        Your wallet is linked to account. Ban = permanent loss of all tokens.
       </p>
     </div>
 
     <div class="checkbox-container">
       <input type="checkbox" id="agreeRules">
-      <label for="agreeRules">Я ПОДТВЕРЖДАЮ: ознакомлен со всеми правилами. Нарушение = БАН НАВСЕГДА + 100% КОНФИСКАЦИЯ AUS. АПЕЛЛЯЦИЙ НЕТ.</label>
+      <label for="agreeRules">I CONFIRM: I have read and agree to all Community Rules. Violation = PERMANENT BAN + 100% CONFISCATION. NO APPEALS.</label>
     </div>
 
     <div class="modal-footer">
-      <button class="modal-btn cancel" onclick="closeRulesModal()">Отмена</button>
-      <button class="modal-btn continue" id="continueBtn" disabled onclick="proceedToProfile()">Принять и продолжить</button>
+      <button class="modal-btn cancel" onclick="closeRulesModal()">Cancel</button>
+      <button class="modal-btn continue" id="continueBtn" disabled onclick="proceedToProfile()">Accept & Continue</button>
     </div>
   </div>
 </div>
@@ -928,7 +928,7 @@
 <script>
   let selectedTier = null;
 
-  // Инициализация темы
+  // Theme initialization
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -951,7 +951,7 @@
     }
   }
 
-  // Переключение темы
+  // Theme toggle
   function toggleTheme() {
     const isDark = document.body.classList.contains('dark-theme');
     
@@ -966,12 +966,12 @@
     }
   }
 
-  // Показ модального окна правил
+  // Show rules modal
   function showRulesModal(tier) {
     selectedTier = tier;
     const tierInfo = document.getElementById('tierInfo');
     
-    // Информация о тарифе
+    // Tier info
     const tierData = {
       'Free': {
         price: '0 AUS',
@@ -996,66 +996,65 @@
     };
 
     tierInfo.innerHTML = `
-      <h4>ВЫБРАННЫЙ ТАРИФ: <strong style="color: ${tierData[tier].color};">${tier}</strong></h4>
-      <p><strong>Цена:</strong> ${tierData[tier].price}<br>
-      <strong>Доступ:</strong> ${tierData[tier].access}</p>
+      <h4>SELECTED TIER: <strong style="color: ${tierData[tier].color};">${tier}</strong></h4>
+      <p><strong>Price:</strong> ${tierData[tier].price}<br>
+      <strong>Access:</strong> ${tierData[tier].access}</p>
     `;
 
-    // Сброс чекбокса и кнопки
+    // Reset checkbox and button
     document.getElementById('agreeRules').checked = false;
     document.getElementById('continueBtn').disabled = true;
 
-    // Показ модалки
+    // Show modal
     document.getElementById('rulesModal').classList.add('active');
   }
 
-  // Закрытие модалки
+  // Close modal
   function closeRulesModal() {
     document.getElementById('rulesModal').classList.remove('active');
     selectedTier = null;
   }
 
-  // Разблокировка кнопки при согласии
+  // Enable button on agreement
   document.getElementById('agreeRules').addEventListener('change', function() {
     document.getElementById('continueBtn').disabled = !this.checked;
   });
 
-  // Продолжение к профилю
+  // Proceed to profile
   function proceedToProfile() {
     if (!selectedTier) return;
 
-    // Сохранение согласия и тарифа
+    // Save agreement and tier
     localStorage.setItem('rulesAccepted', 'true');
     localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
     localStorage.setItem('selectedTier', selectedTier);
 
-    // Редирект в профиль
-    alert(`✅ Правила приняты!\nТариф: ${selectedTier}\nПереход к созданию профиля...`);
+    // Redirect
+    alert(`✅ Rules accepted!\nTier: ${selectedTier}\nRedirecting to profile setup...`);
     window.location.href = 'profile.html';
   }
 
-  // Обработчик клика вне модалки (закрытие запрещено — чтобы не пропустить правила!)
+  // Click outside modal - prevent closing
   document.getElementById('rulesModal').addEventListener('click', function(e) {
     if (e.target === this) {
-      // Не закрываем модалку при клике снаружи — пользователь ДОЛЖЕН прочитать правила
-      alert('❗ Вы должны принять правила для продолжения. Прокрутите до конца и поставьте галочку.');
+      alert('❗ You must accept the rules to continue. Scroll to the end and check the box.');
     }
   });
 
-  // Обработчик нажатия Escape (закрытие запрещено)
+  // Escape key - prevent closing
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && document.getElementById('rulesModal').classList.contains('active')) {
       e.preventDefault();
-      alert('❗ Вы должны принять правила для продолжения.');
+      alert('❗ You must accept the rules to continue.');
     }
   });
 
-  // Инициализация при загрузке
+  // Initialization
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     
-    // Кошелёк
+    // Wallet
     const connectBtn = document.getElementById('connect-btn');
     const walletAddressDiv = document.getElementById('wallet-address');
 
