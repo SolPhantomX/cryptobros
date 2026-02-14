@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
@@ -24,8 +24,8 @@
       filter: brightness(0.9);
     }
     .btn {
-      background: linear-gradient(45deg, #00ff9d, #66ffff);
-      color: #000;
+      background: linear-gradient(45deg, #87CEEB, #B0E0E6);
+      color: #fff;
       border: none;
       padding: 1.4rem 3.6rem;
       font-size: 1.45rem;
@@ -34,12 +34,12 @@
       cursor: pointer;
       font-family: 'Quicksand', sans-serif;
       letter-spacing: 1px;
-      box-shadow: 0 0 25px rgba(0,255,157,0.6);
-      margin-bottom: 80px; /* ← это и есть "место рамки": от низа экрана */
+      box-shadow: 0 0 25px rgba(135, 206, 235, 0.6);
+      margin-bottom: 80px;
     }
     .btn:hover {
       transform: scale(1.07);
-      box-shadow: 0 0 35px #00ff9d;
+      box-shadow: 0 0 35px #87CEEB;
     }
     footer {
       position: absolute;
@@ -48,13 +48,128 @@
       text-align: center;
       font-family: 'Quicksand', sans-serif;
       font-weight: 700;
+      animation: colorChange 15s infinite;
+    }
+    @keyframes colorChange {
+      0% { color: #00ff9d; }
+      16.67% { color: #ff00ff; }
+      33.33% { color: #00ffff; }
+      50% { color: #ff9d00; }
+      66.67% { color: #9d00ff; }
+      83.33% { color: #ffff00; }
+      100% { color: #00ff9d; }
+    }
+    .language-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, #66ffff, #00ff9d);
+      color: #000;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      box-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
+      z-index: 100;
+    }
+    .language-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #66ffff;
+    }
+    .language-menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      border-radius: 10px;
+      padding: 10px 0;
+      display: none;
+      z-index: 101;
+      box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
+      min-width: 180px;
+    }
+    .language-menu.active {
+      display: block;
+    }
+    .language-option {
+      padding: 12px 25px;
       color: #00ff9d;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: right;
+    }
+    .language-option:hover {
+      background: rgba(102, 255, 255, 0.2);
+      color: #fff;
+    }
+    .language-option.active {
+      background: rgba(102, 255, 255, 0.3);
+      color: #fff;
     }
   </style>
 </head>
 <body>
   <div class="bg"></div>
+  
+  <!-- Language Button and Menu -->
+  <button class="language-btn" id="languageBtn">LANGUAGE</button>
+  <div class="language-menu" id="languageMenu">
+    <div class="language-option active" data-lang="en">English</div>
+    <div class="language-option" data-lang="fr">Français</div>
+    <div class="language-option" data-lang="es">Español</div>
+    <div class="language-option" data-lang="pt">Português</div>
+    <div class="language-option" data-lang="zh">简体中文</div>
+    <div class="language-option" data-lang="ru">Русский</div>
+  </div>
+  
   <button class="btn" onclick="location.href='onboarding.html'">Enter the Club</button>
   <footer>Cryptobros 2026 ©</footer>
+
+  <script>
+    const translations = {
+      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
+      fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
+      es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
+      pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
+      zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
+      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
+    };
+
+    const languageBtn = document.getElementById('languageBtn');
+    const languageMenu = document.getElementById('languageMenu');
+    const options = document.querySelectorAll('.language-option');
+    const enterBtn = document.querySelector('.btn');
+    const footer = document.querySelector('footer');
+
+    languageBtn.addEventListener('click', () => {
+      languageMenu.classList.toggle('active');
+    });
+
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const lang = opt.dataset.lang;
+        document.documentElement.lang = lang;
+        
+        options.forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        
+        enterBtn.textContent = translations[lang].btn;
+        footer.textContent = translations[lang].footer;
+        
+        languageMenu.classList.remove('active');
+      });
+    });
+
+    document.addEventListener('click', e => {
+      if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
+        languageMenu.classList.remove('active');
+      }
+    });
+  </script>
 </body>
 </html>
