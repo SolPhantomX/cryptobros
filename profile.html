@@ -172,32 +172,48 @@
 <input type="file" id="avatar-upload" accept="image/*">
 <input type="file" id="bg-upload" accept="image/*">
 <script>
+  // Загрузка ВСЕХ данных из localStorage при старте
   let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
   let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
   let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
   let textColor = localStorage.getItem('textColor') || '#ffcc00';
+  let pageBg = localStorage.getItem('pageBg') || '';
 
   function init() {
     const headerEl = document.getElementById('header');
     const avatarEl = document.getElementById('avatar');
 
-    const headerImg = localStorage.getItem('header') || '';
-    const avatarImg = localStorage.getItem('avatar') || '';
+    // Восстановление фона страницы
+    if (pageBg) {
+      document.body.style.backgroundImage = `url(${pageBg})`;
+    }
 
+    // Восстановление хедера
+    const headerImg = localStorage.getItem('header') || '';
     if (headerImg) {
       headerEl.style.backgroundImage = `url(${headerImg})`;
       headerEl.classList.add('loaded');
     }
+
+    // Восстановление аватара
+    const avatarImg = localStorage.getItem('avatar') || '';
     if (avatarImg) {
       avatarEl.style.backgroundImage = `url(${avatarImg})`;
     }
 
+    // Восстановление позиции фона хедера
     headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+    
+    // Восстановление цвета текста
     document.documentElement.style.setProperty('--text-color', textColor);
 
+    // Отображение контента профиля
     renderViewMode();
+    
+    // Построение меню редактирования
     buildEditMenu();
 
+    // Настройка drag-to-pan для хедера
     setupDragToPan();
   }
 
@@ -229,15 +245,15 @@
       headerPos.x = startXPx + dx;
       headerPos.y = startYPx + dy;
       headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+      
+      // Сохраняем позицию в реальном времени
+      localStorage.setItem('headerPos', JSON.stringify(headerPos));
     });
 
     document.addEventListener('mouseup', () => {
       if (isDragging) {
         isDragging = false;
         document.body.style.cursor = 'default';
-        if (!isProfileSaved) {
-          localStorage.setItem('headerPos', JSON.stringify(headerPos));
-        }
       }
     });
   }
@@ -384,9 +400,9 @@
         document.getElementById('header').style.backgroundImage = `url(${reader.result})`;
         document.getElementById('header').classList.add('loaded');
         localStorage.setItem('header', reader.result);
-        if (!isProfileSaved) {
-          document.getElementById('header').style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-        }
+        headerPos = { x: 0, y: 0 }; // Сбрасываем позицию при новом изображении
+        localStorage.setItem('headerPos', JSON.stringify(headerPos));
+        document.getElementById('header').style.backgroundPosition = '0px 0px';
       };
       reader.readAsDataURL(file);
     }
@@ -436,7 +452,8 @@
   window.renderViewMode = renderViewMode;
   window.saveProfile = saveProfile;
 
-  init();
+  // Инициализация при загрузке страницы
+  window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
