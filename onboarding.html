@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS ACCESS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Quicksand вместо Rajdhani -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -96,7 +99,7 @@
       border-radius: 50px;
       z-index: 10;
       transition: all 0.3s ease;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Quicksand', sans-serif;
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
     }
 
@@ -210,11 +213,19 @@
       border-radius: 3px;
     }
 
+    /* ГЛОБАЛЬНАЯ ЗАМЕНА ШРИФТА НА QUICKSAND */
+    h1, .subtitle, .plan-header, .price, .btn, footer, .back-btn, #connect-btn {
+      font-family: 'Quicksand', sans-serif !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.02em !important;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+
     h1 {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 800;
       font-size: 4rem;
-      letter-spacing: 3px;
+      font-weight: 800 !important;
+      letter-spacing: 0.03em !important;
       margin-bottom: 1rem;
       text-shadow: 
         0 0 15px rgba(0, 240, 255, 0.6),
@@ -243,11 +254,10 @@
     }
 
     .subtitle {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 1.8rem;
+      font-size: 1.8rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.03em !important;
       color: var(--accent-cyan);
-      letter-spacing: 2px;
       margin-top: 1rem;
       text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
     }
@@ -384,10 +394,9 @@
     .plan-header {
       padding: 1.8rem 1.2rem 1rem;
       text-align: center;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 800;
-      font-size: 2.2rem;
-      letter-spacing: 2px;
+      font-size: 2.2rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.02em !important;
       position: relative;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
@@ -433,12 +442,11 @@
     }
 
     .price {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 800;
-      font-size: 2rem;
+      font-size: 2rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.02em !important;
       margin: 0.5rem 0 1.5rem;
       text-align: center;
-      letter-spacing: 1px;
     }
 
     .plan.free .price { 
@@ -523,13 +531,11 @@
       color: #000;
       border: none;
       border-radius: 50px;
-      font-weight: bold;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 800;
-      font-size: 1.3rem;
-      letter-spacing: 1.5px;
+      font-size: 1.3rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.03em !important;
       box-shadow: 0 5px 15px rgba(0, 240, 255, 0.2);
       position: relative;
       overflow: hidden;
@@ -634,10 +640,9 @@
       width: 70%;
       max-width: 450px;
       padding: 1.3rem 0;
-      font-size: 1.4rem;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 800;
-      letter-spacing: 2px;
+      font-size: 1.4rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.03em !important;
       background: linear-gradient(45deg, var(--accent-cyan), var(--accent-gold), var(--accent-cyan));
       background-size: 200% 200%;
       color: #000;
@@ -704,10 +709,9 @@
       text-align: center;
       padding: 1rem 0;
       background: rgba(255, 255, 255, 0.85);
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 800;
-      font-size: 1.4rem;
-      letter-spacing: 1px;
+      font-size: 1.4rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.03em !important;
       z-index: 5;
       border-top: 2px solid rgba(0, 240, 255, 0.2);
       backdrop-filter: blur(10px);
@@ -717,33 +721,24 @@
     .dark-theme footer {
       background: rgba(0, 0, 0, 0.9);
       border-top: 2px solid rgba(255, 255, 255, 0.1);
-      animation: flickerFooter 15s infinite;
+      animation: flickerFooter 12s infinite;
     }
 
     @keyframes flickerFooter {
-      0% { color: #00ff9d; }
-      14% { color: #00ff9d; }
-      15% { color: #66ffff; }
-      29% { color: #66ffff; }
-      30% { color: #00ffff; }
-      44% { color: #00ffff; }
-      45% { color: #ff9d00; }
-      59% { color: #ff9d00; }
-      60% { color: #9d00ff; }
-      74% { color: #9d00ff; }
-      75% { color: #ff00ff; }
-      89% { color: #ff00ff; }
-      90% { color: #ffff00; }
-      100% { color: #ffff00; }
+      0%, 20% { color: #00ff9d; }
+      40% { color: #66ffff; }
+      60% { color: #00ffff; }
+      80% { color: #ff9d00; }
+      100% { color: #9d00ff; }
     }
 
     /* Адаптивность */
     @media (max-width: 768px) {
-      h1 { font-size: 2.8rem; letter-spacing: 2px; }
-      .subtitle { font-size: 1.4rem; letter-spacing: 1.5px; }
-      .plan-header { font-size: 1.8rem; letter-spacing: 1.5px; }
+      h1 { font-size: 2.8rem; }
+      .subtitle { font-size: 1.4rem; }
+      .plan-header { font-size: 1.8rem; }
       .price { font-size: 1.7rem; }
-      .btn { font-size: 1.1rem; letter-spacing: 1px; }
+      .btn { font-size: 1.1rem; }
       .back-btn { top: 20px; left: 20px; font-size: 1rem; padding: 0.6rem 1.5rem; }
       .theme-toggle-container { top: 20px; right: 20px; width: 70px; height: 35px; }
       .theme-toggle { width: 28px; height: 28px; }
