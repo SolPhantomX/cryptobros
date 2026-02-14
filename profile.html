@@ -104,10 +104,19 @@
     .sidebar { width: 200px; }
     .nav-item {
       padding: 10px 0;
-      color: #385898;
+      color: var(--text-color, #ffcc00);
       font-weight: bold;
       cursor: pointer;
       font-size: 18px;
+      animation: flicker 3s infinite alternate;
+    }
+    .nav-item:hover {
+      opacity: 0.8;
+      text-shadow: 0 0 8px var(--text-color, #ffcc00);
+    }
+    a.nav-item {
+      text-decoration: none;
+      display: block;
     }
     .main { flex: 1; }
     .name, .rank, .field-value, .field-label {
