@@ -323,52 +323,152 @@
       text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
     }
 
-    .checkbox-container {
-      background: rgba(45, 5, 5, 0.9);
-      border: 4px solid #ff0000;
-      border-radius: 20px;
-      padding: 2rem;
-      margin: 2.5rem 0;
+    /* КРОВАВАЯ ГАЛОЧКА */
+    .agreement-section {
       position: relative;
+      margin: 2.5rem 0;
+      padding: 1.5rem;
+      background: rgba(30, 5, 15, 0.9);
+      border-radius: 24px;
+      border: 4px solid #ff0000;
+      box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
+      animation: pulseWarning 2s ease-in-out infinite;
       overflow: hidden;
-      animation: pulseRedBorder 2s ease-in-out infinite;
     }
 
-    @keyframes pulseRedBorder {
-      0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
-      50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.9); }
+    .blood-seal {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: rgba(50, 5, 5, 0.8);
+      border-radius: 16px;
+      border: 2px solid #ff0000;
     }
 
-    .checkbox-container::before {
-      content: '❗';
-      position: absolute;
-      top: -15px;
-      left: 20px;
-      font-size: 4rem;
-      color: #ff0000;
-      opacity: 0.3;
-      transform: rotate(-15deg);
+    .seal-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      animation: pulseIcon 1.5s ease-in-out infinite;
     }
 
-    .checkbox-container input {
-      width: 32px;
-      height: 32px;
-      cursor: pointer;
-      accent-color: #ff0000;
-      border: 3px solid #ff4d4d;
-      border-radius: 6px;
-      transform: scale(1.3);
-      margin-right: 15px;
+    @keyframes pulseIcon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); text-shadow: 0 0 20px rgba(255, 0, 0, 0.8); }
     }
 
-    .checkbox-container label {
+    .seal-text {
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       font-weight: 800;
-      color: #ff3333;
+      color: #ff6b6b;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 1.5rem;
+      background: rgba(40, 10, 20, 0.85);
+      border-radius: 20px;
+      position: relative;
       cursor: pointer;
+    }
+
+    .custom-checkbox {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #ff0000;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(20, 0, 5, 0.7);
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+    }
+
+    .custom-checkbox:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+    }
+
+    .checkbox-mark {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: transparent;
+      transition: all 0.3s ease;
+    }
+
+    #agreeRules:checked ~ .custom-checkbox .checkbox-mark {
+      color: #ff0000;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+      transform: scale(1.1);
+    }
+
+    .checkbox-label {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ff4d4d;
       line-height: 1.6;
-      text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-label .warning-text {
+      display: block;
+      font-size: 1.2rem;
+      color: #ff0000;
+      font-weight: 800;
+      margin-top: 0.5rem;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+
+    .hidden-checkbox {
+      display: none;
+    }
+
+    #checkboxContainer:hover .custom-checkbox {
+      border-color: #ff6b6b;
+    }
+
+    #checkboxContainer:hover .checkbox-label {
+      color: #ff9d9d;
+    }
+
+    .blood-drip {
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 25px;
+      background: linear-gradient(to bottom, #ff0000, transparent);
+      border-radius: 4px;
+      opacity: 0.7;
+      animation: dripBlood 3s ease-in-out infinite;
+    }
+
+    @keyframes dripBlood {
+      0%, 100% { height: 25px; opacity: 0.7; }
+      50% { height: 40px; opacity: 1; }
+    }
+
+    /* При активации — эффект крови */
+    #agreeRules:checked ~ .blood-drip {
+      animation: bloodSplash 0.5s ease-out;
+      background: linear-gradient(to bottom, #ff0000, #8b0000);
+    }
+
+    @keyframes bloodSplash {
+      0% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+      50% { transform: translateX(-50%) scale(1.5); opacity: 1; }
+      100% { transform: translateX(-50%) scale(1); opacity: 0.9; }
     }
 
     .btn-container {
@@ -523,8 +623,10 @@
       .rule-item p { font-size: 1rem; }
       .final-warning h3 { font-size: 1.6rem; }
       .final-warning p { font-size: 1.05rem; }
-      .checkbox-container { padding: 1.5rem; }
-      .checkbox-container label { font-size: 1.1rem; }
+      .checkbox-container { flex-direction: column; align-items: center; text-align: center; }
+      .custom-checkbox { width: 40px; height: 40px; }
+      .checkbox-mark { font-size: 30px; }
+      .checkbox-label { font-size: 1.2rem; }
       .btn { padding: 1rem 2rem; font-size: 1.1rem; }
       .btn-container { flex-direction: column; gap: 1rem; }
     }
@@ -622,9 +724,25 @@
     </div>
   </div>
 
-  <div class="checkbox-container">
-    <input type="checkbox" id="agreeRules">
-    <label for="agreeRules">I CONFIRM: I have read and agree to all Community Rules. Violation = PERMANENT BAN + 100% CONFISCATION. NO APPEALS.</label>
+  <!-- КРОВАВАЯ ГАЛОЧКА -->
+  <div class="agreement-section">
+    <div class="blood-seal">
+      <div class="seal-icon">⚠️</div>
+      <div class="seal-text">YOUR WALLET • YOUR RULES • YOUR RISK</div>
+    </div>
+    
+    <div class="checkbox-container" id="checkboxContainer">
+      <div class="custom-checkbox">
+        <div class="checkbox-mark">✓</div>
+      </div>
+      <label for="agreeRules" class="checkbox-label">
+        I CONFIRM: I have read and agree to all Community Rules.<br>
+        <span class="warning-text">Violation = PERMANENT BAN + 100% CONFISCATION. NO APPEALS.</span>
+      </label>
+      <input type="checkbox" id="agreeRules" class="hidden-checkbox">
+    </div>
+    
+    <div class="blood-drip" id="bloodDrip"></div>
   </div>
 
   <div class="btn-container">
@@ -681,16 +799,57 @@
     <span style="font-size: 1.1rem; color: #a0a0ff;">Price: ${tierData[selectedTier].price} • Access: ${tierData[selectedTier].access}</span>
   `;
 
-  // Enable button on agreement
-  document.getElementById('agreeRules').addEventListener('change', function() {
-    document.getElementById('continueBtn').disabled = !this.checked;
+  // Анимация галочки при клике
+  document.getElementById('checkboxContainer').addEventListener('click', function(e) {
+    if (e.target !== document.getElementById('agreeRules')) {
+      const checkbox = document.getElementById('agreeRules');
+      checkbox.checked = !checkbox.checked;
+      
+      // Анимация крови при активации
+      if (checkbox.checked) {
+        const bloodDrip = document.getElementById('bloodDrip');
+        bloodDrip.style.animation = 'bloodSplash 0.5s ease-out';
+        
+        setTimeout(() => {
+          document.getElementById('continueBtn').disabled = false;
+        }, 300);
+      } else {
+        document.getElementById('continueBtn').disabled = true;
+      }
+    }
+  });
+
+  // Защита от пропуска скролла
+  let hasScrolledToBottom = false;
+  const rulesContainer = document.getElementById('rulesContainer');
+
+  rulesContainer.addEventListener('scroll', () => {
+    const isAtBottom = rulesContainer.scrollTop + rulesContainer.clientHeight >= rulesContainer.scrollHeight - 50;
+    if (isAtBottom) {
+      hasScrolledToBottom = true;
+      document.getElementById('checkboxContainer').style.animation = 'pulseWarning 1s ease-in-out';
+    }
+  });
+
+  // Кнопка продолжить активируется ТОЛЬКО после скролла + галочки
+  document.getElementById('continueBtn').addEventListener('click', function() {
+    if (!hasScrolledToBottom) {
+      alert('❗ You must scroll through ALL rules before accepting.');
+      rulesContainer.scrollTop = rulesContainer.scrollHeight;
+      return;
+    }
+    if (!document.getElementById('agreeRules').checked) {
+      alert('❗ You must accept the rules to continue.');
+      return;
+    }
+    showPayment();
   });
 
   // Show payment section
   function showPayment() {
     // Hide rules
     document.getElementById('rulesContainer').style.display = 'none';
-    document.querySelector('.checkbox-container').style.display = 'none';
+    document.querySelector('.agreement-section').style.display = 'none';
     document.querySelector('.btn-container').style.display = 'none';
 
     // Show payment section
