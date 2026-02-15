@@ -4,17 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cryptobros Rules</title>
+  <!-- ПРЕДЗАГРУЗКА ШРИФТОВ БЕЗ МЕРЦАНИЯ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&family=Inter:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
   <style>
+    /* ОСНОВНЫЕ СТИЛИ БЕЗ МЕРЦАНИЯ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       background: linear-gradient(135deg, #0a0a1a 0%, #111122 50%, #1a1a2a 100%);
       color: #e0e0ff;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Quicksand', sans-serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -23,7 +24,6 @@
       position: relative;
       overflow: hidden;
     }
-
     body::before {
       content: '';
       position: fixed;
@@ -35,36 +35,6 @@
         radial-gradient(circle at 50% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
       z-index: -1;
     }
-
-    /* ИСПРАВЛЕНО: кнопка Back to Home уменьшена */
-    .back-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: rgba(0, 0, 0, 0.7);
-      border: 2px solid #00ff9d;
-      color: #00ff9d;
-      font-size: 0.95rem;
-      font-weight: 700;
-      padding: 0.6rem 1.2rem;
-      cursor: pointer;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border-radius: 50px;
-      z-index: 100;
-      transition: all 0.3s ease;
-      font-family: 'Quicksand', sans-serif;
-      box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
-    }
-
-    .back-btn:hover {
-      background: rgba(0, 255, 157, 0.1);
-      transform: translateX(-3px);
-      box-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
-    }
-
     .container {
       max-width: 900px;
       width: 100%;
@@ -76,14 +46,38 @@
       position: relative;
       overflow: hidden;
     }
-
+    .back-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #00ff9d;
+      color: #00ff9d;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 50px;
+      z-index: 100;
+      transition: all 0.3s ease;
+      font-family: 'Quicksand', sans-serif;
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+    }
+    .back-btn:hover {
+      background: rgba(0, 255, 157, 0.1);
+      transform: translateX(-3px);
+      box-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
+    }
     .header {
       text-align: center;
       margin-bottom: 2.5rem;
       position: relative;
       z-index: 1;
     }
-
     .header::after {
       content: '';
       position: absolute;
@@ -95,12 +89,11 @@
       background: linear-gradient(90deg, transparent, #00ff9d, #ffd700, #00ff9d, transparent);
       border-radius: 2px;
     }
-
     h1 {
-      font-family: 'Quicksand', sans-serif !important;
+      font-family: 'Quicksand', sans-serif;
       font-size: 3.2rem;
-      font-weight: 800 !important;
-      letter-spacing: 0.04em !important;
+      font-weight: 800;
+      letter-spacing: 0.04em;
       margin-bottom: 1rem;
       background: linear-gradient(90deg, #00ff9d, #ffd700, #66ffff);
       -webkit-background-clip: text;
@@ -108,7 +101,6 @@
       background-clip: text;
       text-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
     }
-
     .subtitle {
       font-size: 1.25rem;
       color: #a0ffff;
@@ -116,7 +108,6 @@
       font-weight: 600;
       line-height: 1.6;
     }
-
     .tier-badge {
       background: rgba(0, 30, 15, 0.7);
       border: 2px solid #00ff9d;
@@ -124,14 +115,13 @@
       padding: 1rem 2rem;
       text-align: center;
       margin: 1.8rem 0;
-      font-family: 'Quicksand', sans-serif !important;
-      font-weight: 800 !important;
-      font-size: 1.4rem !important;
-      letter-spacing: 0.03em !important;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: 0.03em;
       color: #00ff9d;
       box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
     }
-
     .rules-container {
       background: rgba(25, 15, 40, 0.8);
       border-radius: 20px;
@@ -143,12 +133,11 @@
       position: relative;
       z-index: 1;
     }
-
     /* БОНУСЫ — ПРИЯТНЫЕ ЦВЕТА */
     .section-title.bonuses {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 2rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
       margin: 1.8rem 0 1.5rem;
       color: #00ff9d;
       text-align: center;
@@ -162,12 +151,10 @@
       border: 2px solid #00ff9d;
       box-shadow: 0 0 20px rgba(0, 255, 157, 0.3);
     }
-
     .section-title.bonuses::before {
       content: '💎';
       font-size: 2.2rem;
     }
-
     .bonus-item {
       background: rgba(10, 25, 15, 0.7);
       border-radius: 16px;
@@ -178,62 +165,41 @@
       position: relative;
       overflow: hidden;
     }
-
-    .bonus-item::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, rgba(0, 255, 157, 0.1), transparent 70%);
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
     .bonus-item:hover {
       transform: translateX(5px);
       border-left-width: 8px;
       box-shadow: 0 5px 20px rgba(0, 255, 157, 0.3);
       opacity: 1;
     }
-
-    .bonus-item:hover::before {
-      opacity: 1;
-    }
-
     .bonus-item h3 {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 1.5rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
       margin-bottom: 0.8rem;
       color: #00ff9d;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
     .bonus-item h3::before {
       content: '✨';
       font-size: 1.8rem;
     }
-
     .bonus-item p {
       color: #a0ffa0;
       line-height: 1.8;
       font-size: 1.05rem;
       font-weight: 500;
     }
-
     .bonus-item p strong {
       color: #ffd700;
       font-weight: 700;
     }
-
     /* НАКАЗАНИЯ — КРОВАВО-КРАСНЫЙ С ПУЛЬСАЦИЕЙ */
     .section-title.punishments {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 2rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
       margin: 2.5rem 0 1.5rem;
       color: #ff0000;
       text-align: center;
@@ -249,12 +215,10 @@
       position: relative;
       overflow: hidden;
     }
-
     .section-title.punishments::before {
       content: '⚠️';
       font-size: 2.2rem;
     }
-
     .punishment-item {
       background: rgba(40, 10, 15, 0.85);
       border-radius: 16px;
@@ -265,35 +229,30 @@
       position: relative;
       overflow: hidden;
     }
-
     .punishment-item h3 {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 1.5rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
       margin-bottom: 0.8rem;
       color: #ff4d4d;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
     .punishment-item h3::before {
       content: '☠️';
       font-size: 1.8rem;
     }
-
     .punishment-item p {
       color: #ff9d9d;
       line-height: 1.8;
       font-size: 1.05rem;
       font-weight: 500;
     }
-
     .punishment-item p strong {
       color: #ff0000;
       font-weight: 700;
     }
-
     .final-warning {
       background: rgba(50, 10, 10, 0.95);
       border: 4px solid #ff0000;
@@ -305,23 +264,20 @@
       position: relative;
       overflow: hidden;
     }
-
     .final-warning h3 {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 2.2rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
       color: #ff0000;
       margin-bottom: 1.2rem;
       text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
     }
-
     .final-warning p {
       color: #ffcccc;
       font-size: 1.25rem;
       line-height: 1.9;
       font-weight: 600;
     }
-
     .final-warning p strong {
       color: #ff0000;
       font-size: 1.5rem;
@@ -329,7 +285,6 @@
       margin: 1rem 0;
       text-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
     }
-
     /* КРОВАВАЯ ГАЛОЧКА (ИСПРАВЛЕНА!) */
     .agreement-section {
       position: relative;
@@ -340,44 +295,37 @@
       border: 4px solid #ff0000;
       box-shadow: 0 0 50px rgba(255, 0, 0, 0.7);
       text-align: center;
-      overflow: hidden;
+      overflow: visible;
     }
-
     .blood-seal {
       text-align: center;
       margin-bottom: 1.8rem;
     }
-
     .seal-icon {
       font-size: 4rem;
       margin-bottom: 0.8rem;
     }
-
     .seal-text {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 1.6rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
       color: #ff6b6b;
-      letter-spacing: 0.06em !important;
+      letter-spacing: 0.06em;
       text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
     }
-
     .checkbox-wrapper {
       position: relative;
       display: inline-block;
       margin: 1.5rem auto;
     }
-
-    /* ИСПРАВЛЕНО: input ДО .custom-checkbox для работы :checked */
     #agreeRules {
       position: absolute;
       opacity: 0;
       width: 80px;
       height: 80px;
       cursor: pointer;
-      z-index: 5;
+      z-index: 1;
     }
-
     .custom-checkbox {
       width: 80px;
       height: 80px;
@@ -392,63 +340,61 @@
       transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
       margin: 0 auto;
-      z-index: 10;
     }
-
     .custom-checkbox:hover {
       transform: scale(1.15) rotate(2deg);
       box-shadow: 0 0 40px rgba(255, 0, 0, 0.9);
     }
-
     .checkbox-mark {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 56px !important;
-      font-weight: 900 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 56px;
+      font-weight: 900;
       color: transparent;
       transition: all 0.4s ease;
       user-select: none;
     }
-
     #agreeRules:checked ~ .custom-checkbox .checkbox-mark {
       color: #ff0000;
       text-shadow: 0 0 25px rgba(255, 0, 0, 0.9), 0 0 40px rgba(255, 107, 107, 0.7);
       transform: scale(1.2) rotate(-5deg);
+      animation: bloodSplash 0.6s ease-out;
     }
-
+    @keyframes bloodSplash {
+      0% { transform: scale(1) rotate(0); color: transparent; }
+      50% { transform: scale(1.3) rotate(-8deg); color: #ff3333; text-shadow: 0 0 30px rgba(255, 0, 0, 1); }
+      100% { transform: scale(1.2) rotate(-5deg); color: #ff0000; text-shadow: 0 0 25px rgba(255, 0, 0, 0.9); }
+    }
     .checkbox-instruction {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 1.5rem !important;
-      font-weight: 700 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
       color: #ff4d4d;
       margin-top: 1.2rem;
       text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-      letter-spacing: 0.03em !important;
+      letter-spacing: 0.03em;
     }
-
     .checkbox-warning {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 1.3rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
       color: #ff0000;
       margin-top: 0.8rem;
       text-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
-      letter-spacing: 0.04em !important;
+      letter-spacing: 0.04em;
     }
-
     .btn-container {
       display: flex;
       gap: 1.5rem;
       justify-content: center;
       margin-top: 2rem;
     }
-
     .btn {
       padding: 1.2rem 3rem;
       border-radius: 16px;
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 1.2rem !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.03em !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
       cursor: pointer;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       border: none;
@@ -456,7 +402,6 @@
       overflow: hidden;
       min-width: 200px;
     }
-
     .btn::after {
       content: '';
       position: absolute;
@@ -466,47 +411,39 @@
       transform: translateX(-100%);
       transition: transform 0.6s;
     }
-
     .btn:hover::after {
       transform: translateX(100%);
     }
-
     .btn.cancel {
       background: rgba(255, 50, 50, 0.25);
       color: #ff6b6b;
       border: 3px solid #ff6b6b;
       font-weight: 700;
     }
-
     .btn.cancel:hover {
       background: rgba(255, 50, 50, 0.4);
       transform: translateY(-4px) scale(1.03);
       box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
     }
-
     .btn.continue {
       background: linear-gradient(45deg, #ff0000, #ff6b6b, #ff0000);
       color: #fff;
       font-weight: 900;
       box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5);
     }
-
     .btn.continue:hover {
       transform: translateY(-5px) scale(1.05);
       box-shadow: 0 12px 40px rgba(255, 0, 0, 0.8);
     }
-
     .btn.continue:active {
       transform: translateY(2px) scale(0.98);
     }
-
     .btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
       transform: none !important;
       box-shadow: none !important;
     }
-
     .payment-section {
       display: none;
       background: rgba(25, 15, 40, 0.8);
@@ -515,26 +452,22 @@
       margin-top: 2rem;
       border: 2px solid rgba(255, 107, 107, 0.4);
     }
-
     .payment-section.active {
       display: block;
       animation: fadeIn 0.5s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     .payment-title {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 2rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
       color: #ff6b6b;
       margin-bottom: 1.5rem;
       text-align: center;
     }
-
     .payment-info {
       background: rgba(40, 20, 50, 0.6);
       border-radius: 16px;
@@ -542,21 +475,18 @@
       margin-bottom: 1.5rem;
       text-align: center;
     }
-
     .payment-info h4 {
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 1.5rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
       color: #ff0000;
       margin-bottom: 0.8rem;
     }
-
     .payment-info p {
       color: #d0d0ff;
       font-size: 1.1rem;
       line-height: 1.6;
     }
-
     .connect-wallet-btn {
       width: 100%;
       padding: 1.3rem;
@@ -564,33 +494,31 @@
       color: #fff;
       border: none;
       border-radius: 16px;
-      font-family: 'Quicksand', sans-serif !important;
-      font-size: 1.3rem !important;
-      font-weight: 800 !important;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
       cursor: pointer;
       transition: all 0.3s;
       margin-top: 1.5rem;
     }
-
     .connect-wallet-btn:hover {
       transform: translateY(-3px) scale(1.02);
       box-shadow: 0 8px 30px rgba(255, 0, 0, 0.6);
     }
-
     @media (max-width: 768px) {
-      .back-btn { top: 15px; left: 15px; font-size: 1rem; padding: 0.6rem 1.2rem; }
+      .back-btn { top: 15px; left: 15px; font-size: 0.9rem; padding: 0.5rem 1rem; }
       .container { padding: 2rem; }
-      h1 { font-size: 2.5rem !important; }
+      h1 { font-size: 2.5rem; }
       .subtitle { font-size: 1.1rem; }
-      .tier-badge { font-size: 1.2rem !important; padding: 0.8rem 1.5rem; }
-      .section-title { font-size: 1.6rem !important; }
-      .bonus-item h3, .punishment-item h3 { font-size: 1.3rem !important; }
+      .tier-badge { font-size: 1.2rem; padding: 0.8rem 1.5rem; }
+      .section-title { font-size: 1.6rem; }
+      .bonus-item h3, .punishment-item h3 { font-size: 1.3rem; }
       .bonus-item p, .punishment-item p { font-size: 1rem; }
       .custom-checkbox { width: 70px; height: 70px; }
-      .checkbox-mark { font-size: 48px !important; }
-      .checkbox-instruction { font-size: 1.3rem !important; }
-      .checkbox-warning { font-size: 1.15rem !important; }
-      .btn { padding: 1rem 2rem; font-size: 1.1rem !important; }
+      .checkbox-mark { font-size: 48px; }
+      .checkbox-instruction { font-size: 1.3rem; }
+      .checkbox-warning { font-size: 1.15rem; }
+      .btn { padding: 1rem 2rem; font-size: 1.1rem; }
       .btn-container { flex-direction: column; gap: 1rem; }
     }
   </style>
@@ -754,6 +682,7 @@
 </div>
 
 <script>
+  // ... (скрипты без изменений) ...
   // Get tier from URL
   const urlParams = new URLSearchParams(window.location.search);
   const selectedTier = urlParams.get('tier') || 'Free';
