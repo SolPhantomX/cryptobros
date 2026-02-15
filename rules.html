@@ -29,16 +29,10 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: 
-        radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 30%, rgba(255, 107, 107, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 50% 80%, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(0, 255, 157, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(102, 255, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
       z-index: -1;
-      animation: pulseRed 4s ease-in-out infinite;
-    }
-
-    @keyframes pulseRed {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.6; }
     }
 
     .container {
@@ -47,11 +41,8 @@
       background: rgba(15, 10, 25, 0.95);
       border-radius: 32px;
       padding: 3rem;
-      box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.8),
-        0 0 50px rgba(255, 0, 0, 0.25),
-        0 0 30px rgba(255, 107, 107, 0.2);
-      border: 3px solid rgba(255, 0, 0, 0.7);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      border: 3px solid rgba(102, 255, 255, 0.3);
       position: relative;
       overflow: hidden;
       animation: slideIn 0.6s ease-out;
@@ -62,30 +53,9 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .container::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent,
-        rgba(255, 0, 0, 0.1) 25%,
-        transparent 50%
-      );
-      background-size: 40px 40px;
-      animation: scanline 8s linear infinite;
-      pointer-events: none;
-    }
-
-    @keyframes scanline {
-      0% { transform: translateY(0) rotate(45deg); }
-      100% { transform: translateY(100%) rotate(45deg); }
-    }
-
     .header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
       position: relative;
       z-index: 1;
     }
@@ -93,126 +63,216 @@
     .header::after {
       content: '';
       position: absolute;
-      bottom: -20px;
+      bottom: -15px;
       left: 50%;
       transform: translateX(-50%);
-      width: 80%;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, #ff0000, #ff6b6b, #ff0000, transparent);
+      width: 70%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #00ff9d, #ffd700, #00ff9d, transparent);
       border-radius: 2px;
     }
 
     h1 {
       font-family: 'Quicksand', sans-serif;
-      font-size: 3.5rem;
+      font-size: 3.2rem;
       font-weight: 800;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       margin-bottom: 1rem;
-      background: linear-gradient(90deg, #ff0000, #ff6b6b, #ff0000);
+      background: linear-gradient(90deg, #00ff9d, #ffd700, #66ffff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
-      animation: textGlow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes textGlow {
-      from { text-shadow: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 107, 107, 0.4); }
-      to { text-shadow: 0 0 30px rgba(255, 0, 0, 0.8), 0 0 60px rgba(255, 107, 107, 0.6); }
+      text-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
     }
 
     .subtitle {
-      font-size: 1.3rem;
-      color: #ff9d9d;
-      margin-top: 1rem;
+      font-size: 1.25rem;
+      color: #a0ffff;
+      margin-top: 0.8rem;
       font-weight: 600;
       line-height: 1.6;
     }
 
     .tier-badge {
-      background: rgba(255, 0, 0, 0.2);
-      border: 2px solid #ff0000;
+      background: rgba(0, 30, 15, 0.7);
+      border: 2px solid #00ff9d;
       border-radius: 12px;
       padding: 1rem 2rem;
       text-align: center;
-      margin: 2rem 0;
+      margin: 1.8rem 0;
       font-family: 'Quicksand', sans-serif;
       font-weight: 800;
       font-size: 1.4rem;
       letter-spacing: 0.03em;
-      color: #ff6b6b;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      color: #00ff9d;
+      box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
     }
 
     .rules-container {
       background: rgba(25, 15, 40, 0.8);
       border-radius: 20px;
-      padding: 2.5rem;
-      margin-bottom: 2.5rem;
-      border: 2px solid rgba(255, 107, 107, 0.4);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 2px solid rgba(102, 255, 255, 0.3);
       max-height: 500px;
       overflow-y: auto;
       position: relative;
       z-index: 1;
     }
 
-    .rules-section {
-      margin-bottom: 2.5rem;
-    }
-
-    .section-title {
+    /* БОНУСЫ — ПРИЯТНЫЕ ЦВЕТА */
+    .section-title.bonuses {
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 800;
-      margin-bottom: 1.5rem;
-      color: #ff6b6b;
+      margin: 1.8rem 0 1.5rem;
+      color: #00ff9d;
+      text-align: center;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
-      padding-bottom: 0.8rem;
-      border-bottom: 2px solid rgba(255, 107, 107, 0.5);
-    }
-
-    .section-title::before {
-      content: '⚠️';
-      font-size: 2rem;
-    }
-
-    .rule-item {
-      background: rgba(40, 20, 50, 0.6);
+      padding: 1rem;
+      background: rgba(0, 30, 15, 0.5);
       border-radius: 16px;
-      padding: 1.5rem;
+      border: 2px solid #00ff9d;
+      box-shadow: 0 0 20px rgba(0, 255, 157, 0.3);
+    }
+
+    .section-title.bonuses::before {
+      content: '💎';
+      font-size: 2.2rem;
+    }
+
+    .bonus-item {
+      background: rgba(10, 25, 15, 0.7);
+      border-radius: 16px;
+      padding: 1.4rem;
       margin-bottom: 1.2rem;
-      border-left: 5px solid #ff0000;
+      border-left: 5px solid #00ff9d;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
 
-    .rule-item:hover {
-      transform: translateX(5px);
-      border-left-width: 8px;
-      box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
-    }
-
-    .rule-item::before {
+    .bonus-item::before {
       content: '';
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: linear-gradient(90deg, rgba(255, 0, 0, 0.1), transparent 70%);
+      background: linear-gradient(90deg, rgba(0, 255, 157, 0.1), transparent 70%);
       z-index: -1;
       opacity: 0;
       transition: opacity 0.3s;
     }
 
-    .rule-item:hover::before {
+    .bonus-item:hover {
+      transform: translateX(5px);
+      border-left-width: 8px;
+      box-shadow: 0 5px 20px rgba(0, 255, 157, 0.3);
       opacity: 1;
     }
 
-    .rule-item h3 {
+    .bonus-item:hover::before {
+      opacity: 1;
+    }
+
+    .bonus-item h3 {
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.8rem;
+      color: #00ff9d;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bonus-item h3::before {
+      content: '✨';
+      font-size: 1.8rem;
+    }
+
+    .bonus-item p {
+      color: #a0ffa0;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    .bonus-item p strong {
+      color: #ffd700;
+      font-weight: 700;
+    }
+
+    /* НАКАЗАНИЯ — КРОВАВО-КРАСНЫЙ С ПУЛЬСАЦИЕЙ */
+    .section-title.punishments {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 2.5rem 0 1.5rem;
+      color: #ff0000;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 1rem;
+      background: rgba(50, 5, 5, 0.8);
+      border-radius: 16px;
+      border: 3px solid #ff0000;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      animation: pulseRedSection 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseRedSection {
+      0%, 100% { box-shadow: 0 0 25px rgba(255, 0, 0, 0.5); }
+      50% { box-shadow: 0 0 45px rgba(255, 0, 0, 0.8); }
+    }
+
+    .section-title.punishments::before {
+      content: '⚠️';
+      font-size: 2.2rem;
+    }
+
+    .punishment-item {
+      background: rgba(40, 10, 15, 0.85);
+      border-radius: 16px;
+      padding: 1.4rem;
+      margin-bottom: 1.2rem;
+      border-left: 6px solid #ff0000;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: pulseRedItem 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseRedItem {
+      0%, 100% { border-left-color: #ff0000; box-shadow: 0 0 10px rgba(255, 0, 0, 0.3); }
+      50% { border-left-color: #ff6b6b; box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
+    }
+
+    .punishment-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, rgba(255, 0, 0, 0.15), transparent 70%);
+      z-index: -1;
+      opacity: 0.3;
+    }
+
+    .punishment-item:hover {
+      transform: translateX(5px);
+      border-left-width: 9px;
+      box-shadow: 0 5px 25px rgba(255, 0, 0, 0.5);
+    }
+
+    .punishment-item h3 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
       font-weight: 800;
       margin-bottom: 0.8rem;
       color: #ff4d4d;
@@ -221,58 +281,31 @@
       gap: 10px;
     }
 
-    .rule-item h3::before {
-      content: '•';
-      font-size: 2.5rem;
-      line-height: 1;
+    .punishment-item h3::before {
+      content: '☠️';
+      font-size: 1.8rem;
     }
 
-    .rule-item p {
-      color: #d0d0ff;
+    .punishment-item p {
+      color: #ff9d9d;
       line-height: 1.8;
       font-size: 1.05rem;
       font-weight: 500;
     }
 
-    .rule-item p strong {
-      color: #ff6b6b;
+    .punishment-item p strong {
+      color: #ff0000;
       font-weight: 700;
     }
 
-    .rule-item.principle {
-      background: rgba(15, 25, 20, 0.7);
-      border-left-color: #00ff9d;
-      border-left-width: 6px;
-    }
-
-    .rule-item.principle h3 {
-      color: #00ff9d;
-      font-size: 1.6rem;
-    }
-
-    .rule-item.principle h3::before {
-      content: '💎';
-      font-size: 2rem;
-    }
-
-    .rule-item.principle:hover {
-      transform: translateX(5px);
-      border-left-width: 9px;
-      box-shadow: 0 5px 20px rgba(0, 255, 157, 0.3);
-    }
-
-    .rule-item.principle::before {
-      background: linear-gradient(90deg, rgba(0, 255, 157, 0.15), transparent 70%);
-    }
-
     .final-warning {
-      background: rgba(50, 10, 10, 0.9);
+      background: rgba(50, 10, 10, 0.95);
       border: 4px solid #ff0000;
       border-radius: 24px;
       padding: 2rem;
       margin: 2.5rem 0;
       text-align: center;
-      box-shadow: 0 0 40px rgba(255, 0, 0, 0.5);
+      box-shadow: 0 0 50px rgba(255, 0, 0, 0.7);
       position: relative;
       overflow: hidden;
       animation: pulseWarning 1.8s ease-in-out infinite;
@@ -280,7 +313,7 @@
 
     @keyframes pulseWarning {
       0%, 100% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.5); }
-      50% { box-shadow: 0 0 60px rgba(255, 0, 0, 0.9); }
+      50% { box-shadow: 0 0 70px rgba(255, 0, 0, 0.9); }
     }
 
     .final-warning::before {
@@ -290,192 +323,161 @@
       left: 50%;
       transform: translateX(-50%);
       font-size: 6rem;
-      opacity: 0.2;
+      opacity: 0.3;
       animation: warningIcon 2s ease-in-out infinite;
     }
 
     @keyframes warningIcon {
       0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.2; }
-      50% { transform: translateX(-50%) scale(1.2); opacity: 0.4; }
+      50% { transform: translateX(-50%) scale(1.3); opacity: 0.5; }
     }
 
     .final-warning h3 {
       font-family: 'Quicksand', sans-serif;
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 800;
       color: #ff0000;
-      margin-bottom: 1.5rem;
-      text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+      margin-bottom: 1.2rem;
+      text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
     }
 
     .final-warning p {
-      color: #ff9d9d;
-      font-size: 1.2rem;
+      color: #ffcccc;
+      font-size: 1.25rem;
       line-height: 1.9;
       font-weight: 600;
     }
 
     .final-warning p strong {
       color: #ff0000;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       display: block;
       margin: 1rem 0;
-      text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+      text-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
     }
 
     /* КРОВАВАЯ ГАЛОЧКА */
     .agreement-section {
       position: relative;
       margin: 2.5rem 0;
-      padding: 1.5rem;
-      background: rgba(30, 5, 15, 0.9);
-      border-radius: 24px;
+      padding: 2rem;
+      background: rgba(30, 5, 15, 0.95);
+      border-radius: 28px;
       border: 4px solid #ff0000;
-      box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
-      animation: pulseWarning 2s ease-in-out infinite;
+      box-shadow: 0 0 50px rgba(255, 0, 0, 0.7);
+      animation: pulseWarning 1.8s ease-in-out infinite;
+      text-align: center;
       overflow: hidden;
     }
 
     .blood-seal {
       text-align: center;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      background: rgba(50, 5, 5, 0.8);
-      border-radius: 16px;
-      border: 2px solid #ff0000;
+      margin-bottom: 1.8rem;
     }
 
     .seal-icon {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
+      font-size: 4rem;
+      margin-bottom: 0.8rem;
       animation: pulseIcon 1.5s ease-in-out infinite;
     }
 
     @keyframes pulseIcon {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); text-shadow: 0 0 20px rgba(255, 0, 0, 0.8); }
+      50% { transform: scale(1.2); text-shadow: 0 0 25px rgba(255, 0, 0, 0.9); }
     }
 
     .seal-text {
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 800;
       color: #ff6b6b;
-      letter-spacing: 0.05em;
-      text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+      letter-spacing: 0.06em;
+      text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
     }
 
-    .checkbox-container {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      padding: 1.5rem;
-      background: rgba(40, 10, 20, 0.85);
-      border-radius: 20px;
+    .checkbox-wrapper {
       position: relative;
+      display: inline-block;
+      margin: 1.5rem auto;
+    }
+
+    #agreeRules {
+      position: absolute;
+      opacity: 0;
+      width: 80px;
+      height: 80px;
       cursor: pointer;
+      z-index: 10;
     }
 
     .custom-checkbox {
-      width: 48px;
-      height: 48px;
-      border: 4px solid #ff0000;
-      border-radius: 12px;
+      width: 80px;
+      height: 80px;
+      border: 6px solid #ff0000;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(20, 0, 5, 0.7);
+      background: rgba(20, 0, 5, 0.8);
       position: relative;
-      flex-shrink: 0;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+      margin: 0 auto;
     }
 
     .custom-checkbox:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+      transform: scale(1.15) rotate(2deg);
+      box-shadow: 0 0 40px rgba(255, 0, 0, 0.9);
     }
 
     .checkbox-mark {
       font-family: 'Quicksand', sans-serif;
-      font-size: 36px;
-      font-weight: 800;
+      font-size: 56px;
+      font-weight: 900;
       color: transparent;
-      transition: all 0.3s ease;
-    }
-
-    #agreeRules:checked ~ .custom-checkbox .checkbox-mark {
-      color: #ff0000;
-      text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-      transform: scale(1.1);
-    }
-
-    .checkbox-label {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #ff4d4d;
-      line-height: 1.6;
-      cursor: pointer;
+      transition: all 0.4s ease;
       user-select: none;
     }
 
-    .checkbox-label .warning-text {
-      display: block;
-      font-size: 1.2rem;
+    #agreeRules:checked + .custom-checkbox .checkbox-mark {
       color: #ff0000;
-      font-weight: 800;
-      margin-top: 0.5rem;
-      text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-    }
-
-    .hidden-checkbox {
-      display: none;
-    }
-
-    #checkboxContainer:hover .custom-checkbox {
-      border-color: #ff6b6b;
-    }
-
-    #checkboxContainer:hover .checkbox-label {
-      color: #ff9d9d;
-    }
-
-    .blood-drip {
-      position: absolute;
-      bottom: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 8px;
-      height: 25px;
-      background: linear-gradient(to bottom, #ff0000, transparent);
-      border-radius: 4px;
-      opacity: 0.7;
-      animation: dripBlood 3s ease-in-out infinite;
-    }
-
-    @keyframes dripBlood {
-      0%, 100% { height: 25px; opacity: 0.7; }
-      50% { height: 40px; opacity: 1; }
-    }
-
-    /* При активации — эффект крови */
-    #agreeRules:checked ~ .blood-drip {
-      animation: bloodSplash 0.5s ease-out;
-      background: linear-gradient(to bottom, #ff0000, #8b0000);
+      text-shadow: 0 0 25px rgba(255, 0, 0, 0.9), 0 0 40px rgba(255, 107, 107, 0.7);
+      transform: scale(1.2) rotate(-5deg);
+      animation: bloodSplash 0.6s ease-out;
     }
 
     @keyframes bloodSplash {
-      0% { transform: translateX(-50%) scale(1); opacity: 0.7; }
-      50% { transform: translateX(-50%) scale(1.5); opacity: 1; }
-      100% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+      0% { transform: scale(1) rotate(0); color: transparent; }
+      50% { transform: scale(1.3) rotate(-8deg); color: #ff3333; text-shadow: 0 0 30px rgba(255, 0, 0, 1); }
+      100% { transform: scale(1.2) rotate(-5deg); color: #ff0000; text-shadow: 0 0 25px rgba(255, 0, 0, 0.9); }
+    }
+
+    .checkbox-instruction {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff4d4d;
+      margin-top: 1.2rem;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+      letter-spacing: 0.03em;
+    }
+
+    .checkbox-warning {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ff0000;
+      margin-top: 0.8rem;
+      text-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
+      letter-spacing: 0.04em;
     }
 
     .btn-container {
       display: flex;
       gap: 1.5rem;
       justify-content: center;
-      margin-top: 2.5rem;
+      margin-top: 2rem;
     }
 
     .btn {
@@ -618,15 +620,13 @@
       h1 { font-size: 2.5rem; }
       .subtitle { font-size: 1.1rem; }
       .tier-badge { font-size: 1.2rem; padding: 0.8rem 1.5rem; }
-      .section-title { font-size: 1.5rem; }
-      .rule-item h3 { font-size: 1.25rem; }
-      .rule-item p { font-size: 1rem; }
-      .final-warning h3 { font-size: 1.6rem; }
-      .final-warning p { font-size: 1.05rem; }
-      .checkbox-container { flex-direction: column; align-items: center; text-align: center; }
-      .custom-checkbox { width: 40px; height: 40px; }
-      .checkbox-mark { font-size: 30px; }
-      .checkbox-label { font-size: 1.2rem; }
+      .section-title { font-size: 1.6rem; }
+      .bonus-item h3, .punishment-item h3 { font-size: 1.3rem; }
+      .bonus-item p, .punishment-item p { font-size: 1rem; }
+      .custom-checkbox { width: 70px; height: 70px; }
+      .checkbox-mark { font-size: 48px; }
+      .checkbox-instruction { font-size: 1.3rem; }
+      .checkbox-warning { font-size: 1.15rem; }
       .btn { padding: 1rem 2rem; font-size: 1.1rem; }
       .btn-container { flex-direction: column; gap: 1rem; }
     }
@@ -637,7 +637,7 @@
 <div class="container">
   <div class="header">
     <h1>CRYPTOBROS COMMUNITY RULES</h1>
-    <p class="subtitle"><strong>READ CAREFULLY BEFORE PROCEEDING</strong><br>Violation of any rule results in <span style="color: #ff0000; font-weight: 700;">PERMANENT BAN</span> and 100% token confiscation to club treasury.</p>
+    <p class="subtitle"><strong>READ CAREFULLY BEFORE PROCEEDING</strong><br>Earn rewards for quality content. Violations = permanent ban + 100% confiscation.</p>
   </div>
 
   <div class="tier-badge" id="tierBadge">
@@ -645,81 +645,113 @@
   </div>
 
   <div class="rules-container" id="rulesContainer">
-    <div class="rules-section">
-      <div class="section-title">PART 1: BEHAVIOR RULES</div>
-      
-      <div class="rule-item">
-        <h3>NO SCAM OR PHISHING</h3>
-        <p>Sharing fake giveaways, phishing links, fraudulent schemes, or misleading financial advice is <strong>STRICTLY PROHIBITED</strong>. Violation results in <strong>IMMEDIATE PERMANENT BAN</strong> and confiscation of 100% of your AUS token balance to the community treasury.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>NO SHILLING WITHOUT DYOR</h3>
-        <p>Shilling tokens/projects without proper DYOR-based justification (analysis, data, logic) and mandatory position disclosure (e.g., "I hold 10k tokens") is forbidden. Without this — <strong>BAN</strong>.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>NO REFERRALS OR "GUARANTEED 100X"</h3>
-        <p>Posting referral links, paid courses, trading signals, or "guaranteed profit" promises without prominent warning: <strong>"THIS IS RISKY, YOU MAY LOSE EVERYTHING"</strong> is prohibited.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>NO TOXICITY OR SPAM</h3>
-        <p>Insults, harassment, doxxing, spam, flooding, off-topic in feed/chats/tribunal are forbidden. Respect for others is mandatory for club membership.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>NO BOTS OR MANIPULATION</h3>
-        <p>Using bots, multi-accounts, or manipulating likes/reposts/comments is prohibited. All suspicious accounts are checked by AI Tribunal. Detection = <strong>instant ban</strong>.</p>
-      </div>
-
-      <div class="rule-item principle">
-        <h3>CLUB PRINCIPLE</h3>
-        <p><strong>"TRUTH &gt; HYPE"</strong><br>All posts/comments must follow this principle. Hype without facts = removal + reputation penalty. Facts without hype = club respect.</p>
-      </div>
+    
+    <!-- БОНУСЫ — ПРИЯТНЫЕ ЦВЕТА -->
+    <div class="section-title bonuses">💎 BONUSES & REWARDS</div>
+    
+    <div class="bonus-item">
+      <h3>DAILY REWARDS</h3>
+      <p>
+        <strong>+1 AUS</strong> for first login of the day<br>
+        <strong>+3 AUS</strong> for first post of the day<br>
+        <strong>+1 AUS</strong> for first comment of the day<br><br>
+        <strong>Streak 7 days:</strong> +10 AUS<br>
+        <strong>Streak 30 days:</strong> +100 AUS + «Veteran» badge
+      </p>
     </div>
 
-    <div class="rules-section">
-      <div class="section-title">PART 2: SYSTEM RULES</div>
-      
-      <div class="rule-item">
-        <h3>TOKENS FOR ACTIVITY</h3>
-        <p>+5 AUS per post (max 3/day) • +2 AUS per comment (max 10/day) • +1 AUS per like (max 20/day)<br>Violating limits = temporary feature lock.</p>
-      </div>
+    <div class="bonus-item">
+      <h3>REFERRALS</h3>
+      <p>
+        <strong>+10 AUS</strong> for each friend who joins via your link<br>
+        <strong>+5% of their first premium purchase</strong> (lifetime)<br><br>
+        <span style="color: #ffd700; font-weight: 700;">✨ Max:</span> 1,000 AUS/month from referrals
+      </p>
+    </div>
 
-      <div class="rule-item">
-        <h3>PREMIUM POSTS & BOOSTS</h3>
-        <p>100 AUS → post in top 24h • 25 AUS → ×3 visibility for 6h<br>Premium status does not guarantee profit — only visibility.</p>
-      </div>
+    <div class="bonus-item">
+      <h3>TOP POSTS</h3>
+      <p>
+        <strong>Top-1 post of the day:</strong> +15 AUS<br>
+        <strong>Best post of the month:</strong> 500 AUS<br><br>
+        <span style="color: #66ffff; font-weight: 700;">🎯 Criteria:</span> Quality analysis, charts, engagement, AI score ≥8
+      </p>
+    </div>
 
-      <div class="rule-item">
-        <h3>EXCLUSIVE CONTENT</h3>
-        <p>Posts with lock 🔒 visible only to holders of 10k+ AUS. Attempt to bypass protection = <strong>BAN</strong>.</p>
-      </div>
+    <div class="bonus-item">
+      <h3>SPECIAL EVENTS</h3>
+      <p>
+        <strong>Lucky Chest:</strong> Every Friday 18:00 UTC — 1 random user gets 100 AUS<br>
+        <strong>Club Anniversary:</strong> +10 AUS to all active users<br><br>
+        <span style="color: #00ff9d; font-weight: 700;">💎 Note:</span> Seasonal events announced in advance
+      </p>
+    </div>
 
-      <div class="rule-item">
-        <h3>TRADER VERIFICATION</h3>
-        <p>Verified traders must disclose success statistics (percentage of profitable trades, average profit). Hiding data = verification revoked.</p>
-      </div>
+    <!-- НАКАЗАНИЯ — КРОВАВО-КРАСНЫЙ С ПУЛЬСАЦИЕЙ -->
+    <div class="section-title punishments">⚠️ VIOLATIONS & PUNISHMENTS</div>
+    
+    <div class="punishment-item">
+      <h3>SPAM / FLOOD</h3>
+      <p>
+        <strong>>3 posts in 5 minutes</strong> → 24-hour ban<br>
+        <strong>Repeat offense</strong> → 7-day ban<br><br>
+        <span style="color: #ff6b6b; font-weight: 700;">❗ No warnings</span> for obvious spam bots
+      </p>
+    </div>
 
-      <div class="rule-item">
-        <h3>TIPS & TRANSFERS</h3>
-        <p>Tips to authors (💸 button) and AUS transfers <strong>ARE NON-REFUNDABLE</strong>. Ensure you trust the recipient before sending.</p>
-      </div>
+    <div class="punishment-item">
+      <h3>SCAM / PHISHING</h3>
+      <p>
+        <strong>Keywords:</strong> "giveaway", "send SOL", "private key", "free money"<br>
+        <strong>Action:</strong> Immediate permanent ban + 100% AUS confiscation to club treasury<br><br>
+        <span style="color: #ff0000; font-weight: 800; font-size: 1.2rem;">☠️ NO APPEALS. NO EXCEPTIONS.</span>
+      </p>
+    </div>
 
-      <div class="rule-item">
-        <h3>CLUB TREASURY</h3>
-        <p>25% of all premium post fees and boosts go to treasury. Daily 50 AUS distributed for best post of the day. Attempting to manipulate voting = <strong>BAN + confiscation</strong>.</p>
-      </div>
+    <div class="punishment-item">
+      <h3>TOXICITY</h3>
+      <p>
+        Insults, harassment, doxxing, trolling<br>
+        <strong>First offense:</strong> Warning + -10 reputation<br>
+        <strong>Repeat offense:</strong> 24-hour ban<br><br>
+        <span style="color: #ff4d4d; font-weight: 700;">⚠️ Severe cases:</span> Immediate ban
+      </p>
+    </div>
+
+    <div class="punishment-item">
+      <h3>LOW QUALITY</h3>
+      <p>
+        Posts <15 characters without analysis or $token mention<br>
+        <strong>First offense:</strong> Warning<br>
+        <strong>Repeat offense:</strong> 24-hour ban<br><br>
+        <span style="color: #ff6b6b; font-weight: 700;">💡 Tip:</span> Add charts, data, or DYOR for quality score
+      </p>
+    </div>
+
+    <div class="punishment-item">
+      <h3>MULTI-ACCOUNTS</h3>
+      <p>
+        Detection of multiple accounts from same device/IP<br>
+        <strong>Action:</strong> Accounts merged + 50% penalty on total paid AUS<br><br>
+        <span style="color: #ff0000; font-weight: 700;">❗ Free tier users:</span> All accounts banned
+      </p>
+    </div>
+
+    <div class="punishment-item">
+      <h3>REPORTING SCAMS</h3>
+      <p>
+        <strong>Confirmed report:</strong> +20 AUS<br>
+        <strong>False report:</strong> -50 reputation points<br><br>
+        <span style="color: #ff4d4d; font-weight: 700;">⚠️ Abuse:</span> 3+ false reports = 7-day ban
+      </p>
     </div>
 
     <div class="final-warning">
       <h3>FINAL WARNING</h3>
       <p>
-        <strong>NO APPEALS.</strong><br>
-        Decision of moderators and AI Tribunal is final.<br>
-        Violation of any Part 1 rule → <strong>PERMANENT BAN + 100% AUS BALANCE CONFISCATED TO CLUB TREASURY</strong><br>
-        Your wallet is linked to account. Ban = permanent loss of all tokens.
+        <strong>NO APPEALS</strong> for major violations (scam, multi-accounts, severe toxicity).<br><br>
+        <span style="color: #00ff9d; font-weight: 700;">✅ BUT:</span> Follow rules → earn rewards → grow reputation → unlock exclusive features.<br><br>
+        Your wallet is linked to account. <strong>Ban = permanent loss of all tokens.</strong>
       </p>
     </div>
   </div>
@@ -731,18 +763,15 @@
       <div class="seal-text">YOUR WALLET • YOUR RULES • YOUR RISK</div>
     </div>
     
-    <div class="checkbox-container" id="checkboxContainer">
-      <div class="custom-checkbox">
-        <div class="checkbox-mark">✓</div>
-      </div>
-      <label for="agreeRules" class="checkbox-label">
-        I CONFIRM: I have read and agree to all Community Rules.<br>
-        <span class="warning-text">Violation = PERMANENT BAN + 100% CONFISCATION. NO APPEALS.</span>
+    <div class="checkbox-wrapper">
+      <input type="checkbox" id="agreeRules">
+      <label for="agreeRules" class="custom-checkbox">
+        <span class="checkbox-mark">✓</span>
       </label>
-      <input type="checkbox" id="agreeRules" class="hidden-checkbox">
     </div>
     
-    <div class="blood-drip" id="bloodDrip"></div>
+    <div class="checkbox-instruction">CLICK THE SEAL TO ACCEPT</div>
+    <div class="checkbox-warning">VIOLATION = PERMANENT BAN + 100% CONFISCATION</div>
   </div>
 
   <div class="btn-container">
@@ -799,54 +828,39 @@
     <span style="font-size: 1.1rem; color: #a0a0ff;">Price: ${tierData[selectedTier].price} • Access: ${tierData[selectedTier].access}</span>
   `;
 
-  // Анимация галочки при клике
-  document.getElementById('checkboxContainer').addEventListener('click', function(e) {
-    if (e.target !== document.getElementById('agreeRules')) {
-      const checkbox = document.getElementById('agreeRules');
-      checkbox.checked = !checkbox.checked;
-      
-      // Анимация крови при активации
-      if (checkbox.checked) {
-        const bloodDrip = document.getElementById('bloodDrip');
-        bloodDrip.style.animation = 'bloodSplash 0.5s ease-out';
-        
-        setTimeout(() => {
-          document.getElementById('continueBtn').disabled = false;
-        }, 300);
-      } else {
-        document.getElementById('continueBtn').disabled = true;
-      }
-    }
-  });
-
-  // Защита от пропуска скролла
+  // Enable button on agreement + scroll check
   let hasScrolledToBottom = false;
   const rulesContainer = document.getElementById('rulesContainer');
+  const agreeCheckbox = document.getElementById('agreeRules');
+  const continueBtn = document.getElementById('continueBtn');
 
   rulesContainer.addEventListener('scroll', () => {
     const isAtBottom = rulesContainer.scrollTop + rulesContainer.clientHeight >= rulesContainer.scrollHeight - 50;
     if (isAtBottom) {
       hasScrolledToBottom = true;
-      document.getElementById('checkboxContainer').style.animation = 'pulseWarning 1s ease-in-out';
     }
   });
 
-  // Кнопка продолжить активируется ТОЛЬКО после скролла + галочки
-  document.getElementById('continueBtn').addEventListener('click', function() {
+  agreeCheckbox.addEventListener('change', function() {
+    if (this.checked && hasScrolledToBottom) {
+      continueBtn.disabled = false;
+    } else {
+      continueBtn.disabled = true;
+    }
+  });
+
+  // Show payment section
+  function showPayment() {
     if (!hasScrolledToBottom) {
       alert('❗ You must scroll through ALL rules before accepting.');
       rulesContainer.scrollTop = rulesContainer.scrollHeight;
       return;
     }
-    if (!document.getElementById('agreeRules').checked) {
+    if (!agreeCheckbox.checked) {
       alert('❗ You must accept the rules to continue.');
       return;
     }
-    showPayment();
-  });
 
-  // Show payment section
-  function showPayment() {
     // Hide rules
     document.getElementById('rulesContainer').style.display = 'none';
     document.querySelector('.agreement-section').style.display = 'none';
@@ -857,7 +871,6 @@
     const paymentInfo = document.getElementById('paymentInfo');
     
     if (tierData[selectedTier].isFree) {
-      // FREE tier - go directly to profile
       localStorage.setItem('rulesAccepted', 'true');
       localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
       localStorage.setItem('selectedTier', selectedTier);
@@ -867,7 +880,6 @@
         window.location.href = 'profile.html';
       }, 500);
     } else {
-      // Paid tier - show payment info
       paymentSection.classList.add('active');
       paymentInfo.innerHTML = `
         <h4>${selectedTier} TIER</h4>
@@ -884,7 +896,6 @@
   document.getElementById('connectWalletBtn').addEventListener('click', function() {
     alert(`🔒 ${selectedTier} tier selected!\n\nPrice: ${tierData[selectedTier].price}\n\nConnect your Phantom wallet to proceed with payment.\n\nThis feature is coming soon!`);
     
-    // Save data and redirect to profile (for demo)
     localStorage.setItem('rulesAccepted', 'true');
     localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
     localStorage.setItem('selectedTier', selectedTier);
