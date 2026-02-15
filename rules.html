@@ -4,13 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cryptobros Rules</title>
-  <!-- ПРЕДЗАГРУЗКА ШРИФТОВ БЕЗ МЕРЦАНИЯ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
   <style>
-    /* БАЗОВЫЕ СТИЛИ БЕЗ МЕРЦАНИЯ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: linear-gradient(135deg, #0a0a1a 0%, #111122 50%, #1a1a2a 100%);
@@ -46,7 +44,6 @@
       position: relative;
       overflow: hidden;
     }
-    /* КНОПКА "BACK TO HOME" (УМЕНЬШЕНА, НЕ НАЕЗЖАЕТ) */
     .back-btn {
       position: absolute;
       top: 15px;
@@ -134,7 +131,6 @@
       position: relative;
       z-index: 1;
     }
-    /* БОНУСЫ — ПРИЯТНЫЕ ЦВЕТА */
     .section-title.bonuses {
       font-family: 'Poppins', sans-serif;
       font-size: 2rem;
@@ -196,7 +192,6 @@
       color: #ffd700;
       font-weight: 700;
     }
-    /* НАКАЗАНИЯ — КРОВАВО-КРАСНЫЙ */
     .section-title.punishments {
       font-family: 'Poppins', sans-serif;
       font-size: 2rem;
@@ -286,7 +281,6 @@
       margin: 1rem 0;
       text-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
     }
-    /* КРОВАВАЯ ГАЛОЧКА (ВИДИМАЯ И РАБОЧАЯ) */
     .agreement-section {
       position: relative;
       margin: 2.5rem 0;
@@ -319,14 +313,6 @@
       display: inline-block;
       margin: 1.5rem auto;
     }
-    #agreeRules {
-      position: absolute;
-      opacity: 0;
-      width: 80px;
-      height: 80px;
-      cursor: pointer;
-      z-index: 1;
-    }
     .custom-checkbox {
       width: 80px;
       height: 80px;
@@ -346,6 +332,14 @@
       transform: scale(1.15) rotate(2deg);
       box-shadow: 0 0 40px rgba(255, 0, 0, 0.9);
     }
+    .custom-checkbox input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      z-index: 1;
+    }
     .checkbox-mark {
       font-family: 'Poppins', sans-serif;
       font-size: 56px;
@@ -354,7 +348,7 @@
       transition: all 0.4s ease;
       user-select: none;
     }
-    #agreeRules:checked ~ .custom-checkbox .checkbox-mark {
+    .custom-checkbox input:checked + .checkbox-mark {
       color: #ff0000;
       text-shadow: 0 0 25px rgba(255, 0, 0, 0.9), 0 0 40px rgba(255, 107, 107, 0.7);
       transform: scale(1.2) rotate(-5deg);
@@ -644,7 +638,7 @@
     </div>
   </div>
 
-  <!-- КРОВАВАЯ ГАЛОЧКА (ВИДИМАЯ И РАБОЧАЯ) -->
+  <!-- КРОВАВАЯ ГАЛОЧКА (ИСПРАВЛЕНО: ВИДНА И КЛИКАБЕЛЬНА) -->
   <div class="agreement-section">
     <div class="blood-seal">
       <div class="seal-icon">⚠️</div>
@@ -652,8 +646,8 @@
     </div>
     
     <div class="checkbox-wrapper">
-      <input type="checkbox" id="agreeRules">
       <label for="agreeRules" class="custom-checkbox">
+        <input type="checkbox" id="agreeRules">
         <span class="checkbox-mark">✓</span>
       </label>
     </div>
@@ -677,11 +671,9 @@
 </div>
 
 <script>
-  // Get tier from URL
   const urlParams = new URLSearchParams(window.location.search);
   const selectedTier = urlParams.get('tier') || 'Free';
 
-  // Tier data
   const tierData = {
     'Free': {
       price: '0 AUS',
@@ -709,14 +701,12 @@
     }
   };
 
-  // Fill tier badge
   const tierBadge = document.getElementById('tierBadge');
   tierBadge.innerHTML = `
     SELECTED TIER: <strong style="color: ${tierData[selectedTier].color};">${selectedTier}</strong><br>
     <span style="font-size: 1.1rem; color: #a0a0ff;">Price: ${tierData[selectedTier].price} • Access: ${tierData[selectedTier].access}</span>
   `;
 
-  // Enable button on agreement + scroll check
   let hasScrolledToBottom = false;
   const rulesContainer = document.getElementById('rulesContainer');
   const agreeCheckbox = document.getElementById('agreeRules');
@@ -737,7 +727,6 @@
     }
   });
 
-  // Show payment section
   function showPayment() {
     if (!hasScrolledToBottom) {
       alert('❗ You must scroll through ALL rules before accepting.');
@@ -749,12 +738,10 @@
       return;
     }
 
-    // Hide rules
     document.getElementById('rulesContainer').style.display = 'none';
     document.querySelector('.agreement-section').style.display = 'none';
     document.querySelector('.btn-container').style.display = 'none';
 
-    // Show payment section
     const paymentSection = document.getElementById('paymentSection');
     const paymentInfo = document.getElementById('paymentInfo');
     
@@ -780,7 +767,6 @@
     }
   }
 
-  // Connect wallet button
   document.getElementById('connectWalletBtn').addEventListener('click', function() {
     alert(`🔒 ${selectedTier} tier selected!\n\nPrice: ${tierData[selectedTier].price}\n\nConnect your Phantom wallet to proceed with payment.\n\nThis feature is coming soon!`);
     
