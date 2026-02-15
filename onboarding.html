@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS ACCESS</title>
-  <!-- Quicksand instead of Rajdhani -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,7 +12,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      /* Light theme (variables) */
       --bg-primary: #f8f9fa;
       --bg-secondary: #ffffff;
       --bg-tertiary: #e9ecef;
@@ -31,7 +29,6 @@
     }
 
     .dark-theme {
-      /* Dark theme (variables) */
       --bg-primary: #0a0a1a;
       --bg-secondary: #111122;
       --bg-tertiary: #1a1a2a;
@@ -120,7 +117,6 @@
       box-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
     }
 
-    /* Theme toggle */
     .theme-toggle-container {
       position: absolute;
       top: 30px;
@@ -213,7 +209,6 @@
       border-radius: 3px;
     }
 
-    /* GLOBAL FONT REPLACEMENT TO QUICKSAND */
     h1, .subtitle, .plan-header, .price, .btn, footer, .back-btn, #connect-btn {
       font-family: 'Quicksand', sans-serif !important;
       font-weight: 700 !important;
@@ -732,7 +727,6 @@
       100% { color: #9d00ff; }
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
       h1 { font-size: 2.8rem; }
       .subtitle { font-size: 1.4rem; }
@@ -756,7 +750,6 @@
 
 <a href="index.html" class="back-btn">← Back to Home</a>
 
-<!-- Theme toggle -->
 <div class="theme-toggle-container" id="themeToggle">
   <span class="theme-toggle-label sun">☀️</span>
   <div class="theme-toggle" id="themeSlider"></div>
@@ -773,45 +766,45 @@
     <div class="plan free">
       <div class="plan-header">Free</div>
       <div class="price">0 AUS</div>
+      <button class="btn" onclick="window.location.href='rules.html?tier=Free'">SELECT</button>
       <ul class="features">
         <li>2-week access</li>
         <li>Basic profile</li>
         <li>Limited tribunal</li>
       </ul>
-      <button class="btn" onclick="showRulesModal('Free')">SELECT</button>
     </div>
 
     <div class="plan master">
       <div class="plan-header">Master</div>
       <div class="price">500 AUS</div>
+      <button class="btn" onclick="window.location.href='rules.html?tier=Master'">SELECT</button>
       <ul class="features">
         <li>Unlimited access</li>
         <li>Custom profile</li>
         <li>Full tribunal</li>
       </ul>
-      <button class="btn" onclick="showRulesModal('Master')">SELECT</button>
     </div>
 
     <div class="plan pro">
       <div class="plan-header">Pro</div>
       <div class="price">2,000 AUS</div>
+      <button class="btn" onclick="window.location.href='rules.html?tier=Pro'">SELECT</button>
       <ul class="features">
         <li>All Master features</li>
         <li>AI feed filtering</li>
         <li>Staking rewards</li>
       </ul>
-      <button class="btn" onclick="showRulesModal('Pro')">SELECT</button>
     </div>
 
     <div class="plan premium">
       <div class="plan-header">Premium</div>
       <div class="price">10,000 AUS</div>
+      <button class="btn" onclick="window.location.href='rules.html?tier=Premium'">SELECT</button>
       <ul class="features">
         <li>All Pro features</li>
         <li>Free invites</li>
         <li>Governance rights</li>
       </ul>
-      <button class="btn" onclick="showRulesModal('Premium')">SELECT</button>
     </div>
   </div>
 
@@ -821,114 +814,11 @@
   </div>
 </div>
 
-<!-- Rules modal -->
-<div class="modal-overlay" id="rulesModal">
-  <div class="rules-modal">
-    <div class="modal-header">
-      <h2>CRYPTOBROS COMMUNITY RULES</h2>
-      <p><strong>READ CAREFULLY BEFORE PROCEEDING</strong><br>Violation of any rule results in <span style="color: #ff0000; font-weight: 700;">PERMANENT BAN</span> and token confiscation.</p>
-    </div>
-
-    <div class="tier-info" id="tierInfo">
-      <!-- Will be filled dynamically -->
-    </div>
-
-    <div class="rules-section">
-      <div class="section-title danger">PART 1: BEHAVIOR RULES</div>
-      
-      <div class="rule-item">
-        <h3>NO SCAM OR PHISHING</h3>
-        <p>Sharing fake giveaways, phishing links, fraudulent schemes, or misleading financial advice is <strong>STRICTLY PROHIBITED</strong>. Violation results in <strong>IMMEDIATE PERMANENT BAN</strong> and confiscation of 100% of your AUS token balance to the community treasury.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>NO SHILLING WITHOUT DYOR</h3>
-        <p>Shilling tokens/projects without proper DYOR-based justification (analysis, data, logic) and mandatory position disclosure (e.g., "I hold 10k tokens") is forbidden. Without this — <strong>BAN</strong>.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>NO REFERRALS OR "GUARANTEED 100X"</h3>
-        <p>Posting referral links, paid courses, trading signals, or "guaranteed profit" promises without prominent warning: <strong>"THIS IS RISKY, YOU MAY LOSE EVERYTHING"</strong> is prohibited.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>NO TOXICITY OR SPAM</h3>
-        <p>Insults, harassment, doxxing, spam, flooding, off-topic in feed/chats/tribunal are forbidden. Respect for others is mandatory for club membership.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>NO BOTS OR MANIPULATION</h3>
-        <p>Using bots, multi-accounts, or manipulating likes/reposts/comments is prohibited. All suspicious accounts are checked by AI Tribunal. Detection = <strong>instant ban</strong>.</p>
-      </div>
-
-      <div class="rule-item principle">
-        <h3>CLUB PRINCIPLE</h3>
-        <p><strong>"TRUTH &gt; HYPE"</strong><br>All posts/comments must follow this principle. Hype without facts = removal + reputation penalty. Facts without hype = club respect.</p>
-      </div>
-    </div>
-
-    <div class="rules-section">
-      <div class="section-title system">PART 2: SYSTEM RULES</div>
-      
-      <div class="rule-item">
-        <h3>TOKENS FOR ACTIVITY</h3>
-        <p>+5 AUS per post (max 3/day) • +2 AUS per comment (max 10/day) • +1 AUS per like (max 20/day)<br>Violating limits = temporary feature lock.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>PREMIUM POSTS & BOOSTS</h3>
-        <p>100 AUS → post in top 24h • 25 AUS → ×3 visibility for 6h<br>Premium status does not guarantee profit — only visibility.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>EXCLUSIVE CONTENT</h3>
-        <p>Posts with lock 🔒 visible only to holders of 10k+ AUS. Attempt to bypass protection = <strong>BAN</strong>.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>TRADER VERIFICATION</h3>
-        <p>Verified traders must disclose success statistics (percentage of profitable trades, average profit). Hiding data = verification revoked.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>TIPS & TRANSFERS</h3>
-        <p>Tips to authors (💸 button) and AUS transfers <strong>ARE NON-REFUNDABLE</strong>. Ensure you trust the recipient before sending.</p>
-      </div>
-
-      <div class="rule-item">
-        <h3>CLUB TREASURY</h3>
-        <p>25% of all premium post fees and boosts go to treasury. Daily 50 AUS distributed for best post of the day. Attempting to manipulate voting = <strong>BAN + confiscation</strong>.</p>
-      </div>
-    </div>
-
-    <div class="rule-item warning">
-      <h3>FINAL WARNING</h3>
-      <p>
-        <strong>NO APPEALS.</strong><br>
-        Decision of moderators and AI Tribunal is final.<br>
-        Violation of any Part 1 rule → <strong>PERMANENT BAN + 100% AUS BALANCE CONFISCATED TO CLUB TREASURY</strong><br>
-        Your wallet is linked to account. Ban = permanent loss of all tokens.
-      </p>
-    </div>
-
-    <div class="checkbox-container">
-      <input type="checkbox" id="agreeRules">
-      <label for="agreeRules">I CONFIRM: I have read and agree to all Community Rules. Violation = PERMANENT BAN + 100% CONFISCATION. NO APPEALS.</label>
-    </div>
-
-    <div class="modal-footer">
-      <button class="modal-btn cancel" onclick="closeRulesModal()">Cancel</button>
-      <button class="modal-btn continue" id="continueBtn" disabled onclick="proceedToProfile()">Accept & Continue</button>
-    </div>
-  </div>
-</div>
-
 <footer>Cryptobros 2026 ©</footer>
 
 <script>
   let selectedTier = null;
 
-  // Theme initialization
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -951,7 +841,6 @@
     }
   }
 
-  // Theme toggle
   function toggleTheme() {
     const isDark = document.body.classList.contains('dark-theme');
     
@@ -966,95 +855,10 @@
     }
   }
 
-  // Show rules modal
-  function showRulesModal(tier) {
-    selectedTier = tier;
-    const tierInfo = document.getElementById('tierInfo');
-    
-    // Tier info
-    const tierData = {
-      'Free': {
-        price: '0 AUS',
-        access: '2-week limited access',
-        color: '#00ff9d'
-      },
-      'Master': {
-        price: '500 AUS',
-        access: 'Unlimited access',
-        color: '#66ffff'
-      },
-      'Pro': {
-        price: '2,000 AUS',
-        access: 'Unlimited access + AI features',
-        color: '#ff6b6b'
-      },
-      'Premium': {
-        price: '10,000 AUS',
-        access: 'Full access + governance rights',
-        color: '#d700ff'
-      }
-    };
-
-    tierInfo.innerHTML = `
-      <h4>SELECTED TIER: <strong style="color: ${tierData[tier].color};">${tier}</strong></h4>
-      <p><strong>Price:</strong> ${tierData[tier].price}<br>
-      <strong>Access:</strong> ${tierData[tier].access}</p>
-    `;
-
-    // Reset checkbox and button
-    document.getElementById('agreeRules').checked = false;
-    document.getElementById('continueBtn').disabled = true;
-
-    // Show modal
-    document.getElementById('rulesModal').classList.add('active');
-  }
-
-  // Close modal
-  function closeRulesModal() {
-    document.getElementById('rulesModal').classList.remove('active');
-    selectedTier = null;
-  }
-
-  // Enable button on agreement
-  document.getElementById('agreeRules').addEventListener('change', function() {
-    document.getElementById('continueBtn').disabled = !this.checked;
-  });
-
-  // Proceed to profile
-  function proceedToProfile() {
-    if (!selectedTier) return;
-
-    // Save agreement and tier
-    localStorage.setItem('rulesAccepted', 'true');
-    localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
-    localStorage.setItem('selectedTier', selectedTier);
-
-    // Redirect
-    alert(`✅ Rules accepted!\nTier: ${selectedTier}\nRedirecting to profile setup...`);
-    window.location.href = 'profile.html';
-  }
-
-  // Click outside modal - prevent closing
-  document.getElementById('rulesModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      alert('❗ You must accept the rules to continue. Scroll to the end and check the box.');
-    }
-  });
-
-  // Escape key - prevent closing
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && document.getElementById('rulesModal').classList.contains('active')) {
-      e.preventDefault();
-      alert('❗ You must accept the rules to continue.');
-    }
-  });
-
-  // Initialization
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     
-    // Wallet
     const connectBtn = document.getElementById('connect-btn');
     const walletAddressDiv = document.getElementById('wallet-address');
 
