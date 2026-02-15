@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cryptobros Rules</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(135deg, #0a0a1a 0%, #111122 50%, #1a1a2a 100%);
+      color: #e0e0ff;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(255, 107, 107, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
+      z-index: -1;
+      animation: pulseRed 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseRed {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(15, 10, 25, 0.95);
+      border-radius: 32px;
+      padding: 3rem;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.8),
+        0 0 50px rgba(255, 0, 0, 0.25),
+        0 0 30px rgba(255, 107, 107, 0.2);
+      border: 3px solid rgba(255, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+      animation: slideIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 0, 0, 0.1) 25%,
+        transparent 50%
+      );
+      background-size: 40px 40px;
+      animation: scanline 8s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(0) rotate(45deg); }
+      100% { transform: translateY(100%) rotate(45deg); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #ff0000, #ff6b6b, #ff0000, transparent);
+      border-radius: 2px;
+    }
+
+    h1 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #ff0000, #ff6b6b, #ff0000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+      animation: textGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes textGlow {
+      from { text-shadow: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 107, 107, 0.4); }
+      to { text-shadow: 0 0 30px rgba(255, 0, 0, 0.8), 0 0 60px rgba(255, 107, 107, 0.6); }
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: #ff9d9d;
+      margin-top: 1rem;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .tier-badge {
+      background: rgba(255, 0, 0, 0.2);
+      border: 2px solid #ff0000;
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      text-align: center;
+      margin: 2rem 0;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: 0.03em;
+      color: #ff6b6b;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    }
+
+    .rules-container {
+      background: rgba(25, 15, 40, 0.8);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+      border: 2px solid rgba(255, 107, 107, 0.4);
+      max-height: 500px;
+      overflow-y: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rules-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      color: #ff6b6b;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid rgba(255, 107, 107, 0.5);
+    }
+
+    .section-title::before {
+      content: '⚠️';
+      font-size: 2rem;
+    }
+
+    .rule-item {
+      background: rgba(40, 20, 50, 0.6);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      border-left: 5px solid #ff0000;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rule-item:hover {
+      transform: translateX(5px);
+      border-left-width: 8px;
+      box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
+    }
+
+    .rule-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, rgba(255, 0, 0, 0.1), transparent 70%);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .rule-item:hover::before {
+      opacity: 1;
+    }
+
+    .rule-item h3 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.8rem;
+      color: #ff4d4d;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rule-item h3::before {
+      content: '•';
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .rule-item p {
+      color: #d0d0ff;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    .rule-item p strong {
+      color: #ff6b6b;
+      font-weight: 700;
+    }
+
+    .rule-item.principle {
+      background: rgba(15, 25, 20, 0.7);
+      border-left-color: #00ff9d;
+      border-left-width: 6px;
+    }
+
+    .rule-item.principle h3 {
+      color: #00ff9d;
+      font-size: 1.6rem;
+    }
+
+    .rule-item.principle h3::before {
+      content: '💎';
+      font-size: 2rem;
+    }
+
+    .rule-item.principle:hover {
+      transform: translateX(5px);
+      border-left-width: 9px;
+      box-shadow: 0 5px 20px rgba(0, 255, 157, 0.3);
+    }
+
+    .rule-item.principle::before {
+      background: linear-gradient(90deg, rgba(0, 255, 157, 0.15), transparent 70%);
+    }
+
+    .final-warning {
+      background: rgba(50, 10, 10, 0.9);
+      border: 4px solid #ff0000;
+      border-radius: 24px;
+      padding: 2rem;
+      margin: 2.5rem 0;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      animation: pulseWarning 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseWarning {
+      0%, 100% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.5); }
+      50% { box-shadow: 0 0 60px rgba(255, 0, 0, 0.9); }
+    }
+
+    .final-warning::before {
+      content: '⚡';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 6rem;
+      opacity: 0.2;
+      animation: warningIcon 2s ease-in-out infinite;
+    }
+
+    @keyframes warningIcon {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.2; }
+      50% { transform: translateX(-50%) scale(1.2); opacity: 0.4; }
+    }
+
+    .final-warning h3 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ff0000;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    }
+
+    .final-warning p {
+      color: #ff9d9d;
+      font-size: 1.2rem;
+      line-height: 1.9;
+      font-weight: 600;
+    }
+
+    .final-warning p strong {
+      color: #ff0000;
+      font-size: 1.4rem;
+      display: block;
+      margin: 1rem 0;
+      text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+    }
+
+    .checkbox-container {
+      background: rgba(45, 5, 5, 0.9);
+      border: 4px solid #ff0000;
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2.5rem 0;
+      position: relative;
+      overflow: hidden;
+      animation: pulseRedBorder 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseRedBorder {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+      50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.9); }
+    }
+
+    .checkbox-container::before {
+      content: '❗';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-size: 4rem;
+      color: #ff0000;
+      opacity: 0.3;
+      transform: rotate(-15deg);
+    }
+
+    .checkbox-container input {
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      accent-color: #ff0000;
+      border: 3px solid #ff4d4d;
+      border-radius: 6px;
+      transform: scale(1.3);
+      margin-right: 15px;
+    }
+
+    .checkbox-container label {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ff3333;
+      cursor: pointer;
+      line-height: 1.6;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 2.5rem;
+    }
+
+    .btn {
+      padding: 1.2rem 3rem;
+      border-radius: 16px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      position: relative;
+      overflow: hidden;
+      min-width: 200px;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+
+    .btn:hover::after {
+      transform: translateX(100%);
+    }
+
+    .btn.cancel {
+      background: rgba(255, 50, 50, 0.25);
+      color: #ff6b6b;
+      border: 3px solid #ff6b6b;
+      font-weight: 700;
+    }
+
+    .btn.cancel:hover {
+      background: rgba(255, 50, 50, 0.4);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+    }
+
+    .btn.continue {
+      background: linear-gradient(45deg, #ff0000, #ff6b6b, #ff0000);
+      color: #fff;
+      font-weight: 900;
+      box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5);
+    }
+
+    .btn.continue:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 12px 40px rgba(255, 0, 0, 0.8);
+    }
+
+    .btn.continue:active {
+      transform: translateY(2px) scale(0.98);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .payment-section {
+      display: none;
+      background: rgba(25, 15, 40, 0.8);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-top: 2rem;
+      border: 2px solid rgba(255, 107, 107, 0.4);
+    }
+
+    .payment-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .payment-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ff6b6b;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .payment-info {
+      background: rgba(40, 20, 50, 0.6);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .payment-info h4 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #ff0000;
+      margin-bottom: 0.8rem;
+    }
+
+    .payment-info p {
+      color: #d0d0ff;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .connect-wallet-btn {
+      width: 100%;
+      padding: 1.3rem;
+      background: linear-gradient(45deg, #ff0000, #ff6b6b);
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1.5rem;
+    }
+
+    .connect-wallet-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(255, 0, 0, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 2rem; }
+      h1 { font-size: 2.5rem; }
+      .subtitle { font-size: 1.1rem; }
+      .tier-badge { font-size: 1.2rem; padding: 0.8rem 1.5rem; }
+      .section-title { font-size: 1.5rem; }
+      .rule-item h3 { font-size: 1.25rem; }
+      .rule-item p { font-size: 1rem; }
+      .final-warning h3 { font-size: 1.6rem; }
+      .final-warning p { font-size: 1.05rem; }
+      .checkbox-container { padding: 1.5rem; }
+      .checkbox-container label { font-size: 1.1rem; }
+      .btn { padding: 1rem 2rem; font-size: 1.1rem; }
+      .btn-container { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>CRYPTOBROS COMMUNITY RULES</h1>
+    <p class="subtitle"><strong>READ CAREFULLY BEFORE PROCEEDING</strong><br>Violation of any rule results in <span style="color: #ff0000; font-weight: 700;">PERMANENT BAN</span> and 100% token confiscation to club treasury.</p>
+  </div>
+
+  <div class="tier-badge" id="tierBadge">
+    <!-- Will be filled dynamically -->
+  </div>
+
+  <div class="rules-container" id="rulesContainer">
+    <div class="rules-section">
+      <div class="section-title">PART 1: BEHAVIOR RULES</div>
+      
+      <div class="rule-item">
+        <h3>NO SCAM OR PHISHING</h3>
+        <p>Sharing fake giveaways, phishing links, fraudulent schemes, or misleading financial advice is <strong>STRICTLY PROHIBITED</strong>. Violation results in <strong>IMMEDIATE PERMANENT BAN</strong> and confiscation of 100% of your AUS token balance to the community treasury.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>NO SHILLING WITHOUT DYOR</h3>
+        <p>Shilling tokens/projects without proper DYOR-based justification (analysis, data, logic) and mandatory position disclosure (e.g., "I hold 10k tokens") is forbidden. Without this — <strong>BAN</strong>.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>NO REFERRALS OR "GUARANTEED 100X"</h3>
+        <p>Posting referral links, paid courses, trading signals, or "guaranteed profit" promises without prominent warning: <strong>"THIS IS RISKY, YOU MAY LOSE EVERYTHING"</strong> is prohibited.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>NO TOXICITY OR SPAM</h3>
+        <p>Insults, harassment, doxxing, spam, flooding, off-topic in feed/chats/tribunal are forbidden. Respect for others is mandatory for club membership.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>NO BOTS OR MANIPULATION</h3>
+        <p>Using bots, multi-accounts, or manipulating likes/reposts/comments is prohibited. All suspicious accounts are checked by AI Tribunal. Detection = <strong>instant ban</strong>.</p>
+      </div>
+
+      <div class="rule-item principle">
+        <h3>CLUB PRINCIPLE</h3>
+        <p><strong>"TRUTH &gt; HYPE"</strong><br>All posts/comments must follow this principle. Hype without facts = removal + reputation penalty. Facts without hype = club respect.</p>
+      </div>
+    </div>
+
+    <div class="rules-section">
+      <div class="section-title">PART 2: SYSTEM RULES</div>
+      
+      <div class="rule-item">
+        <h3>TOKENS FOR ACTIVITY</h3>
+        <p>+5 AUS per post (max 3/day) • +2 AUS per comment (max 10/day) • +1 AUS per like (max 20/day)<br>Violating limits = temporary feature lock.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>PREMIUM POSTS & BOOSTS</h3>
+        <p>100 AUS → post in top 24h • 25 AUS → ×3 visibility for 6h<br>Premium status does not guarantee profit — only visibility.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>EXCLUSIVE CONTENT</h3>
+        <p>Posts with lock 🔒 visible only to holders of 10k+ AUS. Attempt to bypass protection = <strong>BAN</strong>.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>TRADER VERIFICATION</h3>
+        <p>Verified traders must disclose success statistics (percentage of profitable trades, average profit). Hiding data = verification revoked.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>TIPS & TRANSFERS</h3>
+        <p>Tips to authors (💸 button) and AUS transfers <strong>ARE NON-REFUNDABLE</strong>. Ensure you trust the recipient before sending.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>CLUB TREASURY</h3>
+        <p>25% of all premium post fees and boosts go to treasury. Daily 50 AUS distributed for best post of the day. Attempting to manipulate voting = <strong>BAN + confiscation</strong>.</p>
+      </div>
+    </div>
+
+    <div class="final-warning">
+      <h3>FINAL WARNING</h3>
+      <p>
+        <strong>NO APPEALS.</strong><br>
+        Decision of moderators and AI Tribunal is final.<br>
+        Violation of any Part 1 rule → <strong>PERMANENT BAN + 100% AUS BALANCE CONFISCATED TO CLUB TREASURY</strong><br>
+        Your wallet is linked to account. Ban = permanent loss of all tokens.
+      </p>
+    </div>
+  </div>
+
+  <div class="checkbox-container">
+    <input type="checkbox" id="agreeRules">
+    <label for="agreeRules">I CONFIRM: I have read and agree to all Community Rules. Violation = PERMANENT BAN + 100% CONFISCATION. NO APPEALS.</label>
+  </div>
+
+  <div class="btn-container">
+    <button class="btn cancel" onclick="window.location.href='onboarding.html'">Cancel</button>
+    <button class="btn continue" id="continueBtn" disabled onclick="showPayment()">Accept & Continue</button>
+  </div>
+
+  <div class="payment-section" id="paymentSection">
+    <h3 class="payment-title">Complete Your Access</h3>
+    <div class="payment-info" id="paymentInfo">
+      <!-- Will be filled dynamically -->
+    </div>
+    <button class="connect-wallet-btn" id="connectWalletBtn">Connect Phantom Wallet</button>
+  </div>
+</div>
+
+<script>
+  // Get tier from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const selectedTier = urlParams.get('tier') || 'Free';
+
+  // Tier data
+  const tierData = {
+    'Free': {
+      price: '0 AUS',
+      access: '2-week limited access',
+      color: '#00ff9d',
+      isFree: true
+    },
+    'Master': {
+      price: '500 AUS',
+      access: 'Unlimited access',
+      color: '#66ffff',
+      isFree: false
+    },
+    'Pro': {
+      price: '2,000 AUS',
+      access: 'Unlimited access + AI features',
+      color: '#ff6b6b',
+      isFree: false
+    },
+    'Premium': {
+      price: '10,000 AUS',
+      access: 'Full access + governance rights',
+      color: '#d700ff',
+      isFree: false
+    }
+  };
+
+  // Fill tier badge
+  const tierBadge = document.getElementById('tierBadge');
+  tierBadge.innerHTML = `
+    SELECTED TIER: <strong style="color: ${tierData[selectedTier].color};">${selectedTier}</strong><br>
+    <span style="font-size: 1.1rem; color: #a0a0ff;">Price: ${tierData[selectedTier].price} • Access: ${tierData[selectedTier].access}</span>
+  `;
+
+  // Enable button on agreement
+  document.getElementById('agreeRules').addEventListener('change', function() {
+    document.getElementById('continueBtn').disabled = !this.checked;
+  });
+
+  // Show payment section
+  function showPayment() {
+    // Hide rules
+    document.getElementById('rulesContainer').style.display = 'none';
+    document.querySelector('.checkbox-container').style.display = 'none';
+    document.querySelector('.btn-container').style.display = 'none';
+
+    // Show payment section
+    const paymentSection = document.getElementById('paymentSection');
+    const paymentInfo = document.getElementById('paymentInfo');
+    
+    if (tierData[selectedTier].isFree) {
+      // FREE tier - go directly to profile
+      localStorage.setItem('rulesAccepted', 'true');
+      localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
+      localStorage.setItem('selectedTier', selectedTier);
+      
+      setTimeout(() => {
+        alert('✅ Rules accepted! Redirecting to profile setup...');
+        window.location.href = 'profile.html';
+      }, 500);
+    } else {
+      // Paid tier - show payment info
+      paymentSection.classList.add('active');
+      paymentInfo.innerHTML = `
+        <h4>${selectedTier} TIER</h4>
+        <p><strong>Price:</strong> ${tierData[selectedTier].price}<br>
+        <strong>Access:</strong> ${tierData[selectedTier].access}</p>
+        <p style="margin-top: 1rem; color: #ff6b6b; font-weight: 600;">
+          Connect your Phantom wallet to complete payment.
+        </p>
+      `;
+    }
+  }
+
+  // Connect wallet button
+  document.getElementById('connectWalletBtn').addEventListener('click', function() {
+    alert(`🔒 ${selectedTier} tier selected!\n\nPrice: ${tierData[selectedTier].price}\n\nConnect your Phantom wallet to proceed with payment.\n\nThis feature is coming soon!`);
+    
+    // Save data and redirect to profile (for demo)
+    localStorage.setItem('rulesAccepted', 'true');
+    localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
+    localStorage.setItem('selectedTier', selectedTier);
+    
+    setTimeout(() => {
+      window.location.href = 'profile.html';
+    }, 1500);
+  });
+</script>
+
+</body>
+</html>
