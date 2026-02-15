@@ -344,12 +344,12 @@
       font-family: 'Poppins', sans-serif;
       font-size: 56px;
       font-weight: 900;
-      color: transparent;
+      color: #ff0000; /* ВИДИМА СРАЗУ, НЕ ПРОЗРАЧНАЯ */
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.7); /* ВИДИМАЯ ТЕНЬ */
       transition: all 0.4s ease;
       user-select: none;
     }
     .custom-checkbox input:checked + .checkbox-mark {
-      color: #ff0000;
       text-shadow: 0 0 25px rgba(255, 0, 0, 0.9), 0 0 40px rgba(255, 107, 107, 0.7);
       transform: scale(1.2) rotate(-5deg);
     }
@@ -638,7 +638,7 @@
     </div>
   </div>
 
-  <!-- КРОВАВАЯ ГАЛОЧКА (ИСПРАВЛЕНО: ВИДНА И КЛИКАБЕЛЬНА) -->
+  <!-- КРОВАВАЯ ГАЛОЧКА (ВИДИМА СРАЗУ, БЕЗ КЛИКА) -->
   <div class="agreement-section">
     <div class="blood-seal">
       <div class="seal-icon">⚠️</div>
@@ -648,7 +648,7 @@
     <div class="checkbox-wrapper">
       <label for="agreeRules" class="custom-checkbox">
         <input type="checkbox" id="agreeRules">
-        <span class="checkbox-mark">✓</span>
+        <span class="checkbox-mark">✓</span> <!-- ВИДИМА СРАЗУ -->
       </label>
     </div>
     
