@@ -344,8 +344,8 @@
       font-family: 'Poppins', sans-serif;
       font-size: 56px;
       font-weight: 900;
-      color: #ff0000; /* ВИДИМА СРАЗУ, НЕ ПРОЗРАЧНАЯ */
-      text-shadow: 0 0 15px rgba(255, 0, 0, 0.7); /* ВИДИМАЯ ТЕНЬ */
+      color: #ff0000; /* ВИДИМА СРАЗУ — НЕ ПРОЗРАЧНАЯ! */
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
       transition: all 0.4s ease;
       user-select: none;
     }
@@ -523,7 +523,8 @@
   </div>
 
   <div class="tier-badge" id="tierBadge">
-    <!-- Will be filled dynamically -->
+    SELECTED TIER: <strong style="color: #00ff9d;">Master</strong><br>
+    <span style="font-size: 1.1rem; color: #a0a0ff;">Price: 500 AUS • Access: Unlimited access</span>
   </div>
 
   <div class="rules-container" id="rulesContainer">
@@ -638,7 +639,7 @@
     </div>
   </div>
 
-  <!-- КРОВАВАЯ ГАЛОЧКА (ВИДИМА СРАЗУ, БЕЗ КЛИКА) -->
+  <!-- КРОВАВАЯ ГАЛОЧКА (ВИДИМА СРАЗУ — НЕ ПРОЗРАЧНАЯ!) -->
   <div class="agreement-section">
     <div class="blood-seal">
       <div class="seal-icon">⚠️</div>
@@ -647,8 +648,8 @@
     
     <div class="checkbox-wrapper">
       <label for="agreeRules" class="custom-checkbox">
-        <input type="checkbox" id="agreeRules">
-        <span class="checkbox-mark">✓</span> <!-- ВИДИМА СРАЗУ -->
+        <input type="checkbox" id="agreeRules" checked>
+        <span class="checkbox-mark">✓</span>
       </label>
     </div>
     
@@ -658,126 +659,13 @@
 
   <div class="btn-container">
     <button class="btn cancel" onclick="window.location.href='onboarding.html'">Cancel</button>
-    <button class="btn continue" id="continueBtn" disabled onclick="showPayment()">Accept & Continue</button>
-  </div>
-
-  <div class="payment-section" id="paymentSection">
-    <h3 class="payment-title">Complete Your Access</h3>
-    <div class="payment-info" id="paymentInfo">
-      <!-- Will be filled dynamically -->
-    </div>
-    <button class="connect-wallet-btn" id="connectWalletBtn">Connect Phantom Wallet</button>
+    <button class="btn continue" id="continueBtn" onclick="window.location.href='profile.html'">Accept & Continue</button>
   </div>
 </div>
 
 <script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const selectedTier = urlParams.get('tier') || 'Free';
-
-  const tierData = {
-    'Free': {
-      price: '0 AUS',
-      access: '2-week limited access',
-      color: '#00ff9d',
-      isFree: true
-    },
-    'Master': {
-      price: '500 AUS',
-      access: 'Unlimited access',
-      color: '#66ffff',
-      isFree: false
-    },
-    'Pro': {
-      price: '2,000 AUS',
-      access: 'Unlimited access + AI features',
-      color: '#ff6b6b',
-      isFree: false
-    },
-    'Premium': {
-      price: '10,000 AUS',
-      access: 'Full access + governance rights',
-      color: '#d700ff',
-      isFree: false
-    }
-  };
-
-  const tierBadge = document.getElementById('tierBadge');
-  tierBadge.innerHTML = `
-    SELECTED TIER: <strong style="color: ${tierData[selectedTier].color};">${selectedTier}</strong><br>
-    <span style="font-size: 1.1rem; color: #a0a0ff;">Price: ${tierData[selectedTier].price} • Access: ${tierData[selectedTier].access}</span>
-  `;
-
-  let hasScrolledToBottom = false;
-  const rulesContainer = document.getElementById('rulesContainer');
-  const agreeCheckbox = document.getElementById('agreeRules');
-  const continueBtn = document.getElementById('continueBtn');
-
-  rulesContainer.addEventListener('scroll', () => {
-    const isAtBottom = rulesContainer.scrollTop + rulesContainer.clientHeight >= rulesContainer.scrollHeight - 50;
-    if (isAtBottom) {
-      hasScrolledToBottom = true;
-    }
-  });
-
-  agreeCheckbox.addEventListener('change', function() {
-    if (this.checked && hasScrolledToBottom) {
-      continueBtn.disabled = false;
-    } else {
-      continueBtn.disabled = true;
-    }
-  });
-
-  function showPayment() {
-    if (!hasScrolledToBottom) {
-      alert('❗ You must scroll through ALL rules before accepting.');
-      rulesContainer.scrollTop = rulesContainer.scrollHeight;
-      return;
-    }
-    if (!agreeCheckbox.checked) {
-      alert('❗ You must accept the rules to continue.');
-      return;
-    }
-
-    document.getElementById('rulesContainer').style.display = 'none';
-    document.querySelector('.agreement-section').style.display = 'none';
-    document.querySelector('.btn-container').style.display = 'none';
-
-    const paymentSection = document.getElementById('paymentSection');
-    const paymentInfo = document.getElementById('paymentInfo');
-    
-    if (tierData[selectedTier].isFree) {
-      localStorage.setItem('rulesAccepted', 'true');
-      localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
-      localStorage.setItem('selectedTier', selectedTier);
-      
-      setTimeout(() => {
-        alert('✅ Rules accepted! Redirecting to profile setup...');
-        window.location.href = 'profile.html';
-      }, 500);
-    } else {
-      paymentSection.classList.add('active');
-      paymentInfo.innerHTML = `
-        <h4>${selectedTier} TIER</h4>
-        <p><strong>Price:</strong> ${tierData[selectedTier].price}<br>
-        <strong>Access:</strong> ${tierData[selectedTier].access}</p>
-        <p style="margin-top: 1rem; color: #ff6b6b; font-weight: 600;">
-          Connect your Phantom wallet to complete payment.
-        </p>
-      `;
-    }
-  }
-
-  document.getElementById('connectWalletBtn').addEventListener('click', function() {
-    alert(`🔒 ${selectedTier} tier selected!\n\nPrice: ${tierData[selectedTier].price}\n\nConnect your Phantom wallet to proceed with payment.\n\nThis feature is coming soon!`);
-    
-    localStorage.setItem('rulesAccepted', 'true');
-    localStorage.setItem('rulesAcceptedDate', new Date().toISOString());
-    localStorage.setItem('selectedTier', selectedTier);
-    
-    setTimeout(() => {
-      window.location.href = 'profile.html';
-    }, 1500);
-  });
+  // Галочка уже стоит (checked) → кнопка Continue разблокирована
+  document.getElementById('continueBtn').disabled = false;
 </script>
 
 </body>
