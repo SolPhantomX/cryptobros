@@ -3,60 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS ACCESS</title>
+  <title>CRYPTOBROS - Onboarding</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --bg-primary: #f8f9fa;
-      --bg-secondary: #ffffff;
-      --bg-tertiary: #e9ecef;
-      --text-primary: #212529;
-      --text-secondary: #6c757d;
-      --border-color: #dee2e6;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
-      --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
-      --accent-gold: #FFD700;
-      --accent-cyan: #00F0FF;
-      --accent-purple: #9D00FF;
-      --accent-red: #FF6B6B;
-      --hover-bg: #f1f3f5;
-    }
-
-    .dark-theme {
-      --bg-primary: #0a0a1a;
-      --bg-secondary: #111122;
-      --bg-tertiary: #1a1a2a;
-      --text-primary: #e0e0ff;
-      --text-secondary: #a0a0c0;
-      --border-color: #333355;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
-      --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
-      --accent-gold: #FFD700;
-      --accent-cyan: #00F0FF;
-      --accent-purple: #d700ff;
-      --accent-red: #ff6b6b;
-      --hover-bg: #202035;
-    }
-
     body {
-      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
-      color: var(--text-primary);
+      background: linear-gradient(135deg, #0a0a1a 0%, #111122 50%, #1a1a2a 100%);
+      color: #e0e0ff;
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
-      padding-bottom: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
       position: relative;
-      overflow-x: hidden;
-      overflow-y: auto;
-      transition: all 0.4s ease;
+      overflow: hidden;
     }
-
     body::before {
       content: '';
       position: fixed;
@@ -65,828 +29,258 @@
       background: 
         radial-gradient(circle at 20% 50%, rgba(0, 255, 157, 0.05) 0%, transparent 50%),
         radial-gradient(circle at 80% 30%, rgba(102, 255, 255, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 50% 80%, rgba(255, 0, 255, 0.03) 0%, transparent 50%);
+        radial-gradient(circle at 50% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
       z-index: -1;
-      transition: opacity 0.4s ease;
     }
-
-    .dark-theme body::before {
-      opacity: 1;
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      text-align: center;
     }
-
-    .light-theme body::before {
-      opacity: 0.3;
-    }
-
     .back-btn {
       position: absolute;
-      top: 30px;
-      left: 30px;
-      background: rgba(255, 255, 255, 0.9);
-      border: 2px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      font-size: 1.2rem;
-      font-weight: 700;
-      padding: 0.8rem 1.8rem;
-      cursor: pointer;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-radius: 50px;
-      z-index: 10;
-      transition: all 0.3s ease;
-      font-family: 'Quicksand', sans-serif;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-    }
-
-    .dark-theme .back-btn {
+      top: 15px;
+      left: 15px;
       background: rgba(0, 0, 0, 0.7);
-      border: 2px solid var(--accent-cyan);
-      box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
-    }
-
-    .back-btn:hover {
-      background: rgba(0, 240, 255, 0.1);
-      transform: translateX(-5px);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
-    }
-
-    .dark-theme .back-btn:hover {
-      background: rgba(0, 255, 157, 0.1);
-      box-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
-    }
-
-    .theme-toggle-container {
-      position: absolute;
-      top: 30px;
-      right: 30px;
-      width: 80px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-      z-index: 10;
-      transition: all 0.4s ease;
-    }
-
-    .dark-theme .theme-toggle-container {
-      background: rgba(0, 0, 0, 0.7);
-      box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
-    }
-
-    .theme-toggle {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #0a0a0f;
-      font-size: 1.1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    .theme-toggle-label {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      border: 2px solid #00ff9d;
+      color: #00ff9d;
       font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      transition: color 0.3s ease;
+      font-weight: 700;
+      padding: 0.4rem 0.9rem;
+      text-decoration: none;
+      border-radius: 50px;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s;
     }
-
-    .theme-toggle-label.sun {
-      left: 12px;
+    .back-btn:hover {
+      background: rgba(0, 255, 157, 0.1);
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
     }
-
-    .theme-toggle-label.moon {
-      right: 12px;
-    }
-
-    .dark-theme .theme-toggle {
-      transform: translateX(40px);
-    }
-
-    .dark-theme .theme-toggle-label.sun {
-      color: var(--text-primary);
-    }
-
-    .dark-theme .theme-toggle-label.moon {
-      color: var(--accent-gold);
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 3rem 2rem 2rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 3.5rem;
-      position: relative;
-    }
-
-    header::after {
-      content: '';
-      position: absolute;
-      bottom: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-gold), var(--accent-cyan), transparent);
-      border-radius: 3px;
-    }
-
-    h1, .subtitle, .plan-header, .price, .btn, footer, .back-btn, #connect-btn {
-      font-family: 'Quicksand', sans-serif !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.02em !important;
-      text-rendering: optimizeLegibility;
-      font-kerning: normal;
-    }
-
     h1 {
-      font-size: 4rem;
-      font-weight: 800 !important;
-      letter-spacing: 0.03em !important;
+      font-family: 'Poppins', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
       margin-bottom: 1rem;
-      text-shadow: 
-        0 0 15px rgba(0, 240, 255, 0.6),
-        0 0 30px rgba(255, 215, 0, 0.4);
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold), var(--accent-cyan));
+      background: linear-gradient(90deg, #00ff9d, #ffd700, #66ffff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      position: relative;
-      animation: glowHeader 2s ease-in-out infinite alternate;
+      text-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
     }
-
-    .dark-theme h1 {
-      text-shadow: 
-        0 0 15px rgba(0, 255, 157, 0.8),
-        0 0 30px rgba(102, 255, 255, 0.6);
-    }
-
-    @keyframes glowHeader {
-      from { 
-        text-shadow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 30px rgba(255, 215, 0, 0.4);
-      }
-      to { 
-        text-shadow: 0 0 25px rgba(0, 240, 255, 0.9), 0 0 50px rgba(255, 215, 0, 0.7);
-      }
-    }
-
     .subtitle {
-      font-size: 1.8rem !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.03em !important;
-      color: var(--accent-cyan);
-      margin-top: 1rem;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+      font-size: 1.3rem;
+      color: #a0ffff;
+      margin-bottom: 3rem;
+      font-weight: 600;
     }
-
-    .dark-theme .subtitle {
-      text-shadow: 0 0 10px rgba(102, 255, 255, 0.5);
-    }
-
-    .plans {
+    .tiers-container {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 2.5rem;
-      margin-bottom: 3rem;
-      padding: 0 1rem;
+      gap: 2rem;
+      margin-top: 2rem;
     }
-
-    .plan {
-      background: var(--bg-secondary);
-      border-radius: 30px;
+    .tier-card {
+      background: rgba(15, 10, 25, 0.95);
+      border-radius: 24px;
+      padding: 2.5rem 1.5rem;
+      border: 3px solid transparent;
+      transition: all 0.4s ease;
+      position: relative;
       overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: var(--shadow-md);
-      position: relative;
-      backdrop-filter: blur(10px);
-      border: 2px solid transparent;
+      cursor: pointer;
     }
-
-    .plan::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.1),
-        rgba(255, 255, 255, 0) 60%
-      );
-      z-index: -1;
-      transition: background 0.4s ease;
+    .tier-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
     }
-
-    .dark-theme .plan::before {
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.05),
-        rgba(255, 255, 255, 0) 60%
-      );
+    .tier-card.free {
+      border-color: #00ff9d;
     }
-
-    .plan:hover {
-      transform: translateY(-12px) scale(1.02);
-      box-shadow: var(--shadow-lg);
+    .tier-card.master {
+      border-color: #66ffff;
     }
-
-    .plan:hover::before {
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.2),
-        rgba(255, 255, 255, 0) 60%
-      );
+    .tier-card.pro {
+      border-color: #ff6b6b;
     }
-
-    .dark-theme .plan:hover::before {
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.1),
-        rgba(255, 255, 255, 0) 60%
-      );
+    .tier-card.premium {
+      border-color: #d700ff;
     }
-
-    .plan.free {
-      border-color: var(--accent-cyan);
-      background: linear-gradient(135deg, rgba(0, 30, 15, 0.9), rgba(0, 50, 25, 0.95));
+    .tier-badge {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
     }
-
-    .light-theme .plan.free {
-      background: linear-gradient(135deg, rgba(200, 255, 230, 0.3), rgba(220, 255, 240, 0.4));
-      border-color: var(--accent-cyan);
+    .tier-card.free .tier-badge { color: #00ff9d; }
+    .tier-card.master .tier-badge { color: #66ffff; }
+    .tier-card.pro .tier-badge { color: #ff6b6b; }
+    .tier-card.premium .tier-badge { color: #d700ff; }
+    .tier-price {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 1rem 0;
+      letter-spacing: 0.03em;
     }
-
-    .plan.master {
-      border-color: var(--accent-cyan);
-      background: linear-gradient(135deg, rgba(10, 20, 40, 0.9), rgba(15, 30, 50, 0.95));
-    }
-
-    .light-theme .plan.master {
-      background: linear-gradient(135deg, rgba(220, 255, 255, 0.3), rgba(240, 255, 255, 0.4));
-      border-color: var(--accent-cyan);
-    }
-
-    .plan.pro {
-      border-color: var(--accent-red);
-      background: linear-gradient(135deg, rgba(30, 10, 15, 0.9), rgba(45, 15, 25, 0.95));
-    }
-
-    .light-theme .plan.pro {
-      background: linear-gradient(135deg, rgba(255, 230, 230, 0.3), rgba(255, 240, 240, 0.4));
-      border-color: var(--accent-red);
-    }
-
-    .plan.premium {
-      border: 2px solid transparent;
-      background: linear-gradient(135deg, rgba(25, 10, 40, 0.9), rgba(35, 15, 55, 0.95));
-      position: relative;
-    }
-
-    .light-theme .plan.premium {
-      background: linear-gradient(135deg, rgba(250, 230, 255, 0.3), rgba(255, 240, 255, 0.4));
-    }
-
-    .plan.premium::after {
-      content: '';
-      position: absolute;
-      top: -2px; left: -2px;
-      right: -2px; bottom: -2px;
-      background: linear-gradient(45deg, var(--accent-purple), #d700ff, #9d00ff, #6600ff, #0066ff);
-      background-size: 400% 400%;
-      z-index: -1;
-      border-radius: 32px;
-      animation: premiumGlow 8s ease infinite;
-      filter: blur(8px);
-      opacity: 0.6;
-    }
-
-    .light-theme .plan.premium::after {
-      opacity: 0.3;
-    }
-
-    @keyframes premiumGlow {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    .plan-header {
-      padding: 1.8rem 1.2rem 1rem;
-      text-align: center;
-      font-size: 2.2rem !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.02em !important;
-      position: relative;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .dark-theme .plan-header {
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .plan.free .plan-header { 
-      color: var(--accent-cyan);
-      text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-    }
-
-    .dark-theme .plan.free .plan-header { 
-      text-shadow: 0 0 15px rgba(0, 255, 157, 0.6);
-    }
-
-    .plan.master .plan-header { 
-      color: var(--accent-cyan);
-      text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-    }
-
-    .dark-theme .plan.master .plan-header { 
-      text-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
-    }
-
-    .plan.pro .plan-header { 
-      color: var(--accent-red);
-      text-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
-    }
-
-    .dark-theme .plan.pro .plan-header { 
-      text-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
-    }
-
-    .plan.premium .plan-header { 
-      color: #fff;
-      text-shadow: 0 0 10px rgba(215, 0, 255, 0.5);
-    }
-
-    .dark-theme .plan.premium .plan-header { 
-      text-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(215, 0, 255, 0.7);
-    }
-
-    .price {
-      font-size: 2rem !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.02em !important;
-      margin: 0.5rem 0 1.5rem;
-      text-align: center;
-    }
-
-    .plan.free .price { 
-      color: var(--accent-cyan);
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
-    }
-
-    .dark-theme .plan.free .price { 
-      text-shadow: 0 0 10px rgba(0, 255, 157, 0.4);
-    }
-
-    .plan.master .price { 
-      color: var(--accent-cyan);
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
-    }
-
-    .dark-theme .plan.master .price { 
-      text-shadow: 0 0 10px rgba(102, 255, 255, 0.4);
-    }
-
-    .plan.pro .price { 
-      color: var(--accent-red);
-      text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
-    }
-
-    .dark-theme .plan.pro .price { 
-      text-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
-    }
-
-    .plan.premium .price { 
-      color: #fff;
-      text-shadow: 0 0 15px rgba(215, 0, 255, 0.4);
-    }
-
-    .dark-theme .plan.premium .price { 
-      text-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
-    }
-
-    .features {
-      padding: 1.5rem 1.8rem;
-      list-style: none;
-      font-size: 1.05rem;
-      color: var(--text-secondary);
-      line-height: 2;
-      background: rgba(0, 0, 0, 0.05);
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .dark-theme .features {
-      background: rgba(0, 0, 0, 0.2);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .features li {
-      margin: 0.8rem 0;
-      position: relative;
-      padding-left: 2.2rem;
+    .tier-price span {
+      font-size: 1rem;
       font-weight: 500;
+      color: #a0a0ff;
     }
-
-    .features li:before {
-      content: "✓";
+    .tier-features {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+    .feature {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      color: #d0d0ff;
+      margin: 0.8rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      line-height: 1.6;
+    }
+    .feature::before {
+      content: '✓';
       position: absolute;
       left: 0;
-      top: 0;
-      color: currentColor;
-      font-weight: bold;
+      color: #00ff9d;
+      font-weight: 800;
       font-size: 1.2rem;
     }
-
-    .plan.free .features li { color: #a0ffa0; }
-    .plan.master .features li { color: #a0ffff; }
-    .plan.pro .features li { color: #ffb3b3; }
-    .plan.premium .features li { color: #e0c0ff; }
-
-    .btn {
+    .tier-card.master .feature::before { color: #66ffff; }
+    .tier-card.pro .feature::before { color: #ff6b6b; }
+    .tier-card.premium .feature::before { color: #d700ff; }
+    .feature-desc {
       display: block;
-      width: 90%;
-      margin: 1.5rem auto 1.8rem;
-      padding: 1.1rem 0;
-      background: linear-gradient(45deg, var(--accent-cyan), var(--accent-gold));
-      color: #000;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: #a0a0ff;
+      margin-top: 0.3rem;
+      line-height: 1.5;
+    }
+    .tier-btn {
+      background: linear-gradient(135deg, #00ff9d, #66ffff);
+      color: #00052a;
       border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      font-size: 1.3rem !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.03em !important;
-      box-shadow: 0 5px 15px rgba(0, 240, 255, 0.2);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .dark-theme .btn {
-      box-shadow: 0 5px 15px rgba(0, 255, 157, 0.3);
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-      transition: left 0.5s;
-    }
-
-    .btn:hover::before {
-      left: 100%;
-    }
-
-    .plan.free .btn {
-      background: linear-gradient(45deg, #00cc66, var(--accent-cyan));
-      color: #000;
-      box-shadow: 0 5px 15px rgba(0, 204, 102, 0.3);
-    }
-
-    .dark-theme .plan.free .btn {
-      box-shadow: 0 5px 15px rgba(0, 204, 102, 0.4);
-    }
-
-    .plan.master .btn {
-      background: linear-gradient(45deg, #00ccff, var(--accent-cyan));
-      color: #000;
-      box-shadow: 0 5px 15px rgba(0, 204, 255, 0.3);
-    }
-
-    .dark-theme .plan.master .btn {
-      box-shadow: 0 5px 15px rgba(0, 204, 255, 0.4);
-    }
-
-    .plan.pro .btn {
-      background: linear-gradient(45deg, #ff3333, var(--accent-red));
-      color: #fff;
-      box-shadow: 0 5px 15px rgba(255, 51, 51, 0.3);
-    }
-
-    .dark-theme .plan.pro .btn {
-      box-shadow: 0 5px 15px rgba(255, 51, 51, 0.4);
-    }
-
-    .plan.premium .btn {
-      background: linear-gradient(45deg, var(--accent-purple), #ff00ff, #ff66ff);
-      color: #fff;
-      box-shadow: 0 5px 20px rgba(215, 0, 255, 0.4);
-      background-size: 200% 200%;
-      animation: btnGradient 3s ease infinite;
-    }
-
-    .dark-theme .plan.premium .btn {
-      box-shadow: 0 5px 20px rgba(215, 0, 255, 0.5);
-    }
-
-    @keyframes btnGradient {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    .btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 8px 25px rgba(0, 240, 255, 0.4);
-    }
-
-    .dark-theme .btn:hover {
-      box-shadow: 0 8px 25px rgba(0, 255, 157, 0.6);
-    }
-
-    .plan.free .btn:hover { box-shadow: 0 8px 25px rgba(0, 204, 102, 0.5); }
-    .plan.master .btn:hover { box-shadow: 0 8px 25px rgba(0, 204, 255, 0.5); }
-    .plan.pro .btn:hover { box-shadow: 0 8px 25px rgba(255, 51, 51, 0.5); }
-    .plan.premium .btn:hover { box-shadow: 0 8px 30px rgba(215, 0, 255, 0.7); }
-
-    #wallet-info {
-      text-align: center;
-      margin: 3rem 0 2rem;
-      padding: 2rem;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 25px;
-      border: 2px solid rgba(0, 240, 255, 0.2);
-      box-shadow: var(--shadow-md);
-      backdrop-filter: blur(10px);
-    }
-
-    .dark-theme #wallet-info {
-      background: rgba(15, 15, 40, 0.7);
-      border: 2px solid rgba(102, 255, 255, 0.3);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    #connect-btn {
-      width: 70%;
-      max-width: 450px;
-      padding: 1.3rem 0;
-      font-size: 1.4rem !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.03em !important;
-      background: linear-gradient(45deg, var(--accent-cyan), var(--accent-gold), var(--accent-cyan));
-      background-size: 200% 200%;
-      color: #000;
-      border: none;
-      border-radius: 50px;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
       cursor: pointer;
       transition: all 0.3s;
-      box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
-      animation: connectBtnGlow 3s ease infinite;
-    }
-
-    .dark-theme #connect-btn {
-      box-shadow: 0 5px 20px rgba(0, 255, 157, 0.4);
-    }
-
-    @keyframes connectBtnGlow {
-      0%, 100% { 
-        background-position: 0% 50%; 
-        box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
-      }
-      50% { 
-        background-position: 100% 50%; 
-        box-shadow: 0 5px 30px rgba(0, 240, 255, 0.5);
-      }
-    }
-
-    .dark-theme @keyframes connectBtnGlow {
-      0%, 100% { 
-        box-shadow: 0 5px 20px rgba(0, 255, 157, 0.4);
-      }
-      50% { 
-        box-shadow: 0 5px 30px rgba(102, 255, 255, 0.6);
-      }
-    }
-
-    #connect-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 35px rgba(0, 240, 255, 0.5);
-    }
-
-    .dark-theme #connect-btn:hover {
-      box-shadow: 0 8px 35px rgba(0, 255, 157, 0.7);
-    }
-
-    #wallet-address {
-      margin: 1.5rem 0 0;
-      font-size: 1.2rem;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      word-break: break-all;
-      color: var(--accent-cyan);
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
-    }
-
-    .dark-theme #wallet-address {
-      text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
-    }
-
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       width: 100%;
-      text-align: center;
-      padding: 1rem 0;
-      background: rgba(255, 255, 255, 0.85);
-      font-size: 1.4rem !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.03em !important;
-      z-index: 5;
-      border-top: 2px solid rgba(0, 240, 255, 0.2);
-      backdrop-filter: blur(10px);
-      color: var(--accent-cyan);
+      margin-top: 1.5rem;
     }
-
-    .dark-theme footer {
-      background: rgba(0, 0, 0, 0.9);
-      border-top: 2px solid rgba(255, 255, 255, 0.1);
-      animation: flickerFooter 12s infinite;
+    .tier-card.master .tier-btn {
+      background: linear-gradient(135deg, #66ffff, #00ff9d);
     }
-
-    @keyframes flickerFooter {
-      0%, 20% { color: #00ff9d; }
-      40% { color: #66ffff; }
-      60% { color: #00ffff; }
-      80% { color: #ff9d00; }
-      100% { color: #9d00ff; }
+    .tier-card.pro .tier-btn {
+      background: linear-gradient(135deg, #ff6b6b, #ff0000);
     }
-
+    .tier-card.premium .tier-btn {
+      background: linear-gradient(135deg, #d700ff, #66ffff);
+    }
+    .tier-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 255, 157, 0.5);
+    }
+    @media (max-width: 1024px) {
+      .tiers-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
     @media (max-width: 768px) {
-      h1 { font-size: 2.8rem; }
-      .subtitle { font-size: 1.4rem; }
-      .plan-header { font-size: 1.8rem; }
-      .price { font-size: 1.7rem; }
-      .btn { font-size: 1.1rem; }
-      .back-btn { top: 20px; left: 20px; font-size: 1rem; padding: 0.6rem 1.5rem; }
-      .theme-toggle-container { top: 20px; right: 20px; width: 70px; height: 35px; }
-      .theme-toggle { width: 28px; height: 28px; }
-    }
-
-    @media (max-width: 480px) {
-      h1 { font-size: 2.3rem; }
-      .subtitle { font-size: 1.2rem; }
-      .plans { grid-template-columns: 1fr; }
-      #connect-btn { width: 90%; font-size: 1.2rem; }
+      .tiers-container {
+        grid-template-columns: 1fr;
+      }
+      h1 { font-size: 2.5rem; }
+      .subtitle { font-size: 1.1rem; }
     }
   </style>
 </head>
-<body class="dark-theme">
+<body>
 
 <a href="index.html" class="back-btn">← Back to Home</a>
 
-<div class="theme-toggle-container" id="themeToggle">
-  <span class="theme-toggle-label sun">☀️</span>
-  <div class="theme-toggle" id="themeSlider"></div>
-  <span class="theme-toggle-label moon">🌙</span>
-</div>
-
 <div class="container">
-  <header>
-    <h1>CRYPTOBROS ACCESS</h1>
-    <div class="subtitle">Choose your tier to join the network</div>
-  </header>
+  <h1>CHOOSE YOUR TIER</h1>
+  <p class="subtitle">Select access level and unlock powerful features</p>
 
-  <div class="plans">
-    <div class="plan free">
-      <div class="plan-header">Free</div>
-      <div class="price">0 AUS</div>
-      <button class="btn" onclick="window.location.href='rules.html?tier=Free'">SELECT</button>
-      <ul class="features">
-        <li>2-week access</li>
-        <li>Basic profile</li>
-        <li>Limited tribunal</li>
-      </ul>
+  <div class="tiers-container">
+    
+    <!-- FREE TIER -->
+    <div class="tier-card free">
+      <div class="tier-badge">FREE</div>
+      <div class="tier-price">0 AUS <span>(2 weeks)</span></div>
+      <div class="tier-features">
+        <div class="feature">2-week limited access</div>
+        <div class="feature">Basic token analysis</div>
+        <div class="feature">Standard verdict only</div>
+        <div class="feature">No premium features</div>
+      </div>
+      <button class="tier-btn" onclick="selectTier('Free')">SELECT</button>
     </div>
 
-    <div class="plan master">
-      <div class="plan-header">Master</div>
-      <div class="price">500 AUS</div>
-      <button class="btn" onclick="window.location.href='rules.html?tier=Master'">SELECT</button>
-      <ul class="features">
-        <li>Unlimited access</li>
-        <li>Custom profile</li>
-        <li>Full tribunal</li>
-      </ul>
+    <!-- MASTER TIER -->
+    <div class="tier-card master">
+      <div class="tier-badge">MASTER</div>
+      <div class="tier-price">500 AUS</div>
+      <div class="tier-features">
+        <div class="feature">Unlimited access</div>
+        <div class="feature">Full token analysis</div>
+        <div class="feature">Standard verdict + details</div>
+        <div class="feature">Save verdicts to history</div>
+      </div>
+      <button class="tier-btn" onclick="selectTier('Master')">SELECT</button>
     </div>
 
-    <div class="plan pro">
-      <div class="plan-header">Pro</div>
-      <div class="price">2,000 AUS</div>
-      <button class="btn" onclick="window.location.href='rules.html?tier=Pro'">SELECT</button>
-      <ul class="features">
-        <li>All Master features</li>
-        <li>AI feed filtering</li>
-        <li>Staking rewards</li>
-      </ul>
+    <!-- PRO TIER -->
+    <div class="tier-card pro">
+      <div class="tier-badge">PRO</div>
+      <div class="tier-price">2,000 AUS</div>
+      <div class="tier-features">
+        <div class="feature">Unlimited access</div>
+        <div class="feature">AI features unlocked</div>
+        <div class="feature">Advanced analytics</div>
+        <div class="feature">Export verdicts (PDF)</div>
+        <div class="feature">Priority support</div>
+      </div>
+      <button class="tier-btn" onclick="selectTier('Pro')">SELECT</button>
     </div>
 
-    <div class="plan premium">
-      <div class="plan-header">Premium</div>
-      <div class="price">10,000 AUS</div>
-      <button class="btn" onclick="window.location.href='rules.html?tier=Premium'">SELECT</button>
-      <ul class="features">
-        <li>All Pro features</li>
-        <li>Free invites</li>
-        <li>Governance rights</li>
-      </ul>
+    <!-- PREMIUM TIER (С КВАНТОВЫМ АНАЛИЗОМ) -->
+    <div class="tier-card premium">
+      <div class="tier-badge">PREMIUM</div>
+      <div class="tier-price">10,000 AUS</div>
+      <div class="tier-features">
+        <div class="feature">Full access + governance rights</div>
+        <div class="feature">AI features unlocked</div>
+        <div class="feature">Unlimited access</div>
+        <div class="feature">
+          🔬 Quantum Contract Scan
+          <span class="feature-desc">GoPlusLabs-powered rug/honeypot detection • Tax analysis • Ownership verification • Liquidity lock check • Anti-whale protection</span>
+        </div>
+        <div class="feature">
+          🎯 Advanced Risk Forecast
+          <span class="feature-desc">24h volatility prediction • Whale movement alerts • Pump/dump pattern detection</span>
+        </div>
+      </div>
+      <button class="tier-btn" onclick="selectTier('Premium')">SELECT</button>
     </div>
-  </div>
 
-  <div id="wallet-info">
-    <button id="connect-btn">Connect Phantom Wallet</button>
-    <div id="wallet-address"></div>
   </div>
 </div>
-
-<footer>Cryptobros 2026 ©</footer>
 
 <script>
-  let selectedTier = null;
-
-  function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (!savedTheme) {
-      if (prefersDark) {
-        document.body.classList.add('dark-theme');
-      } else {
-        document.body.classList.remove('dark-theme');
-        document.body.classList.add('light-theme');
-      }
-    } else {
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        document.body.classList.remove('light-theme');
-      } else {
-        document.body.classList.remove('dark-theme');
-        document.body.classList.add('light-theme');
-      }
-    }
+  function selectTier(tier) {
+    localStorage.setItem('selectedTier', tier);
+    window.location.href = 'rules.html?tier=' + tier;
   }
-
-  function toggleTheme() {
-    const isDark = document.body.classList.contains('dark-theme');
-    
-    if (isDark) {
-      document.body.classList.remove('dark-theme');
-      document.body.classList.add('light-theme');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.body.classList.remove('light-theme');
-      document.body.classList.add('dark-theme');
-      localStorage.setItem('theme', 'dark');
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    
-    const connectBtn = document.getElementById('connect-btn');
-    const walletAddressDiv = document.getElementById('wallet-address');
-
-    connectBtn.addEventListener('click', async () => {
-      if (window.solana && window.solana.isPhantom) {
-        try {
-          const provider = window.solana;
-          const response = await provider.connect();
-          const publicKey = response.publicKey.toString();
-          walletAddressDiv.textContent = `Connected: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
-          walletAddressDiv.style.color = '#00ff9d';
-          localStorage.setItem('phantomAddress', publicKey);
-          alert('Phantom connected! Your address: ' + publicKey);
-        } catch (err) {
-          console.error(err);
-          alert('Connection failed: ' + (err.message || 'Unknown error'));
-        }
-      } else {
-        alert('Phantom wallet not found! Please install it: https://phantom.app/');
-      }
-    });
-
-    if (localStorage.getItem('phantomAddress')) {
-      const addr = localStorage.getItem('phantomAddress');
-      walletAddressDiv.textContent = `Connected: ${addr.slice(0, 6)}...${addr.slice(-4)}`;
-      walletAddressDiv.style.color = '#00ff9d';
-    }
-  });
 </script>
 
 </body>
