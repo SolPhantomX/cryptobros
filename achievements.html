@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRYPTOBROS - Achievements</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #f0f0f0;
+      --bg-card: #ffffff;
+      --text-main: #2c2c2c;
+      --text-secondary: #6c6c6c;
+      --border-color: #e0e0e0;
+      --accent: #0077ff;
+      --accent-hover: #0066cc;
+      --sidebar-bg: #ffffff;
+      --sidebar-hover: #f5f5f5;
+      --btn-bg: #0077ff;
+      --btn-text: #ffffff;
+      --status-bg: #e3f2fd;
+      --status-text: #1976d2;
+    }
+    [data-theme="dark"] {
+      --bg-main: #1a1a1a;
+      --bg-card: #252525;
+      --text-main: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --border-color: #3a3a3a;
+      --accent: #00ff9d;
+      --accent-hover: #00e68c;
+      --sidebar-bg: #1f1f1f;
+      --sidebar-hover: #2a2a2a;
+      --btn-bg: #00ff9d;
+      --btn-text: #000000;
+      --status-bg: rgba(0, 255, 157, 0.1);
+      --status-text: #00ff9d;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+    }
+    .sidebar {
+      width: 200px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 20px 0;
+    }
+    .sidebar-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95em;
+      color: var(--text-main);
+    }
+    .sidebar-item:hover {
+      background: var(--sidebar-hover);
+    }
+    .sidebar-item.active {
+      background: var(--accent);
+      color: var(--btn-text);
+      font-weight: 600;
+    }
+    .main-content {
+      flex: 1;
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .theme-switch {
+      background: var(--accent);
+      color: var(--btn-text);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .theme-switch:hover {
+      background: var(--accent-hover);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .stat-label {
+      font-size: 0.95em;
+      color: var(--text-secondary);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+    }
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.3em;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ref-link {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95em;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .btn-primary {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    .premium-box {
+      display: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar (меню ВК) -->
+  <div class="sidebar">
+    <div class="sidebar-item" onclick="location.href='profile.html'">⚙️ Edit Profile</div>
+    <div class="sidebar-item" onclick="location.href='feed.html'">📰 News Feed</div>
+    <div class="sidebar-item" onclick="location.href='messages.html'">💬 Messages</div>
+    <div class="sidebar-item" onclick="location.href='groups.html'">👥 My Groups</div>
+    <div class="sidebar-item" onclick="location.href='tribunal.html'">⚖️ Tribunal</div>
+    <div class="sidebar-item" onclick="location.href='friends.html'">👫 My Friends</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header with theme switcher -->
+    <div class="header">
+      <button class="theme-switch" id="themeSwitch">🌙 Night Mode</button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="balanceStat">12,450</div>
+        <div class="stat-label">$AUS Balance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="verdictsStat">87</div>
+        <div class="stat-label">Verdicts Saved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="referralsStat">14</div>
+        <div class="stat-label">Referrals</div>
+      </div>
+    </div>
+
+    <!-- Referral Section -->
+    <div class="section">
+      <div class="section-title">🔗 Invite Friends → Earn 10 $AUS per Premium purchase</div>
+      <input type="text" class="ref-link" id="refLink" value="https://solphantomx.github.io/cryptobros/tribunal.html?ref=CRYPTOBROS" readonly>
+      <button class="btn-primary" onclick="copyRef()">📋 COPY REFERRAL LINK</button>
+      <div style="margin-top: 15px; color: var(--text-secondary); font-size: 0.95em">
+        Your referrals: <span id="refCount">14</span> (+<span id="refEarnings">140</span> $AUS earned)
+      </div>
+    </div>
+
+    <!-- Creator Tools -->
+    <div class="section">
+      <div class="section-title">👑 Creator Tools</div>
+      <button class="btn-primary" onclick="generatePremiumLink()">🎁 Generate Premium Link for Friend</button>
+      <div class="premium-box" id="premiumLinkBox">
+        <input type="text" class="ref-link" id="premiumLink" readonly>
+        <button class="btn-primary" onclick="copyPremiumLink()">📋 COPY PREMIUM LINK</button>
+        <div style="margin-top: 10px; color: var(--text-secondary); font-size: 0.9em">
+          Share this link → friend gets Premium instantly
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme switcher (работает на всех страницах)
+    const themeSwitch = document.getElementById('themeSwitch');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeSwitch.textContent = '☀️ Day Mode';
+    }
+    
+    themeSwitch.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      if (current === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        themeSwitch.textContent = '🌙 Night Mode';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeSwitch.textContent = '☀️ Day Mode';
+      }
+    });
+
+    // Referral functions
+    function copyRef() {
+      const link = document.getElementById('refLink').value;
+      navigator.clipboard.writeText(link).then(() => {
+        alert('✅ Referral link copied!');
+      });
+    }
+
+    function generatePremiumLink() {
+      const link = 'https://solphantomx.github.io/cryptobros/tribunal.html?unlock=premium';
+      document.getElementById('premiumLink').value = link;
+      document.getElementById('premiumLinkBox').style.display = 'block';
+      alert('🎁 Premium link generated! Share with your friend.');
+    }
+
+    function copyPremiumLink() {
+      const link = document.getElementById('premiumLink').value;
+      navigator.clipboard.writeText(link).then(() => {
+        alert('✅ Premium link copied!');
+      });
+    }
+
+    // Apply theme on page load
+    window.addEventListener('load', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    });
+  </script>
+</body>
+</html>
