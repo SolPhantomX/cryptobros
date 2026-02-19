@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Светлая тема по умолчанию */
       --bg-body: #f8f9fa;
       --bg-card: #ffffff;
       --text-primary: #212529;
@@ -24,7 +23,6 @@
     }
 
     .dark-theme {
-      /* Тёмная тема */
       --bg-body: #121212;
       --bg-card: #1e1e1e;
       --text-primary: #e0e0e0;
@@ -284,7 +282,6 @@
       font-size: 0.9rem;
     }
 
-    /* Кнопка темы */
     .theme-toggle {
       width: 40px;
       height: 40px;
@@ -318,13 +315,12 @@
 <body>
 
 <div class="layout">
-  <!-- Левая панель -->
   <aside>
     <div class="sidebar-user">
       <div class="avatar">C</div>
       <div class="user-info">
         <h3>@cryptobros</h3>
-        <p>Degen (Master)</p>
+        <p>CHAIRMAN OF THE TRIBUNAL</p>
       </div>
     </div>
 
@@ -338,7 +334,6 @@
     </div>
   </aside>
 
-  <!-- Центральная лента -->
   <main>
     <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
       <div class="theme-toggle" id="themeToggle">🌙</div>
@@ -346,18 +341,17 @@
 
     <div class="create-post">
       <div class="create-avatar">C</div>
-      <textarea class="create-input" placeholder="What’s on your mind?"></textarea>
+      <textarea class="create-input" placeholder="What's on your mind?"></textarea>
       <div style="display: flex; gap: 0.8rem; margin-top: 1rem;">
         <button style="padding: 0.6rem 1.2rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; font-weight: 600;">Photo</button>
         <button style="padding: 0.6rem 1.2rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600;">Post</button>
       </div>
     </div>
 
-    <!-- Посты (как раньше) -->
     <article class="post">
       <div class="post-header">
         <div class="post-avatar">U</div>
-        <div><div class="post-user">@user123 · Pro</div><div class="post-time">2h ago</div></div>
+        <div><div class="post-user">@user123</div><div class="post-time">2h ago</div></div>
       </div>
       <div class="post-content">$WIF just pumped! Analysis needed.</div>
       <div class="post-actions">
@@ -385,7 +379,7 @@
         <div class="post-avatar">M</div>
         <div><div class="post-user">@meme_king</div><div class="post-time">1h ago</div></div>
       </div>
-      <div class="post-content">When the chart looks like a rollercoaster but you’re still holding… 🎢<br><br>[Image: meme of bear riding a rocket]</div>
+      <div class="post-content">When the chart looks like a rollercoaster but you're still holding... 🎢<br><br>[Image: meme of bear riding a rocket]</div>
       <div class="post-actions">
         <div class="action-btn" onclick="toggleLike(this)">❤️ <span class="count">210</span></div>
         <div class="action-btn" onclick="toggleComment(this)">💬 <span class="count">45</span></div>
@@ -394,7 +388,6 @@
     </article>
   </main>
 
-  <!-- Правая колонка -->
   <div class="right-sidebar">
     <div class="trends-card">
       <div class="trends-title">Hot Topics</div>
@@ -415,7 +408,6 @@
 </div>
 
 <script>
-  // Инициализация темы
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -429,7 +421,6 @@
     }
   }
 
-  // Переключение темы
   function toggleTheme() {
     const isDark = document.body.classList.contains('dark-theme');
     if (isDark) {
@@ -443,10 +434,6 @@
     }
   }
 
-  // Обработчики
-  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-  // Функции постов
   function toggleLike(btn) {
     const countEl = btn.querySelector('.count');
     let count = +countEl.textContent;
@@ -463,7 +450,7 @@
   function toggleComment(btn) {
     const post = btn.closest('.post');
     const input = document.createElement('textarea');
-    input.placeholder = 'Write a comment...';
+    input.placeholder = "Write a comment...";
     Object.assign(input.style, {
       width: '100%',
       margin: '0.8rem 0',
@@ -493,7 +480,7 @@
     countEl.textContent = count;
   }
 
-  // Запуск
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
   document.addEventListener('DOMContentLoaded', initTheme);
 </script>
 
