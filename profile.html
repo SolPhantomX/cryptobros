@@ -92,7 +92,7 @@
       z-index: 100;
       min-width: 180px;
       max-width: 250px;
-      max-height: 300px;
+      max-height: 400px;
       overflow-y: auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
@@ -101,8 +101,8 @@
       color: #ffcc00;
       border: 1px solid #555;
       border-radius: 4px;
-      padding: 4px 8px;
-      margin: 2px;
+      padding: 6px 10px;
+      margin: 3px 0;
       cursor: pointer;
       font-size: 12px;
       display: inline-block;
@@ -167,10 +167,22 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    #header-upload, #avatar-upload, #bg-upload { display: none; }
+    #header-upload, #avatar-upload, #bg-upload, #secret-input { display: none; }
     @keyframes flicker {
       0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
       20%,24%,55%,81%,85% { opacity:0.8; }
+    }
+    .creator-section {
+      background: rgba(215, 0, 255, 0.2);
+      border: 1px solid #d700ff;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+    .creator-section h3 {
+      color: #d700ff;
+      margin-bottom: 10px;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -197,45 +209,37 @@
   <input type="file" id="header-upload" accept="image/*">
   <input type="file" id="avatar-upload" accept="image/*">
   <input type="file" id="bg-upload" accept="image/*">
+  <input type="text" id="secret-input" placeholder="Enter secret word">
 
   <script>
     let profileData = JSON.parse(localStorage.getItem('profileData')) || { 
-      name: '@cryptobros', 
-      about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype', 
-      city: 'Cyberspace' 
+      name: '', 
+      about: '', 
+      city: '' 
     };
     let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
     let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
     let textColor = localStorage.getItem('textColor') || '#ffcc00';
     let pageBg = localStorage.getItem('pageBg') || '';
     let currentTheme = localStorage.getItem('theme') || 'dark';
+    let isCreator = localStorage.getItem('isCreator') === 'true';
     const bgPresets = [
       'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png', 
       'bg6.jpg', 'bg7.jpg', 'bg8.jpg', 'bg9.jpg', 'bg10.jpg',
       'bg11.jpg', 'bg12.jpg', 'bg13.jpg'
     ];
+    const SECRET_WORD = 'CRYPTOBROS'; // ← Секретное слово для создания
 
     function init() {
-      if (currentTheme === 'light') {
-        document.body.style.backgroundColor = '#f0f0f0';
-        document.body.style.color = '#2c2c2c';
-        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
-          el.style.color = '#2c2c2c';
-        });
-        document.getElementById('themeSwitch').textContent = '☀️';
-      } else {
-        document.body.style.backgroundColor = '#000';
-        document.body.style.color = '#ffcc00';
-        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
-          el.style.color = '#ffcc00';
-        });
-        document.getElementById('themeSwitch').textContent = '🌙';
-      }
-
+      // Применяем тему
+      applyTheme();
+      
+      // Применяем фон
       if (pageBg) {
         document.body.style.backgroundImage = `url(${pageBg})`;
       }
 
+      // Применяем шапку
       const headerImg = localStorage.getItem('header') || '';
       const headerEl = document.getElementById('header');
       if (headerImg) {
@@ -244,39 +248,54 @@
         headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
       }
 
+      // Применяем аватар
       const avatarImg = localStorage.getItem('avatar') || '';
       const avatarEl = document.getElementById('avatar');
       if (avatarImg) {
         avatarEl.style.backgroundImage = `url(${avatarImg})`;
       }
 
+      // Показываем контент
       renderViewMode();
+      
+      // Строим меню
       buildEditMenu();
+      
+      // Настройка drag-to-pan
       setupDragToPan();
+      
+      // Обработчики кнопок
       document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
       document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
+      
+      // Проверяем, создатель ли это
+      checkCreatorStatus();
+    }
+
+    function applyTheme() {
+      if (currentTheme === 'light') {
+        document.body.style.backgroundColor = '#f0f0f0';
+        document.body.style.color = '#2c2c2c';
+        updateElementColors('#2c2c2c');
+        document.getElementById('themeSwitch').textContent = '☀️';
+      } else {
+        document.body.style.backgroundColor = '#000';
+        document.body.style.color = '#ffcc00';
+        updateElementColors('#ffcc00');
+        document.getElementById('themeSwitch').textContent = '🌙';
+      }
+    }
+
+    function updateElementColors(color) {
+      document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
+        el.style.color = color;
+      });
     }
 
     function toggleTheme() {
-      if (currentTheme === 'dark') {
-        currentTheme = 'light';
-        localStorage.setItem('theme', 'light');
-        document.body.style.backgroundColor = '#f0f0f0';
-        document.body.style.color = '#2c2c2c';
-        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
-          el.style.color = '#2c2c2c';
-        });
-        document.getElementById('themeSwitch').textContent = '☀️';
-      } else {
-        currentTheme = 'dark';
-        localStorage.setItem('theme', 'dark');
-        document.body.style.backgroundColor = '#000';
-        document.body.style.color = '#ffcc00';
-        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
-          el.style.color = '#ffcc00';
-        });
-        document.getElementById('themeSwitch').textContent = '🌙';
-      }
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', currentTheme);
+      applyTheme();
     }
 
     function toggleEditMenu() {
@@ -284,21 +303,86 @@
       if (menu.style.display === 'block') {
         menu.style.display = 'none';
       } else {
-        let bgButtons = bgPresets.map(bg => 
-          `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
-        ).join('');
-        
-        menu.innerHTML = `
-          <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
-          <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
-          <button onclick="changeTextColor('#66ffff')">🔵 Cyan</button>
-          <button onclick="changeTextColor('#d700ff')">🟣 Purple</button>
-          ${bgButtons}
-          <button onclick="changePageBg()">🖼️ Custom Background</button>
-          <button onclick="enterEditMode()">✏️ Edit Profile</button>
-          <button onclick="document.getElementById('editMenu').style.display='none'">❌ Close</button>
-        `;
+        buildEditMenuContent();
         menu.style.display = 'block';
+      }
+    }
+
+    function buildEditMenuContent() {
+      const menu = document.getElementById('editMenu');
+      
+      let bgButtons = bgPresets.map(bg => 
+        `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
+      ).join('');
+      
+      let menuHTML = `
+        <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
+        <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
+        <button onclick="changeTextColor('#66ffff')">🔵 Cyan</button>
+        <button onclick="changeTextColor('#d700ff')">🟣 Purple</button>
+        ${bgButtons}
+        <button onclick="changePageBg()">🖼️ Custom Background</button>
+        <button onclick="enterEditMode()">✏️ Edit Profile</button>
+      `;
+      
+      // Если создатель - добавляем кнопки создателя
+      if (isCreator) {
+        menuHTML += `
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid #555">
+            <button onclick="generateInviteCode('Premium')">🎁 Premium Invite</button>
+            <button onclick="generateInviteCode('Master')">🎁 Master Invite</button>
+            <button onclick="generateInviteCode('Pro')">🎁 Pro Invite</button>
+            <button onclick="showActiveCodes()">📊 Active Codes</button>
+            <button onclick="revokeAllCodes()">🗑️ Revoke All</button>
+          </div>
+        `;
+      }
+      
+      menuHTML += `<button onclick="document.getElementById('editMenu').style.display='none'">❌ Close</button>`;
+      menu.innerHTML = menuHTML;
+    }
+
+    function generateInviteCode(tier) {
+      // Генерируем 4-значный код
+      const code = Math.floor(1000 + Math.random() * 9000);
+      const fullCode = `${tier.charAt(0)}${tier.charAt(1)}${tier.charAt(2).toUpperCase()}-${code}`;
+      
+      // Сохраняем в активные коды
+      let activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
+      activeCodes.push({
+        code: fullCode,
+        tier: tier,
+        generatedAt: Date.now(),
+        used: false
+      });
+      localStorage.setItem('activeInviteCodes', JSON.stringify(activeCodes));
+      
+      // Копируем в буфер обмена
+      navigator.clipboard.writeText(fullCode).then(() => {
+        alert(`✅ Invite code generated!\n\nCode: ${fullCode}\nTier: ${tier}\n\nCopied to clipboard!`);
+      });
+    }
+
+    function showActiveCodes() {
+      const activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
+      if (activeCodes.length === 0) {
+        alert('No active invite codes.');
+        return;
+      }
+      
+      let message = 'Active Invite Codes:\n\n';
+      activeCodes.forEach(code => {
+        message += `${code.code} - ${code.tier} - ${code.used ? 'USED' : 'ACTIVE'}\n`;
+      });
+      
+      alert(message);
+    }
+
+    function revokeAllCodes() {
+      if (confirm('Revoke all active invite codes?')) {
+        localStorage.removeItem('activeInviteCodes');
+        alert('✅ All invite codes revoked!');
+        document.getElementById('editMenu').style.display = 'none';
       }
     }
 
@@ -312,9 +396,7 @@
     function changeTextColor(color) {
       textColor = color;
       localStorage.setItem('textColor', color);
-      document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
-        el.style.color = color;
-      });
+      updateElementColors(color);
       document.getElementById('editMenu').style.display = 'none';
     }
 
@@ -338,30 +420,88 @@
     function enterEditMode() {
       document.getElementById('editMenu').style.display = 'none';
       document.getElementById('profileContent').innerHTML = `
-        <div class="name">${profileData.name}</div>
-        <div class="rank">CHAIRMAN OF THE TRIBUNAL</div>
+        <div class="name">${profileData.name || '@user'}</div>
+        <div class="rank">${getTierBadge()}</div>
         <div class="field-label">About</div>
-        <textarea id="aboutInput">${profileData.about}</textarea>
+        <textarea id="aboutInput">${profileData.about || ''}</textarea>
         <div class="field-label">City</div>
-        <input type="text" id="cityInput" value="${profileData.city}">
+        <input type="text" id="cityInput" value="${profileData.city || ''}">
         <button class="btn" onclick="saveProfile()">💾 SAVE PROFILE</button>
       `;
     }
 
+    function getTierBadge() {
+      const tier = localStorage.getItem('selectedTier') || 'Free';
+      const badges = {
+        'Free': 'FREE USER',
+        'Master': 'MASTER',
+        'Pro': 'PRO USER',
+        'Premium': 'PREMIUM'
+      };
+      return badges[tier] || 'FREE USER';
+    }
+
     function renderViewMode() {
-      document.getElementById('profileContent').innerHTML = `
-        <div class="name">${profileData.name}</div>
-        <div class="rank">CHAIRMAN OF THE TRIBUNAL</div>
+      const tierBadge = getTierBadge();
+      
+      let content = `
+        <div class="name">${profileData.name || '@user'}</div>
+        <div class="rank">${tierBadge}</div>
         <div class="field-label">About</div>
-        <div class="field-value">${profileData.about}</div>
+        <div class="field-value">${profileData.about || 'No bio yet'}</div>
         <div class="field-label">City</div>
-        <div class="field-value">${profileData.city}</div>
+        <div class="field-value">${profileData.city || 'Not specified'}</div>
       `;
+      
+      // Если создатель - показываем секретное поле
+      if (!isCreator) {
+        content += `
+          <div class="creator-section">
+            <h3>🔓 Creator Access</h3>
+            <p>Enter secret word to unlock creator tools:</p>
+            <input type="text" id="secretWordInput" placeholder="Secret word..." style="width:100%;padding:8px;margin-top:5px">
+            <button class="btn" onclick="activateCreator()" style="width:100%;margin-top:5px">ACTIVATE</button>
+          </div>
+        `;
+      }
+      
+      document.getElementById('profileContent').innerHTML = content;
+    }
+
+    function activateCreator() {
+      const input = document.getElementById('secretWordInput');
+      if (input && input.value.trim().toUpperCase() === SECRET_WORD) {
+        isCreator = true;
+        localStorage.setItem('isCreator', 'true');
+        alert('✅ Creator mode activated!\n\nYou now have access to invite code generation and admin tools.');
+        renderViewMode();
+        buildEditMenuContent();
+      } else {
+        alert('❌ Invalid secret word!');
+      }
+    }
+
+    function checkCreatorStatus() {
+      if (isCreator) {
+        // Создатель - всё ок
+        return;
+      }
+      
+      // Проверяем, есть ли уже сохранённый статус создателя
+      if (localStorage.getItem('isCreator') === 'true') {
+        isCreator = true;
+      }
     }
 
     function saveProfile() {
       profileData.about = document.getElementById('aboutInput').value;
       profileData.city = document.getElementById('cityInput').value;
+      
+      // Если имя пустое - ставим @user
+      if (!profileData.name) {
+        profileData.name = '@user';
+      }
+      
       localStorage.setItem('profileData', JSON.stringify(profileData));
       localStorage.setItem('isProfileSaved', 'true');
       renderViewMode();
