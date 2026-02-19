@@ -341,51 +341,14 @@
 
     <div class="create-post">
       <div class="create-avatar">C</div>
-      <textarea class="create-input" placeholder="What's on your mind?"></textarea>
+      <textarea class="create-input" placeholder="What's on your mind?" id="postInput"></textarea>
       <div style="display: flex; gap: 0.8rem; margin-top: 1rem;">
-        <button style="padding: 0.6rem 1.2rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; font-weight: 600;">Photo</button>
-        <button style="padding: 0.6rem 1.2rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600;">Post</button>
+        <button style="padding: 0.6rem 1.2rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; font-weight: 600;" onclick="createPost()">Post</button>
       </div>
     </div>
 
-    <article class="post">
-      <div class="post-header">
-        <div class="post-avatar">U</div>
-        <div><div class="post-user">@user123</div><div class="post-time">2h ago</div></div>
-      </div>
-      <div class="post-content">$WIF just pumped! Analysis needed.</div>
-      <div class="post-actions">
-        <div class="action-btn" onclick="toggleLike(this)">❤️ <span class="count">142</span></div>
-        <div class="action-btn" onclick="toggleComment(this)">💬 <span class="count">38</span></div>
-        <div class="action-btn" onclick="toggleRepost(this)">🔁 <span class="count">21</span></div>
-      </div>
-    </article>
-
-    <article class="post">
-      <div class="post-header">
-        <div class="post-avatar">T</div>
-        <div><div class="post-user">@trader_sol · Premium</div><div class="post-time">45m ago</div></div>
-      </div>
-      <div class="post-content">Is $SOL safe to buy now?</div>
-      <div class="post-actions">
-        <div class="action-btn" onclick="toggleLike(this)">❤️ <span class="count">89</span></div>
-        <div class="action-btn" onclick="toggleComment(this)">💬 <span class="count">17</span></div>
-        <div class="action-btn" onclick="toggleRepost(this)">🔁 <span class="count">12</span></div>
-      </div>
-    </article>
-
-    <article class="post">
-      <div class="post-header">
-        <div class="post-avatar">M</div>
-        <div><div class="post-user">@meme_king</div><div class="post-time">1h ago</div></div>
-      </div>
-      <div class="post-content">When the chart looks like a rollercoaster but you're still holding... 🎢<br><br>[Image: meme of bear riding a rocket]</div>
-      <div class="post-actions">
-        <div class="action-btn" onclick="toggleLike(this)">❤️ <span class="count">210</span></div>
-        <div class="action-btn" onclick="toggleComment(this)">💬 <span class="count">45</span></div>
-        <div class="action-btn" onclick="toggleRepost(this)">🔁 <span class="count">67</span></div>
-      </div>
-    </article>
+    <!-- Посты будут динамически загружаться здесь -->
+    <div id="feedPosts"></div>
   </main>
 
   <div class="right-sidebar">
@@ -408,6 +371,7 @@
 </div>
 
 <script>
+  // Инициализация темы
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -421,6 +385,7 @@
     }
   }
 
+  // Переключение темы
   function toggleTheme() {
     const isDark = document.body.classList.contains('dark-theme');
     if (isDark) {
@@ -434,6 +399,65 @@
     }
   }
 
+  // Создание поста
+  function createPost() {
+    const content = document.getElementById('postInput').value.trim();
+    if (!content) return;
+    
+    const posts = JSON.parse(localStorage.getItem('feedPosts')) || [];
+    posts.unshift({
+      id: Date.now(),
+      content: content,
+      timestamp: Date.now(),
+      likes: 0,
+      username: '@user'
+    });
+    
+    localStorage.setItem('feedPosts', JSON.stringify(posts));
+    document.getElementById('postInput').value = '';
+    
+    loadPosts();
+    
+    // Отмечаем первый пост в день
+    const userId = localStorage.getItem('userId') || 'user_' + Date.now();
+    let user = JSON.parse(localStorage.getItem(`user_${userId}`)) || { firstPostToday: true };
+    user.firstPostToday = true;
+    localStorage.setItem(`user_${userId}`, JSON.stringify(user));
+  }
+
+  // Загрузка постов
+  function loadPosts() {
+    const posts = JSON.parse(localStorage.getItem('feedPosts')) || [];
+    const container = document.getElementById('feedPosts');
+    container.innerHTML = '';
+    
+    posts.forEach(post => {
+      const date = new Date(post.timestamp);
+      const timeStr = date.toLocaleTimeString();
+      
+      const postHTML = `
+        <article class="post">
+          <div class="post-header">
+            <div class="post-avatar">${post.username.charAt(1)}</div>
+            <div>
+              <div class="post-user">${post.username}</div>
+              <div class="post-time">${timeStr}</div>
+            </div>
+          </div>
+          <div class="post-content">${post.content.replace(/\n/g, '<br>')}</div>
+          <div class="post-actions">
+            <div class="action-btn" onclick="toggleLike(this)">❤️ <span class="count">${post.likes}</span></div>
+            <div class="action-btn" onclick="toggleComment(this)">💬 <span class="count">0</span></div>
+            <div class="action-btn" onclick="toggleRepost(this)">🔁 <span class="count">0</span></div>
+          </div>
+        </article>
+      `;
+      
+      container.innerHTML += postHTML;
+    });
+  }
+
+  // Функции постов
   function toggleLike(btn) {
     const countEl = btn.querySelector('.count');
     let count = +countEl.textContent;
@@ -480,8 +504,24 @@
     countEl.textContent = count;
   }
 
+  // Загрузка автоматических постов (розыгрыш сундука)
+  function loadAutoPosts() {
+    const autoPosts = JSON.parse(localStorage.getItem('autoPosts')) || [];
+    autoPosts.forEach(post => {
+      const posts = JSON.parse(localStorage.getItem('feedPosts')) || [];
+      posts.unshift(post);
+      localStorage.setItem('feedPosts', JSON.stringify(posts));
+    });
+    localStorage.removeItem('autoPosts');
+  }
+
+  // Запуск
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-  document.addEventListener('DOMContentLoaded', initTheme);
+  document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    loadPosts();
+    loadAutoPosts();
+  });
 </script>
 
 </body>
