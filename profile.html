@@ -1,290 +1,439 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS - Profile</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>CRYPTOBROS</title>
   <style>
-    :root {
-      --bg-main: #f0f0f0;
-      --bg-card: #ffffff;
-      --text-main: #2c2c2c;
-      --text-secondary: #6c6c6c;
-      --border-color: #e0e0e0;
-      --accent: #0077ff;
-      --accent-hover: #0066cc;
-      --sidebar-bg: #ffffff;
-      --sidebar-hover: #f5f5f5;
-      --btn-bg: #0077ff;
-      --btn-text: #ffffff;
-      --status-bg: #e3f2fd;
-      --status-text: #1976d2;
-    }
-    [data-theme="dark"] {
-      --bg-main: #1a1a1a;
-      --bg-card: #252525;
-      --text-main: #e0e0e0;
-      --text-secondary: #a0a0a0;
-      --border-color: #3a3a3a;
-      --accent: #00ff9d;
-      --accent-hover: #00e68c;
-      --sidebar-bg: #1f1f1f;
-      --sidebar-hover: #2a2a2a;
-      --btn-bg: #00ff9d;
-      --btn-text: #000000;
-      --status-bg: rgba(0, 255, 157, 0.1);
-      --status-text: #00ff9d;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: var(--bg-main);
-      color: var(--text-main);
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      display: flex;
+      font-family: Arial, sans-serif;
+      background-size: cover;
+      background-attachment: fixed;
+      background-color: #000;
+      color: #ffcc00;
     }
-    .sidebar {
-      width: 200px;
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--border-color);
-      padding: 20px 0;
-    }
-    .sidebar-item {
-      padding: 12px 20px;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95em;
-      color: var(--text-main);
-    }
-    .sidebar-item:hover {
-      background: var(--sidebar-hover);
-    }
-    .sidebar-item.active {
-      background: var(--accent);
-      color: var(--btn-text);
-      font-weight: 600;
-    }
-    .main-content {
-      flex: 1;
-      padding: 20px;
+    .top-section {
+      position: relative;
+      height: 300px;
     }
     .header {
+      width: 100%;
+      height: 100%;
+      background: center/cover;
+      border: 2px dashed #555;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .header.loaded {
+      border: none;
+    }
+    .avatar {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 4px solid white;
+      background: center/cover;
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .main-layout {
+      max-width: 1200px;
+      margin: 220px auto 0;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid var(--border-color);
+      gap: 20px;
+      padding: 0 20px;
     }
     .theme-switch {
-      background: var(--accent);
-      color: var(--btn-text);
-      border: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .theme-switch:hover {
-      background: var(--accent-hover);
-    }
-    .profile-card {
-      background: var(--bg-card);
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    .avatar-container {
-      width: 150px;
-      height: 150px;
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 32px;
+      height: 32px;
+      background: #333;
+      border: 1px solid #666;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), #66ffff);
-      margin: 0 auto 20px;
+      color: #ffcc00;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 4rem;
-      color: var(--btn-text);
-      font-weight: 800;
       cursor: pointer;
-      position: relative;
-      overflow: hidden;
+      z-index: 100;
+      font-size: 16px;
     }
-    .avatar-container:hover::after {
-      content: '📷';
+    .edit-btn {
       position: absolute;
-      font-size: 2rem;
-      opacity: 0.7;
-    }
-    .status-badge {
-      background: var(--status-bg);
-      color: var(--status-text);
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      display: inline-block;
-      margin-top: 10px;
-      letter-spacing: 1px;
-    }
-    .profile-field {
-      margin-bottom: 20px;
-    }
-    .profile-field label {
-      display: block;
-      margin-bottom: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-    .profile-field input {
-      width: 100%;
-      padding: 12px 15px;
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-main);
-      font-family: 'Inter', sans-serif;
-      font-size: 1em;
-    }
-    .profile-field input:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-    .btn-primary {
-      background: var(--btn-bg);
-      color: var(--btn-text);
-      border: none;
-      padding: 12px 30px;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 1em;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: #333;
+      border: 1px solid #666;
+      border-radius: 50%;
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: background 0.2s;
+      z-index: 100;
+    }
+    .edit-menu {
+      position: absolute;
+      top: 50px;
+      right: 16px;
+      background: #000;
+      border: 1px solid #ffcc00;
+      border-radius: 6px;
+      padding: 8px;
+      display: none;
+      z-index: 100;
+      min-width: 180px;
+    }
+    .edit-menu button {
+      background: #222;
+      color: #ffcc00;
+      border: 1px solid #555;
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin: 2px;
+      cursor: pointer;
+      font-size: 12px;
+      display: inline-block;
       width: 100%;
+      text-align: left;
     }
-    .btn-primary:hover {
-      background: var(--accent-hover);
+    .sidebar { width: 200px; }
+    .nav-item {
+      padding: 10px 0;
+      color: #ffcc00;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 18px;
+      animation: flicker 3s infinite alternate;
     }
-    .achievements-btn {
-      background: var(--accent);
-      color: var(--btn-text);
+    .nav-item:hover {
+      opacity: 0.8;
+      text-shadow: 0 0 8px #ffcc00;
+    }
+    a.nav-item {
+      text-decoration: none;
+      display: block;
+      color: #ffcc00;
+    }
+    .main { flex: 1; }
+    .name { 
+      font-size: 28px; 
+      font-weight: bold; 
+      margin-bottom: 8px; 
+      animation: flicker 3s infinite alternate;
+    }
+    .rank { 
+      margin-bottom: 20px; 
+      font-weight: bold;
+      animation: flicker 3s infinite alternate;
+    }
+    .field-label { 
+      color: #aaa; 
+      margin: 10px 0 4px; 
+      font-weight: bold; 
+    }
+    .field-value {
+      color: #ffcc00;
+      margin-bottom: 15px;
+      animation: flicker 3s infinite alternate;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      background: rgba(0,0,0,0.3);
+      color: #ffcc00;
+      border: 1px solid #555;
+      border-radius: 4px;
+    }
+    .btn {
+      background: #4267B2;
+      color: white;
       border: none;
       padding: 10px 20px;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      margin-top: 15px;
+      border-radius: 4px;
       cursor: pointer;
-      width: 100%;
-      transition: background 0.2s;
+      margin-top: 10px;
     }
-    .achievements-btn:hover {
-      background: var(--accent-hover);
+    #header-upload, #avatar-upload, #bg-upload { display: none; }
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
+      20%,24%,55%,81%,85% { opacity:0.8; }
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar (меню ВК) -->
-  <div class="sidebar">
-    <div class="sidebar-item active">⚙️ Edit Profile</div>
-    <div class="sidebar-item" onclick="location.href='feed.html'">📰 News Feed</div>
-    <div class="sidebar-item" onclick="location.href='messages.html'">💬 Messages</div>
-    <div class="sidebar-item" onclick="location.href='groups.html'">👥 My Groups</div>
-    <div class="sidebar-item" onclick="location.href='tribunal.html'">⚖️ Tribunal</div>
-    <div class="sidebar-item" onclick="location.href='friends.html'">👫 My Friends</div>
+  <div class="top-section">
+    <div class="header" id="header"></div>
+    <div class="avatar" id="avatar"></div>
+    <div class="theme-switch" id="themeSwitch">🌙</div>
+    <div class="edit-btn" id="editBtn">⚙️</div>
+    <div class="edit-menu" id="editMenu"></div>
+  </div>
+  
+  <div class="main-layout">
+    <div class="sidebar">
+      <a href="feed.html" class="nav-item">📰 News Feed</a>
+      <a href="messages.html" class="nav-item">💬 Messages</a>
+      <a href="groups.html" class="nav-item">👥 My Groups</a>
+      <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
+      <a href="friends.html" class="nav-item">👫 My Friends</a>
+    </div>
+    <div class="main" id="profileContent"></div>
   </div>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Header with theme switcher -->
-    <div class="header">
-      <button class="theme-switch" id="themeSwitch">🌙 Night Mode</button>
-    </div>
-
-    <!-- Profile Card -->
-    <div class="profile-card">
-      <div class="avatar-container" onclick="changeAvatar()">C</div>
-      <div style="text-align: center; margin-bottom: 20px">
-        <h1 style="font-family: 'Poppins', sans-serif; font-size: 2em; margin-bottom: 5px">@cryptobros</h1>
-        <div class="status-badge">ПРЕДСЕДАТЕЛЬ ТРИБУНАЛА</div>
-      </div>
-
-      <div class="profile-field">
-        <label>Name</label>
-        <input type="text" id="profileName" placeholder="Your name" value="Cryptobros Chairman">
-      </div>
-
-      <div class="profile-field">
-        <label>Bio</label>
-        <input type="text" id="profileBio" placeholder="About you" value="Chairman of the AI Tribunal • Truth over hype">
-      </div>
-
-      <div class="profile-field">
-        <label>City</label>
-        <input type="text" id="profileCity" placeholder="Your city" value="Cyberspace">
-      </div>
-
-      <button class="btn-primary" onclick="saveProfile()">💾 SAVE PROFILE</button>
-      <button class="achievements-btn" onclick="location.href='achievements.html'">🏆 MY ACHIEVEMENTS</button>
-    </div>
-  </div>
+  <input type="file" id="header-upload" accept="image/*">
+  <input type="file" id="avatar-upload" accept="image/*">
+  <input type="file" id="bg-upload" accept="image/*">
 
   <script>
-    // Theme switcher (работает на всех страницах)
-    const themeSwitch = document.getElementById('themeSwitch');
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    
-    if (currentTheme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeSwitch.textContent = '☀️ Day Mode';
-    }
-    
-    themeSwitch.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme');
-      if (current === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
-        themeSwitch.textContent = '🌙 Night Mode';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-        themeSwitch.textContent = '☀️ Day Mode';
-      }
-    });
+    // Load data from localStorage
+    let profileData = JSON.parse(localStorage.getItem('profileData')) || { 
+      name: '@cryptobros', 
+      about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype', 
+      city: 'Cyberspace' 
+    };
+    let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
+    let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
+    let textColor = localStorage.getItem('textColor') || '#ffcc00';
+    let pageBg = localStorage.getItem('pageBg') || '';
+    let currentTheme = localStorage.getItem('theme') || 'dark';
 
-    // Save profile
+    function init() {
+      // Apply theme
+      if (currentTheme === 'light') {
+        document.body.style.backgroundColor = '#f0f0f0';
+        document.body.style.color = '#2c2c2c';
+        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
+          el.style.color = '#2c2c2c';
+        });
+        document.getElementById('themeSwitch').textContent = '☀️';
+      } else {
+        document.body.style.backgroundColor = '#000';
+        document.body.style.color = '#ffcc00';
+        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
+          el.style.color = '#ffcc00';
+        });
+        document.getElementById('themeSwitch').textContent = '🌙';
+      }
+
+      // Apply background
+      if (pageBg) {
+        document.body.style.backgroundImage = `url(${pageBg})`;
+      }
+
+      // Apply header
+      const headerImg = localStorage.getItem('header') || '';
+      const headerEl = document.getElementById('header');
+      if (headerImg) {
+        headerEl.style.backgroundImage = `url(${headerImg})`;
+        headerEl.classList.add('loaded');
+        headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+      }
+
+      // Apply avatar
+      const avatarImg = localStorage.getItem('avatar') || '';
+      const avatarEl = document.getElementById('avatar');
+      if (avatarImg) {
+        avatarEl.style.backgroundImage = `url(${avatarImg})`;
+      }
+
+      // Render profile view mode
+      renderViewMode();
+
+      // Build edit menu
+      buildEditMenu();
+
+      // Setup drag-to-pan for header
+      setupDragToPan();
+
+      // Setup theme switcher
+      document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
+      document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
+    }
+
+    function toggleTheme() {
+      if (currentTheme === 'dark') {
+        currentTheme = 'light';
+        localStorage.setItem('theme', 'light');
+        document.body.style.backgroundColor = '#f0f0f0';
+        document.body.style.color = '#2c2c2c';
+        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
+          el.style.color = '#2c2c2c';
+        });
+        document.getElementById('themeSwitch').textContent = '☀️';
+      } else {
+        currentTheme = 'dark';
+        localStorage.setItem('theme', 'dark');
+        document.body.style.backgroundColor = '#000';
+        document.body.style.color = '#ffcc00';
+        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
+          el.style.color = '#ffcc00';
+        });
+        document.getElementById('themeSwitch').textContent = '🌙';
+      }
+    }
+
+    function toggleEditMenu() {
+      const menu = document.getElementById('editMenu');
+      if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+      } else {
+        menu.innerHTML = `
+          <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
+          <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
+          <button onclick="changeTextColor('#66ffff')">🔵 Cyan</button>
+          <button onclick="changeTextColor('#d700ff')">🟣 Purple</button>
+          <button onclick="changePageBg()">🖼️ Change Background</button>
+          <button onclick="enterEditMode()">✏️ Edit Profile</button>
+          <button onclick="document.getElementById('editMenu').style.display='none'">❌ Close</button>
+        `;
+        menu.style.display = 'block';
+      }
+    }
+
+    function changeTextColor(color) {
+      textColor = color;
+      localStorage.setItem('textColor', color);
+      document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
+        el.style.color = color;
+      });
+      document.getElementById('editMenu').style.display = 'none';
+    }
+
+    function changePageBg() {
+      document.getElementById('bg-upload').click();
+      document.getElementById('bg-upload').onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            pageBg = event.target.result;
+            localStorage.setItem('pageBg', pageBg);
+            document.body.style.backgroundImage = `url(${pageBg})`;
+          };
+          reader.readAsDataURL(file);
+        }
+        document.getElementById('editMenu').style.display = 'none';
+      };
+    }
+
+    function enterEditMode() {
+      document.getElementById('editMenu').style.display = 'none';
+      document.getElementById('profileContent').innerHTML = `
+        <div class="name">${profileData.name}</div>
+        <div class="rank">CHAIRMAN OF THE TRIBUNAL</div>
+        <div class="field-label">About</div>
+        <textarea id="aboutInput">${profileData.about}</textarea>
+        <div class="field-label">City</div>
+        <input type="text" id="cityInput" value="${profileData.city}">
+        <button class="btn" onclick="saveProfile()">💾 SAVE PROFILE</button>
+      `;
+    }
+
+    function renderViewMode() {
+      document.getElementById('profileContent').innerHTML = `
+        <div class="name">${profileData.name}</div>
+        <div class="rank">CHAIRMAN OF THE TRIBUNAL</div>
+        <div class="field-label">About</div>
+        <div class="field-value">${profileData.about}</div>
+        <div class="field-label">City</div>
+        <div class="field-value">${profileData.city}</div>
+      `;
+    }
+
     function saveProfile() {
-      const name = document.getElementById('profileName').value;
-      const bio = document.getElementById('profileBio').value;
-      const city = document.getElementById('profileCity').value;
-      
-      localStorage.setItem('profileName', name);
-      localStorage.setItem('profileBio', bio);
-      localStorage.setItem('profileCity', city);
-      
+      profileData.about = document.getElementById('aboutInput').value;
+      profileData.city = document.getElementById('cityInput').value;
+      localStorage.setItem('profileData', JSON.stringify(profileData));
+      localStorage.setItem('isProfileSaved', 'true');
+      renderViewMode();
       alert('✅ Profile saved successfully!');
     }
 
-    // Change avatar (placeholder)
-    function changeAvatar() {
-      alert('📷 Click to upload new avatar (coming soon)');
+    function setupDragToPan() {
+      const headerEl = document.getElementById('header');
+      let isDragging = false;
+      let startX, startY, startXPx, startYPx;
+
+      headerEl.addEventListener('mousedown', (e) => {
+        if (headerEl.classList.contains('loaded')) {
+          isDragging = true;
+          startX = e.clientX;
+          startY = e.clientY;
+          const bgPos = headerEl.style.backgroundPosition.split(' ');
+          startXPx = parseInt(bgPos[0]) || 0;
+          startYPx = parseInt(bgPos[1]) || 0;
+          document.body.style.cursor = 'grabbing';
+        }
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        headerPos.x = startXPx + dx;
+        headerPos.y = startYPx + dy;
+        headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+        localStorage.setItem('headerPos', JSON.stringify(headerPos));
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+          document.body.style.cursor = 'default';
+        }
+      });
     }
 
-    // Apply theme on page load (для всех страниц)
-    window.addEventListener('load', () => {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    });
+    function buildEditMenu() {
+      document.getElementById('header').addEventListener('click', () => {
+        if (!isProfileSaved) document.getElementById('header-upload').click();
+      });
+      
+      document.getElementById('header-upload').onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            localStorage.setItem('header', event.target.result);
+            document.getElementById('header').style.backgroundImage = `url(${event.target.result})`;
+            document.getElementById('header').classList.add('loaded');
+            headerPos = { x: 0, y: 0 };
+            localStorage.setItem('headerPos', JSON.stringify(headerPos));
+            document.getElementById('header').style.backgroundPosition = '0px 0px';
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+
+      document.getElementById('avatar').addEventListener('click', () => {
+        document.getElementById('avatar-upload').click();
+      });
+
+      document.getElementById('avatar-upload').onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            localStorage.setItem('avatar', event.target.result);
+            document.getElementById('avatar').style.backgroundImage = `url(${event.target.result})`;
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
