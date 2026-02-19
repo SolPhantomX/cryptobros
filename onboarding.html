@@ -26,11 +26,13 @@
       overflow-x: hidden;
     }
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       width: 100%;
     }
     .header {
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 40px;
       padding: 20px;
     }
@@ -42,12 +44,21 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 10px;
     }
-    .slogan {
-      font-size: 1.2rem;
-      color: #66ffff;
-      margin-top: 10px;
+    .back-btn {
+      background: rgba(0, 255, 157, 0.1);
+      color: #00ff9d;
+      border: 2px solid #00ff9d;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .back-btn:hover {
+      background: rgba(0, 255, 157, 0.2);
+      transform: scale(1.05);
     }
     .social-token-banner {
       background: rgba(0, 255, 157, 0.1);
@@ -68,8 +79,8 @@
     }
     .tiers-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
       margin-bottom: 40px;
     }
     .tier-card {
@@ -176,7 +187,7 @@
     }
     .wallet-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 15px;
       margin: 20px 0;
     }
@@ -232,21 +243,6 @@
       cursor: pointer;
       width: 100%;
     }
-    .back-btn {
-      background: rgba(255, 255, 255, 0.1);
-      color: #00ff9d;
-      border: 2px solid #00ff9d;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: all 0.3s;
-    }
-    .back-btn:hover {
-      background: rgba(0, 255, 157, 0.2);
-    }
     .instructions {
       background: rgba(0, 10, 50, 0.7);
       border: 2px solid #00ff9d;
@@ -273,7 +269,7 @@
   <div class="container">
     <div class="header">
       <div class="logo">CRYPTOBROS</div>
-      <div class="slogan">BROS IN. NOISE OUT.</div>
+      <button class="back-btn" onclick="window.history.back()">← BACK</button>
     </div>
 
     <div class="social-token-banner">
@@ -356,6 +352,9 @@
           <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/backpack.svg" alt="Backpack">
           Backpack
         </div>
+      </div>
+
+      <div class="wallet-grid">
         <div class="wallet-btn" onclick="connectWallet('TrustWallet')">
           <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/trustwallet.svg" alt="TrustWallet">
           TrustWallet
@@ -388,7 +387,7 @@
         </p>
       </div>
 
-      <button class="back-btn" onclick="backToTiers()">← Back to Tiers</button>
+      <button class="back-btn" style="margin-top: 20px; width: 100%;" onclick="backToTiers()">← Back to Tiers</button>
     </div>
 
     <div class="invite-section">
