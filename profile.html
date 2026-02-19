@@ -8,46 +8,123 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-main: #f0f0f0;
+      --bg-card: #ffffff;
+      --text-main: #2c2c2c;
+      --text-secondary: #6c6c6c;
+      --border-color: #e0e0e0;
+      --accent: #0077ff;
+      --accent-hover: #0066cc;
+      --sidebar-bg: #ffffff;
+      --sidebar-hover: #f5f5f5;
+      --btn-bg: #0077ff;
+      --btn-text: #ffffff;
+      --status-bg: #e3f2fd;
+      --status-text: #1976d2;
+    }
+    [data-theme="dark"] {
+      --bg-main: #1a1a1a;
+      --bg-card: #252525;
+      --text-main: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --border-color: #3a3a3a;
+      --accent: #00ff9d;
+      --accent-hover: #00e68c;
+      --sidebar-bg: #1f1f1f;
+      --sidebar-hover: #2a2a2a;
+      --btn-bg: #00ff9d;
+      --btn-text: #000000;
+      --status-bg: rgba(0, 255, 157, 0.1);
+      --status-text: #00ff9d;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: #00052a;
-      color: #00ff9d;
+      background: var(--bg-main);
+      color: var(--text-main);
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
+      display: flex;
     }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
+    .sidebar {
+      width: 200px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 20px 0;
+    }
+    .sidebar-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95em;
+      color: var(--text-main);
+    }
+    .sidebar-item:hover {
+      background: var(--sidebar-hover);
+    }
+    .sidebar-item.active {
+      background: var(--accent);
+      color: var(--btn-text);
+      font-weight: 600;
+    }
+    .main-content {
+      flex: 1;
+      padding: 20px;
     }
     .header {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
     }
-    .avatar {
+    .theme-switch {
+      background: var(--accent);
+      color: var(--btn-text);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .theme-switch:hover {
+      background: var(--accent-hover);
+    }
+    .profile-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .avatar-container {
       width: 150px;
       height: 150px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #00ff9d, #66ffff);
-      margin: 0 auto 15px;
+      background: linear-gradient(135deg, var(--accent), #66ffff);
+      margin: 0 auto 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 4rem;
-      color: #00052a;
+      color: var(--btn-text);
       font-weight: 800;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
-    h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px #00ff9d;
+    .avatar-container:hover::after {
+      content: '📷';
+      position: absolute;
+      font-size: 2rem;
+      opacity: 0.7;
     }
-    .tier-badge {
-      background: linear-gradient(135deg, #d700ff, #66ffff);
-      color: #00052a;
+    .status-badge {
+      background: var(--status-bg);
+      color: var(--status-text);
       padding: 5px 15px;
       border-radius: 20px;
       font-family: 'Poppins', sans-serif;
@@ -56,172 +133,158 @@
       margin-top: 10px;
       letter-spacing: 1px;
     }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin: 25px 0;
+    .profile-field {
+      margin-bottom: 20px;
     }
-    .stat-card {
-      background: rgba(0, 10, 50, 0.7);
-      border: 1px solid #00ff9d;
-      border-radius: 10px;
-      padding: 15px;
-      text-align: center;
-    }
-    .stat-value {
-      font-size: 2rem;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 800;
-      color: #00ff9d;
-    }
-    .stat-label {
-      font-size: 0.9rem;
-      color: #66ffff;
-      margin-top: 5px;
-    }
-    .referral-section {
-      background: rgba(0, 10, 50, 0.7);
-      border: 1px solid #d700ff;
-      border-radius: 10px;
-      padding: 20px;
-      margin: 25px 0;
-    }
-    .referral-section h2 {
-      font-family: 'Poppins', sans-serif;
-      color: #d700ff;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    .ref-link {
-      width: 100%;
-      padding: 10px;
-      background: #00052a;
-      border: 1px solid #d700ff;
-      color: #d700ff;
-      border-radius: 5px;
-      margin-bottom: 15px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      text-align: center;
-    }
-    .btn {
-      background: linear-gradient(135deg, #d700ff, #66ffff);
-      color: #00052a;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+    .profile-field label {
+      display: block;
+      margin-bottom: 8px;
       font-family: 'Poppins', sans-serif;
       font-weight: 600;
+      color: var(--text-main);
+    }
+    .profile-field input {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+    }
+    .profile-field input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .btn-primary {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    .achievements-btn {
+      background: var(--accent);
+      color: var(--btn-text);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      margin-top: 15px;
       cursor: pointer;
       width: 100%;
-      margin-top: 10px;
+      transition: background 0.2s;
     }
-    .creator-tools {
-      background: rgba(215, 0, 255, 0.1);
-      border: 1px solid #d700ff;
-      border-radius: 10px;
-      padding: 20px;
-      margin: 25px 0;
-    }
-    .creator-tools h2 {
-      font-family: 'Poppins', sans-serif;
-      color: #d700ff;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    .premium-link {
-      display: none;
-      margin-top: 15px;
-    }
-    .nav-menu {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin: 25px 0;
-    }
-    .nav-item {
-      background: rgba(0, 10, 50, 0.7);
-      border: 1px solid #00ff9d;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-family: 'Poppins', sans-serif;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .nav-item:hover {
-      background: rgba(0, 255, 157, 0.1);
+    .achievements-btn:hover {
+      background: var(--accent-hover);
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- Sidebar (меню ВК) -->
+  <div class="sidebar">
+    <div class="sidebar-item active">⚙️ Edit Profile</div>
+    <div class="sidebar-item" onclick="location.href='feed.html'">📰 News Feed</div>
+    <div class="sidebar-item" onclick="location.href='messages.html'">💬 Messages</div>
+    <div class="sidebar-item" onclick="location.href='groups.html'">👥 My Groups</div>
+    <div class="sidebar-item" onclick="location.href='tribunal.html'">⚖️ Tribunal</div>
+    <div class="sidebar-item" onclick="location.href='friends.html'">👫 My Friends</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header with theme switcher -->
     <div class="header">
-      <div class="avatar">C</div>
-      <h1>@cryptobros</h1>
-      <div class="tier-badge">PREMIUM</div>
+      <button class="theme-switch" id="themeSwitch">🌙 Night Mode</button>
     </div>
 
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-value">12,450</div>
-        <div class="stat-label">$AUS Balance</div>
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="avatar-container" onclick="changeAvatar()">C</div>
+      <div style="text-align: center; margin-bottom: 20px">
+        <h1 style="font-family: 'Poppins', sans-serif; font-size: 2em; margin-bottom: 5px">@cryptobros</h1>
+        <div class="status-badge">ПРЕДСЕДАТЕЛЬ ТРИБУНАЛА</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">87</div>
-        <div class="stat-label">Verdicts Saved</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">14</div>
-        <div class="stat-label">Referrals</div>
-      </div>
-    </div>
 
-    <div class="referral-section">
-      <h2>Invite Friends → Earn 10 $AUS per Premium purchase</h2>
-      <input type="text" class="ref-link" id="refLink" value="https://solphantomx.github.io/cryptobros/tribunal.html?ref=CRYPTOBROS" readonly>
-      <button class="btn" onclick="copyRef()">📋 COPY LINK</button>
-      <div class="ref-count" style="margin-top:10px;color:#66ffff">Your referrals: 14 (+140 $AUS earned)</div>
-    </div>
-
-    <div class="creator-tools">
-      <h2>Creator Tools</h2>
-      <button class="btn" onclick="generatePremiumLink()">🎁 Generate Premium Link for Friend</button>
-      <div class="premium-link" id="premiumLinkBox">
-        <input type="text" class="ref-link" id="premiumLink" readonly>
-        <button class="btn" onclick="copyPremiumLink()">📋 COPY PREMIUM LINK</button>
+      <div class="profile-field">
+        <label>Name</label>
+        <input type="text" id="profileName" placeholder="Your name" value="Cryptobros Chairman">
       </div>
-    </div>
 
-    <div class="nav-menu">
-      <div class="nav-item" onclick="location.href='tribunal.html'">Tribunal</div>
-      <div class="nav-item" onclick="location.href='onboarding.html'">Onboarding</div>
-      <div class="nav-item" onclick="location.href='rules.html'">Rules</div>
-      <div class="nav-item" onclick="location.href='index.html'">Home</div>
+      <div class="profile-field">
+        <label>Bio</label>
+        <input type="text" id="profileBio" placeholder="About you" value="Chairman of the AI Tribunal • Truth over hype">
+      </div>
+
+      <div class="profile-field">
+        <label>City</label>
+        <input type="text" id="profileCity" placeholder="Your city" value="Cyberspace">
+      </div>
+
+      <button class="btn-primary" onclick="saveProfile()">💾 SAVE PROFILE</button>
+      <button class="achievements-btn" onclick="location.href='achievements.html'">🏆 MY ACHIEVEMENTS</button>
     </div>
   </div>
 
   <script>
-    function copyRef() {
-      const link = document.getElementById('refLink').value;
-      navigator.clipboard.writeText(link).then(() => {
-        alert('✅ Referral link copied!');
-      });
+    // Theme switcher (работает на всех страницах)
+    const themeSwitch = document.getElementById('themeSwitch');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeSwitch.textContent = '☀️ Day Mode';
     }
     
-    function generatePremiumLink() {
-      const link = 'https://solphantomx.github.io/cryptobros/tribunal.html?unlock=premium';
-      document.getElementById('premiumLink').value = link;
-      document.getElementById('premiumLinkBox').style.display = 'block';
-      alert('Premium link generated! Share this with your friend.');
+    themeSwitch.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      if (current === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        themeSwitch.textContent = '🌙 Night Mode';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeSwitch.textContent = '☀️ Day Mode';
+      }
+    });
+
+    // Save profile
+    function saveProfile() {
+      const name = document.getElementById('profileName').value;
+      const bio = document.getElementById('profileBio').value;
+      const city = document.getElementById('profileCity').value;
+      
+      localStorage.setItem('profileName', name);
+      localStorage.setItem('profileBio', bio);
+      localStorage.setItem('profileCity', city);
+      
+      alert('✅ Profile saved successfully!');
     }
-    
-    function copyPremiumLink() {
-      const link = document.getElementById('premiumLink').value;
-      navigator.clipboard.writeText(link).then(() => {
-        alert('✅ Premium link copied!');
-      });
+
+    // Change avatar (placeholder)
+    function changeAvatar() {
+      alert('📷 Click to upload new avatar (coming soon)');
     }
+
+    // Apply theme on page load (для всех страниц)
+    window.addEventListener('load', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    });
   </script>
 </body>
 </html>
