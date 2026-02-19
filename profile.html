@@ -195,7 +195,6 @@
   <input type="file" id="bg-upload" accept="image/*">
 
   <script>
-    // Load data from localStorage
     let profileData = JSON.parse(localStorage.getItem('profileData')) || { 
       name: '@cryptobros', 
       about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype', 
@@ -206,9 +205,9 @@
     let textColor = localStorage.getItem('textColor') || '#ffcc00';
     let pageBg = localStorage.getItem('pageBg') || '';
     let currentTheme = localStorage.getItem('theme') || 'dark';
+    const bgPresets = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg'];
 
     function init() {
-      // Apply theme
       if (currentTheme === 'light') {
         document.body.style.backgroundColor = '#f0f0f0';
         document.body.style.color = '#2c2c2c';
@@ -225,12 +224,10 @@
         document.getElementById('themeSwitch').textContent = '🌙';
       }
 
-      // Apply background
       if (pageBg) {
         document.body.style.backgroundImage = `url(${pageBg})`;
       }
 
-      // Apply header
       const headerImg = localStorage.getItem('header') || '';
       const headerEl = document.getElementById('header');
       if (headerImg) {
@@ -239,23 +236,15 @@
         headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
       }
 
-      // Apply avatar
       const avatarImg = localStorage.getItem('avatar') || '';
       const avatarEl = document.getElementById('avatar');
       if (avatarImg) {
         avatarEl.style.backgroundImage = `url(${avatarImg})`;
       }
 
-      // Render profile view mode
       renderViewMode();
-
-      // Build edit menu
       buildEditMenu();
-
-      // Setup drag-to-pan for header
       setupDragToPan();
-
-      // Setup theme switcher
       document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
       document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
     }
@@ -287,17 +276,29 @@
       if (menu.style.display === 'block') {
         menu.style.display = 'none';
       } else {
+        let bgButtons = bgPresets.map(bg => 
+          `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
+        ).join('');
+        
         menu.innerHTML = `
           <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
           <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
           <button onclick="changeTextColor('#66ffff')">🔵 Cyan</button>
           <button onclick="changeTextColor('#d700ff')">🟣 Purple</button>
-          <button onclick="changePageBg()">🖼️ Change Background</button>
+          ${bgButtons}
+          <button onclick="changePageBg()">🖼️ Custom Background</button>
           <button onclick="enterEditMode()">✏️ Edit Profile</button>
           <button onclick="document.getElementById('editMenu').style.display='none'">❌ Close</button>
         `;
         menu.style.display = 'block';
       }
+    }
+
+    function setPresetBg(filename) {
+      pageBg = filename;
+      localStorage.setItem('pageBg', pageBg);
+      document.body.style.backgroundImage = `url(${filename})`;
+      document.getElementById('editMenu').style.display = 'none';
     }
 
     function changeTextColor(color) {
@@ -432,7 +433,6 @@
       };
     }
 
-    // Initialize on load
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
