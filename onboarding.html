@@ -23,10 +23,9 @@
       align-items: center;
       padding: 20px;
       position: relative;
-      overflow-x: hidden;
     }
     .container {
-      max-width: 1400px;
+      max-width: 1200px;
       width: 100%;
     }
     .header {
@@ -35,15 +34,6 @@
       align-items: center;
       margin-bottom: 40px;
       padding: 20px;
-    }
-    .logo {
-      font-family: 'Poppins', sans-serif;
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #00ff9d, #66ffff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
     .back-btn {
       background: rgba(0, 255, 157, 0.1);
@@ -60,27 +50,28 @@
       background: rgba(0, 255, 157, 0.2);
       transform: scale(1.05);
     }
-    .social-token-banner {
-      background: rgba(0, 255, 157, 0.1);
-      border: 2px solid #00ff9d;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 20px 0;
-      text-align: center;
-    }
-    .social-token-banner h2 {
+    .main-title {
       font-family: 'Poppins', sans-serif;
-      color: #00ff9d;
-      margin-bottom: 10px;
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00ff9d, #66ffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin: 0 auto;
     }
-    .social-token-banner p {
+    .sub-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
       color: #66ffff;
-      font-size: 0.95rem;
+      text-align: center;
+      margin-top: 10px;
     }
     .tiers-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
       margin-bottom: 40px;
     }
     .tier-card {
@@ -187,7 +178,7 @@
     }
     .wallet-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 15px;
       margin: 20px 0;
     }
@@ -243,6 +234,24 @@
       cursor: pointer;
       width: 100%;
     }
+    .back-btn {
+      background: rgba(0, 255, 157, 0.1);
+      color: #00ff9d;
+      border: 2px solid #00ff9d;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s;
+      display: block;
+      width: 100%;
+    }
+    .back-btn:hover {
+      background: rgba(0, 255, 157, 0.2);
+      transform: scale(1.05);
+    }
     .instructions {
       background: rgba(0, 10, 50, 0.7);
       border: 2px solid #00ff9d;
@@ -268,66 +277,62 @@
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">CRYPTOBROS</div>
-      <button class="back-btn" onclick="window.history.back()">← BACK</button>
+      <button class="back-btn" onclick="window.history.back()">← Back to Home</button>
+      <div class="main-title">CHOOSE YOUR TIER</div>
     </div>
 
-    <div class="social-token-banner">
-      <h2>💰 SOCIAL TOKEN $AUS ONLY</h2>
-      <p>This is a SOCIAL TOKEN — the lifeblood of our community. All payments, rewards, and governance happen through $AUS. No other currency accepted.</p>
-    </div>
+    <div class="sub-title">Select access level and unlock powerful features</div>
 
     <div class="tiers-grid">
       <div class="tier-card free">
         <div class="tier-name">FREE</div>
-        <div class="tier-price">0 $AUS</div>
-        <div class="tier-duration">2 weeks access</div>
+        <div class="tier-price">0 AUS</div>
+        <div class="tier-duration">(2 weeks)</div>
         <div class="tier-features">
-          <div class="feature"><span class="feature-icon">✓</span> Basic Tribunal access</div>
-          <div class="feature"><span class="feature-icon">✓</span> Standard verdicts</div>
-          <div class="feature"><span class="feature-icon">×</span> Quantum Contract Scan</div>
-          <div class="feature"><span class="feature-icon">×</span> Premium analytics</div>
+          <div class="feature"><span class="feature-icon">✓</span> 2-week limited access</div>
+          <div class="feature"><span class="feature-icon">✓</span> Basic token analysis</div>
+          <div class="feature"><span class="feature-icon">✓</span> Standard verdict only</div>
+          <div class="feature"><span class="feature-icon">✓</span> No premium features</div>
         </div>
-        <button class="select-btn" onclick="selectTier('Free')">SELECT FREE</button>
+        <button class="select-btn" onclick="selectTier('Free')">SELECT</button>
       </div>
 
       <div class="tier-card master">
         <div class="tier-name">MASTER</div>
-        <div class="tier-price">50 $AUS</div>
-        <div class="tier-duration">Lifetime access</div>
+        <div class="tier-price">500 AUS</div>
         <div class="tier-features">
-          <div class="feature"><span class="feature-icon">✓</span> Full Tribunal access</div>
-          <div class="feature"><span class="feature-icon">✓</span> Advanced analytics</div>
-          <div class="feature"><span class="feature-icon">×</span> Quantum Contract Scan</div>
-          <div class="feature"><span class="feature-icon">×</span> Priority support</div>
+          <div class="feature"><span class="feature-icon">✓</span> Unlimited access</div>
+          <div class="feature"><span class="feature-icon">✓</span> Full token analysis</div>
+          <div class="feature"><span class="feature-icon">✓</span> Standard verdict + details</div>
+          <div class="feature"><span class="feature-icon">✓</span> Save verdicts to history</div>
         </div>
-        <button class="select-btn" onclick="selectTier('Master')">SELECT MASTER</button>
+        <button class="select-btn" onclick="selectTier('Master')">SELECT</button>
       </div>
 
       <div class="tier-card pro">
         <div class="tier-name">PRO</div>
-        <div class="tier-price">100 $AUS</div>
-        <div class="tier-duration">Lifetime access</div>
+        <div class="tier-price">2,000 AUS</div>
         <div class="tier-features">
-          <div class="feature"><span class="feature-icon">✓</span> Full Tribunal access</div>
+          <div class="feature"><span class="feature-icon">✓</span> Unlimited access</div>
+          <div class="feature"><span class="feature-icon">✓</span> AI features unlocked</div>
           <div class="feature"><span class="feature-icon">✓</span> Advanced analytics</div>
-          <div class="feature"><span class="feature-icon">×</span> Quantum Contract Scan</div>
+          <div class="feature"><span class="feature-icon">✓</span> Export verdicts (PDF)</div>
           <div class="feature"><span class="feature-icon">✓</span> Priority support</div>
         </div>
-        <button class="select-btn" onclick="selectTier('Pro')">SELECT PRO</button>
+        <button class="select-btn" onclick="selectTier('Pro')">SELECT</button>
       </div>
 
       <div class="tier-card premium">
         <div class="tier-name">PREMIUM</div>
-        <div class="tier-price">200 $AUS</div>
-        <div class="tier-duration">Lifetime access</div>
+        <div class="tier-price">10,000 AUS</div>
         <div class="tier-features">
-          <div class="feature"><span class="feature-icon">✓</span> Full Tribunal access</div>
-          <div class="feature"><span class="feature-icon">✓</span> Advanced analytics</div>
+          <div class="feature"><span class="feature-icon">✓</span> Full access + governance rights</div>
+          <div class="feature"><span class="feature-icon">✓</span> AI features unlocked</div>
+          <div class="feature"><span class="feature-icon">✓</span> Unlimited access</div>
           <div class="feature"><span class="feature-icon">✓</span> 🔬 Quantum Contract Scan</div>
-          <div class="feature"><span class="feature-icon">✓</span> Priority support</div>
+          <div class="feature"><span class="feature-icon">✓</span> Advanced Risk Forecast</div>
         </div>
-        <button class="select-btn" onclick="selectTier('Premium')">SELECT PREMIUM</button>
+        <button class="select-btn" onclick="selectTier('Premium')">SELECT</button>
       </div>
     </div>
 
@@ -352,9 +357,6 @@
           <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/backpack.svg" alt="Backpack">
           Backpack
         </div>
-      </div>
-
-      <div class="wallet-grid">
         <div class="wallet-btn" onclick="connectWallet('TrustWallet')">
           <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/trustwallet.svg" alt="TrustWallet">
           TrustWallet
@@ -387,7 +389,7 @@
         </p>
       </div>
 
-      <button class="back-btn" style="margin-top: 20px; width: 100%;" onclick="backToTiers()">← Back to Tiers</button>
+      <button class="back-btn" onclick="backToTiers()">← Back to Tiers</button>
     </div>
 
     <div class="invite-section">
