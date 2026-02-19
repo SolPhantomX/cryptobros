@@ -1,459 +1,227 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>CRYPTOBROS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRYPTOBROS - Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background-size: cover;
-      background-attachment: fixed;
-    }
-    .top-section {
+      background: #00052a;
+      color: #00ff9d;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      padding: 20px;
       position: relative;
-      height: 300px;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
     }
     .header {
-      width: 100%;
-      height: 100%;
-      background: center/cover;
-      border: 2px dashed #555;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .header.loaded {
-      border: none;
+      text-align: center;
+      margin-bottom: 30px;
     }
     .avatar {
-      width: 200px;
-      height: 200px;
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
-      border: 4px solid white;
-      background: center/cover;
-      position: absolute;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      cursor: pointer;
-    }
-    .main-layout {
-      max-width: 1200px;
-      margin: 220px auto 0;
-      display: flex;
-      gap: 20px;
-      padding: 0 20px;
-    }
-    .edit-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 32px;
-      height: 32px;
-      background: #333;
-      border: 1px solid #666;
-      border-radius: 50%;
-      color: #ffcc00;
+      background: linear-gradient(135deg, #00ff9d, #66ffff);
+      margin: 0 auto 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      z-index: 100;
+      font-size: 4rem;
+      color: #00052a;
+      font-weight: 800;
     }
-    .edit-tooltip {
-      position: absolute;
-      top: 50px;
-      right: 16px;
-      background: #000;
-      color: #ffcc00;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 14px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      z-index: 100;
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #00ff9d;
     }
-    .edit-menu {
-      position: absolute;
-      top: 50px;
-      right: 16px;
-      background: #000;
-      border: 1px solid #ffcc00;
-      border-radius: 6px;
-      padding: 8px;
-      display: none;
-      z-index: 100;
-      min-width: 180px;
-    }
-    .edit-menu button {
-      background: #222;
-      color: #ffcc00;
-      border: 1px solid #555;
-      border-radius: 4px;
-      padding: 4px 8px;
-      margin: 2px;
-      cursor: pointer;
-      font-size: 12px;
+    .tier-badge {
+      background: linear-gradient(135deg, #d700ff, #66ffff);
+      color: #00052a;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
       display: inline-block;
-      width: 100%;
-      text-align: left;
+      margin-top: 10px;
+      letter-spacing: 1px;
     }
-    .sidebar { width: 200px; }
-    .nav-item {
-      padding: 10px 0;
-      color: var(--text-color, #ffcc00);
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 18px;
-      animation: flicker 3s infinite alternate;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 25px 0;
     }
-    .nav-item:hover {
-      opacity: 0.8;
-      text-shadow: 0 0 8px var(--text-color, #ffcc00);
+    .stat-card {
+      background: rgba(0, 10, 50, 0.7);
+      border: 1px solid #00ff9d;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
     }
-    a.nav-item {
-      text-decoration: none;
-      display: block;
+    .stat-value {
+      font-size: 2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      color: #00ff9d;
     }
-    .main { flex: 1; }
-    .name, .rank, .field-value, .field-label {
-      color: var(--text-color, #ffcc00);
-      animation: flicker 3s infinite alternate;
+    .stat-label {
+      font-size: 0.9rem;
+      color: #66ffff;
+      margin-top: 5px;
     }
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
-      20%,24%,55%,81%,85% { opacity:0.8; }
+    .referral-section {
+      background: rgba(0, 10, 50, 0.7);
+      border: 1px solid #d700ff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 25px 0;
     }
-    .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
-    .rank { margin-bottom: 20px; }
-    .field-label { color: #aaa; margin: 10px 0 4px; font-weight: bold; }
-    input, textarea {
+    .referral-section h2 {
+      font-family: 'Poppins', sans-serif;
+      color: #d700ff;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .ref-link {
       width: 100%;
       padding: 10px;
-      margin: 5px 0 15px;
-      background: rgba(0,0,0,0.3);
-      color: var(--text-color, #ffcc00);
-      border: 1px solid #555;
-      border-radius: 4px;
+      background: #00052a;
+      border: 1px solid #d700ff;
+      color: #d700ff;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      text-align: center;
     }
     .btn {
-      background: #4267B2;
-      color: white;
+      background: linear-gradient(135deg, #d700ff, #66ffff);
+      color: #00052a;
       border: none;
       padding: 10px 20px;
-      border-radius: 4px;
+      border-radius: 5px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
       cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
     }
-    #header-upload, #avatar-upload, #bg-upload { display: none; }
+    .creator-tools {
+      background: rgba(215, 0, 255, 0.1);
+      border: 1px solid #d700ff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+    .creator-tools h2 {
+      font-family: 'Poppins', sans-serif;
+      color: #d700ff;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .premium-link {
+      display: none;
+      margin-top: 15px;
+    }
+    .nav-menu {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 25px 0;
+    }
+    .nav-item {
+      background: rgba(0, 10, 50, 0.7);
+      border: 1px solid #00ff9d;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .nav-item:hover {
+      background: rgba(0, 255, 157, 0.1);
+    }
   </style>
 </head>
 <body>
-<div class="top-section">
-  <div class="header" id="header"></div>
-  <div class="avatar" id="avatar"></div>
-  <div class="edit-btn" id="editBtn">⚙️</div>
-  <div class="edit-tooltip" id="editTooltip">Edit Profile</div>
-  <div class="edit-menu" id="editMenu"></div>
-</div>
-<div class="main-layout">
-  <div class="sidebar">
-    <div class="nav-item">News Feed</div>
-    <div class="nav-item">Messages</div>
-    <div class="nav-item">My Groups</div>
-    <a href="tribunal.html" class="nav-item">Tribunal</a>
-    <div class="nav-item">My Friends</div>
+  <div class="container">
+    <div class="header">
+      <div class="avatar">C</div>
+      <h1>@cryptobros</h1>
+      <div class="tier-badge">PREMIUM</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value">12,450</div>
+        <div class="stat-label">$AUS Balance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">87</div>
+        <div class="stat-label">Verdicts Saved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">14</div>
+        <div class="stat-label">Referrals</div>
+      </div>
+    </div>
+
+    <div class="referral-section">
+      <h2>Invite Friends → Earn 10 $AUS per Premium purchase</h2>
+      <input type="text" class="ref-link" id="refLink" value="https://solphantomx.github.io/cryptobros/tribunal.html?ref=CRYPTOBROS" readonly>
+      <button class="btn" onclick="copyRef()">📋 COPY LINK</button>
+      <div class="ref-count" style="margin-top:10px;color:#66ffff">Your referrals: 14 (+140 $AUS earned)</div>
+    </div>
+
+    <div class="creator-tools">
+      <h2>Creator Tools</h2>
+      <button class="btn" onclick="generatePremiumLink()">🎁 Generate Premium Link for Friend</button>
+      <div class="premium-link" id="premiumLinkBox">
+        <input type="text" class="ref-link" id="premiumLink" readonly>
+        <button class="btn" onclick="copyPremiumLink()">📋 COPY PREMIUM LINK</button>
+      </div>
+    </div>
+
+    <div class="nav-menu">
+      <div class="nav-item" onclick="location.href='tribunal.html'">Tribunal</div>
+      <div class="nav-item" onclick="location.href='onboarding.html'">Onboarding</div>
+      <div class="nav-item" onclick="location.href='rules.html'">Rules</div>
+      <div class="nav-item" onclick="location.href='index.html'">Home</div>
+    </div>
   </div>
-  <div class="main" id="profileContent"></div>
-</div>
-<input type="file" id="header-upload" accept="image/*">
-<input type="file" id="avatar-upload" accept="image/*">
-<input type="file" id="bg-upload" accept="image/*">
-<script>
-  // Загрузка ВСЕХ данных из localStorage при старте
-  let profileData = JSON.parse(localStorage.getItem('profileData')) || { name: '', about: '', city: '' };
-  let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
-  let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
-  let textColor = localStorage.getItem('textColor') || '#ffcc00';
-  let pageBg = localStorage.getItem('pageBg') || '';
 
-  function init() {
-    const headerEl = document.getElementById('header');
-    const avatarEl = document.getElementById('avatar');
-
-    // Восстановление фона страницы
-    if (pageBg) {
-      document.body.style.backgroundImage = `url(${pageBg})`;
+  <script>
+    function copyRef() {
+      const link = document.getElementById('refLink').value;
+      navigator.clipboard.writeText(link).then(() => {
+        alert('✅ Referral link copied!');
+      });
     }
-
-    // Восстановление хедера
-    const headerImg = localStorage.getItem('header') || '';
-    if (headerImg) {
-      headerEl.style.backgroundImage = `url(${headerImg})`;
-      headerEl.classList.add('loaded');
-    }
-
-    // Восстановление аватара
-    const avatarImg = localStorage.getItem('avatar') || '';
-    if (avatarImg) {
-      avatarEl.style.backgroundImage = `url(${avatarImg})`;
-    }
-
-    // Восстановление позиции фона хедера
-    headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
     
-    // Восстановление цвета текста
-    document.documentElement.style.setProperty('--text-color', textColor);
-
-    // Отображение контента профиля
-    renderViewMode();
+    function generatePremiumLink() {
+      const link = 'https://solphantomx.github.io/cryptobros/tribunal.html?unlock=premium';
+      document.getElementById('premiumLink').value = link;
+      document.getElementById('premiumLinkBox').style.display = 'block';
+      alert('Premium link generated! Share this with your friend.');
+    }
     
-    // Построение меню редактирования
-    buildEditMenu();
-
-    // Настройка drag-to-pan для хедера
-    setupDragToPan();
-  }
-
-  function setupDragToPan() {
-    const headerEl = document.getElementById('header');
-    if (!headerEl) return;
-
-    let isDragging = false;
-    let startX, startY;
-    let startXPx, startYPx;
-
-    headerEl.addEventListener('mousedown', e => {
-      if (isProfileSaved) return;
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-
-      const bgPos = getComputedStyle(headerEl).backgroundPosition.split(' ');
-      startXPx = parseFloat(bgPos[0]) || 0;
-      startYPx = parseFloat(bgPos[1]) || 0;
-
-      document.body.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      headerPos.x = startXPx + dx;
-      headerPos.y = startYPx + dy;
-      headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-      
-      // Сохраняем позицию в реальном времени
-      localStorage.setItem('headerPos', JSON.stringify(headerPos));
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        document.body.style.cursor = 'default';
-      }
-    });
-  }
-
-  function buildEditMenu() {
-    const menu = document.getElementById('editMenu');
-    menu.innerHTML = `
-      <button onclick="toggleEdit()">Edit Profile</button>
-      <button onclick="changeBackground()">Change Background</button>
-      <button onclick="chooseTextColor()">Text Color</button>
-    `;
-  }
-
-  function toggleEdit() {
-    document.getElementById('editMenu').style.display = 'none';
-    renderEditMode();
-    isProfileSaved = false;
-    setupDragToPan();
-  }
-
-  function changeBackground() {
-    document.getElementById('editMenu').style.display = 'none';
-    const content = document.getElementById('profileContent');
-    let buttons = '';
-    for (let i = 1; i <= 13; i++) {
-      buttons += `<div style="margin:4px 0;"><button onclick="setBg('bg${i}.jpg')" style="width:100%;text-align:left;">bg${i}.jpg</button></div>`;
+    function copyPremiumLink() {
+      const link = document.getElementById('premiumLink').value;
+      navigator.clipboard.writeText(link).then(() => {
+        alert('✅ Premium link copied!');
+      });
     }
-    buttons += `<div style="margin:4px 0;"><button onclick="document.getElementById('bg-upload').click()" style="width:100%;text-align:left;">Upload Custom</button></div>`;
-    content.innerHTML = `
-      <div style="color:var(--text-color);margin-bottom:10px;font-weight:bold;">Select Page Background</div>
-      <div>${buttons}</div>
-      <button class="btn" style="margin-top:10px;background:#666;" onclick="renderViewMode()">Back</button>
-    `;
-  }
-
-  function chooseTextColor() {
-    document.getElementById('editMenu').style.display = 'none';
-    const content = document.getElementById('profileContent');
-
-    const colors = [
-      { name: 'Black', hex: '#000000' },
-      { name: 'Red', hex: '#FF0000' },
-      { name: 'Green', hex: '#00FF00' },
-      { name: 'Blue', hex: '#0000FF' },
-      { name: 'Yellow', hex: '#FFFF00' },
-      { name: 'Magenta', hex: '#FF00FF' },
-      { name: 'Cyan', hex: '#00FFFF' },
-      { name: 'White', hex: '#FFFFFF' }
-    ];
-
-    let colorButtons = '';
-    colors.forEach(c => {
-      const textContrast = (c.hex === '#000000' || c.hex === '#FFFFFF') ? 
-        (c.hex === '#000000' ? '#FFFFFF' : '#000000') : '#FFFFFF';
-      colorButtons += `
-        <div style="margin:6px 0;">
-          <button 
-            onclick="setTextColor('${c.hex}')" 
-            style="width:100%; font-weight:bold; color:${textContrast}; background:${c.hex}; border:1px solid #555; padding:8px;"
-          >${c.name}</button>
-        </div>
-      `;
-    });
-
-    content.innerHTML = `
-      <div style="color:var(--text-color);margin-bottom:10px;font-weight:bold;">Choose Text Color</div>
-      <div>${colorButtons}</div>
-      <button class="btn" style="margin-top:10px;background:#666;" onclick="renderViewMode()">Back</button>
-    `;
-  }
-
-  function setTextColor(hex) {
-    textColor = hex;
-    localStorage.setItem('textColor', hex);
-    document.documentElement.style.setProperty('--text-color', textColor);
-    renderViewMode();
-  }
-
-  function setBg(filename) {
-    fetch(`https://raw.githubusercontent.com/SolPhantomX/cryptobros/main/${filename}`)
-      .then(res => res.blob())
-      .then(blob => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          document.body.style.backgroundImage = `url(${reader.result})`;
-          localStorage.setItem('pageBg', reader.result);
-        };
-        reader.readAsDataURL(blob);
-      })
-      .catch(() => alert(`File ${filename} not found`));
-  }
-
-  function renderViewMode() {
-    const content = document.getElementById('profileContent');
-    content.innerHTML = `
-      <div class="name">${profileData.name || '—'}</div>
-      <div class="rank">Degen (Master)</div>
-      <div class="field-label">About</div>
-      <div class="field-value">${profileData.about || '—'}</div>
-      <div class="field-label">City</div>
-      <div class="field-value">${profileData.city || '—'}</div>
-    `;
-  }
-
-  function renderEditMode() {
-    const content = document.getElementById('profileContent');
-    content.innerHTML = `
-      <input type="text" id="nameInput" value="${profileData.name}" placeholder="Name" />
-      <div class="rank">Degen (Master)</div>
-      <div class="field-label">About</div>
-      <textarea id="aboutInput" placeholder="About">${profileData.about}</textarea>
-      <div class="field-label">City</div>
-      <input type="text" id="cityInput" value="${profileData.city}" placeholder="City" />
-      <button class="btn" onclick="saveProfile()">Save Profile</button>
-      <button class="btn" style="background:#666;margin-left:10px;" onclick="renderViewMode()">Cancel</button>
-    `;
-  }
-
-  function saveProfile() {
-    profileData = {
-      name: document.getElementById('nameInput').value,
-      about: document.getElementById('aboutInput').value,
-      city: document.getElementById('cityInput').value
-    };
-    localStorage.setItem('profileData', JSON.stringify(profileData));
-    localStorage.setItem('isProfileSaved', 'true');
-    isProfileSaved = true;
-    renderViewMode();
-  }
-
-  document.getElementById('header').addEventListener('click', () => {
-    document.getElementById('header-upload').click();
-  });
-
-  document.getElementById('avatar').addEventListener('click', () => {
-    document.getElementById('avatar-upload').click();
-  });
-
-  document.getElementById('header-upload').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        document.getElementById('header').style.backgroundImage = `url(${reader.result})`;
-        document.getElementById('header').classList.add('loaded');
-        localStorage.setItem('header', reader.result);
-        headerPos = { x: 0, y: 0 }; // Сбрасываем позицию при новом изображении
-        localStorage.setItem('headerPos', JSON.stringify(headerPos));
-        document.getElementById('header').style.backgroundPosition = '0px 0px';
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  document.getElementById('avatar-upload').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        document.getElementById('avatar').style.backgroundImage = `url(${reader.result})`;
-        localStorage.setItem('avatar', reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  document.getElementById('bg-upload').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        document.body.style.backgroundImage = `url(${reader.result})`;
-        localStorage.setItem('pageBg', reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  document.getElementById('editBtn').addEventListener('click', () => {
-    const menu = document.getElementById('editMenu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-  });
-
-  document.addEventListener('click', e => {
-    const btn = document.getElementById('editBtn');
-    const menu = document.getElementById('editMenu');
-    if (!btn.contains(e.target) && !menu.contains(e.target)) {
-      menu.style.display = 'none';
-    }
-  });
-
-  window.toggleEdit = toggleEdit;
-  window.changeBackground = changeBackground;
-  window.chooseTextColor = chooseTextColor;
-  window.setTextColor = setTextColor;
-  window.renderViewMode = renderViewMode;
-  window.saveProfile = saveProfile;
-
-  // Инициализация при загрузке страницы
-  window.addEventListener('DOMContentLoaded', init);
-</script>
+  </script>
 </body>
 </html>
