@@ -18,23 +18,22 @@
       align-items: center;
     }
 
-    /* Back button - pill style */
     .back-btn {
       position: absolute;
       top: 30px;
       left: 30px;
       padding: 12px 28px;
       background: #ffffff;
-      color: #00d4ff;
+      color: #007bff;
       font-size: 1.1rem;
       font-weight: 700;
       border: none;
       border-radius: 999px;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(0, 212, 255, 0.35), inset 0 2px 4px rgba(255,255,255,0.7);
+      box-shadow: 0 6px 18px rgba(0, 123, 255, 0.35), inset 0 2px 4px rgba(255,255,255,0.7);
       transition: all 0.25s;
     }
-    .back-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 212, 255, 0.5); }
+    .back-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 123, 255, 0.5); }
 
     .container { max-width: 1280px; width: 100%; text-align: center; }
 
@@ -48,15 +47,14 @@
     }
 
     .sub-title {
-      font-size: 1.5rem; /* Увеличено */
-      font-weight: 600;  /* Жирнее */
-      color: #a0f0ff;     /* Более светлый голубой */
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #a0f0ff;
       letter-spacing: 0.8px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.3);
       margin-bottom: 50px;
     }
 
-    /* Фикс: grid вместо flex для ровного ряда карточек */
     .tiers-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -74,7 +72,7 @@
       transition: all 0.3s;
       display: flex;
       flex-direction: column;
-      height: 100%; /* ← Важно! все карточки одной высоты */
+      height: 100%;
     }
 
     .tier-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
@@ -97,9 +95,8 @@
     .feature { font-size: 1.05rem; margin: 12px 0; color: #e0f0ff; display: flex; align-items: center; }
     .feature::before { content: "✓"; color: #00ff9d; margin-right: 12px; font-size: 1.4rem; }
 
-    /* SELECT - белая подушка с голубым текстом, внутри карточки */
     .select-btn {
-      margin-top: auto; /* ← прижимает кнопку вниз карточки */
+      margin-top: auto;
       padding: 14px 32px;
       background: #ffffff;
       color: #00d4ff;
@@ -115,17 +112,16 @@
     }
     .select-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0, 212, 255, 0.55); }
 
-    /* Новые блоки — под панелью, один под другим */
-    .extra-blocks {
+    .premium-extra-container {
       max-width: 800px;
       width: 100%;
       margin-top: 40px;
       display: flex;
-      flex-direction: column;
-      gap: 24px;
+      justify-content: flex-end;
     }
 
-    .extra-block {
+    .premium-extra-block {
+      width: 280px;
       background: rgba(10, 20, 70, 0.85);
       border-radius: 16px;
       padding: 24px;
@@ -133,39 +129,40 @@
       backdrop-filter: blur(6px);
     }
 
-    .extra-block h3 {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.4rem;
+    .premium-extra-block h3 {
+      font-size: 1.3rem;
       font-weight: 700;
       color: #fff;
       margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .extra-block h3 svg {
-      width: 24px;
-      height: 24px;
-      fill: #ffd700;
-    }
-
-    .extra-block ul {
-      padding-left: 20px;
-      list-style-type: none;
-      color: #c0f0ff;
-    }
-
-    .extra-block li {
-      margin: 8px 0;
-      position: relative;
-    }
-
-    .extra-block li::before {
-      content: "•";
+    .premium-extra-block h3::before {
+      content: "✓";
       color: #00ff9d;
       font-weight: bold;
+    }
+
+    .premium-extra-block ul {
+      padding-left: 0;
+      list-style: none;
+      color: #c0f0ff;
+      font-size: 0.95rem;
+    }
+
+    .premium-extra-block li {
+      margin: 8px 0;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .premium-extra-block li::before {
+      content: "•";
+      color: #00ff9d;
       position: absolute;
-      left: -20px;
+      left: 0;
     }
   </style>
 </head>
@@ -230,24 +227,19 @@
       </div>
     </div>
 
-    <!-- НОВЫЕ БЛОКИ — один под другим, под панелью -->
-    <div class="extra-blocks">
-      <div class="extra-block">
-        <h3>
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-          Quantum Contract Scan
-        </h3>
+    <div class="premium-extra-container">
+      <div class="premium-extra-block">
+        <h3>Quantum Contract Scan</h3>
         <ul>
           <li>GoPlusLabs-powered rug/honeypot detection</li>
           <li>Tax analysis • Ownership verification</li>
         </ul>
       </div>
+    </div>
 
-      <div class="extra-block">
-        <h3>
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-          Advanced Risk Forecast
-        </h3>
+    <div class="premium-extra-container">
+      <div class="premium-extra-block">
+        <h3>Advanced Risk Forecast</h3>
         <ul>
           <li>24h volatility prediction</li>
           <li>Whale movement alerts</li>
