@@ -3,10 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-Frame-Options" content="DENY">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <title>CRYPTOBROS - Choose Your Tier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +18,6 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
-      position: relative;
     }
     .container {
       max-width: 1200px;
@@ -36,7 +31,7 @@
       padding: 20px;
     }
     .back-btn {
-      background: #4a3d35; /* ← ТЁМНОЕ МОЛОКО (не кофе!) */
+      background: #e8e0d8; /* ← СВЕТЛОЕ МОЛОКО */
       color: #66ffff;
       font-family: 'Poppins', sans-serif;
       font-size: 1.1rem;
@@ -45,15 +40,11 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       transition: all 0.3s;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-    }
-    .back-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
     }
     .main-title {
       font-family: 'Poppins', sans-serif;
@@ -86,12 +77,6 @@
       padding: 30px;
       text-align: center;
       transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .tier-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 255, 157, 0.2);
     }
     .tier-card.free { border-color: #66ffff; }
     .tier-card.master { border-color: #d700ff; background: rgba(215, 0, 255, 0.1); }
@@ -151,10 +136,10 @@
       cursor: pointer;
       width: 100%;
       transition: all 0.3s;
-      margin-top: 20px;
-    }
-    .select-btn:hover {
-      transform: scale(1.03);
+      min-height: 52px; /* ← ОДНАКОВАЯ ВЫСОТА */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .tier-card.master .select-btn {
       background: linear-gradient(135deg, #d700ff, #66ffff);
@@ -165,33 +150,23 @@
     .tier-card.premium .select-btn {
       background: linear-gradient(135deg, #ffd700, #00ff9d);
     }
-    /* БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — как на скрине */
-    .extra-blocks {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    /* БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — как на скрине: один блок, без рамок */
+    .premium-extra {
       margin-top: 30px;
-    }
-    .extra-section {
-      background: rgba(0, 10, 50, 0.7);
-      border: 2px solid #ffd700;
-      border-radius: 15px;
-      padding: 25px;
       text-align: left;
     }
-    .extra-section h3 {
+    .premium-extra h3 {
       font-family: 'Poppins', sans-serif;
       color: #ffd700;
       margin-bottom: 15px;
       font-size: 1.4rem;
     }
-    .extra-section ul {
+    .premium-extra ul {
       padding-left: 20px;
       color: #66ffff;
       font-size: 0.9rem;
       line-height: 1.5;
     }
-    /* Invite block — компактный, выше */
     .invite-block {
       background: rgba(0, 10, 50, 0.7);
       border: 2px solid #d700ff;
@@ -294,28 +269,22 @@
       </div>
     </div>
 
-    <!-- БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — как на скрине -->
-    <div class="extra-blocks">
-      <div class="extra-section">
-        <h3>🔬 Quantum Contract Scan</h3>
-        <ul>
-          <li>GoPlusLabs-powered rug/honeypot detection</li>
-          <li>Tax analysis • Ownership verification</li>
-          <li>Liquidity lock check • Anti-whale protection</li>
-        </ul>
-      </div>
-
-      <div class="extra-section">
-        <h3>🎯 Advanced Risk Forecast</h3>
-        <ul>
-          <li>24h volatility prediction</li>
-          <li>Whale movement alerts</li>
-          <li>Pump/dump pattern detection</li>
-        </ul>
-      </div>
+    <!-- КАК НА СКРИНЕ: Quantum Scan и Risk Forecast — ПОД ПАНЕЛЬЮ, В ОДИН БЛОК -->
+    <div class="premium-extra">
+      <h3>🔬 Quantum Contract Scan</h3>
+      <ul>
+        <li>GoPlusLabs-powered rug/honeypot detection</li>
+        <li>Tax analysis • Ownership verification</li>
+        <li>Liquidity lock check • Anti-whale protection</li>
+      </ul>
+      <h3>🎯 Advanced Risk Forecast</h3>
+      <ul>
+        <li>24h volatility prediction</li>
+        <li>Whale movement alerts</li>
+        <li>Pump/dump pattern detection</li>
+      </ul>
     </div>
 
-    <!-- Инвайт-блок -->
     <div class="invite-block">
       <h3>🎁 Have an Invite Code?</h3>
       <input type="text" class="invite-input" id="inviteInput" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
