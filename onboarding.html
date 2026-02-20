@@ -36,7 +36,7 @@
       padding: 20px;
     }
     .back-btn {
-      background: #3a2e25;
+      background: #4a3d35; /* ← ТЁМНОЕ МОЛОКО (не кофе!) */
       color: #66ffff;
       font-family: 'Poppins', sans-serif;
       font-size: 1.1rem;
@@ -45,7 +45,7 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
       transition: all 0.3s;
       display: inline-flex;
       align-items: center;
@@ -53,7 +53,7 @@
     }
     .back-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
     }
     .main-title {
       font-family: 'Poppins', sans-serif;
@@ -165,30 +165,39 @@
     .tier-card.premium .select-btn {
       background: linear-gradient(135deg, #ffd700, #00ff9d);
     }
-    /* PREMIUM — ВНУТРИ ПАНЕЛИ, как на скрине */
-    .premium-details {
-      margin-top: 20px;
+    /* БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — как на скрине */
+    .extra-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .extra-section {
+      background: rgba(0, 10, 50, 0.7);
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      padding: 25px;
       text-align: left;
     }
-    .premium-details h3 {
+    .extra-section h3 {
       font-family: 'Poppins', sans-serif;
       color: #ffd700;
-      margin-bottom: 10px;
-      font-size: 1.2rem;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
     }
-    .premium-details ul {
+    .extra-section ul {
       padding-left: 20px;
       color: #66ffff;
       font-size: 0.9rem;
       line-height: 1.5;
     }
-    /* Invite block — компактный, выше, по центру */
+    /* Invite block — компактный, выше */
     .invite-block {
       background: rgba(0, 10, 50, 0.7);
       border: 2px solid #d700ff;
       border-radius: 15px;
       padding: 25px;
-      margin: 30px auto 0;
+      margin: 40px auto 0;
       text-align: center;
       max-width: 500px;
     }
@@ -281,26 +290,32 @@
           <div class="feature"><span class="feature-icon">✓</span> Quantum Contract Scan</div>
           <div class="feature"><span class="feature-icon">✓</span> Advanced Risk Forecast</div>
         </div>
-        <!-- ВНУТРИ ПАНЕЛИ PREMIUM — как на скрине -->
-        <div class="premium-details">
-          <h3>🔬 Quantum Contract Scan</h3>
-          <ul>
-            <li>GoPlusLabs-powered rug/honeypot detection</li>
-            <li>Tax analysis • Ownership verification</li>
-            <li>Liquidity lock check • Anti-whale protection</li>
-          </ul>
-          <h3>🎯 Advanced Risk Forecast</h3>
-          <ul>
-            <li>24h volatility prediction</li>
-            <li>Whale movement alerts</li>
-            <li>Pump/dump pattern detection</li>
-          </ul>
-        </div>
         <button class="select-btn" onclick="selectTier('Premium')">SELECT</button>
       </div>
     </div>
 
-    <!-- Инвайт-блок — поднят выше, компактный -->
+    <!-- БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — как на скрине -->
+    <div class="extra-blocks">
+      <div class="extra-section">
+        <h3>🔬 Quantum Contract Scan</h3>
+        <ul>
+          <li>GoPlusLabs-powered rug/honeypot detection</li>
+          <li>Tax analysis • Ownership verification</li>
+          <li>Liquidity lock check • Anti-whale protection</li>
+        </ul>
+      </div>
+
+      <div class="extra-section">
+        <h3>🎯 Advanced Risk Forecast</h3>
+        <ul>
+          <li>24h volatility prediction</li>
+          <li>Whale movement alerts</li>
+          <li>Pump/dump pattern detection</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Инвайт-блок -->
     <div class="invite-block">
       <h3>🎁 Have an Invite Code?</h3>
       <input type="text" class="invite-input" id="inviteInput" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
