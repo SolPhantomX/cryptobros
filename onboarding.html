@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS - Choose Your Tier</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,162 +12,105 @@
       color: #00ff9d;
       font-family: 'Poppins', sans-serif;
       min-height: 100vh;
-      padding: 30px 20px;
+      padding: 40px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    /* Кнопка НАЗАД — белая подушечка с голубым текстом */
+    /* Back button - pill style */
     .back-btn {
       position: absolute;
       top: 30px;
       left: 30px;
-      padding: 14px 32px;
+      padding: 12px 28px;
       background: #ffffff;
       color: #00d4ff;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       border: none;
       border-radius: 999px;
       cursor: pointer;
-      box-shadow: 
-        0 8px 20px rgba(0, 212, 255, 0.35),
-        0 4px 10px rgba(0, 0, 0, 0.25),
-        inset 0 2px 6px rgba(255,255,255,0.8);
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 10;
+      box-shadow: 0 6px 18px rgba(0, 212, 255, 0.35), inset 0 2px 4px rgba(255,255,255,0.7);
+      transition: all 0.25s;
     }
+    .back-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 212, 255, 0.5); }
 
-    .back-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 
-        0 14px 30px rgba(0, 212, 255, 0.5),
-        0 6px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .back-btn:active {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0, 212, 255, 0.4);
-    }
-
-    .container {
-      max-width: 1280px;
-      width: 100%;
-      text-align: center;
-    }
+    .container { max-width: 1280px; width: 100%; text-align: center; }
 
     .main-title {
-      font-size: 3.8rem;
+      font-size: 3.6rem;
       font-weight: 900;
-      background: linear-gradient(90deg, #00ff9d, #00d4ff, #66ffff);
+      background: linear-gradient(90deg, #00ff9d, #00d4ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin: 20px 0 10px;
+      margin: 20px 0 8px;
     }
 
     .sub-title {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       color: #66ffff;
-      margin-bottom: 60px;
-      opacity: 0.92;
+      margin-bottom: 50px;
     }
 
+    /* Фикс: grid вместо flex для ровного ряда карточек */
     .tiers-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
       margin-bottom: 60px;
+      width: 100%;
     }
 
     .tier-card {
-      width: 300px;
-      background: linear-gradient(135deg, rgba(10,20,80,0.85), rgba(5,10,50,0.85));
-      border-radius: 24px;
-      padding: 32px 24px;
-      border: 2px solid;
-      backdrop-filter: blur(8px);
+      background: rgba(10, 20, 70, 0.8);
+      border-radius: 20px;
+      padding: 30px 24px;
+      border: 2px solid #444;
+      backdrop-filter: blur(6px);
       transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* ← Важно! все карточки одной высоты */
     }
 
-    .tier-card:hover { transform: translateY(-10px); }
+    .tier-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
 
     .free    { border-color: #66ffff; }
-    .master  { border-color: #d700ff; }
-    .pro     { border-color: #00ff9d; }
-    .premium { border-color: #ffd700; }
+    .master  { border-color: #d700ff; background: rgba(215,0,255,0.1); }
+    .pro     { border-color: #00ff9d; background: rgba(0,255,157,0.1); }
+    .premium { border-color: #ffd700; background: rgba(255,215,0,0.1); }
 
-    .tier-name {
-      font-size: 2.6rem;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
+    .tier-name { font-size: 2.4rem; font-weight: 900; margin-bottom: 10px; }
     .free    .tier-name { color: #66ffff; }
     .master  .tier-name { color: #d700ff; }
     .pro     .tier-name { color: #00ff9d; }
     .premium .tier-name { color: #ffd700; }
 
-    .tier-price {
-      font-size: 3.4rem;
-      font-weight: 900;
-      margin: 0 0 8px;
-    }
+    .tier-price { font-size: 3.2rem; font-weight: 900; margin-bottom: 6px; }
+    .tier-duration { font-size: 1rem; color: #aaa; margin-bottom: 24px; }
 
-    .tier-duration {
-      font-size: 1.1rem;
-      color: #aaa;
-      margin-bottom: 28px;
-    }
+    .tier-features { flex-grow: 1; text-align: left; margin: 20px 0; }
+    .feature { font-size: 1.05rem; margin: 12px 0; color: #e0f0ff; display: flex; align-items: center; }
+    .feature::before { content: "✓"; color: #00ff9d; margin-right: 12px; font-size: 1.4rem; }
 
-    .tier-features {
-      text-align: left;
-      margin: 24px 0 32px;
-    }
-
-    .feature {
-      font-size: 1.05rem;
-      margin: 14px 0;
-      color: #e0f0ff;
-      display: flex;
-      align-items: center;
-    }
-
-    .feature::before {
-      content: "✔";
-      color: #00ff9d;
-      margin-right: 12px;
-      font-size: 1.4rem;
-    }
-
-    /* Кнопки SELECT внутри карточек — как подушечки */
+    /* SELECT - белая подушка с голубым текстом, внутри карточки */
     .select-btn {
-      width: 100%;
-      padding: 16px;
-      margin-top: 20px;
+      margin-top: auto; /* ← прижимает кнопку вниз карточки */
+      padding: 14px 32px;
       background: #ffffff;
       color: #00d4ff;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       font-weight: 700;
       border: none;
       border-radius: 999px;
       cursor: pointer;
-      box-shadow: 
-        0 6px 18px rgba(0, 212, 255, 0.4),
-        inset 0 2px 6px rgba(255,255,255,0.9);
+      box-shadow: 0 6px 18px rgba(0, 212, 255, 0.4), inset 0 2px 6px rgba(255,255,255,0.8);
       transition: all 0.25s;
+      align-self: center;
+      width: 80%;
     }
-
-    .select-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(0, 212, 255, 0.55);
-    }
-
-    /* Остальные стили (features-below, invite) можно добавить из предыдущей версии, если нужно */
+    .select-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0, 212, 255, 0.55); }
   </style>
 </head>
 <body>
@@ -232,8 +173,6 @@
         <button class="select-btn">SELECT</button>
       </div>
     </div>
-
-    <!-- Добавь сюда блоки Quantum / Advanced Risk и Invite, если нужно из предыдущей версии -->
   </div>
 
 </body>
