@@ -6,7 +6,7 @@
   <title>CRYPTOBROS - Choose Your Tier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -17,270 +17,322 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 20px 10px;
     }
     .container {
-      max-width: 1200px;
+      max-width: 1280px;
       width: 100%;
     }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 40px;
-      padding: 20px;
-    }
+
+    /* Кнопка НАЗАД */
     .back-btn {
-      width: 180px;
-      height: 40px;
-      background: #e8e0d8;
-      color: #66ffff;
+      padding: 12px 28px;
+      background: #ffffff;
+      color: #00d4ff;
       font-family: 'Poppins', sans-serif;
       font-size: 1.1rem;
-      font-weight: 600;
+      font-weight: 700;
       border: none;
-      border-radius: 8px;
+      border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 15px rgba(0, 212, 255, 0.4), 0 2px 6px rgba(0,0,0,0.3);
+      transition: all 0.25s ease;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
-      transition: all 0.3s;
+      margin-bottom: 30px;
+      align-self: flex-start;
     }
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 212, 255, 0.55);
+    }
+
     .main-title {
       font-family: 'Poppins', sans-serif;
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #00ff9d, #66ffff);
+      font-size: 3.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00ff9d, #00d4ff, #66ffff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
       text-align: center;
-      margin: 0 auto;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
     }
+
     .sub-title {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
+      font-weight: 500;
       color: #66ffff;
       text-align: center;
-      margin: 10px auto 30px;
+      margin-bottom: 50px;
+      opacity: 0.95;
     }
+
     .tiers-grid {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 30px;
-      margin-bottom: 40px;
+      gap: 24px 32px;
+      margin-bottom: 60px;
     }
+
     .tier-card {
-      width: 280px;
-      background: rgba(0, 10, 50, 0.7);
-      border: 2px solid #00ff9d;
-      border-radius: 15px;
-      padding: 30px;
+      width: 290px;
+      background: rgba(5, 15, 60, 0.75);
+      border-radius: 20px;
+      padding: 32px 24px;
       text-align: center;
-      transition: all 0.3s;
+      border: 2px solid #444;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(6px);
     }
-    .tier-card.free { border-color: #66ffff; }
-    .tier-card.master { border-color: #d700ff; background: rgba(215, 0, 255, 0.1); }
-    .tier-card.pro { border-color: #00ff9d; background: rgba(0, 255, 157, 0.1); }
-    .tier-card.premium { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); }
+    .tier-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .tier-card.free    { border-color: #66ffff; }
+    .tier-card.master  { border-color: #d700ff; background: rgba(215,0,255,0.08); }
+    .tier-card.pro     { border-color: #00ff9d; background: rgba(0,255,157,0.08); }
+    .tier-card.premium { border-color: #ffd700; background: rgba(255,215,0,0.08); }
+
     .tier-name {
       font-family: 'Poppins', sans-serif;
-      font-size: 2rem;
-      font-weight: 800;
-      margin-bottom: 15px;
+      font-size: 2.4rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
     }
-    .tier-card.free .tier-name { color: #66ffff; }
-    .tier-card.master .tier-name { color: #d700ff; }
-    .tier-card.pro .tier-name { color: #00ff9d; }
-    .tier-card.premium .tier-name { color: #ffd700; }
+    .free    .tier-name { color: #66ffff; }
+    .master  .tier-name { color: #d700ff; }
+    .pro     .tier-name { color: #00ff9d; }
+    .premium .tier-name { color: #ffd700; }
+
     .tier-price {
       font-family: 'Poppins', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin: 10px 0;
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin: 8px 0 4px;
+      line-height: 1;
     }
-    .tier-card.free .tier-price { color: #66ffff; }
-    .tier-card.master .tier-price { color: #d700ff; }
-    .tier-card.pro .tier-price { color: #00ff9d; }
-    .tier-card.premium .tier-price { color: #ffd700; }
+    .free    .tier-price { color: #66ffff; }
+    .master  .tier-price { color: #d700ff; }
+    .pro     .tier-price { color: #00ff9d; }
+    .premium .tier-price { color: #ffd700; }
+
     .tier-duration {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: #aaa;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+      font-weight: 400;
     }
+
     .tier-features {
       text-align: left;
-      margin: 20px 0;
+      margin: 24px 0 32px;
     }
     .feature {
       display: flex;
-      align-items: flex-start;
-      margin: 10px 0;
-      font-size: 0.95rem;
-      line-height: 1.4;
+      align-items: center;
+      margin: 12px 0;
+      font-size: 1rem;
+      color: #e0f0ff;
     }
     .feature-icon {
       color: #00ff9d;
-      margin-right: 10px;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
+      margin-right: 12px;
       flex-shrink: 0;
     }
-    .select-btn {
-      background: linear-gradient(135deg, #00ff9d, #66ffff);
-      color: #00052a;
-      border: none;
-      height: 52px;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      width: 100%;
+
+    /* Кнопки SELECT в одну линию */
+    .select-buttons {
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       justify-content: center;
+      gap: 20px 40px;
+      margin-bottom: 60px;
+    }
+    .select-btn {
+      width: 260px;
+      height: 60px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
       transition: all 0.3s;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
     }
-    .tier-card.master .select-btn {
-      background: linear-gradient(135deg, #d700ff, #66ffff);
+    .free    .select-btn { background: linear-gradient(135deg, #66ffff, #00d4ff); color: #00052a; }
+    .master  .select-btn { background: linear-gradient(135deg, #d700ff, #ff66ff); color: #000; }
+    .pro     .select-btn { background: linear-gradient(135deg, #00ff9d, #66ffff); color: #00052a; }
+    .premium .select-btn { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; }
+    .select-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.6);
     }
-    .tier-card.pro .select-btn {
-      background: linear-gradient(135deg, #00ff9d, #66ffff);
+
+    /* Блоки фич под карточками */
+    .features-below {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 50px;
+      max-width: 1100px;
     }
-    .tier-card.premium .select-btn {
-      background: linear-gradient(135deg, #ffd700, #00ff9d);
-    }
-    /* БЛОКИ ПОД ПАНЕЛЬЮ — как на скрине */
-    .below-premium {
-      margin-top: 30px;
-      text-align: left;
-    }
-    .below-item {
-      background: rgba(0, 10, 50, 0.7);
+    .feature-block {
+      flex: 1;
+      min-width: 320px;
+      background: rgba(10, 20, 70, 0.7);
       border: 2px solid #ffd700;
-      border-radius: 15px;
-      padding: 25px;
-      margin-bottom: 20px;
+      border-radius: 16px;
+      padding: 28px;
+      color: #e0f0ff;
     }
-    .below-item h3 {
+    .feature-block h3 {
       font-family: 'Poppins', sans-serif;
       color: #ffd700;
-      margin-bottom: 15px;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
+      margin-bottom: 18px;
     }
-    .below-item ul {
-      padding-left: 20px;
-      color: #66ffff;
-      font-size: 0.9rem;
-      line-height: 1.5;
+    .feature-block ul {
+      list-style: none;
+      padding: 0;
+      font-size: 1rem;
+      line-height: 1.6;
     }
-    .invite-block {
-      background: rgba(0, 10, 50, 0.7);
+    .feature-block li {
+      margin: 10px 0;
+      position: relative;
+      padding-left: 28px;
+    }
+    .feature-block li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #00ff9d;
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    /* Инвайт блок — выше */
+    .invite-section {
+      margin: 0 auto 40px;
+      max-width: 520px;
+      background: rgba(10, 20, 70, 0.75);
       border: 2px solid #d700ff;
-      border-radius: 15px;
-      padding: 25px;
-      margin: 40px auto 0;
+      border-radius: 20px;
+      padding: 40px 30px;
       text-align: center;
-      max-width: 500px;
     }
-    .invite-block h3 {
+    .invite-section h3 {
       font-family: 'Poppins', sans-serif;
       color: #d700ff;
-      margin-bottom: 15px;
-      font-size: 1.4rem;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
     }
     .invite-input {
       width: 100%;
-      padding: 12px;
-      background: #00052a;
+      padding: 16px;
+      font-size: 1.1rem;
+      background: #0a1446;
       border: 2px solid #d700ff;
-      border-radius: 8px;
-      color: #d700ff;
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      margin-bottom: 15px;
+      border-radius: 12px;
+      color: #ffffff;
+      margin-bottom: 20px;
     }
     .invite-btn {
-      background: linear-gradient(135deg, #d700ff, #66ffff);
-      color: #00052a;
-      border: none;
-      padding: 12px 30px;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
       width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #d700ff, #66ffff);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <button class="back-btn" onclick="location.href='index.html'">← Back to Home</button>
-      <div class="main-title">CHOOSE YOUR TIER</div>
-    </div>
 
+  <div class="container">
+
+    <button class="back-btn" onclick="location.href='index.html'">← Back to Home</button>
+
+    <h1 class="main-title">CHOOSE YOUR TIER</h1>
     <div class="sub-title">Select access level and unlock powerful features</div>
 
     <div class="tiers-grid">
+      <!-- FREE -->
       <div class="tier-card free">
         <div class="tier-name">FREE</div>
         <div class="tier-price">0 AUS</div>
         <div class="tier-duration">(2 weeks)</div>
         <div class="tier-features">
-          <div class="feature"><span class="feature-icon">✓</span> 2-week limited access</div>
-          <div class="feature"><span class="feature-icon">✓</span> Basic token analysis</div>
-          <div class="feature"><span class="feature-icon">✓</span> Standard verdict only</div>
-          <div class="feature"><span class="feature-icon">✓</span> No premium features</div>
+          <div class="feature"><span class="feature-icon">✓</span>2-week limited access</div>
+          <div class="feature"><span class="feature-icon">✓</span>Basic token analysis</div>
+          <div class="feature"><span class="feature-icon">✓</span>Standard verdict only</div>
+          <div class="feature"><span class="feature-icon">✓</span>No premium features</div>
         </div>
-        <button class="select-btn" onclick="selectTier('Free')">SELECT</button>
       </div>
 
+      <!-- MASTER -->
       <div class="tier-card master">
         <div class="tier-name">MASTER</div>
         <div class="tier-price">500 AUS</div>
         <div class="tier-features">
-          <div class="feature"><span class="feature-icon">✓</span> Unlimited access</div>
-          <div class="feature"><span class="feature-icon">✓</span> Full token analysis</div>
-          <div class="feature"><span class="feature-icon">✓</span> Standard verdict + details</div>
-          <div class="feature"><span class="feature-icon">✓</span> Save verdicts to history</div>
+          <div class="feature"><span class="feature-icon">✓</span>Unlimited access</div>
+          <div class="feature"><span class="feature-icon">✓</span>Full token analysis</div>
+          <div class="feature"><span class="feature-icon">✓</span>Standard verdict + details</div>
+          <div class="feature"><span class="feature-icon">✓</span>Save verdicts to history</div>
         </div>
-        <button class="select-btn" onclick="selectTier('Master')">SELECT</button>
       </div>
 
+      <!-- PRO -->
       <div class="tier-card pro">
         <div class="tier-name">PRO</div>
         <div class="tier-price">2,000 AUS</div>
         <div class="tier-features">
-          <div class="feature"><span class="feature-icon">✓</span> Unlimited access</div>
-          <div class="feature"><span class="feature-icon">✓</span> AI features unlocked</div>
-          <div class="feature"><span class="feature-icon">✓</span> Advanced analytics</div>
-          <div class="feature"><span class="feature-icon">✓</span> Export verdicts (PDF)</div>
-          <div class="feature"><span class="feature-icon">✓</span> Priority support</div>
+          <div class="feature"><span class="feature-icon">✓</span>Unlimited access</div>
+          <div class="feature"><span class="feature-icon">✓</span>AI features unlocked</div>
+          <div class="feature"><span class="feature-icon">✓</span>Advanced analytics</div>
+          <div class="feature"><span class="feature-icon">✓</span>Export verdicts (PDF)</div>
+          <div class="feature"><span class="feature-icon">✓</span>Priority support</div>
         </div>
-        <button class="select-btn" onclick="selectTier('Pro')">SELECT</button>
       </div>
 
+      <!-- PREMIUM -->
       <div class="tier-card premium">
         <div class="tier-name">PREMIUM</div>
         <div class="tier-price">10,000 AUS</div>
         <div class="tier-features">
-          <div class="feature"><span class="feature-icon">✓</span> Full access + governance rights</div>
-          <div class="feature"><span class="feature-icon">✓</span> AI features unlocked</div>
-          <div class="feature"><span class="feature-icon">✓</span> Unlimited access</div>
-          <div class="feature"><span class="feature-icon">✓</span> Quantum Contract Scan</div>
-          <div class="feature"><span class="feature-icon">✓</span> Advanced Risk Forecast</div>
+          <div class="feature"><span class="feature-icon">✓</span>Full access + governance rights</div>
+          <div class="feature"><span class="feature-icon">✓</span>AI features unlocked</div>
+          <div class="feature"><span class="feature-icon">✓</span>Unlimited access</div>
+          <div class="feature"><span class="feature-icon">✓</span>Quantum Contract Scan</div>
+          <div class="feature"><span class="feature-icon">✓</span>Advanced Risk Forecast</div>
         </div>
-        <button class="select-btn" onclick="selectTier('Premium')">SELECT</button>
       </div>
     </div>
 
-    <!-- БЛОКИ ПОД ПАНЕЛЬЮ — как на скрине -->
-    <div class="below-premium">
-      <div class="below-item">
+    <!-- Кнопки SELECT в одну линию -->
+    <div class="select-buttons">
+      <button class="select-btn free"    onclick="selectTier('Free')">SELECT</button>
+      <button class="select-btn master"  onclick="selectTier('Master')">SELECT</button>
+      <button class="select-btn pro"     onclick="selectTier('Pro')">SELECT</button>
+      <button class="select-btn premium" onclick="selectTier('Premium')">SELECT</button>
+    </div>
+
+    <!-- Блоки Quantum + Advanced -->
+    <div class="features-below">
+      <div class="feature-block">
         <h3>🔬 Quantum Contract Scan</h3>
         <ul>
           <li>GoPlusLabs-powered rug/honeypot detection</li>
@@ -288,8 +340,7 @@
           <li>Liquidity lock check • Anti-whale protection</li>
         </ul>
       </div>
-
-      <div class="below-item">
+      <div class="feature-block">
         <h3>🎯 Advanced Risk Forecast</h3>
         <ul>
           <li>24h volatility prediction</li>
@@ -299,28 +350,28 @@
       </div>
     </div>
 
-    <div class="invite-block">
+    <!-- Инвайт -->
+    <div class="invite-section">
       <h3>🎁 Have an Invite Code?</h3>
-      <input type="text" class="invite-input" id="inviteInput" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
+      <input type="text" class="invite-input" placeholder="Enter invite code (e.g. PRE-5421, MST-1234, PRO-9012)" id="inviteCode">
       <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
     </div>
+
   </div>
 
   <script>
     function selectTier(tier) {
-      alert(`You selected ${tier} tier!`);
+      alert(`Selected tier: ${tier}`);
     }
     function activateInvite() {
-      const code = document.getElementById('inviteInput').value.trim().toUpperCase();
-      if (!code) {
-        alert('Please enter an invite code!');
-        return;
-      }
-      if (code.startsWith('PRE-')) alert('✅ PREMIUM activated!');
-      else if (code.startsWith('MST-')) alert('✅ MASTER activated!');
-      else if (code.startsWith('PRO-')) alert('✅ PRO activated!');
-      else alert('❌ Invalid code!');
+      const code = document.getElementById('inviteCode').value.trim().toUpperCase();
+      if (!code) return alert("Enter code!");
+      if (code.startsWith('PRE-')) alert("PREMIUM activated! 🚀");
+      else if (code.startsWith('MST-')) alert("MASTER activated!");
+      else if (code.startsWith('PRO-')) alert("PRO activated!");
+      else alert("Invalid code 😕");
     }
   </script>
+
 </body>
 </html>
