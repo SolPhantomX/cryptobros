@@ -36,7 +36,7 @@
     .back-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 123, 255, 0.5); }
 
     .container {
-      max-width: 800px;
+      max-width: 1280px;
       width: 100%;
       text-align: center;
     }
@@ -61,7 +61,7 @@
 
     .tiers-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(4, minmax(280px, 1fr));
       gap: 30px;
       margin-bottom: 60px;
       width: 100%;
@@ -123,7 +123,7 @@
       padding: 30px;
       border: 1px solid #333;
       backdrop-filter: blur(6px);
-      margin: 40px 0;
+      margin: 40px auto;
       max-width: 500px;
       width: 100%;
     }
@@ -136,12 +136,6 @@
       display: flex;
       align-items: center;
       gap: 12px;
-    }
-
-    .invite-block h3 svg {
-      width: 24px;
-      height: 24px;
-      fill: #ff6b6b;
     }
 
     .invite-block input {
@@ -178,11 +172,15 @@
       box-shadow: 0 6px 15px rgba(215, 0, 255, 0.4);
     }
 
-    /* === БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — В ОДНОМ СТОЛБЦЕ, ПО ЦЕНТРУ === */
+    /* === БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — В ЕЁ КОЛОНКЕ (СПРАВА) === */
     .premium-addons {
-      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-width: 280px;
       width: 100%;
       margin-top: 40px;
+      align-self: flex-end;
     }
 
     .addon-card {
@@ -191,7 +189,6 @@
       padding: 24px;
       border: 1px solid #333;
       backdrop-filter: blur(6px);
-      margin-bottom: 24px;
     }
 
     .addon-card h3 {
@@ -292,17 +289,14 @@
       </div>
     </div>
 
-    <!-- 🔥 INVITE BLOCK — ПО ЦЕНТРУ, СРАЗУ ПОД ТАРИФАМИ -->
+    <!-- INVITE BLOCK — ПО ЦЕНТРУ -->
     <div class="invite-block">
-      <h3>
-        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        Have an Invite Code?
-      </h3>
+      <h3>🎁 Have an Invite Code?</h3>
       <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
       <button class="invite-btn">ACTIVATE INVITE</button>
     </div>
 
-    <!-- 🔥 БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — В ОДНОМ СТОЛБЦЕ, ПО ЦЕНТРУ -->
+    <!-- ДВА БЛОКА ПОД ПАНЕЛЬЮ PREMIUM (СПРАВА) -->
     <div class="premium-addons">
       <div class="addon-card">
         <h3>Quantum Contract Scan</h3>
