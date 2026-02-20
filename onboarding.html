@@ -34,9 +34,7 @@
     .container {
       max-width: 1280px;
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      text-align: center;
     }
     .main-title {
       font-size: 3.6rem;
@@ -58,8 +56,8 @@
       display: grid;
       grid-template-columns: repeat(4, minmax(280px, 1fr));
       gap: 30px;
-      width: 100%;
       margin-bottom: 60px;
+      width: 100%;
     }
     .tier-card {
       background: rgba(10, 20, 70, 0.8);
@@ -100,12 +98,60 @@
       width: 80%;
     }
 
-    /* === БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — В ТОЙ ЖЕ КОЛОНКЕ === */
+    /* === INVITE BLOCK — ПО ЦЕНТРУ, ПОД ТАРИФАМИ === */
+    .invite-block {
+      background: rgba(10, 10, 40, 0.7);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid #333;
+      backdrop-filter: blur(6px);
+      margin: 40px auto;
+      max-width: 500px;
+      width: 100%;
+    }
+    .invite-block h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .invite-block input {
+      width: 100%;
+      padding: 14px 20px;
+      background: rgba(20, 20, 50, 0.8);
+      border: 1px solid #444;
+      border-radius: 12px;
+      color: #e0f0ff;
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      outline: none;
+    }
+    .invite-block input:focus {
+      border-color: #00ff9d;
+      box-shadow: 0 0 0 3px rgba(0, 255, 157, 0.3);
+    }
+    .invite-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #d700ff, #00d4ff);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* === БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — В ЕЁ КОЛОНКЕ (СПРАВА) === */
     .premium-addons {
       display: flex;
       flex-direction: column;
       gap: 24px;
-      width: 280px;
+      max-width: 280px;
+      width: 100%;
       margin-top: 40px;
       align-self: flex-end;
     }
@@ -114,6 +160,7 @@
       border-radius: 16px;
       padding: 24px;
       border: 1px solid #333;
+      backdrop-filter: blur(6px);
     }
     .addon-card h3 {
       font-size: 1.3rem;
@@ -204,7 +251,14 @@
       </div>
     </div>
 
-    <!-- 🔴 БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — СПРАВА -->
+    <!-- 🔑 INVITE BLOCK — ПО ЦЕНТРУ -->
+    <div class="invite-block">
+      <h3>🎁 Have an Invite Code?</h3>
+      <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
+      <button class="invite-btn">ACTIVATE INVITE</button>
+    </div>
+
+    <!-- 🔴 ДВА БЛОКА ПОД ПАНЕЛЬЮ PREMIUM (СПРАВА) -->
     <div class="premium-addons">
       <div class="addon-card">
         <h3>Quantum Contract Scan</h3>
