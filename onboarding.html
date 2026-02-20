@@ -160,33 +160,32 @@
     .tier-card.premium .select-btn {
       background: linear-gradient(135deg, #ffd700, #00ff9d);
     }
-    .premium-extra {
+    /* PREMIUM EXTRA — как в старом скрине */
+    .premium-details {
       margin-top: 30px;
-      background: rgba(0, 10, 50, 0.7);
-      border: 2px solid #ffd700;
-      border-radius: 15px;
-      padding: 25px;
       text-align: left;
     }
-    .premium-extra h3 {
+    .premium-details h3 {
       font-family: 'Poppins', sans-serif;
       color: #ffd700;
-      margin-bottom: 15px;
-      font-size: 1.4rem;
+      margin-bottom: 12px;
+      font-size: 1.3rem;
     }
-    .premium-extra ul {
+    .premium-details ul {
       padding-left: 20px;
       color: #66ffff;
       font-size: 0.9rem;
       line-height: 1.5;
     }
+    /* Invite block — компактный, по центру, высотой ~150px */
     .invite-block {
       background: rgba(0, 10, 50, 0.7);
       border: 2px solid #d700ff;
       border-radius: 15px;
       padding: 25px;
-      margin-top: 40px;
+      margin: 40px auto 0;
       text-align: center;
+      max-width: 500px;
     }
     .invite-block h3 {
       font-family: 'Poppins', sans-serif;
@@ -281,4 +280,51 @@
       </div>
     </div>
 
-    <!-- PREMIUM EXTRA
+    <!-- PREMIUM DETAILS — как в старом скрине -->
+    <div class="premium-details">
+      <h3>🔬 Quantum Contract Scan</h3>
+      <ul>
+        <li>GoPlusLabs-powered rug/honeypot detection</li>
+        <li>Tax analysis • Ownership verification</li>
+        <li>Liquidity lock check • Anti-whale protection</li>
+      </ul>
+      <h3>🎯 Advanced Risk Forecast</h3>
+      <ul>
+        <li>24h volatility prediction</li>
+        <li>Whale movement alerts</li>
+        <li>Pump/dump pattern detection</li>
+      </ul>
+    </div>
+
+    <!-- Invite block — компактный, по центру -->
+    <div class="invite-block">
+      <h3>🎁 Have an Invite Code?</h3>
+      <input type="text" class="invite-input" id="inviteInput" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
+      <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
+    </div>
+  </div>
+
+  <script>
+    function selectTier(tier) {
+      alert(`You selected ${tier} tier!`);
+    }
+
+    function activateInvite() {
+      const code = document.getElementById('inviteInput').value.trim().toUpperCase();
+      if (!code) {
+        alert('Please enter an invite code!');
+        return;
+      }
+      if (code.startsWith('PRE-')) {
+        alert('✅ PREMIUM activated!');
+      } else if (code.startsWith('MST-')) {
+        alert('✅ MASTER activated!');
+      } else if (code.startsWith('PRO-')) {
+        alert('✅ PRO activated!');
+      } else {
+        alert('❌ Invalid code!');
+      }
+    }
+  </script>
+</body>
+</html>
