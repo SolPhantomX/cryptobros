@@ -36,19 +36,24 @@
       padding: 20px;
     }
     .back-btn {
-      background: none;
-      border: none;
-      color: #00ff9d;
+      background: #3a2e25;
+      color: #66ffff;
       font-family: 'Poppins', sans-serif;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
-      cursor: pointer;
-      padding: 6px 16px;
+      padding: 10px 24px;
+      border: none;
       border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
       transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
     .back-btn:hover {
-      background: rgba(0, 255, 157, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.5);
     }
     .main-title {
       font-family: 'Poppins', sans-serif;
@@ -160,16 +165,16 @@
     .tier-card.premium .select-btn {
       background: linear-gradient(135deg, #ffd700, #00ff9d);
     }
-    /* PREMIUM EXTRA — как в старом скрине */
+    /* PREMIUM — ВНУТРИ ПАНЕЛИ, как на скрине */
     .premium-details {
-      margin-top: 30px;
+      margin-top: 20px;
       text-align: left;
     }
     .premium-details h3 {
       font-family: 'Poppins', sans-serif;
       color: #ffd700;
-      margin-bottom: 12px;
-      font-size: 1.3rem;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
     }
     .premium-details ul {
       padding-left: 20px;
@@ -177,13 +182,13 @@
       font-size: 0.9rem;
       line-height: 1.5;
     }
-    /* Invite block — компактный, по центру, высотой ~150px */
+    /* Invite block — компактный, выше, по центру */
     .invite-block {
       background: rgba(0, 10, 50, 0.7);
       border: 2px solid #d700ff;
       border-radius: 15px;
       padding: 25px;
-      margin: 40px auto 0;
+      margin: 30px auto 0;
       text-align: center;
       max-width: 500px;
     }
@@ -276,27 +281,26 @@
           <div class="feature"><span class="feature-icon">✓</span> Quantum Contract Scan</div>
           <div class="feature"><span class="feature-icon">✓</span> Advanced Risk Forecast</div>
         </div>
+        <!-- ВНУТРИ ПАНЕЛИ PREMIUM — как на скрине -->
+        <div class="premium-details">
+          <h3>🔬 Quantum Contract Scan</h3>
+          <ul>
+            <li>GoPlusLabs-powered rug/honeypot detection</li>
+            <li>Tax analysis • Ownership verification</li>
+            <li>Liquidity lock check • Anti-whale protection</li>
+          </ul>
+          <h3>🎯 Advanced Risk Forecast</h3>
+          <ul>
+            <li>24h volatility prediction</li>
+            <li>Whale movement alerts</li>
+            <li>Pump/dump pattern detection</li>
+          </ul>
+        </div>
         <button class="select-btn" onclick="selectTier('Premium')">SELECT</button>
       </div>
     </div>
 
-    <!-- PREMIUM DETAILS — как в старом скрине -->
-    <div class="premium-details">
-      <h3>🔬 Quantum Contract Scan</h3>
-      <ul>
-        <li>GoPlusLabs-powered rug/honeypot detection</li>
-        <li>Tax analysis • Ownership verification</li>
-        <li>Liquidity lock check • Anti-whale protection</li>
-      </ul>
-      <h3>🎯 Advanced Risk Forecast</h3>
-      <ul>
-        <li>24h volatility prediction</li>
-        <li>Whale movement alerts</li>
-        <li>Pump/dump pattern detection</li>
-      </ul>
-    </div>
-
-    <!-- Invite block — компактный, по центру -->
+    <!-- Инвайт-блок — поднят выше, компактный -->
     <div class="invite-block">
       <h3>🎁 Have an Invite Code?</h3>
       <input type="text" class="invite-input" id="inviteInput" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
