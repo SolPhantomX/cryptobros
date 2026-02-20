@@ -36,19 +36,19 @@
       padding: 20px;
     }
     .back-btn {
-      background: rgba(0, 255, 157, 0.1);
+      background: none;
+      border: none;
       color: #00ff9d;
-      border: 2px solid #00ff9d;
-      padding: 8px 20px;
-      border-radius: 8px;
       font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
+      padding: 6px 16px;
+      border-radius: 8px;
       transition: all 0.3s;
     }
     .back-btn:hover {
-      background: rgba(0, 255, 157, 0.2);
-      transform: scale(1.05);
+      background: rgba(0, 255, 157, 0.1);
     }
     .main-title {
       font-family: 'Poppins', sans-serif;
@@ -66,11 +66,11 @@
       font-size: 1.2rem;
       color: #66ffff;
       text-align: center;
-      margin-top: 10px;
+      margin: 10px auto 30px;
     }
     .tiers-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 30px;
       margin-bottom: 40px;
     }
@@ -85,8 +85,8 @@
       overflow: hidden;
     }
     .tier-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 30px rgba(0, 255, 157, 0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 255, 157, 0.2);
     }
     .tier-card.free { border-color: #66ffff; }
     .tier-card.master { border-color: #d700ff; background: rgba(215, 0, 255, 0.1); }
@@ -123,14 +123,16 @@
     }
     .feature {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       margin: 10px 0;
       font-size: 0.95rem;
+      line-height: 1.4;
     }
     .feature-icon {
       color: #00ff9d;
       margin-right: 10px;
       font-size: 1.2rem;
+      flex-shrink: 0;
     }
     .select-btn {
       background: linear-gradient(135deg, #00ff9d, #66ffff);
@@ -144,10 +146,10 @@
       cursor: pointer;
       width: 100%;
       transition: all 0.3s;
-      margin-top: 15px;
+      margin-top: 20px;
     }
     .select-btn:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
     .tier-card.master .select-btn {
       background: linear-gradient(135deg, #d700ff, #66ffff);
@@ -158,58 +160,39 @@
     .tier-card.premium .select-btn {
       background: linear-gradient(135deg, #ffd700, #00ff9d);
     }
-    .wallet-section {
+    .premium-extra {
+      margin-top: 30px;
       background: rgba(0, 10, 50, 0.7);
-      border: 2px solid #00ff9d;
+      border: 2px solid #ffd700;
       border-radius: 15px;
-      padding: 30px;
-      margin-top: 40px;
-      display: none;
+      padding: 25px;
+      text-align: left;
     }
-    .wallet-section.active {
-      display: block;
-    }
-    .section-title {
+    .premium-extra h3 {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.8rem;
-      color: #00ff9d;
-      text-align: center;
-      margin-bottom: 20px;
+      color: #ffd700;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
     }
-    .wallet-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      margin: 20px 0;
+    .premium-extra ul {
+      padding-left: 20px;
+      color: #66ffff;
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
-    .wallet-btn {
-      background: rgba(0, 255, 157, 0.1);
-      border: 2px solid #00ff9d;
-      border-radius: 10px;
-      padding: 15px;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-align: center;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      color: #00ff9d;
-    }
-    .wallet-btn:hover {
-      background: rgba(0, 255, 157, 0.2);
-      transform: scale(1.05);
-    }
-    .wallet-btn img {
-      width: 40px;
-      height: 40px;
-      display: block;
-      margin: 0 auto 10px;
-    }
-    .invite-section {
+    .invite-block {
       background: rgba(0, 10, 50, 0.7);
       border: 2px solid #d700ff;
       border-radius: 15px;
       padding: 25px;
-      margin-top: 30px;
+      margin-top: 40px;
+      text-align: center;
+    }
+    .invite-block h3 {
+      font-family: 'Poppins', sans-serif;
+      color: #d700ff;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
     }
     .invite-input {
       width: 100%;
@@ -233,26 +216,6 @@
       font-size: 1rem;
       cursor: pointer;
       width: 100%;
-    }
-    .instructions {
-      background: rgba(0, 10, 50, 0.7);
-      border: 2px solid #00ff9d;
-      border-radius: 15px;
-      padding: 25px;
-      margin-top: 30px;
-    }
-    .instructions h3 {
-      font-family: 'Poppins', sans-serif;
-      color: #00ff9d;
-      margin-bottom: 15px;
-    }
-    .instructions ol {
-      color: #66ffff;
-      margin-left: 20px;
-      line-height: 1.6;
-    }
-    .instructions li {
-      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -311,299 +274,11 @@
           <div class="feature"><span class="feature-icon">✓</span> Full access + governance rights</div>
           <div class="feature"><span class="feature-icon">✓</span> AI features unlocked</div>
           <div class="feature"><span class="feature-icon">✓</span> Unlimited access</div>
-          <div class="feature"><span class="feature-icon">✓</span> 🔬 Quantum Contract Scan</div>
+          <div class="feature"><span class="feature-icon">✓</span> Quantum Contract Scan</div>
           <div class="feature"><span class="feature-icon">✓</span> Advanced Risk Forecast</div>
         </div>
         <button class="select-btn" onclick="selectTier('Premium')">SELECT</button>
       </div>
     </div>
 
-    <div class="wallet-section" id="walletSection">
-      <h2 class="section-title">Connect Your Wallet</h2>
-      <p style="text-align: center; color: #66ffff; margin-bottom: 20px;">Select your wallet to pay with $AUS</p>
-      
-      <div class="wallet-grid">
-        <div class="wallet-btn" onclick="connectWallet('Phantom')">
-          <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/phantom.svg" alt="Phantom">
-          Phantom
-        </div>
-        <div class="wallet-btn" onclick="connectWallet('MetaMask')">
-          <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/metamask.svg" alt="MetaMask">
-          MetaMask
-        </div>
-        <div class="wallet-btn" onclick="connectWallet('Solflare')">
-          <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/solflare.svg" alt="Solflare">
-          Solflare
-        </div>
-        <div class="wallet-btn" onclick="connectWallet('Backpack')">
-          <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/backpack.svg" alt="Backpack">
-          Backpack
-        </div>
-        <div class="wallet-btn" onclick="connectWallet('TrustWallet')">
-          <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/trustwallet.svg" alt="TrustWallet">
-          TrustWallet
-        </div>
-        <div class="wallet-btn" onclick="connectWallet('CoinbaseWallet')">
-          <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/coinbasewallet.svg" alt="CoinbaseWallet">
-          Coinbase
-        </div>
-        <div class="wallet-btn" onclick="connectWallet('BraveWallet')">
-          <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/bravewallet.svg" alt="BraveWallet">
-          Brave
-        </div>
-        <div class="wallet-btn" onclick="connectWallet('Ledger')">
-          <img src="https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/core/base/src/icons/ledger.svg" alt="Ledger">
-          Ledger
-        </div>
-      </div>
-
-      <div class="instructions">
-        <h3>How to Connect Your Wallet:</h3>
-        <ol>
-          <li>Click on your wallet icon above</li>
-          <li>Approve the connection in your wallet popup</li>
-          <li>Confirm the $AUS payment amount</li>
-          <li>Wait for transaction confirmation</li>
-          <li>Enjoy your CRYPTOBROS access!</li>
-        </ol>
-        <p style="color: #ffd700; margin-top: 15px; font-weight: 600;">
-          ⚠️ Make sure you have enough $AUS in your wallet before connecting!
-        </p>
-      </div>
-
-      <button class="back-btn" onclick="backToTiers()" style="margin-top: 20px; width: 100%;">← Back to Tiers</button>
-    </div>
-
-    <div class="invite-section">
-      <h3 style="font-family: 'Poppins', sans-serif; color: #d700ff; text-align: center;">🎁 Have an Invite Code?</h3>
-      <input type="text" class="invite-input" id="inviteInput" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
-      <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
-    </div>
-  </div>
-
-  <script>
-    let selectedTier = null;
-    const CREATOR_WALLET = 'YOUR_WALLET_ADDRESS_HERE';
-    const CLUB_TREASURY = 'CLUB_TREASURY_ADDRESS_HERE';
-    const TREASURY_PERCENTAGE = 0.05;
-
-    function selectTier(tier) {
-      selectedTier = tier;
-      document.getElementById('walletSection').classList.add('active');
-      localStorage.setItem('selectedTier', tier);
-      alert(`You selected ${tier} tier!\n\nConnect your wallet to pay with $AUS.\n\nAmount: ${getTierPrice(tier)} $AUS`);
-    }
-
-    function getTierPrice(tier) {
-      const prices = {
-        'Free': 0,
-        'Master': 50,
-        'Pro': 100,
-        'Premium': 200
-      };
-      return prices[tier] || 0;
-    }
-
-    function connectWallet(walletName) {
-      if (!selectedTier) {
-        alert('Please select a tier first!');
-        return;
-      }
-
-      const amount = getTierPrice(selectedTier);
-      
-      if (amount === 0) {
-        localStorage.setItem('tierExpiry', Date.now() + 14 * 24 * 60 * 60 * 1000);
-        window.location.href = 'profile.html';
-        return;
-      }
-
-      alert(`Connecting to ${walletName}...\n\nAmount: ${amount} $AUS\n\nPlease approve the transaction in your wallet.`);
-      
-      setTimeout(() => {
-        processPayment(walletName, amount);
-      }, 1000);
-    }
-
-    function processPayment(walletName, amount) {
-      const treasuryAmount = amount * TREASURY_PERCENTAGE;
-      const creatorAmount = amount - treasuryAmount;
-
-      alert(`✅ Payment successful!\n\nAmount: ${amount} $AUS\nTo Creator: ${creatorAmount} $AUS\nTo Club Treasury: ${treasuryAmount} $AUS\n\nWallet: ${walletName}\nTier: ${selectedTier}\n\nRedirecting to profile...`);
-
-      localStorage.setItem('selectedTier', selectedTier);
-      localStorage.setItem('tierExpiry', 'lifetime');
-      localStorage.setItem('walletConnected', walletName);
-      
-      addToTreasury(treasuryAmount);
-      
-      window.location.href = 'profile.html';
-    }
-
-    function addToTreasury(amount) {
-      let treasury = parseFloat(localStorage.getItem('clubTreasury')) || 0;
-      treasury += amount;
-      localStorage.setItem('clubTreasury', treasury.toString());
-      
-      const transactions = JSON.parse(localStorage.getItem('treasuryTransactions')) || [];
-      transactions.push({
-        amount: amount,
-        timestamp: Date.now(),
-        type: 'deposit'
-      });
-      localStorage.setItem('treasuryTransactions', JSON.stringify(transactions));
-    }
-
-    function backToTiers() {
-      document.getElementById('walletSection').classList.remove('active');
-      selectedTier = null;
-    }
-
-    function activateInvite() {
-      const code = document.getElementById('inviteInput').value.trim().toUpperCase();
-      
-      if (!code) {
-        alert('Please enter an invite code!');
-        return;
-      }
-
-      if (code.startsWith('PRE-')) {
-        localStorage.setItem('selectedTier', 'Premium');
-        localStorage.setItem('tierExpiry', 'lifetime');
-        alert('✅ PREMIUM activated permanently!\n\nEnjoy full access to CRYPTOBROS!');
-        window.location.href = 'profile.html';
-      } else if (code.startsWith('MST-')) {
-        localStorage.setItem('selectedTier', 'Master');
-        localStorage.setItem('tierExpiry', 'lifetime');
-        alert('✅ MASTER activated permanently!\n\nEnjoy CRYPTOBROS access!');
-        window.location.href = 'profile.html';
-      } else if (code.startsWith('PRO-')) {
-        localStorage.setItem('selectedTier', 'Pro');
-        localStorage.setItem('tierExpiry', 'lifetime');
-        alert('✅ PRO activated permanently!\n\nEnjoy CRYPTOBROS access!');
-        window.location.href = 'profile.html';
-      } else {
-        alert('❌ Invalid invite code!\n\nValid formats:\n- PRE-XXXX (Premium)\n- MST-XXXX (Master)\n- PRO-XXXX (Pro)');
-      }
-    }
-
-    function scheduleDailyBonuses() {
-      const now = new Date();
-      const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0);
-      
-      const timeUntilMidnight = midnight - now;
-      
-      setTimeout(() => {
-        distributeDailyBonuses();
-        setInterval(distributeDailyBonuses, 24 * 60 * 60 * 1000);
-      }, timeUntilMidnight);
-    }
-
-    function distributeDailyBonuses() {
-      const treasury = parseFloat(localStorage.getItem('clubTreasury')) || 0;
-      
-      if (treasury < 10) {
-        console.log('Treasury too low for bonuses');
-        return;
-      }
-
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      users.forEach(user => {
-        if (user.firstPostToday) {
-          user.balance += 1;
-          addToTreasury(-1);
-          user.firstPostToday = false;
-        }
-      });
-      
-      localStorage.setItem('users', JSON.stringify(users));
-      console.log('Daily bonuses distributed at 00:00');
-    }
-
-    function checkForSpam(userId, messageCount) {
-      const user = JSON.parse(localStorage.getItem(`user_${userId}`)) || { warnings: 0, banned: false };
-      
-      if (messageCount > 5) {
-        user.warnings++;
-        
-        if (user.warnings === 1) {
-          user.bannedUntil = Date.now() + 24 * 60 * 60 * 1000;
-          alert('⚠️ SPAM DETECTED! You are banned for 24 hours.');
-        } else if (user.warnings >= 2) {
-          user.banned = true;
-          user.balance = 0;
-          addToTreasury(user.balance);
-          alert('❌ PERMANENT BAN! All $AUS confiscated for repeated spam.');
-        }
-        
-        localStorage.setItem(`user_${userId}`, JSON.stringify(user));
-      }
-    }
-
-    function scheduleFridayChest() {
-      const now = new Date();
-      const day = now.getDay();
-      
-      let daysUntilFriday = (5 - day + 7) % 7;
-      if (daysUntilFriday === 0 && now.getHours() >= 12) {
-        daysUntilFriday = 7;
-      }
-      
-      const nextFriday = new Date();
-      nextFriday.setDate(now.getDate() + daysUntilFriday);
-      nextFriday.setHours(12, 0, 0, 0);
-      
-      const timeUntilFriday = nextFriday - now;
-      
-      setTimeout(() => {
-        drawFridayChest();
-        setInterval(drawFridayChest, 7 * 24 * 60 * 60 * 1000);
-      }, timeUntilFriday);
-    }
-
-    function drawFridayChest() {
-      const treasury = parseFloat(localStorage.getItem('clubTreasury')) || 0;
-      
-      if (treasury < 50) {
-        console.log('Treasury too low for chest draw');
-        return;
-      }
-
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      const winner = users[Math.floor(Math.random() * users.length)];
-      
-      if (!winner) return;
-      
-      const chestTypes = ['Golden Chest', 'Magic Chest', 'Mystery Chest'];
-      const chestType = chestTypes[Math.floor(Math.random() * chestTypes.length)];
-      
-      const rewardPercentage = 0.05 + Math.random() * 0.15;
-      const reward = Math.floor(treasury * rewardPercentage);
-      
-      winner.balance += reward;
-      addToTreasury(-reward);
-      
-      createFeedPost(`🎉 FRIDAY CHEST DRAW! 🎉\n\nWinner: @${winner.username}\nChest: ${chestType}\nPrize: ${reward} $AUS\n\nCongratulations!`);
-      
-      console.log(`Friday chest drawn: ${winner.username} won ${reward} $AUS`);
-    }
-
-    function createFeedPost(content) {
-      const posts = JSON.parse(localStorage.getItem('feedPosts')) || [];
-      posts.unshift({
-        id: Date.now(),
-        content: content,
-        timestamp: Date.now(),
-        likes: 0
-      });
-      localStorage.setItem('feedPosts', JSON.stringify(posts));
-    }
-
-    window.addEventListener('load', () => {
-      scheduleDailyBonuses();
-      scheduleFridayChest();
-    });
-  </script>
-</body>
-</html>
+    <!-- PREMIUM EXTRA
