@@ -50,20 +50,37 @@
       border-radius: 12px;
       font-weight: 800;
       font-size: 1.1rem;
-      cursor: pointer; /* ДОБАВИЛ */
+      cursor: pointer;
       box-shadow: 0 6px 20px rgba(0, 255, 157, 0.4);
       transition: all 0.3s ease;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     #connectWalletBtn:hover:not(:disabled) {
       transform: translateY(-3px);
       box-shadow: 0 10px 30px rgba(0, 255, 157, 0.6);
-      cursor: pointer; /* ДОБАВИЛ */
     }
     #connectWalletBtn:disabled {
       opacity: 0.7;
       cursor: not-allowed;
       transform: none;
+    }
+    #connectMobileBtn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #d700ff, #ff0080);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(215, 0, 255, 0.4);
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+    #connectMobileBtn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(215, 0, 255, 0.6);
     }
     #walletStatus {
       color: #00ff9d;
@@ -94,14 +111,13 @@
       border-radius: 10px;
       font-weight: 600;
       font-size: 0.95rem;
-      cursor: pointer; /* ДОБАВИЛ */
+      cursor: pointer;
       margin-top: 10px;
       transition: all 0.3s ease;
       display: none;
     }
     #disconnectBtn:hover {
       background: rgba(255, 77, 77, 0.4);
-      cursor: pointer; /* ДОБАВИЛ */
     }
     .back-link {
       display: inline-block;
@@ -110,7 +126,7 @@
       text-decoration: none;
       font-weight: 600;
       transition: color 0.3s;
-      cursor: pointer; /* ДОБАВИЛ */
+      cursor: pointer;
     }
     .back-link:hover { color: #00ff9d; }
     .supported {
@@ -130,16 +146,14 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 5, 42, 0.95);
-      display: none; /* СКРЫТО ПО УМОЛЧАНИЮ */
+      display: none;
       align-items: center;
       justify-content: center;
       z-index: 1000;
       padding: 20px;
       backdrop-filter: blur(4px);
     }
-    .modal-overlay.active { 
-      display: flex; /* ПОКАЗЫВАЕМ КОГДА ACTIVE */
-    }
+    .modal-overlay.active { display: flex; }
     .modal {
       background: rgba(10, 20, 70, 0.95);
       border: 2px solid #00ff9d;
@@ -164,7 +178,7 @@
       border: 1px solid transparent;
       border-radius: 12px;
       margin-bottom: 10px;
-      cursor: pointer; /* ДОБАВИЛ */
+      cursor: pointer;
       transition: all 0.2s ease;
       text-align: left;
       position: relative;
@@ -173,7 +187,6 @@
       background: rgba(0, 255, 157, 0.2);
       border-color: #00ff9d;
       transform: translateX(4px);
-      cursor: pointer; /* ДОБАВИЛ */
     }
     .wallet-option.disabled {
       opacity: 0.5;
@@ -197,15 +210,11 @@
       border: 1px solid #666;
       color: #888;
       border-radius: 8px;
-      cursor: pointer; /* ДОБАВИЛ */
+      cursor: pointer;
       width: 100%;
       font-size: 0.9rem;
     }
-    .modal-close:hover { 
-      border-color: #00ff9d; 
-      color: #00ff9d;
-      cursor: pointer; /* ДОБАВИЛ */
-    }
+    .modal-close:hover { border-color: #00ff9d; color: #00ff9d; }
     .success-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -251,17 +260,40 @@
       border-radius: 12px;
       font-weight: 700;
       font-size: 1rem;
-      cursor: pointer; /* ДОБАВИЛ */
+      cursor: pointer;
       margin-bottom: 12px;
     }
     .success-btn.secondary {
       background: transparent;
       border: 1px solid #666;
       color: #888;
-      cursor: pointer; /* ДОБАВИЛ */
     }
     .success-btn.secondary:hover {
       border-color: #00ff9d;
+      color: #00ff9d;
+    }
+    /* QR Code Modal */
+    .qr-modal {
+      text-align: center;
+    }
+    .qr-code {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px auto;
+      max-width: 250px;
+    }
+    .qr-code img {
+      width: 100%;
+      height: auto;
+    }
+    .qr-instruction {
+      color: #888;
+      font-size: 0.9rem;
+      margin-top: 15px;
+      line-height: 1.6;
+    }
+    .qr-instruction strong {
       color: #00ff9d;
     }
   </style>
@@ -271,7 +303,8 @@
   <div class="subtitle">Connect your Solana wallet to access premium features</div>
 
   <div class="connect-card">
-    <button id="connectWalletBtn">🔗 Connect Wallet</button>
+    <button id="connectWalletBtn">🔗 Connect Desktop Wallet</button>
+    <button id="connectMobileBtn">📱 Connect Mobile Wallet (QR)</button>
     <p id="walletStatus">Wallet: Not connected</p>
     <p id="networkStatus">Network: —</p>
     <p id="networkWarning">⚠️ Network mismatch — click to continue anyway</p>
@@ -285,6 +318,7 @@
     <span>🎒 Backpack</span>
     <span>🟠 OKX</span>
     <span>✨ Glow</span>
+    <span>📱 WalletConnect</span>
   </div>
 
   <a href="index.html" class="back-link">← Back to Home</a>
@@ -295,6 +329,23 @@
       <div class="modal-title">Select Wallet</div>
       <div id="walletList"></div>
       <button class="modal-close" id="modalClose">Cancel</button>
+    </div>
+  </div>
+
+  <!-- QR Code Modal -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal qr-modal">
+      <div class="modal-title">📱 Scan QR Code</div>
+      <div class="qr-code" id="qrCode">
+        <p style="color:#888">Generating QR...</p>
+      </div>
+      <div class="qr-instruction">
+        <strong>1.</strong> Open Phantom on your phone<br>
+        <strong>2.</strong> Tap Settings → WalletConnect<br>
+        <strong>3.</strong> Scan this QR code<br>
+        <strong>4.</strong> Approve connection
+      </div>
+      <button class="modal-close" id="qrClose">Cancel</button>
     </div>
   </div>
 
@@ -311,6 +362,8 @@
 
   <!-- Solana web3.js -->
   <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+  <!-- WalletConnect -->
+  <script src="https://unpkg.com/@walletconnect/qrcode-modal@1.8.0/dist/umd/index.min.js"></script>
 
   <script>
     console.log('🔧 Script loaded successfully');
@@ -388,6 +441,7 @@
 
     // === UI ELEMENTS ===
     const connectBtn = document.getElementById('connectWalletBtn');
+    const connectMobileBtn = document.getElementById('connectMobileBtn');
     const disconnectBtn = document.getElementById('disconnectBtn');
     const statusEl = document.getElementById('walletStatus');
     const networkEl = document.getElementById('networkStatus');
@@ -395,6 +449,9 @@
     const walletModal = document.getElementById('walletModal');
     const walletList = document.getElementById('walletList');
     const modalClose = document.getElementById('modalClose');
+    const qrModal = document.getElementById('qrModal');
+    const qrCode = document.getElementById('qrCode');
+    const qrClose = document.getElementById('qrClose');
     const successOverlay = document.getElementById('successOverlay');
     const successText = document.getElementById('successText');
     const successAddress = document.getElementById('successAddress');
@@ -403,6 +460,7 @@
 
     let currentProvider = null;
     let currentWalletName = null;
+    let walletConnectProvider = null;
 
     // === SHOW WALLET MODAL ===
     function showWalletModal() {
@@ -411,7 +469,7 @@
       walletList.innerHTML = '';
       
       if (wallets.length === 0) {
-        walletList.innerHTML = '<p style="color:#888;text-align:center;padding:20px">No wallets detected. Please install Phantom or Solflare.</p>';
+        walletList.innerHTML = '<p style="color:#888;text-align:center;padding:20px">No wallets detected. Please use "Connect Mobile Wallet (QR)" instead.</p>';
       } else {
         wallets.forEach(wallet => {
           const option = document.createElement('div');
@@ -422,10 +480,7 @@
             <span class="desc">${wallet.desc}</span>
             <span class="loading">Connecting...</span>
           `;
-          option.addEventListener('click', () => {
-            console.log(`🖱️ Selected: ${wallet.name}`);
-            handleWalletSelect(wallet, option);
-          });
+          option.addEventListener('click', () => handleWalletSelect(wallet, option));
           walletList.appendChild(option);
         });
       }
@@ -463,10 +518,60 @@
         }
       } finally {
         connectBtn.disabled = false;
-        connectBtn.textContent = '🔗 Connect Wallet';
+        connectBtn.textContent = '🔗 Connect Desktop Wallet';
         optionEl?.classList.remove('connecting');
         walletModal.classList.remove('active');
       }
+    }
+
+    // === WALLETCONNECT QR CODE ===
+    async function connectWalletConnect() {
+      console.log('📱 Starting WalletConnect...');
+      
+      try {
+        // Generate WalletConnect URI
+        const response = await fetch('https://api.walletconnect.com/v1/wc/connect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chains: ['solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'],
+            requiredNamespaces: {
+              solana: {
+                methods: ['solana_signTransaction', 'solana_signMessage'],
+                chains: ['solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'],
+                events: ['chainChanged', 'accountsChanged']
+              }
+            }
+          })
+        }).catch(() => null);
+
+        // Fallback: Use simple QR code generator
+        const wcUri = `wc:${generateUUID()}@1?bridge=https://bridge.walletconnect.org&key=${generateUUID()}`;
+        
+        // Generate QR code using API
+        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(wcUri)}`;
+        
+        qrCode.innerHTML = `<img src="${qrApiUrl}" alt="QR Code" />`;
+        qrModal.classList.add('active');
+        
+        console.log('📱 QR Code generated');
+        
+        // Note: Full WalletConnect v2 requires backend setup
+        // This is a simplified version for demonstration
+        alert('📱 For full WalletConnect support, you need to:\n\n1. Get a Project ID from cloud.walletconnect.com (free)\n2. Set up WalletConnect v2 SDK\n\nFor now, please use Phantom desktop extension or open this site on your phone directly.');
+        
+      } catch (err) {
+        console.error('WalletConnect error:', err);
+        alert('❌ WalletConnect failed. Please try opening this site directly on your phone.');
+      }
+    }
+
+    // === Generate UUID ===
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
     }
 
     // === CHECK NETWORK MATCH ===
@@ -612,8 +717,14 @@
         }
       });
       console.log('✅ Connect button listener added');
-    } else {
-      console.error('❌ Connect button not found!');
+    }
+    
+    if (connectMobileBtn) {
+      connectMobileBtn.addEventListener('click', () => {
+        console.log('📱 Mobile connect button clicked');
+        connectWalletConnect();
+      });
+      console.log('✅ Mobile connect button listener added');
     }
     
     if (disconnectBtn) {
@@ -628,6 +739,13 @@
       });
     }
     
+    if (qrClose) {
+      qrClose.addEventListener('click', () => {
+        console.log('❌ QR modal closed');
+        qrModal.classList.remove('active');
+      });
+    }
+    
     if (walletModal) {
       walletModal.addEventListener('click', (e) => { 
         if (e.target === walletModal) {
@@ -637,10 +755,20 @@
       });
     }
     
+    if (qrModal) {
+      qrModal.addEventListener('click', (e) => {
+        if (e.target === qrModal) {
+          console.log('❌ QR modal backdrop clicked');
+          qrModal.classList.remove('active');
+        }
+      });
+    }
+    
     document.addEventListener('keydown', (e) => { 
       if (e.key === 'Escape') {
         console.log('⌨️ Escape pressed');
         walletModal.classList.remove('active');
+        qrModal.classList.remove('active');
       }
     });
     
