@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS TRIBUNAL - AI Risk Assessment</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>CRYPTOBROS TRIBUNAL</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -12,86 +12,53 @@
       background:#00052a;
       color:#00ff9d;
       min-height:100vh;
-      overflow-x:hidden;
-      position:relative;
+      padding:20px;
     }
-    body::before {
-      content:'';
-      position:fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      background:
-        radial-gradient(circle at 15% 25%, rgba(0,255,157,0.08), transparent 40%),
-        radial-gradient(circle at 85% 75%, rgba(102,255,255,0.08), transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(215,0,255,0.05), transparent 50%),
-        linear-gradient(45deg, transparent 24%, rgba(0,255,157,0.07) 25%, rgba(0,255,157,0.07) 26%, transparent 27%, transparent 74%, rgba(102,255,255,0.07) 75%, rgba(102,255,255,0.07) 76%, transparent 77%),
-        linear-gradient(135deg, transparent 24%, rgba(0,255,157,0.07) 25%, rgba(0,255,157,0.07) 26%, transparent 27%, transparent 74%, rgba(102,255,255,0.07) 75%, rgba(102,255,255,0.07) 76%, transparent 77%);
-      background-size:100px 100px;
-      z-index:-1;
-      pointer-events:none;
-    }
-    .neon-network { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; opacity:0.9; }
-    .neon-node { position:absolute; width:4px; height:4px; border-radius:50%; box-shadow:0 0 6px currentColor; }
-    .neon-connection { position:absolute; height:1px; background:linear-gradient(to right, transparent, #00ff9d, transparent); opacity:0.6; }
-    @keyframes pulse { 0%,100% { opacity:0.6; } 50% { opacity:1; } }
-    .neon-node, .neon-connection { animation:pulse 3.5s infinite; }
-    .container { max-width:1200px; margin:0 auto; padding:20px; position:relative; z-index:1; }
-    header { text-align:center; padding:40px 0 20px; }
-    h1 { font-family:'Poppins',sans-serif; font-size:3.2em; font-weight:800; text-shadow:0 0 12px #00ff9d; margin-bottom:8px; }
-    .subtitle { font-size:1.3em; color:#66ffff; margin-bottom:30px; }
-    .input-section { background:rgba(0,5,42,0.85); border:2px solid #00ff9d; border-radius:16px; padding:32px; margin:30px 0; }
-    .input-group { display:flex; gap:16px; }
-    input[type="text"] { flex:1; padding:16px; background:rgba(0,5,42,0.9); border:2px solid #00ff9d; border-radius:12px; color:#00ff9d; font-size:1.1em; outline:none; }
-    input[type="text"]::placeholder { color:#66ffff; opacity:0.7; }
-    input[type="text"]:focus { box-shadow:0 0 16px #00ff9d; border-color:#66ffff; }
-    .btn { background:linear-gradient(135deg,#00ff9d,#66ffff); color:#000; border:none; padding:16px 40px; border-radius:12px; font-weight:700; cursor:pointer; transition:all 0.3s; }
-    .btn:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,255,157,0.5); }
-    .dialog-section { background:rgba(0,5,42,0.85); border:2px solid #66ffff; border-radius:16px; padding:32px; margin:30px 0; min-height:300px; }
-    .dialog-title { font-size:1.6em; color:#66ffff; margin-bottom:20px; text-align:center; font-weight:700; }
-    .message { background:rgba(0,10,50,0.7); border-left:5px solid #00ff9d; padding:16px; margin:16px 0; border-radius:6px; white-space:pre-wrap; font-size:0.98em; line-height:1.6; }
-    .expert-name { font-weight:700; color:#66ffff; margin-bottom:6px; font-size:1.15em; }
-    .verdict-section { background:rgba(0,5,42,0.85); border:2px solid #d700ff; border-radius:16px; padding:32px; margin:30px 0; text-align:center; display:none; }
-    .verdict-title { font-size:2.2em; margin-bottom:20px; text-shadow:0 0 12px #d700ff; font-weight:800; }
-    .verdict-text { font-size:3.5em; font-weight:800; padding:24px; border-radius:12px; margin:20px 0; text-shadow:0 0 18px currentColor; }
-    .verdict-risk { color:#ff4d4d; }
+    header { text-align:center; padding:30px 0; }
+    h1 { font-family:'Poppins',sans-serif; font-size:2.8em; font-weight:800; text-shadow:0 0 10px #00ff9d; }
+    .subtitle { font-size:1.2em; color:#66ffff; margin-top:8px; }
+    .input-group { display:flex; max-width:600px; margin:0 auto 20px; gap:10px; }
+    input { flex:1; padding:14px; background:rgba(0,5,42,0.9); border:2px solid #00ff9d; border-radius:10px; color:#00ff9d; font-size:1.1em; }
+    input::placeholder { color:#66ffff; opacity:0.7; }
+    button { padding:14px 30px; background:linear-gradient(135deg,#00ff9d,#66ffff); color:#000; border:none; border-radius:10px; font-weight:700; cursor:pointer; }
+    .dialog { background:rgba(0,5,42,0.85); border:2px solid #66ffff; border-radius:12px; padding:20px; margin-bottom:30px; min-height:200px; }
+    .dialog-title { font-size:1.4em; color:#66ffff; margin-bottom:15px; text-align:center; font-weight:700; }
+    .message { margin:12px 0; padding:12px; border-left:4px solid #00ff9d; background:rgba(0,10,50,0.6); border-radius:6px; }
+    .expert-name { font-weight:700; color:#66ffff; margin-bottom:4px; }
+    .verdict { background:rgba(0,5,42,0.85); border:2px solid #d700ff; border-radius:12px; padding:20px; text-align:center; display:none; }
+    .verdict-title { font-size:2em; margin-bottom:15px; text-shadow:0 0 10px #d700ff; font-weight:800; }
+    .verdict-score { font-size:3.5em; font-weight:800; margin:15px 0; }
     .verdict-safe { color:#00ff9d; }
-    .verdict-trusted { color:#66ffff; }
-    .upgrade-btn { background:linear-gradient(135deg,#d700ff,#66ffff); color:#000; border:none; padding:16px 40px; border-radius:12px; font-size:1.3em; font-weight:700; cursor:pointer; margin:20px auto; display:block; }
-    .upgrade-info { margin-top:16px; font-size:0.95em; color:#66ffff; }
-    footer { text-align:center; padding:24px; color:#66ffff; font-size:0.9em; margin-top:40px; border-top:1px solid rgba(0,255,157,0.2); }
-    @media (max-width:768px) { .input-group { flex-direction:column; } h1 { font-size:2.4em; } .input-section, .verdict-section { padding:24px; } }
+    .verdict-risk { color:#ff4d4d; }
+    .details { background:rgba(0,0,0,0.4); padding:12px; border-radius:8px; margin-top:15px; white-space:pre-wrap; }
+    footer { text-align:center; padding:20px; color:#66ffff; font-size:0.9em; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>CRYPTOBROS TRIBUNAL</h1>
-      <div class="subtitle">AI-Powered Risk Assessment</div>
-    </header>
+  <header>
+    <h1>CRYPTOBROS TRIBUNAL</h1>
+    <div class="subtitle">AI-Powered Risk Assessment</div>
+  </header>
 
-    <div class="input-section">
-      <div class="input-group">
-        <input type="text" id="tokenInput" placeholder="$TICKER or contract address" autocomplete="off">
-        <button class="btn" id="analyzeBtn">ANALYZE</button>
-      </div>
-      <p style="color:#66ffff; text-align:center; margin-top:10px;">Examples: SOL, BTC, $WIF, BONK, AUS</p>
-    </div>
-
-    <div class="dialog-section" id="dialogSection">
-      <div class="dialog-title">TRIBUNAL DELIBERATION</div>
-      <div id="dialogContainer"></div>
-    </div>
-
-    <div class="verdict-section" id="verdictSection">
-      <div class="verdict-title">FINAL VERDICT</div>
-      <div id="verdictText" class="verdict-text"></div>
-      <div id="verdictDetails"></div>
-    </div>
-
-    <footer>
-      <p>Version 1.6 • Powered by GoPlusLabs Quantum Scan • Premium required</p>
-    </footer>
+  <div class="input-group">
+    <input type="text" id="tokenInput" placeholder="$TICKER or contract address" autocomplete="off">
+    <button id="analyzeBtn">ANALYZE</button>
   </div>
+
+  <div class="dialog" id="dialogSection">
+    <div class="dialog-title">TRIBUNAL DELIBERATION</div>
+    <div id="dialogContainer"></div>
+  </div>
+
+  <div class="verdict" id="verdictSection">
+    <div class="verdict-title">FINAL VERDICT</div>
+    <div id="verdictText" class="verdict-score"></div>
+    <div id="verdictDetails" class="details"></div>
+  </div>
+
+  <footer>
+    <p>Version 2.2 • Powered by GoPlusLabs • Premium required</p>
+  </footer>
 
   <script>
     const tokenInput = document.getElementById('tokenInput');
@@ -105,8 +72,16 @@
     analyzeBtn.addEventListener('click', analyzeToken);
     tokenInput.addEventListener('keypress', e => { if (e.key === 'Enter') analyzeToken(); });
 
+    function addMessage(sender, text) {
+      const div = document.createElement('div');
+      div.className = 'message';
+      div.innerHTML = `<div class="expert-name">[${sender}]</div>${text.replace(/\n/g, '<br>')}`;
+      dialogContainer.appendChild(div);
+      dialogContainer.scrollTop = dialogContainer.scrollHeight;
+    }
+
     async function analyzeToken() {
-      let query = tokenInput.value.trim().toUpperCase();
+      let query = tokenInput.value.trim();
       if (!query) return;
 
       dialogContainer.innerHTML = '';
@@ -115,46 +90,22 @@
 
       addMessage("System", "Initializing analysis...");
 
-      let contractAddress = null;
+      let contractAddress = query.replace(/^\$/, '');
       let chain = 'solana';
 
-      if (query.length < 20 && !query.includes(' ')) {
-        query = query.replace(/^\$/, '');
-        addMessage("System", `Looking up contract for ticker: ${query}`);
+      addMessage("System", `Using: ${contractAddress}`);
 
-        try {
-          const res = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(query)}`);
-          const data = await res.json();
-
-          if (data.pairs && data.pairs.length > 0) {
-            const topPair = data.pairs.reduce((best, cur) => 
-              (cur.liquidity?.usd || 0) > (best.liquidity?.usd || 0) ? cur : best
-            );
-            contractAddress = topPair.baseToken.address;
-            chain = topPair.chainId;
-            addMessage("DexScreener", `Found top pair: ${topPair.baseToken.symbol} on ${chain}\nContract: ${contractAddress.slice(0,8)}...`);
-          } else {
-            addMessage("System", "No pairs found for this ticker. Try full contract address.");
-            return;
-          }
-        } catch (err) {
-          addMessage("System", "Error looking up ticker. Enter full contract address.");
-          return;
-        }
-      } else {
-        contractAddress = query;
-        addMessage("System", "Using provided contract address.");
-      }
-
-      const isPremium = ['Premium', 'Pro'].includes(localStorage.getItem('selectedTier') || '');
+      const isPremium = localStorage.getItem('selectedTier') === 'Premium' || localStorage.getItem('selectedTier') === 'Pro';
 
       if (!isPremium) {
-        addMessage("System", "Quantum Contract Scan requires Premium tier.\nUpgrade to unlock advanced on-chain analysis powered by GoPlusLabs.");
-        showUpgradeButton();
+        addMessage("System", "Premium required for Quantum Scan.");
+        verdictSection.style.display = 'block';
+        verdictText.innerHTML = '<span class="verdict-risk">PREMIUM REQUIRED</span>';
+        verdictDetails.innerHTML = 'Upgrade to Premium/Pro to unlock on-chain analysis.';
         return;
       }
 
-      addMessage("Quantum Scanner", "Scanning contract on-chain...");
+      addMessage("Quantum Scanner", "Scanning contract...");
 
       try {
         const res = await fetch('https://cryptobros-backend.onrender.com/api/goplus/token-security', {
@@ -169,68 +120,35 @@
         const result = data.result[contractAddress.toLowerCase()] || data.result[Object.keys(data.result)[0]] || {};
 
         let risk = 5;
-        let details = "QUANTUM CONTRACT SCAN COMPLETE\n\n";
+        let details = "QUANTUM SCAN COMPLETE\n\n";
 
-        if (result.is_honeypot === '1') { risk += 90; details += "→ Honeypot DETECTED (CRITICAL)\n"; }
-        if ((result.buy_tax || 0) > 5 || (result.sell_tax || 0) > 5) { 
-          risk += 40; 
-          details += `→ High taxes: Buy ${result.buy_tax || 0}% | Sell ${result.sell_tax || 0}%\n`; 
-        }
-        if (result.is_proxy === '1') { risk += 70; details += "→ Proxy contract (HIGH RUG RISK)\n"; }
-        if (result.can_take_back_ownership === '1') { risk += 60; details += "→ Ownership recovery ENABLED (DANGER)\n"; }
-        if (result.is_open_source === '0') { risk += 40; details += "→ Closed source (RISK)\n"; }
-        if (result.is_anti_whale === '0') { risk += 25; details += "→ No anti-whale protection\n"; }
+        if (result.is_honeypot === '1') risk += 90, details += "→ Honeypot DETECTED (CRITICAL)\n";
+        if ((result.buy_tax || 0) > 5 || (result.sell_tax || 0) > 5) risk += 40, details += `→ Taxes: ${result.buy_tax || 0}% / ${result.sell_tax || 0}%\n`;
+        if (result.is_proxy === '1') risk += 70, details += "→ Proxy (RUG RISK)\n";
+        if (result.can_take_back_ownership === '1') risk += 60, details += "→ Ownership recovery ENABLED\n";
+        if (result.is_open_source === '0') risk += 40, details += "→ Closed source\n";
+        if (result.is_anti_whale === '0') risk += 25, details += "→ No anti-whale\n";
 
         risk = Math.min(99, risk);
         details += `\nRisk Score: ${risk.toFixed(0)}%`;
 
         addMessage("Phi-3-mini (Moderator)", details);
-        showVerdict({ risk, details });
+        showVerdict(risk, details);
 
       } catch (err) {
-        addMessage("System", `Quantum scan failed: ${err.message}\nPlease try again or contact support.`);
-        showUpgradeButton();
+        addMessage("System", `Scan failed: ${err.message}`);
+        showVerdict(99, "Scan error. Try again.");
       }
     }
 
-    function showVerdict(data) {
+    function showVerdict(risk, details) {
       verdictSection.style.display = 'block';
-      const riskPercent = data.risk.toFixed(0);
-      let verdictHTML = '';
-      let colorClass = 'verdict-risk';
+      const percent = risk.toFixed(0);
+      let html = percent <= 20 ? `TRUSTED (${percent}%)` : percent <= 50 ? `LOW RISK (${percent}%)` : `HIGH RISK (${percent}%)`;
+      let color = percent <= 20 ? 'verdict-safe' : 'verdict-risk';
 
-      if (riskPercent <= 20) {
-        verdictHTML = `TRUSTED (${riskPercent}%)`;
-        colorClass = 'verdict-trusted';
-      } else if (riskPercent <= 50) {
-        verdictHTML = `LOW RISK (${riskPercent}%)`;
-        colorClass = 'verdict-safe';
-      } else {
-        verdictHTML = `HIGH RISK (${riskPercent}%)`;
-        colorClass = 'verdict-risk';
-      }
-
-      verdictText.innerHTML = `<span class="${colorClass}">${verdictHTML}</span>`;
-      verdictDetails.innerHTML = `<pre>${data.details}</pre>`;
-    }
-
-    function showUpgradeButton() {
-      verdictDetails.innerHTML = `
-        <button class="upgrade-btn" onclick="window.location.href='onboarding.html'">
-          🔓 UPGRADE TO PREMIUM
-        </button>
-        <p class="upgrade-info">
-          Unlock Quantum Contract Scan • Honeypot detection • Tax analysis • Ownership verification • Advanced risk scoring
-        </p>
-      `;
-    }
-
-    function addMessage(sender, text) {
-      const div = document.createElement('div');
-      div.className = 'message';
-      div.innerHTML = `<div class="expert-name">[${sender}]</div>${text.replace(/\n/g, '<br>')}`;
-      dialogContainer.appendChild(div);
-      dialogContainer.scrollTop = dialogContainer.scrollHeight;
+      verdictText.innerHTML = `<span class="${color}">${html}</span>`;
+      verdictDetails.innerHTML = `<pre>${details}</pre>`;
     }
   </script>
 </body>
