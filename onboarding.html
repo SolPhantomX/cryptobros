@@ -38,7 +38,14 @@
     .container {
       max-width: 1400px;
       margin: 100px auto 40px;
-      text-align: center;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .main-content {
+      width: 100%;
     }
 
     .main-title {
@@ -67,6 +74,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 25px;
+      margin-bottom: 30px;
     }
 
     .tier-card {
@@ -201,56 +209,10 @@
       transform: translateY(-3px);
     }
 
-    /* Addons под PREMIUM */
-    .premium-addons {
-      grid-column: 4;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 25px;
-    }
-    .addon-card {
-      background: rgba(10, 20, 70, 0.9);
-      border-radius: 16px;
-      padding: 20px;
-      border: 2px solid #444;
-      backdrop-filter: blur(10px);
-      text-align: left;
-    }
-    .addon-card h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .addon-card h3::before { content: "🔹"; }
-    .addon-card ul {
-      padding-left: 0;
-      list-style: none;
-      color: #c0f0ff;
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
-    .addon-card li {
-      margin: 6px 0;
-      padding-left: 15px;
-      position: relative;
-    }
-    .addon-card li::before {
-      content: "▸";
-      color: #00ff9d;
-      position: absolute;
-      left: 0;
-      font-weight: bold;
-    }
-
-    /* Invite Block - по центру, НЕ ТРОГАЮ */
+    /* Invite Block - ПОД КАРТОЧКАМИ, ПО ЦЕНТРУ */
     .invite-block {
       max-width: 700px;
-      margin: 40px auto 0;
+      margin: 0 auto;
       background: rgba(10, 10, 40, 0.85);
       border-radius: 20px;
       padding: 40px 50px;
@@ -317,13 +279,62 @@
       transform: translateY(-3px);
     }
 
+    /* Addons СПРАВА - НЕ ТРОГАЮ */
+    .addons-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .addon-card {
+      background: rgba(10, 20, 70, 0.9);
+      border-radius: 16px;
+      padding: 25px;
+      border: 2px solid #444;
+      backdrop-filter: blur(10px);
+      text-align: left;
+      transition: all 0.3s ease;
+    }
+    .addon-card:hover {
+      border-color: #00d4ff;
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+      transform: translateX(-5px);
+    }
+    .addon-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .addon-card h3::before { content: "🔹"; }
+    .addon-card ul {
+      padding-left: 0;
+      list-style: none;
+      color: #c0f0ff;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .addon-card li {
+      margin: 8px 0;
+      padding-left: 18px;
+      position: relative;
+    }
+    .addon-card li::before {
+      content: "▸";
+      color: #00ff9d;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
     @media (max-width: 1200px) {
+      .container { grid-template-columns: 1fr; }
       .tiers-grid { grid-template-columns: repeat(2, 1fr); }
-      .premium-addons { grid-column: 1 / -1; flex-direction: row; }
     }
     @media (max-width: 768px) {
       .tiers-grid { grid-template-columns: 1fr; }
-      .premium-addons { flex-direction: column; }
       .main-title { font-size: 2.5rem; }
       .tier-price { font-size: 2rem; }
       .premium .tier-price { font-size: 2.6rem; }
@@ -334,91 +345,93 @@
   <button class="back-btn" onclick="location.href='index.html'">← Back to Home</button>
 
   <div class="container">
-    <h1 class="main-title">CHOOSE YOUR TIER</h1>
-    <div class="sub-title">Select access level and unlock powerful features</div>
+    <div class="main-content">
+      <h1 class="main-title">CHOOSE YOUR TIER</h1>
+      <div class="sub-title">Select access level and unlock powerful features</div>
 
-    <div class="tiers-grid">
-      <div class="tier-card free">
-        <div class="tier-name">FREE</div>
-        <div class="tier-price">0 AUS</div>
-        <div class="tier-duration">(2 weeks)</div>
-        <div class="tier-features">
-          <div class="feature">2-week limited access</div>
-          <div class="feature">Basic token analysis</div>
-          <div class="feature">Standard verdict only</div>
-          <div class="feature">No premium features</div>
+      <div class="tiers-grid">
+        <div class="tier-card free">
+          <div class="tier-name">FREE</div>
+          <div class="tier-price">0 AUS</div>
+          <div class="tier-duration">(2 weeks)</div>
+          <div class="tier-features">
+            <div class="feature">2-week limited access</div>
+            <div class="feature">Basic token analysis</div>
+            <div class="feature">Standard verdict only</div>
+            <div class="feature">No premium features</div>
+          </div>
+          <button class="select-btn">SELECT</button>
         </div>
-        <button class="select-btn">SELECT</button>
+
+        <div class="tier-card master">
+          <div class="tier-name">MASTER</div>
+          <div class="tier-price">500 AUS</div>
+          <div class="tier-duration">&nbsp;</div>
+          <div class="tier-features">
+            <div class="feature">Unlimited access</div>
+            <div class="feature">Full token analysis</div>
+            <div class="feature">Standard verdict + details</div>
+            <div class="feature">Save verdicts to history</div>
+          </div>
+          <button class="select-btn">SELECT</button>
+        </div>
+
+        <div class="tier-card pro">
+          <div class="tier-name">PRO</div>
+          <div class="tier-price">2,000 AUS</div>
+          <div class="tier-duration">&nbsp;</div>
+          <div class="tier-features">
+            <div class="feature">Unlimited access</div>
+            <div class="feature">AI features unlocked</div>
+            <div class="feature">Advanced analytics</div>
+            <div class="feature">Export verdicts (PDF)</div>
+            <div class="feature">Priority support</div>
+          </div>
+          <button class="select-btn">SELECT</button>
+        </div>
+
+        <div class="tier-card premium">
+          <div class="tier-name">PREMIUM</div>
+          <div class="tier-price">10,000 AUS</div>
+          <div class="tier-duration">&nbsp;</div>
+          <div class="tier-features">
+            <div class="feature">Full access + governance rights</div>
+            <div class="feature">AI features unlocked</div>
+            <div class="feature">Unlimited access</div>
+            <div class="feature">Quantum Contract Scan</div>
+            <div class="feature">Advanced Risk Forecast</div>
+          </div>
+          <a href="profile.html" class="select-btn">SELECT</a>
+        </div>
       </div>
 
-      <div class="tier-card master">
-        <div class="tier-name">MASTER</div>
-        <div class="tier-price">500 AUS</div>
-        <div class="tier-duration">&nbsp;</div>
-        <div class="tier-features">
-          <div class="feature">Unlimited access</div>
-          <div class="feature">Full token analysis</div>
-          <div class="feature">Standard verdict + details</div>
-          <div class="feature">Save verdicts to history</div>
-        </div>
-        <button class="select-btn">SELECT</button>
-      </div>
-
-      <div class="tier-card pro">
-        <div class="tier-name">PRO</div>
-        <div class="tier-price">2,000 AUS</div>
-        <div class="tier-duration">&nbsp;</div>
-        <div class="tier-features">
-          <div class="feature">Unlimited access</div>
-          <div class="feature">AI features unlocked</div>
-          <div class="feature">Advanced analytics</div>
-          <div class="feature">Export verdicts (PDF)</div>
-          <div class="feature">Priority support</div>
-        </div>
-        <button class="select-btn">SELECT</button>
-      </div>
-
-      <div class="tier-card premium">
-        <div class="tier-name">PREMIUM</div>
-        <div class="tier-price">10,000 AUS</div>
-        <div class="tier-duration">&nbsp;</div>
-        <div class="tier-features">
-          <div class="feature">Full access + governance rights</div>
-          <div class="feature">AI features unlocked</div>
-          <div class="feature">Unlimited access</div>
-          <div class="feature">Quantum Contract Scan</div>
-          <div class="feature">Advanced Risk Forecast</div>
-        </div>
-        <a href="profile.html" class="select-btn">SELECT</a>
-      </div>
-
-      <!-- Addons под PREMIUM -->
-      <div class="premium-addons">
-        <div class="addon-card">
-          <h3>Quantum Contract Scan</h3>
-          <ul>
-            <li>GoPlusLabs-powered rug/honeypot detection</li>
-            <li>Tax analysis • Ownership verification</li>
-            <li>Liquidity lock check</li>
-          </ul>
-        </div>
-        <div class="addon-card">
-          <h3>Advanced Risk Forecast</h3>
-          <ul>
-            <li>24h volatility prediction</li>
-            <li>Whale movement alerts</li>
-            <li>Pump/dump pattern detection</li>
-            <li>Market sentiment analysis</li>
-          </ul>
-        </div>
+      <!-- Invite Block - ПОД КАРТОЧКАМИ, ПО ЦЕНТРУ -->
+      <div class="invite-block">
+        <h3>🎁 Have an Invite Code?</h3>
+        <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
+        <button class="invite-btn">ACTIVATE INVITE</button>
       </div>
     </div>
 
-    <!-- Invite Block - по центру -->
-    <div class="invite-block">
-      <h3>🎁 Have an Invite Code?</h3>
-      <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
-      <button class="invite-btn">ACTIVATE INVITE</button>
+    <!-- Addons СПРАВА - НА МЕСТЕ -->
+    <div class="addons-container">
+      <div class="addon-card">
+        <h3>Quantum Contract Scan</h3>
+        <ul>
+          <li>GoPlusLabs-powered rug/honeypot detection</li>
+          <li>Tax analysis • Ownership verification</li>
+          <li>Liquidity lock check</li>
+        </ul>
+      </div>
+      <div class="addon-card">
+        <h3>Advanced Risk Forecast</h3>
+        <ul>
+          <li>24h volatility prediction</li>
+          <li>Whale movement alerts</li>
+          <li>Pump/dump pattern detection</li>
+          <li>Market sentiment analysis</li>
+        </ul>
+      </div>
     </div>
   </div>
 </body>
