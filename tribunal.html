@@ -412,34 +412,18 @@
   </div>
   <script>
     const translations = {
-      en: {
-        placeholder: "$TICKER, mint address, or contract",
-        analyze: "ANALYZE",
-        tribunalTitle: "TRIBUNAL DELIBERATION",
-        verdictTitle: "FINAL VERDICT",
-        save: "SAVE VERDICT",
-        offlineWarning: "⚠️ DexScreener API unavailable. Operating in offline mode with limited analysis.",
-        examples: ["$WIF", "$BONK", "$SOL", "$AUS"],
-        trusted: "TRUSTED",
-        lowRisk: "LOW RISK",
-        highRisk: "HIGH RISK",
-        unknown: "UNKNOWN"
-      },
-      ru: {
-        placeholder: "$ТИКЕР, адрес минта или контракт",
-        analyze: "АНАЛИЗ",
-        tribunalTitle: "ЗАСЕДАНИЕ ТРИБУНАЛА",
-        verdictTitle: "ФИНАЛЬНЫЙ ВЕРДИКТ",
-        save: "СОХРАНИТЬ ВЕРДИКТ",
-        offlineWarning: "⚠️ API DexScreener недоступно. Работаю в офлайн-режиме с ограниченным анализом.",
-        examples: ["$WIF", "$BONK", "$SOL", "$AUS"],
-        trusted: "НАДЕЖНЫЙ",
-        lowRisk: "НИЗКИЙ РИСК",
-        highRisk: "ВЫСОКИЙ РИСК",
-        unknown: "НЕИЗВЕСТНЫЙ"
-      }
+      placeholder: "$TICKER, mint address, or contract",
+      analyze: "ANALYZE",
+      tribunalTitle: "TRIBUNAL DELIBERATION",
+      verdictTitle: "FINAL VERDICT",
+      save: "SAVE VERDICT",
+      offlineWarning: "⚠️ DexScreener API unavailable. Operating in offline mode with limited analysis.",
+      examples: ["$WIF", "$BONK", "$SOL", "$AUS"],
+      trusted: "TRUSTED",
+      lowRisk: "LOW RISK",
+      highRisk: "HIGH RISK",
+      unknown: "UNKNOWN"
     };
-    let currentLang = 'en';
     const saveBtn = document.getElementById('saveBtn');
     const offlineWarning = document.getElementById('offlineWarning');
     const exampleTokens = document.querySelectorAll('.example-token');
@@ -765,11 +749,11 @@
       const { risk, category, recommendation } = moderatorData;
       let verdictHTML = '';
       if (category === 'trusted') {
-        verdictHTML = `<span class="verdict-trusted">${translations[currentLang].trusted} (${(risk).toFixed(2)})</span>`;
+        verdictHTML = `<span class="verdict-trusted">${translations.trusted} (${(risk).toFixed(2)})</span>`;
       } else if (risk < 0.3) {
-        verdictHTML = `<span class="verdict-safe">${translations[currentLang].lowRisk} (${(risk).toFixed(2)})</span>`;
+        verdictHTML = `<span class="verdict-safe">${translations.lowRisk} (${(risk).toFixed(2)})</span>`;
       } else {
-        verdictHTML = `<span class="verdict-risk">${translations[currentLang].highRisk} (${(risk).toFixed(2)})</span>`;
+        verdictHTML = `<span class="verdict-risk">${translations.highRisk} (${(risk).toFixed(2)})</span>`;
       }
       verdictText.innerHTML = verdictHTML;
       let details = `RECOMMENDATION: ${recommendation}\n`;
@@ -843,7 +827,7 @@
       savedVerdicts.unshift(verdictData);
       localStorage.setItem('tribunalVerdicts', JSON.stringify(savedVerdicts.slice(0, 50)));
       saveBtn.textContent = '✓ SAVED';
-      setTimeout(() => { saveBtn.textContent = translations[currentLang].save; }, 2000);
+      setTimeout(() => { saveBtn.textContent = translations.save; }, 2000);
     }
     function delay(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
