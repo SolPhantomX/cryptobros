@@ -34,6 +34,13 @@
     .container {
       max-width: 1280px;
       width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 30px;
+      margin-top: 80px;
+    }
+    .main-section {
+      grid-column: 1 / -1;
       text-align: center;
     }
     .main-title {
@@ -42,7 +49,7 @@
       background: linear-gradient(90deg, #00ff9d, #00d4ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin: 20px 0 8px;
+      margin: 0 0 8px;
     }
     .sub-title {
       font-size: 1.5rem;
@@ -56,7 +63,6 @@
       display: grid;
       grid-template-columns: repeat(4, minmax(280px, 1fr));
       gap: 30px;
-      margin-bottom: 60px;
       width: 100%;
     }
     .tier-card {
@@ -97,9 +103,8 @@
       align-self: center;
       width: 80%;
     }
-
-    /* === INVITE BLOCK — ПО ЦЕНТРУ, ПОД ТАРИФАМИ === */
     .invite-block {
+      grid-column: 1 / -1;
       background: rgba(10, 10, 40, 0.7);
       border-radius: 20px;
       padding: 30px;
@@ -129,10 +134,6 @@
       margin-bottom: 16px;
       outline: none;
     }
-    .invite-block input:focus {
-      border-color: #00ff9d;
-      box-shadow: 0 0 0 3px rgba(0, 255, 157, 0.3);
-    }
     .invite-btn {
       width: 100%;
       padding: 14px;
@@ -144,16 +145,11 @@
       font-weight: 700;
       cursor: pointer;
     }
-
-    /* === БЛОКИ ПОД ПАНЕЛЬЮ PREMIUM — В ЕЁ КОЛОНКЕ (СПРАВА) === */
     .premium-addons {
+      grid-column: 2;
       display: flex;
       flex-direction: column;
       gap: 24px;
-      max-width: 280px;
-      width: 100%;
-      margin-top: 40px;
-      align-self: flex-end;
     }
     .addon-card {
       background: rgba(10, 20, 70, 0.85);
@@ -197,9 +193,12 @@
 </head>
 <body>
   <button class="back-btn" onclick="location.href='index.html'">← Back to Home</button>
+
   <div class="container">
-    <h1 class="main-title">CHOOSE YOUR TIER</h1>
-    <div class="sub-title">Select access level and unlock powerful features</div>
+    <div class="main-section">
+      <h1 class="main-title">CHOOSE YOUR TIER</h1>
+      <div class="sub-title">Select access level and unlock powerful features</div>
+    </div>
 
     <div class="tiers-grid">
       <div class="tier-card free">
@@ -251,14 +250,12 @@
       </div>
     </div>
 
-    <!-- 🔑 INVITE BLOCK — ПО ЦЕНТРУ -->
     <div class="invite-block">
       <h3>🎁 Have an Invite Code?</h3>
       <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
       <button class="invite-btn">ACTIVATE INVITE</button>
     </div>
 
-    <!-- 🔴 ДВА БЛОКА ПОД ПАНЕЛЬЮ PREMIUM (СПРАВА) -->
     <div class="premium-addons">
       <div class="addon-card">
         <h3>Quantum Contract Scan</h3>
