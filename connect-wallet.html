@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRYPTOBROS • Connect Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #00052a;
+      color: #00ff9d;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #00ff9d, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #a0f0ff;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    .connect-card {
+      background: rgba(10, 20, 70, 0.85);
+      border: 2px solid #00ff9d;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(0, 255, 157, 0.2);
+    }
+    #connectWalletBtn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #00ff9d, #00d4ff);
+      color: #00052a;
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0, 255, 157, 0.4);
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+    #connectWalletBtn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 255, 157, 0.6);
+    }
+    #connectWalletBtn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+    #walletStatus {
+      color: #00ff9d;
+      font-weight: 700;
+      margin: 15px 0;
+      font-size: 1rem;
+      min-height: 1.5em;
+    }
+    #networkStatus {
+      color: #ffcc00;
+      font-size: 0.9rem;
+    }
+    #networkWarning {
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      margin: 8px 0;
+      display: none;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    #networkWarning.show { display: block; }
+    #disconnectBtn {
+      width: 100%;
+      padding: 12px 24px;
+      background: rgba(255, 77, 77, 0.2);
+      color: #ff4d4d;
+      border: 1px solid #ff4d4d;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      display: none;
+    }
+    #disconnectBtn:hover {
+      background: rgba(255, 77, 77, 0.4);
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: #66ffff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: #00ff9d; }
+    .supported {
+      margin-top: 30px;
+      color: #888;
+      font-size: 0.85rem;
+    }
+    .supported span {
+      display: inline-block;
+      margin: 3px 5px;
+      padding: 4px 10px;
+      background: rgba(0, 255, 157, 0.1);
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 5, 42, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: rgba(10, 20, 70, 0.95);
+      border: 2px solid #00ff9d;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 0 40px rgba(0, 255, 157, 0.3);
+    }
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .wallet-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      background: rgba(0, 255, 157, 0.1);
+      border: 1px solid transparent;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      position: relative;
+    }
+    .wallet-option:hover:not(.disabled) {
+      background: rgba(0, 255, 157, 0.2);
+      border-color: #00ff9d;
+      transform: translateX(4px);
+    }
+    .wallet-option.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .wallet-option .icon { font-size: 1.4rem; min-width: 24px; }
+    .wallet-option .name { font-weight: 600; color: #fff; }
+    .wallet-option .desc { font-size: 0.8rem; color: #888; margin-left: auto; }
+    .wallet-option .loading {
+      position: absolute;
+      right: 20px;
+      color: #00ff9d;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .wallet-option.connecting .loading { display: inline; }
+    .modal-close {
+      margin-top: 15px;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid #666;
+      color: #888;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    .modal-close:hover { border-color: #00ff9d; color: #00ff9d; }
+    .success-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 5, 42, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      padding: 20px;
+    }
+    .success-overlay.active { display: flex; }
+    .success-card {
+      background: rgba(10, 20, 70, 0.95);
+      border: 2px solid #00ff9d;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0, 255, 157, 0.4);
+    }
+    .success-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    .success-text {
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .success-address {
+      color: #00ff9d;
+      font-family: monospace;
+      margin-bottom: 25px;
+    }
+    .success-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00ff9d, #00d4ff);
+      color: #00052a;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .success-btn.secondary {
+      background: transparent;
+      border: 1px solid #666;
+      color: #888;
+    }
+    .success-btn.secondary:hover {
+      border-color: #00ff9d;
+      color: #00ff9d;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">CRYPTOBROS</div>
+  <div class="subtitle">Connect your Solana wallet to access premium features</div>
+
+  <div class="connect-card">
+    <button id="connectWalletBtn">🔗 Connect Wallet</button>
+    <p id="walletStatus">Wallet: Not connected</p>
+    <p id="networkStatus">Network: —</p>
+    <p id="networkWarning">⚠️ Network mismatch — click to continue anyway</p>
+    <button id="disconnectBtn">🔌 Disconnect</button>
+  </div>
+
+  <div class="supported">
+    Supported: 
+    <span>👻 Phantom</span>
+    <span>🔥 Solflare</span>
+    <span>🎒 Backpack</span>
+    <span>🟠 OKX</span>
+    <span>✨ Glow</span>
+  </div>
+
+  <a href="index.html" class="back-link">← Back to Home</a>
+
+  <!-- Wallet Selection Modal -->
+  <div class="modal-overlay" id="walletModal">
+    <div class="modal">
+      <div class="modal-title">Select Wallet</div>
+      <div id="walletList"></div>
+      <button class="modal-close" id="modalClose">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Success Overlay -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <div class="success-icon">✅</div>
+      <div class="success-text" id="successText"></div>
+      <div class="success-address" id="successAddress"></div>
+      <button class="success-btn" id="goToProfileBtn">Go to Profile</button>
+      <button class="success-btn secondary" id="stayHereBtn">Stay Here</button>
+    </div>
+  </div>
+
+  <!-- Solana web3.js -->
+  <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+
+  <script>
+    // === SETTINGS ===
+    const CLUSTER = 'devnet';
+    const COMMITMENT = 'confirmed';
+    const AUTO_RECONNECT_MIN_INTERVAL = 5 * 60 * 1000;
+
+    const RPC_ENDPOINTS = {
+      'mainnet-beta': 'https://api.mainnet-beta.solana.com',
+      'devnet': 'https://api.devnet.solana.com',
+      'testnet': 'https://api.testnet.solana.com'
+    };
+
+    const connection = new solanaWeb3.Connection(
+      RPC_ENDPOINTS[CLUSTER] || solanaWeb3.clusterApiUrl(CLUSTER),
+      COMMITMENT
+    );
+
+    // === WALLET DETECTION ===
+    const getAvailableWallets = () => {
+      const wallets = [];
+      if (window.solana?.isPhantom) wallets.push({ id: 'phantom', name: 'Phantom', provider: window.solana, icon: '👻', desc: 'Most popular' });
+      if (window.solflare) wallets.push({ id: 'solflare', name: 'Solflare', provider: window.solflare, icon: '🔥', desc: 'Official Solana Labs' });
+      if (window.backpack) wallets.push({ id: 'backpack', name: 'Backpack', provider: window.backpack, icon: '🎒', desc: 'NFT focused' });
+      if (window.okxwallet?.solana) wallets.push({ id: 'okx', name: 'OKX', provider: window.okxwallet.solana, icon: '🟠', desc: 'Multi-chain' });
+      if (window.glow) wallets.push({ id: 'glow', name: 'Glow', provider: window.glow, icon: '✨', desc: 'Mobile friendly' });
+      if (window.coinbaseWalletExtension?.solana || window.ethereum?.isCoinbaseWallet) wallets.push({ id: 'coinbase', name: 'Coinbase', provider: window.coinbaseWalletExtension?.solana || window.ethereum, icon: '🔵', desc: 'Coinbase ecosystem' });
+      if (window.ethereum?.isTrust || window.ethereum?.isExodus) wallets.push({ id: 'trust', name: 'Trust/Exodus', provider: window.ethereum, icon: '🦊', desc: 'EIP-1193' });
+      return wallets;
+    };
+
+    // === EXTRACT PUBLIC KEY ===
+    const extractPublicKey = (provider) => {
+      try {
+        if (provider.publicKey?.toBase58) return provider.publicKey.toBase58();
+        if (provider.publicKey?.toString) return provider.publicKey.toString();
+        if (Array.isArray(provider.accounts) && provider.accounts[0]) return provider.accounts[0];
+        if (provider.selectedAddress) return provider.selectedAddress;
+        if (provider._addresses?.[0]) return provider._addresses[0];
+        return null;
+      } catch (e) {
+        console.error('extractPublicKey error:', e);
+        return null;
+      }
+    };
+
+    // === UI ELEMENTS ===
+    const connectBtn = document.getElementById('connectWalletBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const statusEl = document.getElementById('walletStatus');
+    const networkEl = document.getElementById('networkStatus');
+    const networkWarning = document.getElementById('networkWarning');
+    const walletModal = document.getElementById('walletModal');
+    const walletList = document.getElementById('walletList');
+    const modalClose = document.getElementById('modalClose');
+    const successOverlay = document.getElementById('successOverlay');
+    const successText = document.getElementById('successText');
+    const successAddress = document.getElementById('successAddress');
+    const goToProfileBtn = document.getElementById('goToProfileBtn');
+    const stayHereBtn = document.getElementById('stayHereBtn');
+
+    let currentProvider = null;
+    let currentWalletName = null;
+
+    // === SHOW WALLET MODAL ===
+    function showWalletModal() {
+      const wallets = getAvailableWallets();
+      walletList.innerHTML = '';
+      wallets.forEach(wallet => {
+        const option = document.createElement('div');
+        option.className = 'wallet-option';
+        option.innerHTML = `<span class="icon">${wallet.icon}</span><span class="name">${wallet.name}</span><span class="desc">${wallet.desc}</span><span class="loading">Connecting...</span>`;
+        option.addEventListener('click', () => handleWalletSelect(wallet, option));
+        walletList.appendChild(option);
+      });
+      walletModal.classList.add('active');
+    }
+
+    // === HANDLE WALLET SELECTION ===
+    async function handleWalletSelect(wallet, optionEl) {
+      optionEl?.classList.add('connecting');
+      connectBtn.disabled = true;
+      try {
+        await wallet.provider.connect();
+        const pk = extractPublicKey(wallet.provider);
+        if (!pk) throw new Error('Could not get public key');
+        checkNetworkMatch(wallet.provider);
+        setupProviderListeners(wallet.provider);
+        updateStatus(wallet.name, pk, wallet.icon);
+        disconnectBtn.style.display = 'block';
+        showSuccessOverlay(wallet.icon, wallet.name, pk);
+        currentProvider = wallet.provider;
+        currentWalletName = wallet.name;
+      } catch (err) {
+        console.error('Connect error:', err);
+        if (err.code === 4001 || err.message?.toLowerCase().includes('reject') || err.message?.toLowerCase().includes('cancel')) {
+          alert('⚠️ Connection cancelled by user');
+        } else {
+          alert(`❌ Failed: ${err.message || 'Unknown error'}`);
+        }
+      } finally {
+        connectBtn.disabled = false;
+        connectBtn.textContent = '🔗 Connect Wallet';
+        optionEl?.classList.remove('connecting');
+        walletModal.classList.remove('active');
+      }
+    }
+
+    // === CHECK NETWORK MATCH ===
+    function checkNetworkMatch(provider) {
+      try {
+        const walletNetwork = provider.network || provider.chainId || provider._network;
+        if (walletNetwork && walletNetwork !== CLUSTER && walletNetwork !== 'mainnet-beta') {
+          networkWarning.classList.add('show');
+          networkWarning.onclick = () => {
+            if (confirm(`⚠️ Wallet is on ${walletNetwork}, app is on ${CLUSTER}. Continue anyway?`)) {
+              networkWarning.classList.remove('show');
+            }
+          };
+          console.warn(`⚠️ Network mismatch: wallet=${walletNetwork}, app=${CLUSTER}`);
+        } else {
+          networkWarning.classList.remove('show');
+        }
+      } catch (e) { }
+    }
+
+    // === SETUP PROVIDER EVENT LISTENERS ===
+    function setupProviderListeners(provider) {
+      if (typeof provider.on === 'function') {
+        provider.on('disconnect', handleProviderDisconnect);
+        provider.on('accountsChanged', (accounts) => {
+          if (!accounts || accounts.length === 0) handleProviderDisconnect();
+        });
+      }
+      if (provider.onDisconnect) {
+        provider.onDisconnect(handleProviderDisconnect);
+      }
+    }
+
+    // === HANDLE PROVIDER DISCONNECT ===
+    function handleProviderDisconnect() {
+      statusEl.textContent = 'Wallet: Disconnected';
+      networkEl.textContent = 'Network: —';
+      networkWarning.classList.remove('show');
+      disconnectBtn.style.display = 'none';
+      localStorage.removeItem('walletAddress');
+      localStorage.removeItem('walletName');
+      localStorage.removeItem('walletConnected');
+      currentProvider = null;
+      currentWalletName = null;
+    }
+
+    // === UPDATE STATUS ===
+    function updateStatus(walletName, address, icon = '') {
+      const short = `${address.slice(0, 6)}...${address.slice(-4)}`;
+      statusEl.innerHTML = `Wallet: ${icon} ${walletName} • ${short}`;
+      networkEl.textContent = `Network: ${CLUSTER.toUpperCase()} • ${COMMITMENT}`;
+      networkWarning.classList.remove('show');
+      localStorage.setItem('walletAddress', address);
+      localStorage.setItem('walletName', walletName);
+      localStorage.setItem('walletConnected', 'true');
+    }
+
+    // === SHOW SUCCESS OVERLAY ===
+    function showSuccessOverlay(icon, name, address) {
+      const short = `${address.slice(0, 6)}...${address.slice(-4)}`;
+      successText.textContent = `Connected to ${icon} ${name}!`;
+      successAddress.textContent = `${short}`;
+      successOverlay.classList.add('active');
+    }
+
+    // === REDIRECT TO PROFILE ===
+    function redirectToProfile() {
+      const returnTo = localStorage.getItem('returnTo') || 'profile.html';
+      window.location.href = returnTo;
+    }
+
+    // === DISCONNECT WALLET ===
+    async function disconnectWallet() {
+      if (currentProvider?.disconnect) {
+        try { await currentProvider.disconnect(); } catch (e) { console.error('Disconnect error:', e); }
+      }
+      localStorage.removeItem('walletAddress');
+      localStorage.removeItem('walletName');
+      localStorage.removeItem('walletConnected');
+      statusEl.textContent = 'Wallet: Not connected';
+      networkEl.textContent = 'Network: —';
+      networkWarning.classList.remove('show');
+      disconnectBtn.style.display = 'none';
+      currentProvider = null;
+      currentWalletName = null;
+      alert('🔌 Disconnected');
+    }
+
+    // === AUTO RECONNECT WITH RATE LIMIT ===
+    window.addEventListener('load', async () => {
+      const savedAddr = localStorage.getItem('walletAddress');
+      const savedName = localStorage.getItem('walletName');
+      const isConnected = localStorage.getItem('walletConnected') === 'true';
+      const lastAutoConnect = parseInt(localStorage.getItem('lastAutoConnect') || '0');
+      const now = Date.now();
+
+      if (savedAddr && savedName && isConnected && (now - lastAutoConnect) > AUTO_RECONNECT_MIN_INTERVAL) {
+        statusEl.textContent = `Wallet: ${savedAddr.slice(0,6)}...${savedAddr.slice(-4)} • Checking...`;
+        const wallets = getAvailableWallets();
+        const found = wallets.find(w => w.name === savedName);
+        if (found?.provider) {
+          try {
+            await found.provider.connect?.();
+            const pk = extractPublicKey(found.provider);
+            if (pk) {
+              updateStatus(savedName, pk, found.icon);
+              disconnectBtn.style.display = 'block';
+              checkNetworkMatch(found.provider);
+              setupProviderListeners(found.provider);
+              currentProvider = found.provider;
+              currentWalletName = savedName;
+              localStorage.setItem('lastAutoConnect', now.toString());
+              return;
+            }
+          } catch (e) { console.log('Auto-reconnect failed'); }
+        }
+        statusEl.innerHTML = `Wallet: ${savedAddr.slice(0,6)}...${savedAddr.slice(-4)} • <span style="color:#66ffff;cursor:pointer;text-decoration:underline" id="reconnectLink">Click to reconnect</span>`;
+        networkEl.textContent = `Network: ${CLUSTER.toUpperCase()}`;
+        document.getElementById('reconnectLink')?.addEventListener('click', () => connectBtn.click());
+      }
+    });
+
+    // === EVENT LISTENERS ===
+    connectBtn.addEventListener('click', () => {
+      const wallets = getAvailableWallets();
+      if (wallets.length === 1 && !wallets[0].id === 'walletconnect') {
+        handleWalletSelect(wallets[0], null);
+      } else {
+        showWalletModal();
+      }
+    });
+    disconnectBtn.addEventListener('click', disconnectWallet);
+    modalClose.addEventListener('click', () => walletModal.classList.remove('active'));
+    walletModal.addEventListener('click', (e) => { if (e.target === walletModal) walletModal.classList.remove('active'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') walletModal.classList.remove('active'); });
+    goToProfileBtn.addEventListener('click', redirectToProfile);
+    stayHereBtn.addEventListener('click', () => successOverlay.classList.remove('active'));
+  </script>
+</body>
+</html>
