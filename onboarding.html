@@ -67,7 +67,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 25px;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
 
     .tier-card {
@@ -175,6 +175,8 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      text-decoration: none;
+      display: inline-block;
     }
     .free .select-btn {
       background: linear-gradient(135deg, #00ff9d, #00cc7d);
@@ -205,27 +207,34 @@
     .pro .select-btn:hover { box-shadow: 0 12px 35px rgba(0, 212, 255, 0.7), inset 0 2px 5px rgba(255,255,255,0.3); }
     .premium .select-btn:hover { box-shadow: 0 15px 40px rgba(255, 215, 0, 0.9), inset 0 2px 5px rgba(255,255,255,0.4); }
 
-    .bottom-section {
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 30px;
-      align-items: start;
-    }
-
+    /* Invite Block - красиво по центру */
     .invite-block {
+      max-width: 700px;
+      margin: 0 auto 40px;
       background: rgba(10, 10, 40, 0.85);
       border-radius: 20px;
-      padding: 35px 50px;
-      border: 3px solid #ff4444;
+      padding: 40px 50px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      position: relative;
       backdrop-filter: blur(10px);
-      text-align: center;
-      box-shadow: 0 10px 40px rgba(255, 68, 68, 0.3), inset 0 0 30px rgba(255, 68, 68, 0.1);
+    }
+    .invite-block::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #d700ff, #00d4ff);
+      border-radius: 20px;
+      z-index: -1;
     }
     .invite-block h3 {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: #fff;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -236,18 +245,18 @@
       width: 100%;
       padding: 16px 25px;
       background: rgba(20, 20, 50, 0.9);
-      border: 2px solid #666;
+      border: 2px solid #444;
       border-radius: 12px;
       color: #e0f0ff;
       font-size: 1.05rem;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       outline: none;
       text-align: center;
       transition: all 0.3s;
     }
     .invite-block input:focus { 
-      border-color: #ff4444;
-      box-shadow: 0 0 20px rgba(255, 68, 68, 0.4);
+      border-color: #d700ff;
+      box-shadow: 0 0 25px rgba(215, 0, 255, 0.4);
     }
     .invite-btn {
       width: 100%;
@@ -269,7 +278,10 @@
       transform: translateY(-3px);
     }
 
+    /* Addons справа */
     .addons-container {
+      max-width: 400px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -320,9 +332,6 @@
 
     @media (max-width: 1200px) {
       .tiers-grid { grid-template-columns: repeat(2, 1fr); }
-      .bottom-section {
-        grid-template-columns: 1fr;
-      }
     }
     @media (max-width: 768px) {
       .tiers-grid { grid-template-columns: 1fr; }
@@ -391,35 +400,35 @@
           <div class="feature">Quantum Contract Scan</div>
           <div class="feature">Advanced Risk Forecast</div>
         </div>
-        <button class="select-btn">SELECT</button>
+        <a href="profile.html" class="select-btn">SELECT</a>
       </div>
     </div>
 
-    <div class="bottom-section">
-      <div class="invite-block">
-        <h3>🎁 Have an Invite Code?</h3>
-        <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
-        <button class="invite-btn">ACTIVATE INVITE</button>
-      </div>
+    <!-- Invite Block - красиво по центру с градиентной рамкой -->
+    <div class="invite-block">
+      <h3>🎁 Have an Invite Code?</h3>
+      <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
+      <button class="invite-btn">ACTIVATE INVITE</button>
+    </div>
 
-      <div class="addons-container">
-        <div class="addon-card">
-          <h3>Quantum Contract Scan</h3>
-          <ul>
-            <li>GoPlusLabs-powered rug/honeypot detection</li>
-            <li>Tax analysis • Ownership verification</li>
-            <li>Liquidity lock check</li>
-          </ul>
-        </div>
-        <div class="addon-card">
-          <h3>Advanced Risk Forecast</h3>
-          <ul>
-            <li>24h volatility prediction</li>
-            <li>Whale movement alerts</li>
-            <li>Pump/dump pattern detection</li>
-            <li>Market sentiment analysis</li>
-          </ul>
-        </div>
+    <!-- Addons справа -->
+    <div class="addons-container">
+      <div class="addon-card">
+        <h3>Quantum Contract Scan</h3>
+        <ul>
+          <li>GoPlusLabs-powered rug/honeypot detection</li>
+          <li>Tax analysis • Ownership verification</li>
+          <li>Liquidity lock check</li>
+        </ul>
+      </div>
+      <div class="addon-card">
+        <h3>Advanced Risk Forecast</h3>
+        <ul>
+          <li>24h volatility prediction</li>
+          <li>Whale movement alerts</li>
+          <li>Pump/dump pattern detection</li>
+          <li>Market sentiment analysis</li>
+        </ul>
       </div>
     </div>
   </div>
