@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS TRIBUNAL</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -98,42 +98,43 @@
       position: relative;
       z-index: 1;
     }
+    .back-btn {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #00ff9d, #00d4ff);
+      color: #00052a;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 255, 157, 0.4), 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 255, 157, 0.6), 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
     header {
       text-align: center;
       padding: 30px 0;
     }
     h1 {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 3em;
-      font-weight: 800;
+      font-weight: 900;
       text-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d;
       margin-bottom: 10px;
       letter-spacing: -0.5px;
     }
     .subtitle {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 1.2em;
       color: #66ffff;
       margin-top: 10px;
-      font-weight: 600;
-    }
-    .lang-switch {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 5, 42, 0.85);
-      border: 1px solid #00ff9d;
-      color: #00ff9d;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9em;
-    }
-    .lang-switch:hover {
-      background: rgba(0, 255, 157, 0.1);
-      box-shadow: 0 0 15px #00ff9d;
+      font-weight: 700;
     }
     .input-section {
       background: rgba(0, 5, 42, 0.85);
@@ -198,12 +199,12 @@
       min-height: 400px;
     }
     .dialog-title {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 1.5em;
       color: #66ffff;
       margin-bottom: 20px;
       text-align: center;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 1px;
     }
     .message {
@@ -225,7 +226,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .expert-name {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-weight: 700;
       color: #66ffff;
       margin-bottom: 5px;
@@ -242,17 +243,17 @@
       display: none;
     }
     .verdict-title {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 2em;
       margin-bottom: 20px;
       text-shadow: 0 0 10px #d700ff;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 1px;
     }
     .verdict-text {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 3em;
-      font-weight: 800;
+      font-weight: 900;
       padding: 20px;
       border-radius: 10px;
       margin: 20px 0;
@@ -370,10 +371,10 @@
     <div class="neon-connection"></div>
   </div>
   <div class="container">
+    <button class="back-btn" onclick="location.href='index.html'">← Back to Home</button>
     <header>
       <h1>CRYPTOBROS TRIBUNAL</h1>
       <div class="subtitle">AI Multi-Agent Risk Assessment System</div>
-      <button class="lang-switch" id="langSwitch">RU</button>
     </header>
     <div class="warning-text">
       We do not recommend buying! We advise <span class="not-highlight">NOT</span> to buy!
@@ -439,23 +440,11 @@
       }
     };
     let currentLang = 'en';
-    const langSwitch = document.getElementById('langSwitch');
     const saveBtn = document.getElementById('saveBtn');
     const offlineWarning = document.getElementById('offlineWarning');
     const exampleTokens = document.querySelectorAll('.example-token');
     let currentTokenData = null;
-    function updateLanguage() {
-      const t = translations[currentLang];
-      tokenInput.placeholder = t.placeholder;
-      analyzeBtn.textContent = t.analyze;
-      document.querySelector('.dialog-title').textContent = t.tribunalTitle;
-      document.querySelector('.verdict-title').textContent = t.verdictTitle;
-      saveBtn.textContent = t.save;
-      offlineWarning.textContent = t.offlineWarning;
-      langSwitch.textContent = currentLang === 'en' ? 'RU' : 'EN';
-    }
     function setupEventListeners() {
-      langSwitch.addEventListener('click', toggleLanguage);
       analyzeBtn.addEventListener('click', analyzeToken);
       tokenInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') analyzeToken();
@@ -467,10 +456,6 @@
         });
       });
       saveBtn.addEventListener('click', saveVerdict);
-    }
-    function toggleLanguage() {
-      currentLang = currentLang === 'en' ? 'ru' : 'en';
-      updateLanguage();
     }
     async function analyzeToken() {
       const tokenQuery = tokenInput.value.trim();
@@ -869,7 +854,6 @@
       else if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
       else return num.toFixed(2);
     }
-    updateLanguage();
     setupEventListeners();
   </script>
 </body>
