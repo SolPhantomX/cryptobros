@@ -201,57 +201,10 @@
       transform: translateY(-3px);
     }
 
-    /* Addons под PREMIUM (4-я колонка) */
-    .premium-addons {
-      grid-column: 4;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 25px;
-    }
-    .addon-card {
-      background: rgba(10, 20, 70, 0.9);
-      border-radius: 16px;
-      padding: 20px;
-      border: 2px solid #444;
-      backdrop-filter: blur(10px);
-      text-align: left;
-    }
-    .addon-card h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .addon-card h3::before { content: "🔹"; }
-    .addon-card ul {
-      padding-left: 0;
-      list-style: none;
-      color: #c0f0ff;
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
-    .addon-card li {
-      margin: 6px 0;
-      padding-left: 15px;
-      position: relative;
-    }
-    .addon-card li::before {
-      content: "▸";
-      color: #00ff9d;
-      position: absolute;
-      left: 0;
-      font-weight: bold;
-    }
-
-    /* Invite под MASTER и PRO (колонки 2 и 3) */
     .invite-block {
       grid-column: 2 / 4;
       max-width: 100%;
-      margin: 25px 0 0;
+      margin: 25px 0;
       background: rgba(10, 10, 40, 0.85);
       border-radius: 20px;
       padding: 40px 50px;
@@ -316,6 +269,51 @@
     .invite-btn:hover {
       box-shadow: 0 12px 35px rgba(215, 0, 255, 0.7);
       transform: translateY(-3px);
+    }
+
+    .premium-addons {
+      grid-column: 4;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    .addon-card {
+      background: rgba(10, 20, 70, 0.9);
+      border-radius: 16px;
+      padding: 20px;
+      border: 2px solid #444;
+      backdrop-filter: blur(10px);
+      text-align: left;
+    }
+    .addon-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .addon-card h3::before { content: "🔹"; }
+    .addon-card ul {
+      padding-left: 0;
+      list-style: none;
+      color: #c0f0ff;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .addon-card li {
+      margin: 6px 0;
+      padding-left: 15px;
+      position: relative;
+    }
+    .addon-card li::before {
+      content: "▸";
+      color: #00ff9d;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
     }
 
     @media (max-width: 1200px) {
@@ -393,7 +391,14 @@
         <a href="profile.html" class="select-btn">SELECT</a>
       </div>
 
-      <!-- Addons под PREMIUM -->
+      <!-- Invite Block -->
+      <div class="invite-block">
+        <h3>🎁 Have an Invite Code?</h3>
+        <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
+        <button class="invite-btn">ACTIVATE INVITE</button>
+      </div>
+
+      <!-- Premium Addons -->
       <div class="premium-addons">
         <div class="addon-card">
           <h3>Quantum Contract Scan</h3>
@@ -412,13 +417,6 @@
             <li>Market sentiment analysis</li>
           </ul>
         </div>
-      </div>
-
-      <!-- Invite под MASTER и PRO -->
-      <div class="invite-block">
-        <h3>🎁 Have an Invite Code?</h3>
-        <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
-        <button class="invite-btn">ACTIVATE INVITE</button>
       </div>
     </div>
   </div>
