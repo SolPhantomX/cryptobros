@@ -78,7 +78,6 @@
       backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
-      position: relative;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .tier-card:hover { transform: translateY(-8px); }
@@ -202,18 +201,21 @@
     .select-btn:hover {
       transform: translateY(-3px);
     }
-    .free .select-btn:hover { box-shadow: 0 12px 35px rgba(0, 255, 157, 0.7), inset 0 2px 5px rgba(255,255,255,0.3); }
-    .master .select-btn:hover { box-shadow: 0 12px 35px rgba(215, 0, 255, 0.7), inset 0 2px 5px rgba(255,255,255,0.3); }
-    .pro .select-btn:hover { box-shadow: 0 12px 35px rgba(0, 212, 255, 0.7), inset 0 2px 5px rgba(255,255,255,0.3); }
-    .premium .select-btn:hover { box-shadow: 0 15px 40px rgba(255, 215, 0, 0.9), inset 0 2px 5px rgba(255,255,255,0.4); }
 
-    /* Addons под PREMIUM - той же ширины */
-    .premium-addons {
+    /* Нижняя часть: addons под PREMIUM + invite по центру */
+    .bottom-section {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 25px;
+      margin-top: 25px;
+      align-items: start;
+    }
+
+    .addons-wrapper {
       grid-column: 4;
       display: flex;
       flex-direction: column;
       gap: 15px;
-      margin-top: 25px;
     }
     .addon-card {
       background: rgba(10, 20, 70, 0.9);
@@ -258,11 +260,16 @@
       font-weight: bold;
     }
 
-    /* Invite Block - по центру под всеми */
-    .invite-block {
+    /* Invite Block - по центру */
+    .invite-wrapper {
       grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .invite-block {
       max-width: 700px;
-      margin: 40px auto 0;
+      width: 100%;
       background: rgba(10, 10, 40, 0.85);
       border-radius: 20px;
       padding: 40px 50px;
@@ -291,7 +298,6 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
     .invite-block input {
       width: 100%;
@@ -326,18 +332,19 @@
       letter-spacing: 1px;
     }
     .invite-btn:hover {
-      box-shadow: 0 12px 35px rgba(215, 0, 255, 0.7), inset 0 2px 5px rgba(255,255,255,0.3);
+      box-shadow: 0 12px 35px rgba(215, 0, 255, 0.7);
       transform: translateY(-3px);
     }
 
     @media (max-width: 1200px) {
       .tiers-grid { grid-template-columns: repeat(2, 1fr); }
-      .premium-addons { grid-column: 1 / -1; flex-direction: row; }
-      .addon-card { flex: 1; }
+      .bottom-section { grid-template-columns: repeat(2, 1fr); }
+      .addons-wrapper { grid-column: 1 / -1; flex-direction: row; }
     }
     @media (max-width: 768px) {
       .tiers-grid { grid-template-columns: 1fr; }
-      .premium-addons { flex-direction: column; }
+      .bottom-section { grid-template-columns: 1fr; }
+      .addons-wrapper { flex-direction: column; }
       .main-title { font-size: 2.5rem; }
       .tier-price { font-size: 2rem; }
       .premium .tier-price { font-size: 2.6rem; }
@@ -405,9 +412,12 @@
         </div>
         <a href="profile.html" class="select-btn">SELECT</a>
       </div>
+    </div>
 
-      <!-- Addons ПОД PREMIUM той же ширины -->
-      <div class="premium-addons">
+    <!-- Нижняя секция -->
+    <div class="bottom-section">
+      <!-- Addons под PREMIUM (4-я колонка) -->
+      <div class="addons-wrapper">
         <div class="addon-card">
           <h3>Quantum Contract Scan</h3>
           <ul>
@@ -427,11 +437,13 @@
         </div>
       </div>
 
-      <!-- Invite Block по центру -->
-      <div class="invite-block">
-        <h3>🎁 Have an Invite Code?</h3>
-        <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
-        <button class="invite-btn">ACTIVATE INVITE</button>
+      <!-- Invite по центру -->
+      <div class="invite-wrapper">
+        <div class="invite-block">
+          <h3>🎁 Have an Invite Code?</h3>
+          <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
+          <button class="invite-btn">ACTIVATE INVITE</button>
+        </div>
       </div>
     </div>
   </div>
