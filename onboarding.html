@@ -67,7 +67,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 25px;
-      margin-bottom: 40px;
+      margin-bottom: 0;
     }
 
     .tier-card {
@@ -207,10 +207,62 @@
     .pro .select-btn:hover { box-shadow: 0 12px 35px rgba(0, 212, 255, 0.7), inset 0 2px 5px rgba(255,255,255,0.3); }
     .premium .select-btn:hover { box-shadow: 0 15px 40px rgba(255, 215, 0, 0.9), inset 0 2px 5px rgba(255,255,255,0.4); }
 
-    /* Invite Block - красиво по центру */
+    /* Addons под PREMIUM - той же ширины */
+    .premium-addons {
+      grid-column: 4;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    .addon-card {
+      background: rgba(10, 20, 70, 0.9);
+      border-radius: 16px;
+      padding: 20px;
+      border: 2px solid #444;
+      backdrop-filter: blur(10px);
+      text-align: left;
+      transition: all 0.3s ease;
+    }
+    .addon-card:hover {
+      border-color: #ffd700;
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    }
+    .addon-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .addon-card h3::before { content: "🔹"; }
+    .addon-card ul {
+      padding-left: 0;
+      list-style: none;
+      color: #c0f0ff;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .addon-card li {
+      margin: 6px 0;
+      padding-left: 15px;
+      position: relative;
+    }
+    .addon-card li::before {
+      content: "▸";
+      color: #00ff9d;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    /* Invite Block - по центру под всеми */
     .invite-block {
+      grid-column: 1 / -1;
       max-width: 700px;
-      margin: 0 auto 40px;
+      margin: 40px auto 0;
       background: rgba(10, 10, 40, 0.85);
       border-radius: 20px;
       padding: 40px 50px;
@@ -278,63 +330,14 @@
       transform: translateY(-3px);
     }
 
-    /* Addons справа */
-    .addons-container {
-      max-width: 400px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .addon-card {
-      background: rgba(10, 20, 70, 0.9);
-      border-radius: 16px;
-      padding: 25px;
-      border: 2px solid #444;
-      backdrop-filter: blur(10px);
-      text-align: left;
-      transition: all 0.3s ease;
-    }
-    .addon-card:hover {
-      border-color: #00d4ff;
-      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
-      transform: translateX(-5px);
-    }
-    .addon-card h3 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .addon-card h3::before { content: "🔹"; }
-    .addon-card ul {
-      padding-left: 0;
-      list-style: none;
-      color: #c0f0ff;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-    .addon-card li {
-      margin: 8px 0;
-      padding-left: 18px;
-      position: relative;
-    }
-    .addon-card li::before {
-      content: "▸";
-      color: #00ff9d;
-      position: absolute;
-      left: 0;
-      font-weight: bold;
-    }
-
     @media (max-width: 1200px) {
       .tiers-grid { grid-template-columns: repeat(2, 1fr); }
+      .premium-addons { grid-column: 1 / -1; flex-direction: row; }
+      .addon-card { flex: 1; }
     }
     @media (max-width: 768px) {
       .tiers-grid { grid-template-columns: 1fr; }
+      .premium-addons { flex-direction: column; }
       .main-title { font-size: 2.5rem; }
       .tier-price { font-size: 2rem; }
       .premium .tier-price { font-size: 2.6rem; }
@@ -402,33 +405,33 @@
         </div>
         <a href="profile.html" class="select-btn">SELECT</a>
       </div>
-    </div>
 
-    <!-- Invite Block - красиво по центру с градиентной рамкой -->
-    <div class="invite-block">
-      <h3>🎁 Have an Invite Code?</h3>
-      <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
-      <button class="invite-btn">ACTIVATE INVITE</button>
-    </div>
-
-    <!-- Addons справа -->
-    <div class="addons-container">
-      <div class="addon-card">
-        <h3>Quantum Contract Scan</h3>
-        <ul>
-          <li>GoPlusLabs-powered rug/honeypot detection</li>
-          <li>Tax analysis • Ownership verification</li>
-          <li>Liquidity lock check</li>
-        </ul>
+      <!-- Addons ПОД PREMIUM той же ширины -->
+      <div class="premium-addons">
+        <div class="addon-card">
+          <h3>Quantum Contract Scan</h3>
+          <ul>
+            <li>GoPlusLabs-powered rug/honeypot detection</li>
+            <li>Tax analysis • Ownership verification</li>
+            <li>Liquidity lock check</li>
+          </ul>
+        </div>
+        <div class="addon-card">
+          <h3>Advanced Risk Forecast</h3>
+          <ul>
+            <li>24h volatility prediction</li>
+            <li>Whale movement alerts</li>
+            <li>Pump/dump pattern detection</li>
+            <li>Market sentiment analysis</li>
+          </ul>
+        </div>
       </div>
-      <div class="addon-card">
-        <h3>Advanced Risk Forecast</h3>
-        <ul>
-          <li>24h volatility prediction</li>
-          <li>Whale movement alerts</li>
-          <li>Pump/dump pattern detection</li>
-          <li>Market sentiment analysis</li>
-        </ul>
+
+      <!-- Invite Block по центру -->
+      <div class="invite-block">
+        <h3>🎁 Have an Invite Code?</h3>
+        <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
+        <button class="invite-btn">ACTIVATE INVITE</button>
       </div>
     </div>
   </div>
