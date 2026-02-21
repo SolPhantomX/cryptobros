@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRYPTOBROS • Payment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #00052a;
+      color: #00ff9d;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #00ff9d, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #a0f0ff;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    .tier-card {
+      background: rgba(10, 20, 70, 0.85);
+      border: 2px solid #00ff9d;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px 0;
+      box-shadow: 0 0 30px rgba(0, 255, 157, 0.2);
+    }
+    .tier-name {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .tier-price {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #00ff9d;
+      margin-bottom: 20px;
+    }
+    .tier-features {
+      text-align: left;
+      margin: 20px 0;
+      color: #e0f0ff;
+    }
+    .tier-features li {
+      list-style: none;
+      margin: 10px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+    .tier-features li::before {
+      content: "✓";
+      color: #00ff9d;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+    .pay-btn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #00ff9d, #00d4ff);
+      color: #00052a;
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0, 255, 157, 0.4);
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+    .pay-btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 255, 157, 0.6);
+    }
+    .pay-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .pay-btn.premium {
+      background: linear-gradient(135deg, #ffd700, #ffcc00);
+    }
+    .wallet-info {
+      background: rgba(0, 255, 157, 0.1);
+      border: 1px solid #00ff9d;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+    .wallet-address {
+      font-family: monospace;
+      color: #00ff9d;
+      word-break: break-all;
+      margin: 10px 0;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: #66ffff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: #00ff9d; }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 5, 42, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: rgba(10, 20, 70, 0.95);
+      border: 2px solid #00ff9d;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0, 255, 157, 0.3);
+    }
+    .modal-icon { font-size: 3rem; margin-bottom: 20px; }
+    .modal-title { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 15px; }
+    .modal-text { color: #888; margin-bottom: 25px; line-height: 1.6; }
+    .modal-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00ff9d, #00d4ff);
+      color: #00052a;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .modal-btn.secondary {
+      background: transparent;
+      border: 1px solid #666;
+      color: #888;
+    }
+    .status-box {
+      background: rgba(0, 10, 50, 0.7);
+      border-left: 4px solid #00ff9d;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .status-box.warning { border-left-color: #ffcc00; color: #ffcc00; }
+    .status-box.error { border-left-color: #ff4d4d; color: #ff4d4d; }
+    .status-box.success { border-left-color: #00ff9d; color: #00ff9d; }
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 255, 157, 0.3);
+      border-top-color: #00ff9d;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .timer { font-size: 1.2rem; font-weight: 700; color: #ffcc00; margin: 15px 0; }
+    #paymentDetails {
+      text-align: left;
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      font-size: 0.85rem;
+    }
+    #paymentDetails p { margin: 10px 0; }
+    #treasuryAddr, #paymentMemo { color: #00ff9d; font-family: monospace; word-break: break-all; }
+    #paymentAmount { color: #ffd700; font-size: 1.2rem; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">CRYPTOBROS</div>
+    <div class="subtitle">Select your tier and unlock premium features</div>
+
+    <div class="wallet-info">
+      <p style="color:#888;margin-bottom:5px">Connected Wallet:</p>
+      <div class="wallet-address" id="walletAddress">Loading...</div>
+      <p style="color:#888;font-size:0.85rem;margin-top:10px">Current Tier: <span id="currentTier" style="color:#00ff9d;font-weight:700">Free</span></p>
+    </div>
+
+    <div class="tier-card">
+      <div class="tier-name" style="color:#00ff9d">FREE</div>
+      <div class="tier-price">0 AUS</div>
+      <ul class="tier-features">
+        <li>2-week limited access</li>
+        <li>Basic token analysis</li>
+        <li>Standard verdict only</li>
+        <li>No premium features</li>
+      </ul>
+      <button class="pay-btn" onclick="selectTier('Free', 0)">Current Plan</button>
+    </div>
+
+    <div class="tier-card">
+      <div class="tier-name" style="color:#d700ff">MASTER</div>
+      <div class="tier-price">500 AUS</div>
+      <ul class="tier-features">
+        <li>Unlimited access</li>
+        <li>Full token analysis</li>
+        <li>Standard verdict + details</li>
+        <li>Save verdicts to history</li>
+      </ul>
+      <button class="pay-btn" onclick="selectTier('Master', 500)">Upgrade to Master</button>
+    </div>
+
+    <div class="tier-card">
+      <div class="tier-name" style="color:#00d4ff">PRO</div>
+      <div class="tier-price">2,000 AUS</div>
+      <ul class="tier-features">
+        <li>Unlimited access</li>
+        <li>AI features unlocked</li>
+        <li>Advanced analytics</li>
+        <li>Export verdicts (PDF)</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="pay-btn" onclick="selectTier('Pro', 2000)">Upgrade to Pro</button>
+    </div>
+
+    <div class="tier-card" style="border-color:#ffd700;box-shadow:0 0 40px rgba(255,215,0,0.3)">
+      <div class="tier-name" style="color:#ffd700">PREMIUM</div>
+      <div class="tier-price">10,000 AUS</div>
+      <ul class="tier-features">
+        <li>Full access + governance rights</li>
+        <li>AI features unlocked</li>
+        <li>Quantum Contract Scan</li>
+        <li>Advanced Risk Forecast</li>
+        <li>Exclusive community access</li>
+      </ul>
+      <button class="pay-btn premium" onclick="selectTier('Premium', 10000)">Upgrade to Premium</button>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal">
+      <div class="modal-icon">💰</div>
+      <div class="modal-title" id="modalTitle">Payment Request</div>
+      <div class="modal-text" id="modalText"></div>
+      <div id="paymentDetails">
+        <p style="color:#888;margin-bottom:5px">Treasury Address:</p>
+        <p id="treasuryAddr"></p>
+        <p style="color:#888;margin-bottom:5px">Amount:</p>
+        <p id="paymentAmount"></p>
+        <p style="color:#888;margin-bottom:5px">Memo (optional):</p>
+        <p id="paymentMemo"></p>
+      </div>
+      <button class="modal-btn" id="payWithPhantomBtn">👻 Pay with Phantom</button>
+      <button class="modal-btn secondary" id="verifyPaymentBtn">✅ I've Sent Payment</button>
+      <button class="modal-btn secondary" id="cancelPaymentBtn">Cancel</button>
+      <div id="paymentStatus" class="status-box" style="display:none;margin-top:20px"></div>
+      <div class="timer" id="paymentTimer" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal">
+      <div class="modal-icon">🎉</div>
+      <div class="modal-title">Payment Successful!</div>
+      <div class="modal-text" id="successText"></div>
+      <button class="modal-btn" onclick="window.location.href='profile.html'">Go to Profile</button>
+    </div>
+  </div>
+
+  <!-- Solana web3.js -->
+  <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+
+  <script>
+    // === CONFIGURATION ===
+    const TREASURY_ADDRESS = 'C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6';
+    const AUS_MINT = 'AUS_TOKEN_MINT_ADDRESS_HERE';
+    const CLUSTER = 'devnet';
+    const COMMITMENT = 'confirmed';
+    const POLLING_INTERVAL = 10000;
+    const PAYMENT_TIMEOUT = 15 * 60 * 1000;
+
+    const connection = new solanaWeb3.Connection(
+      solanaWeb3.clusterApiUrl(CLUSTER),
+      COMMITMENT
+    );
+
+    const TIER_PRICES = { 'Free': 0, 'Master': 500, 'Pro': 2000, 'Premium': 10000 };
+
+    let currentUserAddress = null;
+    let currentTier = null;
+    let paymentAmount = 0;
+    let paymentMemo = null;
+    let paymentStartTime = null;
+    let pollingInterval = null;
+
+    // === INITIALIZATION ===
+    window.addEventListener('load', async () => {
+      await initializeWallet();
+      checkCurrentTier();
+    });
+
+    // === INITIALIZE WALLET ===
+    async function initializeWallet() {
+      const savedAddress = localStorage.getItem('walletAddress');
+      if (!savedAddress) {
+        window.location.href = 'connect-wallet.html?returnTo=payment.html';
+        return;
+      }
+      currentUserAddress = savedAddress;
+      document.getElementById('walletAddress').textContent = `${savedAddress.slice(0, 6)}...${savedAddress.slice(-4)}`;
+    }
+
+    // === CHECK CURRENT TIER ===
+    function checkCurrentTier() {
+      const savedTier = localStorage.getItem('userTier');
+      const activatedAt = localStorage.getItem('tierActivatedAt');
+      if (savedTier && activatedAt) {
+        const hoursActive = (Date.now() - parseInt(activatedAt)) / (1000 * 60 * 60);
+        if (savedTier === 'Free' && hoursActive > 336) {
+          localStorage.removeItem('userTier');
+          currentTier = 'Free';
+        } else {
+          currentTier = savedTier;
+        }
+      } else {
+        currentTier = 'Free';
+      }
+      document.getElementById('currentTier').textContent = currentTier;
+    }
+
+    // === SELECT TIER ===
+    function selectTier(tier, amount) {
+      if (tier === currentTier) {
+        alert('You already have this tier!');
+        return;
+      }
+      currentTier = tier;
+      paymentAmount = amount;
+      if (amount === 0) {
+        grantTierAccess(tier);
+        return;
+      }
+      paymentMemo = `CRYPTOBROS:${tier}:${currentUserAddress}:${Date.now()}`;
+      paymentStartTime = Date.now();
+      showPaymentModal(tier, amount);
+    }
+
+    // === SHOW PAYMENT MODAL ===
+    function showPaymentModal(tier, amount) {
+      document.getElementById('modalTitle').textContent = `Pay for ${tier}`;
+      document.getElementById('modalText').textContent = `Send exactly ${amount} AUS to the treasury address below. Your access will be granted automatically once payment is detected.`;
+      document.getElementById('treasuryAddr').textContent = TREASURY_ADDRESS;
+      document.getElementById('paymentAmount').textContent = `${amount} AUS`;
+      document.getElementById('paymentMemo').textContent = paymentMemo;
+      document.getElementById('paymentModal').classList.add('active');
+      document.getElementById('paymentStatus').style.display = 'none';
+      document.getElementById('paymentTimer').style.display = 'none';
+      document.getElementById('payWithPhantomBtn').onclick = () => openPhantomPayment(tier, amount);
+      document.getElementById('verifyPaymentBtn').onclick = () => verifyPayment();
+      document.getElementById('cancelPaymentBtn').onclick = () => closePaymentModal();
+      startPaymentPolling();
+    }
+
+    // === CLOSE PAYMENT MODAL ===
+    function closePaymentModal() {
+      document.getElementById('paymentModal').classList.remove('active');
+      stopPaymentPolling();
+    }
+
+    // === OPEN PHANTOM PAYMENT ===
+    function openPhantomPayment(tier, amount) {
+      const transferUrl = `https://phantom.app/ul/transfer?to=${TREASURY_ADDRESS}&amount=${amount}&spl-token=${AUS_MINT}&memo=${encodeURIComponent(paymentMemo)}`;
+      window.open(transferUrl, '_blank');
+      showPaymentStatus('info', '📱 Payment opened in Phantom. Complete the transaction and click "I've Sent Payment" below.');
+      startTimer();
+    }
+
+    // === START TIMER ===
+    function startTimer() {
+      document.getElementById('paymentTimer').style.display = 'block';
+      const timerInterval = setInterval(() => {
+        const elapsed = Date.now() - paymentStartTime;
+        const remaining = PAYMENT_TIMEOUT - elapsed;
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          stopPaymentPolling();
+          showPaymentStatus('error', '⏰ Payment timeout. Please try again.');
+          document.getElementById('paymentTimer').style.display = 'none';
+          return;
+        }
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        document.getElementById('paymentTimer').textContent = `⏱ Time remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    // === START PAYMENT POLLING ===
+    function startPaymentPolling() {
+      showPaymentStatus('info', '<span class="spinner"></span> Monitoring for payment...');
+      pollingInterval = setInterval(async () => {
+        const detected = await checkPaymentReceived();
+        if (detected) {
+          stopPaymentPolling();
+          handlePaymentSuccess();
+        }
+        const elapsed = Date.now() - paymentStartTime;
+        if (elapsed > PAYMENT_TIMEOUT) {
+          stopPaymentPolling();
+          showPaymentStatus('error', '⏰ Payment timeout. Please try again.');
+        }
+      }, POLLING_INTERVAL);
+    }
+
+    // === STOP PAYMENT POLLING ===
+    function stopPaymentPolling() {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+      }
+    }
+
+    // === CHECK PAYMENT RECEIVED ===
+    async function checkPaymentReceived() {
+      try {
+        const treasuryPubkey = new solanaWeb3.PublicKey(TREASURY_ADDRESS);
+        const ausMint = new solanaWeb3.PublicKey(AUS_MINT);
+        const tokenAccounts = await connection.getTokenAccountsByOwner(treasuryPubkey, { mint: ausMint });
+        if (tokenAccounts.value.length === 0) return false;
+        const signatures = await connection.getSignaturesForAddress(treasuryPubkey, { limit: 10 });
+        for (const sig of signatures) {
+          const tx = await connection.getParsedTransaction(sig.signature, { maxSupportedTransactionVersion: 0, commitment: 'confirmed' });
+          if (!tx) continue;
+          const txTime = tx.blockTime * 1000;
+          if (txTime < paymentStartTime) continue;
+          const memo = extractMemoFromTransaction(tx);
+          if (memo && memo.includes(currentUserAddress) && memo.includes(currentTier)) return true;
+        }
+        return false;
+      } catch (err) {
+        console.error('Payment check error:', err);
+        return false;
+      }
+    }
+
+    // === EXTRACT MEMO FROM TRANSACTION ===
+    function extractMemoFromTransaction(tx) {
+      try {
+        for (const instruction of tx.transaction.message.instructions) {
+          if (instruction.programId.toString() === 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr') {
+            if (instruction.parsed?.info?.memo) return instruction.parsed.info.memo;
+          }
+        }
+        return null;
+      } catch (e) { return null; }
+    }
+
+    // === VERIFY PAYMENT ===
+    async function verifyPayment() {
+      showPaymentStatus('info', '<span class="spinner"></span> Verifying payment...');
+      const detected = await checkPaymentReceived();
+      if (detected) handlePaymentSuccess();
+      else showPaymentStatus('warning', '⏳ Payment not detected yet. Please wait or check if you sent the correct amount.');
+    }
+
+    // === HANDLE PAYMENT SUCCESS ===
+    function handlePaymentSuccess() {
+      stopPaymentPolling();
+      grantTierAccess(currentTier);
+      document.getElementById('successText').textContent = `🎉 Your ${currentTier} tier has been activated! You now have full access to all premium features.`;
+      document.getElementById('successModal').classList.add('active');
+      document.getElementById('paymentModal').classList.remove('active');
+    }
+
+    // === GRANT TIER ACCESS ===
+    function grantTierAccess(tier) {
+      localStorage.setItem('userTier', tier);
+      localStorage.setItem('tierActivatedAt', Date.now().toString());
+      recordPayment(tier, paymentAmount);
+    }
+
+    // === RECORD PAYMENT ===
+    function recordPayment(tier, amount) {
+      const paymentRecord = { user: currentUserAddress, tier: tier, amount: amount, timestamp: Date.now(), network: CLUSTER };
+      let payments = JSON.parse(localStorage.getItem('paymentHistory') || '[]');
+      payments.unshift(paymentRecord);
+      localStorage.setItem('paymentHistory', JSON.stringify(payments.slice(0, 50)));
+      console.log('Payment recorded:', paymentRecord);
+    }
+
+    // === SHOW PAYMENT STATUS ===
+    function showPaymentStatus(type, message) {
+      const statusEl = document.getElementById('paymentStatus');
+      statusEl.innerHTML = message;
+      statusEl.className = 'status-box ' + type;
+      statusEl.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
