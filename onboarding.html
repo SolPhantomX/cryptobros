@@ -67,7 +67,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 25px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .tier-card {
@@ -205,13 +205,74 @@
     .pro .select-btn:hover { box-shadow: 0 12px 35px rgba(0, 212, 255, 0.7), inset 0 2px 5px rgba(255,255,255,0.3); }
     .premium .select-btn:hover { box-shadow: 0 15px 40px rgba(255, 215, 0, 0.9), inset 0 2px 5px rgba(255,255,255,0.4); }
 
-    /* Addons под PREMIUM */
+    .bottom-section {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .invite-block {
+      background: rgba(10, 10, 40, 0.85);
+      border-radius: 20px;
+      padding: 35px 50px;
+      border: 3px solid #ff4444;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(255, 68, 68, 0.3), inset 0 0 30px rgba(255, 68, 68, 0.1);
+    }
+    .invite-block h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .invite-block input {
+      width: 100%;
+      padding: 16px 25px;
+      background: rgba(20, 20, 50, 0.9);
+      border: 2px solid #666;
+      border-radius: 12px;
+      color: #e0f0ff;
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      outline: none;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .invite-block input:focus { 
+      border-color: #ff4444;
+      box-shadow: 0 0 20px rgba(255, 68, 68, 0.4);
+    }
+    .invite-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #d700ff, #00d4ff);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.15rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(215, 0, 255, 0.5), inset 0 2px 5px rgba(255,255,255,0.3);
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .invite-btn:hover {
+      box-shadow: 0 12px 35px rgba(215, 0, 255, 0.7), inset 0 2px 5px rgba(255,255,255,0.3);
+      transform: translateY(-3px);
+    }
+
     .addons-container {
-      grid-column: 4;
       display: flex;
       flex-direction: column;
       gap: 20px;
-      margin-top: 20px;
     }
     .addon-card {
       background: rgba(10, 20, 70, 0.9);
@@ -223,8 +284,8 @@
       transition: all 0.3s ease;
     }
     .addon-card:hover {
-      border-color: #ffd700;
-      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+      border-color: #00d4ff;
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
       transform: translateX(-5px);
     }
     .addon-card h3 {
@@ -257,79 +318,14 @@
       font-weight: bold;
     }
 
-    /* Invite block - выше, по центру */
-    .invite-block {
-      background: rgba(10, 10, 40, 0.85);
-      border-radius: 20px;
-      padding: 30px 50px;
-      border: 2px solid #555;
-      backdrop-filter: blur(10px);
-      max-width: 700px;
-      margin: 40px auto 0;
-      text-align: center;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 30px rgba(100,100,255,0.1);
-    }
-    .invite-block h3 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-    .invite-block input {
-      width: 100%;
-      padding: 16px 25px;
-      background: rgba(20, 20, 50, 0.9);
-      border: 2px solid #666;
-      border-radius: 12px;
-      color: #e0f0ff;
-      font-size: 1.05rem;
-      margin-bottom: 18px;
-      outline: none;
-      text-align: center;
-      transition: all 0.3s;
-    }
-    .invite-block input:focus { 
-      border-color: #00ff9d;
-      box-shadow: 0 0 20px rgba(0, 255, 157, 0.3);
-    }
-    .invite-btn {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #d700ff, #00d4ff);
-      border: none;
-      border-radius: 12px;
-      color: white;
-      font-size: 1.15rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 8px 25px rgba(215, 0, 255, 0.5), inset 0 2px 5px rgba(255,255,255,0.3);
-      transition: all 0.3s;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .invite-btn:hover {
-      box-shadow: 0 12px 35px rgba(215, 0, 255, 0.7), inset 0 2px 5px rgba(255,255,255,0.3);
-      transform: translateY(-3px);
-    }
-
     @media (max-width: 1200px) {
       .tiers-grid { grid-template-columns: repeat(2, 1fr); }
-      .addons-container {
-        grid-column: 1 / -1;
-        flex-direction: row;
-        flex-wrap: wrap;
+      .bottom-section {
+        grid-template-columns: 1fr;
       }
-      .addon-card { flex: 1 1 calc(50% - 15px); }
     }
     @media (max-width: 768px) {
       .tiers-grid { grid-template-columns: 1fr; }
-      .addons-container { flex-direction: column; }
-      .addon-card { flex: 1 1 100%; }
       .main-title { font-size: 2.5rem; }
       .tier-price { font-size: 2rem; }
       .premium .tier-price { font-size: 2.6rem; }
@@ -397,8 +393,15 @@
         </div>
         <button class="select-btn">SELECT</button>
       </div>
+    </div>
 
-      <!-- Addons под PREMIUM -->
+    <div class="bottom-section">
+      <div class="invite-block">
+        <h3>🎁 Have an Invite Code?</h3>
+        <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
+        <button class="invite-btn">ACTIVATE INVITE</button>
+      </div>
+
       <div class="addons-container">
         <div class="addon-card">
           <h3>Quantum Contract Scan</h3>
@@ -418,13 +421,6 @@
           </ul>
         </div>
       </div>
-    </div>
-
-    <!-- Invite block выше -->
-    <div class="invite-block">
-      <h3>🎁 Have an Invite Code?</h3>
-      <input type="text" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)" />
-      <button class="invite-btn">ACTIVATE INVITE</button>
     </div>
   </div>
 </body>
