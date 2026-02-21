@@ -50,7 +50,7 @@
       border-radius: 12px;
       font-weight: 800;
       font-size: 1.1rem;
-      cursor: pointer;
+      cursor: pointer; /* ДОБАВИЛ */
       box-shadow: 0 6px 20px rgba(0, 255, 157, 0.4);
       transition: all 0.3s ease;
       margin-bottom: 20px;
@@ -58,6 +58,7 @@
     #connectWalletBtn:hover:not(:disabled) {
       transform: translateY(-3px);
       box-shadow: 0 10px 30px rgba(0, 255, 157, 0.6);
+      cursor: pointer; /* ДОБАВИЛ */
     }
     #connectWalletBtn:disabled {
       opacity: 0.7;
@@ -93,13 +94,14 @@
       border-radius: 10px;
       font-weight: 600;
       font-size: 0.95rem;
-      cursor: pointer;
+      cursor: pointer; /* ДОБАВИЛ */
       margin-top: 10px;
       transition: all 0.3s ease;
       display: none;
     }
     #disconnectBtn:hover {
       background: rgba(255, 77, 77, 0.4);
+      cursor: pointer; /* ДОБАВИЛ */
     }
     .back-link {
       display: inline-block;
@@ -108,6 +110,7 @@
       text-decoration: none;
       font-weight: 600;
       transition: color 0.3s;
+      cursor: pointer; /* ДОБАВИЛ */
     }
     .back-link:hover { color: #00ff9d; }
     .supported {
@@ -127,14 +130,16 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 5, 42, 0.95);
-      display: none;
+      display: none; /* СКРЫТО ПО УМОЛЧАНИЮ */
       align-items: center;
       justify-content: center;
       z-index: 1000;
       padding: 20px;
       backdrop-filter: blur(4px);
     }
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active { 
+      display: flex; /* ПОКАЗЫВАЕМ КОГДА ACTIVE */
+    }
     .modal {
       background: rgba(10, 20, 70, 0.95);
       border: 2px solid #00ff9d;
@@ -159,7 +164,7 @@
       border: 1px solid transparent;
       border-radius: 12px;
       margin-bottom: 10px;
-      cursor: pointer;
+      cursor: pointer; /* ДОБАВИЛ */
       transition: all 0.2s ease;
       text-align: left;
       position: relative;
@@ -168,6 +173,7 @@
       background: rgba(0, 255, 157, 0.2);
       border-color: #00ff9d;
       transform: translateX(4px);
+      cursor: pointer; /* ДОБАВИЛ */
     }
     .wallet-option.disabled {
       opacity: 0.5;
@@ -191,11 +197,15 @@
       border: 1px solid #666;
       color: #888;
       border-radius: 8px;
-      cursor: pointer;
+      cursor: pointer; /* ДОБАВИЛ */
       width: 100%;
       font-size: 0.9rem;
     }
-    .modal-close:hover { border-color: #00ff9d; color: #00ff9d; }
+    .modal-close:hover { 
+      border-color: #00ff9d; 
+      color: #00ff9d;
+      cursor: pointer; /* ДОБАВИЛ */
+    }
     .success-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -241,13 +251,14 @@
       border-radius: 12px;
       font-weight: 700;
       font-size: 1rem;
-      cursor: pointer;
+      cursor: pointer; /* ДОБАВИЛ */
       margin-bottom: 12px;
     }
     .success-btn.secondary {
       background: transparent;
       border: 1px solid #666;
       color: #888;
+      cursor: pointer; /* ДОБАВИЛ */
     }
     .success-btn.secondary:hover {
       border-color: #00ff9d;
@@ -302,6 +313,8 @@
   <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
 
   <script>
+    console.log('🔧 Script loaded successfully');
+
     // === SETTINGS ===
     const CLUSTER = 'devnet';
     const COMMITMENT = 'confirmed';
@@ -313,21 +326,48 @@
       'testnet': 'https://api.testnet.solana.com'
     };
 
-    const connection = new solanaWeb3.Connection(
-      RPC_ENDPOINTS[CLUSTER] || solanaWeb3.clusterApiUrl(CLUSTER),
-      COMMITMENT
-    );
+    let connection;
+    try {
+      connection = new solanaWeb3.Connection(
+        RPC_ENDPOINTS[CLUSTER] || solanaWeb3.clusterApiUrl(CLUSTER),
+        COMMITMENT
+      );
+      console.log('✅ Solana connection established');
+    } catch (e) {
+      console.error('❌ Solana connection failed:', e);
+    }
 
     // === WALLET DETECTION ===
     const getAvailableWallets = () => {
       const wallets = [];
-      if (window.solana?.isPhantom) wallets.push({ id: 'phantom', name: 'Phantom', provider: window.solana, icon: '👻', desc: 'Most popular' });
-      if (window.solflare) wallets.push({ id: 'solflare', name: 'Solflare', provider: window.solflare, icon: '🔥', desc: 'Official Solana Labs' });
-      if (window.backpack) wallets.push({ id: 'backpack', name: 'Backpack', provider: window.backpack, icon: '🎒', desc: 'NFT focused' });
-      if (window.okxwallet?.solana) wallets.push({ id: 'okx', name: 'OKX', provider: window.okxwallet.solana, icon: '🟠', desc: 'Multi-chain' });
-      if (window.glow) wallets.push({ id: 'glow', name: 'Glow', provider: window.glow, icon: '✨', desc: 'Mobile friendly' });
-      if (window.coinbaseWalletExtension?.solana || window.ethereum?.isCoinbaseWallet) wallets.push({ id: 'coinbase', name: 'Coinbase', provider: window.coinbaseWalletExtension?.solana || window.ethereum, icon: '🔵', desc: 'Coinbase ecosystem' });
-      if (window.ethereum?.isTrust || window.ethereum?.isExodus) wallets.push({ id: 'trust', name: 'Trust/Exodus', provider: window.ethereum, icon: '🦊', desc: 'EIP-1193' });
+      console.log('🔍 Detecting wallets...');
+      
+      if (window.solana?.isPhantom) {
+        console.log('✅ Phantom detected');
+        wallets.push({ id: 'phantom', name: 'Phantom', provider: window.solana, icon: '👻', desc: 'Most popular' });
+      }
+      if (window.solflare) {
+        console.log('✅ Solflare detected');
+        wallets.push({ id: 'solflare', name: 'Solflare', provider: window.solflare, icon: '🔥', desc: 'Official Solana Labs' });
+      }
+      if (window.backpack) {
+        console.log('✅ Backpack detected');
+        wallets.push({ id: 'backpack', name: 'Backpack', provider: window.backpack, icon: '🎒', desc: 'NFT focused' });
+      }
+      if (window.okxwallet?.solana) {
+        console.log('✅ OKX detected');
+        wallets.push({ id: 'okx', name: 'OKX', provider: window.okxwallet.solana, icon: '🟠', desc: 'Multi-chain' });
+      }
+      if (window.glow) {
+        console.log('✅ Glow detected');
+        wallets.push({ id: 'glow', name: 'Glow', provider: window.glow, icon: '✨', desc: 'Mobile friendly' });
+      }
+      if (window.coinbaseWalletExtension?.solana || window.ethereum?.isCoinbaseWallet) {
+        console.log('✅ Coinbase detected');
+        wallets.push({ id: 'coinbase', name: 'Coinbase', provider: window.coinbaseWalletExtension?.solana || window.ethereum, icon: '🔵', desc: 'Coinbase ecosystem' });
+      }
+      
+      console.log(`📊 Found ${wallets.length} wallets:`, wallets.map(w => w.name));
       return wallets;
     };
 
@@ -366,26 +406,45 @@
 
     // === SHOW WALLET MODAL ===
     function showWalletModal() {
+      console.log('📂 Opening wallet modal...');
       const wallets = getAvailableWallets();
       walletList.innerHTML = '';
-      wallets.forEach(wallet => {
-        const option = document.createElement('div');
-        option.className = 'wallet-option';
-        option.innerHTML = `<span class="icon">${wallet.icon}</span><span class="name">${wallet.name}</span><span class="desc">${wallet.desc}</span><span class="loading">Connecting...</span>`;
-        option.addEventListener('click', () => handleWalletSelect(wallet, option));
-        walletList.appendChild(option);
-      });
+      
+      if (wallets.length === 0) {
+        walletList.innerHTML = '<p style="color:#888;text-align:center;padding:20px">No wallets detected. Please install Phantom or Solflare.</p>';
+      } else {
+        wallets.forEach(wallet => {
+          const option = document.createElement('div');
+          option.className = 'wallet-option';
+          option.innerHTML = `
+            <span class="icon">${wallet.icon}</span>
+            <span class="name">${wallet.name}</span>
+            <span class="desc">${wallet.desc}</span>
+            <span class="loading">Connecting...</span>
+          `;
+          option.addEventListener('click', () => {
+            console.log(`🖱️ Selected: ${wallet.name}`);
+            handleWalletSelect(wallet, option);
+          });
+          walletList.appendChild(option);
+        });
+      }
+      
       walletModal.classList.add('active');
+      console.log('✅ Modal opened');
     }
 
     // === HANDLE WALLET SELECTION ===
     async function handleWalletSelect(wallet, optionEl) {
+      console.log(`🔌 Connecting to ${wallet.name}...`);
       optionEl?.classList.add('connecting');
       connectBtn.disabled = true;
+      
       try {
         await wallet.provider.connect();
         const pk = extractPublicKey(wallet.provider);
         if (!pk) throw new Error('Could not get public key');
+        
         checkNetworkMatch(wallet.provider);
         setupProviderListeners(wallet.provider);
         updateStatus(wallet.name, pk, wallet.icon);
@@ -393,8 +452,10 @@
         showSuccessOverlay(wallet.icon, wallet.name, pk);
         currentProvider = wallet.provider;
         currentWalletName = wallet.name;
+        
+        console.log(`✅ Connected to ${wallet.name}: ${pk}`);
       } catch (err) {
-        console.error('Connect error:', err);
+        console.error('❌ Connect error:', err);
         if (err.code === 4001 || err.message?.toLowerCase().includes('reject') || err.message?.toLowerCase().includes('cancel')) {
           alert('⚠️ Connection cancelled by user');
         } else {
@@ -423,7 +484,9 @@
         } else {
           networkWarning.classList.remove('show');
         }
-      } catch (e) { }
+      } catch (e) {
+        console.log('Network check skipped');
+      }
     }
 
     // === SETUP PROVIDER EVENT LISTENERS ===
@@ -441,6 +504,7 @@
 
     // === HANDLE PROVIDER DISCONNECT ===
     function handleProviderDisconnect() {
+      console.log('🔌 Wallet disconnected');
       statusEl.textContent = 'Wallet: Disconnected';
       networkEl.textContent = 'Network: —';
       networkWarning.classList.remove('show');
@@ -458,6 +522,7 @@
       statusEl.innerHTML = `Wallet: ${icon} ${walletName} • ${short}`;
       networkEl.textContent = `Network: ${CLUSTER.toUpperCase()} • ${COMMITMENT}`;
       networkWarning.classList.remove('show');
+      
       localStorage.setItem('walletAddress', address);
       localStorage.setItem('walletName', walletName);
       localStorage.setItem('walletConnected', 'true');
@@ -479,23 +544,27 @@
 
     // === DISCONNECT WALLET ===
     async function disconnectWallet() {
+      console.log('🔌 Disconnecting wallet...');
       if (currentProvider?.disconnect) {
         try { await currentProvider.disconnect(); } catch (e) { console.error('Disconnect error:', e); }
       }
       localStorage.removeItem('walletAddress');
       localStorage.removeItem('walletName');
       localStorage.removeItem('walletConnected');
+      
       statusEl.textContent = 'Wallet: Not connected';
       networkEl.textContent = 'Network: —';
       networkWarning.classList.remove('show');
       disconnectBtn.style.display = 'none';
       currentProvider = null;
       currentWalletName = null;
+      
       alert('🔌 Disconnected');
     }
 
     // === AUTO RECONNECT WITH RATE LIMIT ===
     window.addEventListener('load', async () => {
+      console.log('🔄 Page loaded, checking for saved wallet...');
       const savedAddr = localStorage.getItem('walletAddress');
       const savedName = localStorage.getItem('walletName');
       const isConnected = localStorage.getItem('walletConnected') === 'true';
@@ -503,6 +572,7 @@
       const now = Date.now();
 
       if (savedAddr && savedName && isConnected && (now - lastAutoConnect) > AUTO_RECONNECT_MIN_INTERVAL) {
+        console.log(`🔌 Auto-reconnecting to ${savedName}...`);
         statusEl.textContent = `Wallet: ${savedAddr.slice(0,6)}...${savedAddr.slice(-4)} • Checking...`;
         const wallets = getAvailableWallets();
         const found = wallets.find(w => w.name === savedName);
@@ -529,20 +599,59 @@
     });
 
     // === EVENT LISTENERS ===
-    connectBtn.addEventListener('click', () => {
-      const wallets = getAvailableWallets();
-      if (wallets.length === 1 && !wallets[0].id === 'walletconnect') {
-        handleWalletSelect(wallets[0], null);
-      } else {
-        showWalletModal();
+    console.log('🎯 Setting up event listeners...');
+    
+    if (connectBtn) {
+      connectBtn.addEventListener('click', () => {
+        console.log('🖱️ Connect button clicked');
+        const wallets = getAvailableWallets();
+        if (wallets.length === 1) {
+          handleWalletSelect(wallets[0], null);
+        } else {
+          showWalletModal();
+        }
+      });
+      console.log('✅ Connect button listener added');
+    } else {
+      console.error('❌ Connect button not found!');
+    }
+    
+    if (disconnectBtn) {
+      disconnectBtn.addEventListener('click', disconnectWallet);
+      console.log('✅ Disconnect button listener added');
+    }
+    
+    if (modalClose) {
+      modalClose.addEventListener('click', () => {
+        console.log('❌ Modal closed');
+        walletModal.classList.remove('active');
+      });
+    }
+    
+    if (walletModal) {
+      walletModal.addEventListener('click', (e) => { 
+        if (e.target === walletModal) {
+          console.log('❌ Modal backdrop clicked');
+          walletModal.classList.remove('active');
+        }
+      });
+    }
+    
+    document.addEventListener('keydown', (e) => { 
+      if (e.key === 'Escape') {
+        console.log('⌨️ Escape pressed');
+        walletModal.classList.remove('active');
       }
     });
-    disconnectBtn.addEventListener('click', disconnectWallet);
-    modalClose.addEventListener('click', () => walletModal.classList.remove('active'));
-    walletModal.addEventListener('click', (e) => { if (e.target === walletModal) walletModal.classList.remove('active'); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') walletModal.classList.remove('active'); });
-    goToProfileBtn.addEventListener('click', redirectToProfile);
-    stayHereBtn.addEventListener('click', () => successOverlay.classList.remove('active'));
+    
+    if (goToProfileBtn) {
+      goToProfileBtn.addEventListener('click', redirectToProfile);
+    }
+    if (stayHereBtn) {
+      stayHereBtn.addEventListener('click', () => successOverlay.classList.remove('active'));
+    }
+    
+    console.log('✅ All event listeners set up');
   </script>
 </body>
 </html>
