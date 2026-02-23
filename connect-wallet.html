@@ -780,6 +780,58 @@
     }
     
     console.log('✅ All event listeners set up');
+    // === GLOBAL WALLET SYNC FOR OTHER PAGES ===
+function syncWalletToLocalStorage(address) {
+  if (address) {
+    localStorage.setItem('walletAddress', address);
+    localStorage.setItem('walletConnected', 'true');
+    console.log('💾 Wallet synced:', address.slice(0,6)+'...'+address.slice(-4));
+  }
+}
+
+function clearWalletFromLocalStorage() {
+  localStorage.removeItem('walletAddress');
+  localStorage.removeItem('walletConnected');
+  localStorage.removeItem('walletName');
+  console.log('🗑️ Wallet cleared from localStorage');
+}
+// === UPDATE UI ON OTHER PAGES ===
+function updateWalletUI() {
+  const address = localStorage.getItem('walletAddress');
+  const walletElements = document.querySelectorAll('#walletBtn, .wallet-display, button[onclick*="connect-wallet"]');
+  
+  walletElements.forEach(el => {
+    if (address) {
+      const short = `${address.slice(0,6)}...${address.slice(-4)}`;
+      el.textContent = short;
+      el.onclick = disconnectWallet;
+      el.title = 'Click to disconnect';
+    } else {
+      el.textContent = el.dataset.originalText || 'Connect Phantom';
+      el.onclick = connectWallet;
+    }
+  });
+}
+
+// === DISCONNECT (GLOBAL) ===
+async function disconnectWallet() {
+  if (currentProvider?.disconnect) {
+    try { await currentProvider.disconnect(); } catch(e) {}
+  }
+  clearWalletFromLocalStorage();
+  handleProviderDisconnect();
+  updateWalletUI();
+  alert('🔌 Disconnected');
+}
+
+// === AUTO-CHECK ON LOAD (FOR OTHER PAGES) ===
+document.addEventListener('DOMContentLoaded', () => {
+  const savedAddr = localStorage.getItem('walletAddress');
+  if (savedAddr) {
+    updateWalletUI();
+    console.log('✅ Wallet restored from localStorage:', savedAddr.slice(0,6)+'...'+savedAddr.slice(-4));
+  }
+});
   </script>
 </body>
 </html>
