@@ -13,7 +13,7 @@
       --text-secondary: #6c757d; --border-color: #e9ecef; --shadow: 0 4px 12px rgba(0,0,0,0.05);
       --accent-gold: #FFD700; --accent-cyan: #00F0FF; --accent-purple: #9D00FF;
       --hover-bg: #f1f3f5; --active-sidebar: #fff9e6;
-      --success: #00ff9d; --error: #ff4d4d;
+      --success: #00ff9d; --error: #ff4d4d; --warning: #ffd700;
     }
     .dark-theme {
       --bg-body: #121212; --bg-card: #1e1e1e; --text-primary: #e0e0e0;
@@ -231,38 +231,64 @@
 
     /* === TOAST NOTIFICATIONS === */
     .toast {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      padding: 1rem 1.5rem;
-      background: var(--bg-card);
-      border: 2px solid var(--success);
-      border-radius: 12px;
+      position: fixed; bottom: 30px; right: 30px;
+      padding: 1rem 1.5rem; background: var(--bg-card);
+      border: 2px solid var(--success); border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0, 255, 157, 0.3);
-      color: var(--text-primary);
-      font-weight: 600;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      animation: toastIn 0.3s ease-out;
-      max-width: 350px;
+      color: var(--text-primary); font-weight: 600;
+      z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
+      animation: toastIn 0.3s ease-out; max-width: 350px;
     }
-    .toast.error {
-      border-color: var(--error);
-      box-shadow: 0 4px 20px rgba(255, 77, 77, 0.3);
+    .toast.error { border-color: var(--error); box-shadow: 0 4px 20px rgba(255, 77, 77, 0.3); }
+    .toast.warning { border-color: var(--warning); box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3); }
+    .toast.hiding { animation: toastOut 0.3s ease-in forwards; }
+    @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
+
+    /* === SWARM MODAL === */
+    .swarm-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.75); display: flex; align-items: center;
+      justify-content: center; z-index: 10000; padding: 1rem;
     }
-    .toast.hiding {
-      animation: toastOut 0.3s ease-in forwards;
+    .swarm-content {
+      background: var(--bg-card); padding: 2rem; border-radius: 16px;
+      max-width: 520px; width: 100%; border: 2px solid var(--accent-gold);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
-    @keyframes toastIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .swarm-content h3 { margin-bottom: 1rem; color: var(--text-primary); }
+    .verdict-badge {
+      padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700;
+      text-align: center; margin: 1rem 0; text-transform: uppercase;
+      font-size: 0.9rem;
     }
-    @keyframes toastOut {
-      from { transform: translateY(0); opacity: 1; }
-      to { transform: translateY(20px); opacity: 0; }
+    .verdict-badge.publish { background: rgba(0, 255, 157, 0.15); color: #00ff9d; border: 1px solid #00ff9d; }
+    .verdict-badge.review { background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px solid #ffd700; }
+    .verdict-badge.block { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 1px solid #ff4d4d; }
+    .dark-theme .verdict-badge.block { background: rgba(255, 77, 77, 0.25); }
+    .dark-theme .verdict-badge.review { background: rgba(255, 215, 0, 0.25); }
+    .swarm-content ul { margin: 1rem 0; padding-left: 1.5rem; color: var(--text-secondary); }
+    .swarm-content li { margin: 0.3rem 0; }
+    .agent-votes, .governance-hint {
+      margin: 1rem 0; padding: 0.8rem;
+      background: var(--hover-bg); border-radius: 8px;
+      font-size: 0.85rem; color: var(--text-secondary);
     }
+    .dark-theme .agent-votes, .dark-theme .governance-hint {
+      background: rgba(255,255,255,0.05);
+    }
+    .modal-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .modal-actions button {
+      flex: 1; padding: 0.9rem; border: none; border-radius: 10px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-close { background: var(--hover-bg); color: var(--text-primary); }
+    .btn-close:hover { background: var(--border-color); }
+    .btn-appeal { 
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      color: #0a0a0f; 
+    }
+    .btn-appeal:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(157, 0, 255, 0.4); }
 
     @media (max-width: 1024px) { .layout { flex-direction: column; } aside, .right-sidebar { width: 100%; } }
     @media (max-width: 768px) { .sidebar-menu { display: none; } main { padding: 0; } }
@@ -337,7 +363,319 @@
 <script>
   // === CONFIG ===
   const CONFIG = { USE_BACKEND: false, BACKEND_URL: 'https://cryptobros-backend.onrender.com' };
-  // ⚠️ MVP LIMITATION: Likes/reposts are local-only. Real-time sync across users requires backend.
+  // MVP LIMITATION: Likes/reposts are local-only. Real-time sync requires backend.
+
+  // === SENTINEL SWARM LITE - FINAL POLISHED ===
+  // Client-side moderation. Zero dependencies. English comments only.
+
+  class SentinelSwarm {
+    constructor() {
+      this.patterns = {
+        scam: [
+          /rug\s*pull/i, /send\s+sol/i, /double\s+crypto/i, 
+          /private\s+key/i, /seed\s+phrase/i, /guaranteed\s+profit/i
+        ],
+        urgency: [/\b(now|urgent|fast|limited|last\s+chance|act\s+fast)\b/i],
+        urls: /(https?:\/\/[^\s]+)/g
+      };
+      
+      this.blacklist = JSON.parse(localStorage.getItem('walletBlacklist')) || [];
+      this.walletPatterns = JSON.parse(localStorage.getItem('walletPatterns')) || ['scam', '0000', 'dead', 'fake'];
+      
+      this.wisdomScore = parseFloat(localStorage.getItem('wisdomScore')) || 0;
+      this.lastWisdomUpdate = parseInt(localStorage.getItem('lastWisdomUpdate')) || Date.now();
+      this.juryCount = parseInt(localStorage.getItem('juryCount')) || 0;
+      
+      this.userAUS = parseInt(localStorage.getItem('mockAUS')) || 0;
+      
+      this.checkWisdomDecay();
+    }
+    
+    checkWisdomDecay() {
+      const daysSinceUpdate = (Date.now() - this.lastWisdomUpdate) / (1000 * 60 * 60 * 24);
+      if (daysSinceUpdate >= 7 && this.wisdomScore > 0) {
+        this.wisdomScore = Math.max(0, this.wisdomScore - 1);
+        this.lastWisdomUpdate = Date.now();
+        localStorage.setItem('wisdomScore', this.wisdomScore.toString());
+        localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString());
+        console.log(`📉 Wisdom decayed to ${this.wisdomScore} (no Jury activity)`);
+      }
+    }
+    
+    analyzePatterns(content) {
+      let risk = 0;
+      const factors = [];
+      
+      if (this.patterns.scam.some(p => p.test(content))) {
+        risk += 0.4;
+        factors.push('Scam pattern detected');
+      }
+      
+      const urgencyMatches = (content.match(this.patterns.urgency[0]) || []).length;
+      const capsRatio = (content.match(/[A-Z]/g) || []).length / Math.max(1, content.length);
+      const exclamationCount = (content.match(/!/g) || []).length;
+      
+      if (urgencyMatches > 0 || capsRatio > 0.3 || exclamationCount > 3) {
+        risk += 0.25;
+        factors.push('FOMO/urgency signals detected');
+      }
+      
+      const urlMatches = content.match(this.patterns.urls) || [];
+      if (urlMatches.length > 2) {
+        risk += 0.2;
+        factors.push('Multiple external links');
+      }
+      
+      return { risk: Math.min(1, risk), factors };
+    }
+    
+    analyzeWallet(wallet) {
+      if (!wallet || wallet === 'guest') return { risk: 0.1, factors: ['Guest user'] };
+      
+      if (this.blacklist.includes(wallet)) {
+        return { risk: 0.9, factors: ['Wallet in community blacklist'] };
+      }
+      
+      const walletLower = wallet.toLowerCase();
+      if (this.walletPatterns.some(p => walletLower.includes(p))) {
+        return { risk: 0.3, factors: ['Wallet matches suspicious pattern'] };
+      }
+      
+      return { risk: 0.1, factors: ['Wallet not flagged'] };
+    }
+    
+    isValidWallet(wallet) {
+      if (!wallet || wallet.length < 32 || wallet.length > 44) return false;
+      return !/[0OlI]/.test(wallet);
+    }
+    
+    // FIX: Removed async/await (no async operations inside)
+    vote(content, wallet, isNewUser) {
+      const patternVote = this.analyzePatterns(content);
+      const walletVote = this.analyzeWallet(wallet);
+      
+      let patternWeight = 0.6;
+      let walletWeight = 0.3;
+      
+      if (this.juryCount > 0 && this.juryCount % 10 === 0) {
+        const mutation = (Math.random() - 0.5) * 0.1;
+        patternWeight = Math.max(0.4, Math.min(0.8, patternWeight + mutation));
+        walletWeight = Math.max(0.1, Math.min(0.5, walletWeight - mutation * 0.5));
+        console.log(`🧬 Swarm mutation: Pattern ${patternWeight.toFixed(2)} | Wallet ${walletWeight.toFixed(2)}`);
+      }
+      
+      const weightedRisk = 
+        patternVote.risk * patternWeight + 
+        walletVote.risk * walletWeight + 
+        (isNewUser ? 0.1 : 0);
+      
+      const allFactors = [...patternVote.factors, ...walletVote.factors];
+      
+      const blockThreshold = Math.max(0.55, 0.7 - this.wisdomScore * 0.015);
+      const reviewThreshold = Math.max(0.3, 0.45 - this.wisdomScore * 0.01);
+      
+      let action = 'PUBLISH';
+      if (weightedRisk >= blockThreshold) action = 'BLOCK';
+      else if (weightedRisk >= reviewThreshold) action = 'REVIEW';
+      
+      return {
+        score: parseFloat(weightedRisk.toFixed(2)),
+        action,
+        factors: allFactors,
+        agentVotes: { 
+          pattern: parseFloat(patternVote.risk.toFixed(2)), 
+          wallet: parseFloat(walletVote.risk.toFixed(2)) 
+        },
+        thresholds: { block: parseFloat(blockThreshold.toFixed(2)), review: parseFloat(reviewThreshold.toFixed(2)) },
+        weights: { pattern: parseFloat(patternWeight.toFixed(2)), wallet: parseFloat(walletWeight.toFixed(2)) }
+      };
+    }
+    
+    evolveFromJury(verdict, content, userFeedback = null) {
+      if (userFeedback === 'disagree' && this.wisdomScore > 0) {
+        this.wisdomScore = Math.max(0, this.wisdomScore - 0.5);
+        localStorage.setItem('wisdomScore', this.wisdomScore.toString());
+        console.log(`🔄 Loop feedback: Wisdom reduced to ${this.wisdomScore}`);
+        return;
+      }
+      
+      if (verdict === 'BAN') {
+        this.juryCount++;
+        localStorage.setItem('juryCount', this.juryCount.toString());
+        
+        const words = content.toLowerCase().match(/\b\w+\b/g) || [];
+        const suspiciousWords = words.filter(w => 
+          ['scam', 'rug', 'fake', 'steal', 'trap'].some(k => w.includes(k))
+        );
+        
+        if (suspiciousWords.length > 0 && !this.patterns.scam.some(p => p.test(content))) {
+          const newWord = suspiciousWords[0];
+          if (!this.patterns.scam.some(p => p.source.includes(newWord))) {
+            this.patterns.scam.push(new RegExp(`\\b${newWord}\\b`, 'i'));
+            console.log(`🧠 Sentinel evolved: new pattern /\\b${newWord}\\b/i`);
+          }
+        }
+        
+        this.wisdomScore += 0.25;
+        this.lastWisdomUpdate = Date.now();
+        localStorage.setItem('wisdomScore', this.wisdomScore.toString());
+        localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString());
+        
+      } else if (verdict === 'TRUST') {
+        // FIX: Added lastWisdomUpdate for TRUST verdict
+        this.wisdomScore += 0.1;
+        this.lastWisdomUpdate = Date.now();
+        localStorage.setItem('wisdomScore', this.wisdomScore.toString());
+        localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString());
+      }
+    }
+    
+    addToBlacklist(wallet) {
+      if (!wallet || wallet === 'guest') return;
+      
+      if (!this.isValidWallet(wallet)) {
+        console.warn(`⚠️ Invalid wallet format, skipping blacklist: ${wallet}`);
+        return;
+      }
+      
+      if (!this.blacklist.includes(wallet)) {
+        this.blacklist.push(wallet);
+        localStorage.setItem('walletBlacklist', JSON.stringify(this.blacklist));
+        const display = wallet.length > 8 ? `${wallet.slice(0, 8)}...${wallet.slice(-4)}` : wallet;
+        console.log(`👻 Wallet ${display} added to Ghost blacklist`);
+      }
+      
+      const walletLower = wallet.toLowerCase();
+      const patterns = ['scam', 'rug', 'fake', '0000', 'dead', 'burn'];
+      patterns.forEach(p => {
+        if (walletLower.includes(p) && !this.walletPatterns.includes(p)) {
+          this.walletPatterns.push(p);
+          localStorage.setItem('walletPatterns', JSON.stringify(this.walletPatterns));
+          console.log(`👻 Ghost Memory: added pattern '${p}'`);
+        }
+      });
+    }
+    
+    awardAUS(amount = 1) {
+      this.userAUS += amount;
+      localStorage.setItem('mockAUS', this.userAUS.toString());
+      console.log(`💰 Mock AUS awarded: +${amount} (total: ${this.userAUS})`);
+      return this.userAUS;
+    }
+    
+    getMockAUS() { return this.userAUS; }
+    
+    static cleanupStorage() {
+      try {
+        const posts = JSON.parse(localStorage.getItem('feedPosts')) || [];
+        const postCount = parseInt(localStorage.getItem('postCountSinceCleanup')) || 0;
+        
+        if (postCount >= 50) {
+          const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+          const cleaned = posts.filter(p => p.timestamp > thirtyDaysAgo);
+          
+          if (cleaned.length !== posts.length) {
+            localStorage.setItem('feedPosts', JSON.stringify(cleaned));
+            console.log(`🧹 Storage cleanup: removed ${posts.length - cleaned.length} old posts`);
+          }
+          localStorage.setItem('postCountSinceCleanup', '0');
+        } else {
+          localStorage.setItem('postCountSinceCleanup', String(postCount + 1));
+        }
+      } catch (e) {
+        console.error('❌ Storage cleanup failed:', e);
+      }
+    }
+    
+    getWisdomScore() { return this.wisdomScore; }
+    getJuryCount() { return this.juryCount; }
+    getBlacklistCount() { return this.blacklist.length; }
+  }
+
+  const sentinel = new SentinelSwarm();
+
+  // === TOAST NOTIFICATIONS (fallback if not defined) ===
+  if (typeof showToast !== 'function') {
+    window.showToast = function(msg, type = 'success') {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      
+      const div = document.createElement('div');
+      div.className = `toast ${type}`;
+      div.textContent = msg;
+      div.style.cssText = `
+        position:fixed; bottom:20px; right:20px; padding:1rem 1.5rem;
+        background:${type==='error'?'#ff4d4d':type==='warning'?'#ffd700':'#28a745'};
+        color:#0a0a0f; border-radius:12px; z-index:10000;
+        font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,0.2);
+        animation: toastIn 0.3s ease-out;
+      `;
+      document.body.appendChild(div);
+      setTimeout(() => {
+        div.style.animation = 'toastOut 0.3s ease-in forwards';
+        setTimeout(() => div.remove(), 300);
+      }, 3500);
+    };
+  }
+
+  // === SWARM VERDICT MODAL ===
+  function showSwarmModal(analysis, content, wallet) {
+    const existing = document.querySelector('.swarm-modal');
+    if (existing) existing.remove();
+    
+    const modal = document.createElement('div');
+    modal.className = 'swarm-modal';
+    modal.innerHTML = `
+      <div class="swarm-content">
+        <h3>🛡️ Sentinel Swarm Verdict</h3>
+        <div class="verdict-badge risk-${analysis.action.toLowerCase()}">
+          ${analysis.action}
+        </div>
+        <p><strong>Risk Score:</strong> ${analysis.score}/1.00</p>
+        <p><strong>Thresholds:</strong> Block ≥${analysis.thresholds.block} | Review ≥${analysis.thresholds.review}</p>
+        <p><strong>Agent Weights:</strong> Pattern ${analysis.weights.pattern} | Wallet ${analysis.weights.wallet}</p>
+        <p><strong>Factors:</strong></p>
+        <ul>${analysis.factors.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>
+        
+        <div class="agent-votes">
+          <small>Agent Scores: Pattern ${analysis.agentVotes.pattern} | Wallet ${analysis.agentVotes.wallet}</small>
+        </div>
+        
+        <div class="governance-hint">
+          <small>🧠 Wisdom Score: ${sentinel.getWisdomScore()} | Jury Decisions: ${sentinel.getJuryCount()}</small>
+        </div>
+        
+        <div class="modal-actions">
+          <button class="btn-close" onclick="this.closest('.swarm-modal').remove()">Close</button>
+          <button class="btn-appeal" onclick="submitAppeal('${escapeHtml(content)}', ${analysis.score}, '${wallet}')">
+            ⚖️ Appeal to Tribunal
+          </button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
+  }
+
+  function submitAppeal(content, riskScore, wallet) {
+    console.log(`⚖️ Appeal submitted: risk=${riskScore}, wallet=${wallet}`);
+    
+    const modal = document.querySelector('.swarm-modal');
+    if (modal) {
+      modal.querySelector('.swarm-content').innerHTML = `
+        <h3>✅ Appeal Submitted</h3>
+        <p>Your post will be reviewed by the community Jury.</p>
+        <p><small>Mock mode: No real AUS staked yet.</small></p>
+        <button onclick="this.closest('.swarm-modal').remove()" style="margin-top:1rem;padding:0.8rem 1.5rem;background:var(--accent-gold);border:none;border-radius:8px;cursor:pointer;font-weight:600">
+          Close
+        </button>
+      `;
+    }
+  }
 
   // === THEME ===
   function initTheme() {
@@ -379,27 +717,25 @@
     catch(e) { console.error(`localStorage full (${key}):`, e); showToast('Storage full! Delete some posts.', 'error'); return false; }
   }
 
-  // === TOAST NOTIFICATIONS ===
-  function showToast(message, type = 'success') {
-    const existing = document.querySelector('.toast');
-    if (existing) existing.remove();
-    
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<span>${type === 'success' ? '✅' : '⚠️'}</span><span>${escapeHtml(message)}</span>`;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-      toast.classList.add('hiding');
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
-  }
-
   // === CREATE POST ===
   function createPost() {
     const content = document.getElementById('postInput').value.trim();
-    if (!content) { showToast('Enter some text first', 'error'); return; }
-    if (content.length > 2000) { showToast('Post too long (max 2000 chars)', 'error'); return; }
+    if (!content) { showToast('Please enter some text first', 'error'); return; }
+    if (content.length > 2000) { showToast('Post too long (max 2000 characters)', 'error'); return; }
+    
+    const wallet = localStorage.getItem('walletAddress') || 'guest';
+    const isNewUser = !localStorage.getItem('hasPostedBefore');
+    
+    const riskAnalysis = sentinel.vote(content, wallet, isNewUser);
+    
+    if (riskAnalysis.action === 'BLOCK') {
+      showSwarmModal(riskAnalysis, content, wallet);
+      return;
+    }
+    
+    if (riskAnalysis.action === 'REVIEW') {
+      showToast('Post published with review flag 🟡', 'warning');
+    }
     
     const posts = safeGetItem('feedPosts', []);
     posts.unshift({ 
@@ -408,15 +744,24 @@
       timestamp: Date.now(), 
       likes: 0, 
       username: '@cryptobros', 
-      comments: [], 
+      comments: [],
+      moderation: riskAnalysis,
       likedByMe: false, 
       repostedByMe: false 
     });
     
     if (safeSetItem('feedPosts', posts)) {
       document.getElementById('postInput').value = '';
+      localStorage.setItem('hasPostedBefore', 'true');
+      
+      if (riskAnalysis.action === 'PUBLISH') {
+        sentinel.awardAUS(1);
+        showToast(`Post published! +1 mock AUS 🛡️`);
+      }
+      
+      SentinelSwarm.cleanupStorage();
+      
       loadPosts();
-      showToast('Post published successfully!');
     }
   }
 
@@ -426,6 +771,8 @@
       let posts = safeGetItem('feedPosts', []);
       posts = posts.filter(p => p.id !== postId);
       safeSetItem('feedPosts', posts);
+      // FIX: Added cleanupStorage call in deletePost
+      SentinelSwarm.cleanupStorage();
       loadPosts();
       showToast('Post deleted');
     }
@@ -499,7 +846,7 @@
     if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
   }
 
-  // === TOGGLE LIKE (with persistence) ===
+  // === TOGGLE LIKE ===
   function toggleLike(postId, btn) {
     const posts = safeGetItem('feedPosts', []);
     const post = posts.find(p => p.id === postId);
@@ -512,7 +859,7 @@
     safeSetItem('feedPosts', posts);
   }
 
-  // === TOGGLE REPOST (with persistence) ===
+  // === TOGGLE REPOST ===
   function toggleRepost(postId, btn) {
     const posts = safeGetItem('feedPosts', []);
     const post = posts.find(p => p.id === postId);
@@ -534,7 +881,7 @@
     }
   }
 
-  // === DYNAMIC TRENDS WITH INDICATORS ===
+  // === DYNAMIC TRENDS ===
   function initTrends() {
     const trendData = {
       trend1: { value: 2100, prev: 2100 },
@@ -558,6 +905,7 @@
         if (diff > 0) { indicator = '↑ +' + diff; indicatorClass = 'trend-up'; }
         else if (diff < 0) { indicator = '↓ ' + diff; indicatorClass = 'trend-down'; }
         
+        // Keep raw numbers for <1000 (looks more alive)
         const formatted = trendData[id].value >= 1000 ? (trendData[id].value / 1000).toFixed(1) + 'k' : trendData[id].value;
         el.innerHTML = `${formatted} <span class="trend-indicator ${indicatorClass}">${indicator}</span>`;
       });
@@ -568,6 +916,7 @@
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
   document.addEventListener('DOMContentLoaded', () => {
     initTheme(); applySavedBackground(); initMockUsers(); initTrends(); loadPosts();
+    console.log(`🛡️ Sentinel Swarm ready | Wisdom: ${sentinel.getWisdomScore()} | Blacklist: ${sentinel.getBlacklistCount()}`);
   });
 
   // === GLOBAL SEARCH ===
@@ -610,7 +959,7 @@
       results.style.display = 'block';
       const [users,posts,tokens,hashtags] = await Promise.all([searchUsers(query),searchPosts(query),searchTokens(query),searchHashtags(query)]);
       results.innerHTML = '';
-      const sections = [{data:hashtags,type:'hashtag',title:'Hashtags',color:'#9D00FF'},{users,type:'user',title:'Users',color:'#9D00FF'},{tokens,type:'token',title:'Tokens',color:'#FFD700'},{posts,type:'post',title:'Posts',color:'#00F0FF'}];
+      const sections = [{hashtags,type:'hashtag',title:'Hashtags',color:'#9D00FF'},{users,type:'user',title:'Users',color:'#9D00FF'},{tokens,type:'token',title:'Tokens',color:'#FFD700'},{posts,type:'post',title:'Posts',color:'#00F0FF'}];
       let has = false;
       sections.forEach(sec => {
         if (sec.data?.length) {
