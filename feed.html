@@ -114,7 +114,7 @@
       word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; white-space: pre-wrap;
     }
     .post-actions {
-      display: flex; justify-content: space-between; padding: 1rem 1.5rem;
+      display: flex; justify-content: space-around; padding: 1rem 1.5rem;
       border-top: 1px solid var(--border-color); color: var(--text-secondary);
     }
     .action-btn {
@@ -122,9 +122,44 @@
       padding: 0.5rem 1rem; border-radius: 12px; transition: all 0.2s; user-select: none;
     }
     .action-btn:hover { background: var(--hover-bg); }
-    .action-btn.liked { color: #ff3b5c; }
+    .action-btn.liked { color: #0066FF; }
     .action-btn.reposted { color: var(--accent-cyan); }
-    .action-btn.commented { color: var(--accent-purple); }
+    
+    /* === AUS LOGO LIKE BUTTON === */
+    .aus-logo {
+      width: 24px;
+      height: 24px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .aus-icon {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: brightness(0) saturate(100%) invert(41%) sepia(96%) saturate(436%) hue-rotate(187deg) brightness(94%) contrast(96%);
+      opacity: 0.6;
+      transition: all 0.3s;
+    }
+    .aus-logo.has-likes .aus-icon {
+      opacity: 1;
+      animation: ausPulse 2s ease-in-out infinite;
+    }
+    .action-btn.liked .aus-logo .aus-icon {
+      opacity: 1;
+      animation: ausPulse 1s ease-in-out infinite;
+    }
+    @keyframes ausPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.7; }
+    }
+    .action-btn .count {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+    
     .btn-delete {
       position: absolute; top: 1rem; right: 1rem; padding: 0.4rem 0.8rem;
       background: rgba(255, 59, 92, 0.1); border: 1px solid #ff3b5c; border-radius: 8px;
@@ -521,7 +556,7 @@
     if (riskAnalysis.action === 'BLOCK') { showSwarmModal(riskAnalysis, content, wallet); return; }
     if (riskAnalysis.action === 'REVIEW') { showToast('Post published with review flag 🟡', 'warning'); }
     const posts = safeGetItem('feedPosts', []);
-    posts.unshift({ id: Date.now(), content, timestamp: Date.now(), likes: 0, username: '@cryptobros', comments: [], moderation: riskAnalysis, likedByMe: false, repostedByMe: false });
+    posts.unshift({ id: Date.now(), content, timestamp: Date.now(), likes: 0, username: '@cryptobros', comments: [], moderation: riskAnalysis, likedByMe: false, repostedByMe: false, reposts: 0 });
     if (safeSetItem('feedPosts', posts)) {
       document.getElementById('postInput').value = '';
       document.getElementById('charCount').textContent = '0 / 2000';
@@ -563,7 +598,7 @@
         html = posts.map(post => {
           const date = new Date(post.timestamp);
           const commentsHTML = post.comments?.length ? `<div class="comment-list">${post.comments.map(c=>`<div class="comment-item">💬 ${escapeHtml(c)}</div>`).join('')}</div>` : '';
-          return `<article class="post" data-id="${post.id}"><button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button><div class="post-header"><div class="post-avatar avatar-base">${post.username.charAt(1)}</div><div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div></div><div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div><div class="comment-section"><textarea class="comment-input" placeholder="Comment..." id="comment-${post.id}" maxlength="500"></textarea><button class="comment-save-btn" onclick="saveComment(${post.id})">Save</button>${commentsHTML}</div><div class="post-actions"><div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)">❤️ <span class="count">${post.likes}</span></div><div class="action-btn" onclick="scrollToComment(${post.id})">💬 Comment</div><div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)">🔁 Repost</div></div></article>`;
+          return `<article class="post" data-id="${post.id}"><button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button><div class="post-header"><div class="post-avatar avatar-base">${post.username.charAt(1)}</div><div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div></div><div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div><div class="comment-section"><textarea class="comment-input" placeholder="Comment..." id="comment-${post.id}" maxlength="500"></textarea><button class="comment-save-btn" onclick="saveComment(${post.id})">Save</button>${commentsHTML}</div><div class="post-actions"><div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)"><div class="aus-logo ${post.likes > 0 ? 'has-likes' : ''}"><img src="logoAUS.png" alt="AUS" class="aus-icon"></div><span class="count">${post.likes || 0}</span></div><div class="action-btn" onclick="toggleComments(${post.id})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="count">${post.comments?.length || 0}</span></div><div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${post.repostedByMe?'var(--accent-cyan)':'var(--text-secondary)'}" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>${post.reposts || 0}</span></div></div></article>`;
         }).join('');
       }
       container.innerHTML = html;
@@ -573,7 +608,7 @@
     const input = document.getElementById(`comment-${postId}`);
     const comment = input.value.trim();
     if (!comment || comment.length > 500) { showToast(comment ? 'Max 500 chars' : 'Enter comment', 'error'); return; }
-    const posts = safeGetItem('feed.html', []);
+    const posts = safeGetItem('feedPosts', []);
     const idx = posts.findIndex(p => p.id === postId);
     if (idx !== -1) {
       if (!posts[idx].comments) posts[idx].comments = [];
@@ -581,9 +616,12 @@
       if (safeSetItem('feedPosts', posts)) { loadPosts(); showToast('Comment saved!'); }
     }
   }
-  function scrollToComment(id) {
-    const el = document.getElementById(`comment-${id}`);
-    if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+  function toggleComments(postId) {
+    const commentSection = document.querySelector(`.post[data-id="${postId}"] .comment-section`);
+    if (commentSection) {
+      const isVisible = commentSection.style.display !== 'none';
+      commentSection.style.display = isVisible ? 'none' : 'block';
+    }
   }
   function toggleLike(postId, btn) {
     const posts = safeGetItem('feedPosts', []);
@@ -592,6 +630,11 @@
     if (post.likedByMe) { post.likes--; post.likedByMe = false; btn.classList.remove('liked'); }
     else { post.likes++; post.likedByMe = true; btn.classList.add('liked'); }
     btn.querySelector('.count').textContent = post.likes;
+    const ausLogo = btn.querySelector('.aus-logo');
+    if (ausLogo) {
+      if (post.likes > 0) ausLogo.classList.add('has-likes');
+      else ausLogo.classList.remove('has-likes');
+    }
     safeSetItem('feedPosts', posts);
   }
   function toggleRepost(postId, btn) {
@@ -599,7 +642,9 @@
     const post = posts.find(p => p.id === postId);
     if (!post) return;
     post.repostedByMe = !post.repostedByMe;
+    post.reposts = (post.reposts || 0) + (post.repostedByMe ? 1 : -1);
     btn.classList.toggle('reposted', post.repostedByMe);
+    btn.querySelector('span').textContent = post.reposts;
     safeSetItem('feedPosts', posts);
     showToast(post.repostedByMe ? 'Reposted!' : 'Repost removed');
   }
