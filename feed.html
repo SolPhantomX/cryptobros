@@ -29,7 +29,6 @@
     .layout { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
     aside { width: 280px; flex-shrink: 0; padding: 2rem 0; position: sticky; top: 20px; }
     
-    /* === AVATAR BASE + MODIFIERS === */
     .avatar-base {
       border-radius: 50%;
       background: linear-gradient(45deg, var(--accent-gold), var(--accent-cyan));
@@ -73,18 +72,33 @@
     
     .create-post {
       background: var(--bg-card); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;
-      box-shadow: var(--shadow); display: flex; gap: 1rem; flex-direction: column;
+      box-shadow: var(--shadow);
     }
     .create-input {
-      flex: 1; background: var(--bg-body); border: 1px solid var(--border-color);
-      border-radius: 12px; padding: 1rem; font-size: 1.1rem; color: var(--text-primary);
-      resize: none; outline: none; min-height: 80px;
+      width: 100%; 
+      background: var(--bg-body); 
+      border: 2px solid var(--border-color);
+      border-radius: 12px; 
+      padding: 1rem; 
+      font-size: 1rem; 
+      color: var(--text-primary);
+      resize: vertical; 
+      outline: none; 
+      min-height: 120px;
+      max-height: 400px;
+      font-family: inherit;
+      line-height: 1.6;
+      transition: border-color 0.3s;
     }
-    .create-actions { display: flex; justify-content: flex-end; margin-top: 1rem; }
+    .create-input:focus { border-color: var(--accent-gold); }
+    .create-input::placeholder { color: var(--text-secondary); opacity: 0.7; }
+    .create-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; }
+    #charCount { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; }
     .btn-post {
-      padding: 0.6rem 1.5rem; background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
-      border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer;
-      color: #0a0a0f; transition: all 0.3s;
+      padding: 0.6rem 1.5rem;
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+      border: none; border-radius: 12px; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; color: #0a0a0f; transition: all 0.3s; white-space: nowrap;
     }
     .btn-post:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4); }
     
@@ -95,13 +109,10 @@
     .post-header { display: flex; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
     .post-user { font-weight: 600; font-size: 1.1rem; color: var(--text-primary); }
     .post-time { color: var(--text-secondary); font-size: 0.9rem; margin-left: 0.8rem; }
-    
-    /* === TEXT WRAPPING FIX === */
     .post-content, .comment-item {
       padding: 1.5rem; line-height: 1.6; font-size: 1.05rem; color: var(--text-primary);
-      word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;
+      word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; white-space: pre-wrap;
     }
-    
     .post-actions {
       display: flex; justify-content: space-between; padding: 1rem 1.5rem;
       border-top: 1px solid var(--border-color); color: var(--text-secondary);
@@ -114,14 +125,12 @@
     .action-btn.liked { color: #ff3b5c; }
     .action-btn.reposted { color: var(--accent-cyan); }
     .action-btn.commented { color: var(--accent-purple); }
-    
     .btn-delete {
       position: absolute; top: 1rem; right: 1rem; padding: 0.4rem 0.8rem;
       background: rgba(255, 59, 92, 0.1); border: 1px solid #ff3b5c; border-radius: 8px;
       color: #ff3b5c; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; z-index: 10;
     }
     .btn-delete:hover { background: #ff3b5c; color: white; }
-    
     .comment-section { padding: 0 1.5rem 1rem; }
     .comment-input {
       width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 12px;
@@ -138,7 +147,6 @@
       border-bottom: 1px dashed var(--border-color);
     }
     .comment-item:last-child { border-bottom: none; }
-    
     .right-sidebar { width: 300px; flex-shrink: 0; padding-left: 1rem; position: sticky; top: 20px; }
     .trends-card { background: var(--bg-card); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; }
     .trends-title { font-weight: 700; font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; }
@@ -149,21 +157,14 @@
     .trend-up { color: var(--success); }
     .trend-down { color: var(--error); }
     .trend-neutral { color: var(--text-secondary); }
-    
     .theme-toggle {
       width: 40px; height: 40px; border-radius: 50%; background: var(--bg-card);
       border: 1px solid var(--border-color); display: flex; align-items: center;
       justify-content: center; cursor: pointer; font-size: 1.2rem; transition: all 0.3s; box-shadow: var(--shadow);
     }
     .theme-toggle:hover { transform: scale(1.1); }
-    
-    .loader {
-      text-align: center; padding: 2rem; color: var(--text-secondary);
-      animation: pulse 1.5s infinite;
-    }
+    .loader { text-align: center; padding: 2rem; color: var(--text-secondary); animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-
-    /* === GLOBAL SEARCH STYLES === */
     .search-container { position: relative; max-width: 100%; margin: 0 0 1.5rem 0; z-index: 1000; }
     .search-wrapper {
       display: flex; align-items: center; background: var(--bg-card); border: 2px solid var(--border-color);
@@ -216,8 +217,6 @@
       padding: 1.5rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;
     }
     .search-loading { color: var(--accent-cyan); }
-    
-    /* Dark theme */
     .dark-theme .search-wrapper { background: var(--bg-card); border-color: var(--border-color); }
     .dark-theme #searchResultsBox {
       background: var(--bg-card); border-color: var(--border-color);
@@ -228,8 +227,6 @@
     .dark-theme .result-type.token { background: rgba(255, 215, 0, 0.25); }
     .dark-theme .result-type.hashtag { background: rgba(0, 240, 255, 0.25); }
     .dark-theme .search-empty, .dark-theme .search-loading { color: var(--text-secondary); }
-
-    /* === TOAST NOTIFICATIONS === */
     .toast {
       position: fixed; bottom: 30px; right: 30px;
       padding: 1rem 1.5rem; background: var(--bg-card);
@@ -244,8 +241,6 @@
     .toast.hiding { animation: toastOut 0.3s ease-in forwards; }
     @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
-
-    /* === SWARM MODAL === */
     .swarm-modal {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.75); display: flex; align-items: center;
@@ -274,9 +269,7 @@
       background: var(--hover-bg); border-radius: 8px;
       font-size: 0.85rem; color: var(--text-secondary);
     }
-    .dark-theme .agent-votes, .dark-theme .governance-hint {
-      background: rgba(255,255,255,0.05);
-    }
+    .dark-theme .agent-votes, .dark-theme .governance-hint { background: rgba(255,255,255,0.05); }
     .modal-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
     .modal-actions button {
       flex: 1; padding: 0.9rem; border: none; border-radius: 10px;
@@ -289,9 +282,14 @@
       color: #0a0a0f; 
     }
     .btn-appeal:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(157, 0, 255, 0.4); }
-
     @media (max-width: 1024px) { .layout { flex-direction: column; } aside, .right-sidebar { width: 100%; } }
-    @media (max-width: 768px) { .sidebar-menu { display: none; } main { padding: 0; } }
+    @media (max-width: 768px) { 
+      .sidebar-menu { display: none; } 
+      main { padding: 0; }
+      .create-input { min-height: 100px; font-size: 0.95rem; }
+      .create-actions { flex-direction: column; gap: 0.5rem; }
+      .btn-post { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -312,6 +310,7 @@
       <a href="groups.html" class="menu-item">👥 My Groups</a>
       <a href="profile.html" class="menu-item">⚙️ Settings</a>
       <a href="tribunal.html" class="menu-item">💡 Tribunal</a>
+      <a href="help.html" class="menu-item">🆘 Help Desk</a>
       <a href="payment.html" class="menu-item">💰 AUS Token</a>
     </div>
   </aside>
@@ -320,8 +319,6 @@
       <a href="profile.html" class="back-btn">← Back to Profile</a>
       <div class="theme-toggle" id="themeToggle">🌙</div>
     </div>
-
-    <!-- === GLOBAL SEARCH === -->
     <div class="search-container" id="searchContainer">
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
@@ -330,14 +327,16 @@
       </div>
       <div class="search-results" id="searchResultsBox" style="display:none;"></div>
     </div>
-
     <div class="create-post">
-      <div style="display: flex; gap: 1rem;">
+      <div style="display: flex; gap: 1rem; align-items: flex-start;">
         <div class="create-avatar avatar-base">C</div>
-        <textarea class="create-input" placeholder="What's on your mind? (max 2000 chars)" id="postInput" maxlength="2000"></textarea>
-      </div>
-      <div class="create-actions">
-        <button class="btn-post" onclick="createPost()">Post</button>
+        <div style="flex: 1;">
+          <textarea class="create-input" id="postInput" placeholder="What's on your mind? (max 2000 chars)" maxlength="2000" rows="4"></textarea>
+          <div class="create-actions">
+            <span id="charCount">0 / 2000</span>
+            <button class="btn-post" onclick="createPost()">📝 Post</button>
+          </div>
+        </div>
       </div>
     </div>
     <div id="feedPosts"></div>
@@ -353,44 +352,27 @@
       <div class="trends-title">Your Wallet</div>
       <div style="font-weight: 600; color: var(--accent-gold); margin: 0.8rem 0;">0.00 SOL</div>
       <div style="color: var(--text-secondary); font-size: 0.95rem;">AUS: pending launch</div>
-      <button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='connect-wallet.html'">
-        Connect Phantom
-      </button>
+      <button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='connect-wallet.html'">Connect Phantom</button>
     </div>
   </div>
 </div>
-
 <script>
-  // === CONFIG ===
   const CONFIG = { USE_BACKEND: false, BACKEND_URL: 'https://cryptobros-backend.onrender.com' };
-  // MVP LIMITATION: Likes/reposts are local-only. Real-time sync requires backend.
-
-  // === SENTINEL SWARM LITE - FINAL POLISHED ===
-  // Client-side moderation. Zero dependencies. English comments only.
-
   class SentinelSwarm {
     constructor() {
       this.patterns = {
-        scam: [
-          /rug\s*pull/i, /send\s+sol/i, /double\s+crypto/i, 
-          /private\s+key/i, /seed\s+phrase/i, /guaranteed\s+profit/i
-        ],
+        scam: [/rug\s*pull/i, /send\s+sol/i, /double\s+crypto/i, /private\s+key/i, /seed\s+phrase/i, /guaranteed\s+profit/i],
         urgency: [/\b(now|urgent|fast|limited|last\s+chance|act\s+fast)\b/i],
         urls: /(https?:\/\/[^\s]+)/g
       };
-      
       this.blacklist = JSON.parse(localStorage.getItem('walletBlacklist')) || [];
       this.walletPatterns = JSON.parse(localStorage.getItem('walletPatterns')) || ['scam', '0000', 'dead', 'fake'];
-      
       this.wisdomScore = parseFloat(localStorage.getItem('wisdomScore')) || 0;
       this.lastWisdomUpdate = parseInt(localStorage.getItem('lastWisdomUpdate')) || Date.now();
       this.juryCount = parseInt(localStorage.getItem('juryCount')) || 0;
-      
       this.userAUS = parseInt(localStorage.getItem('mockAUS')) || 0;
-      
       this.checkWisdomDecay();
     }
-    
     checkWisdomDecay() {
       const daysSinceUpdate = (Date.now() - this.lastWisdomUpdate) / (1000 * 60 * 60 * 24);
       if (daysSinceUpdate >= 7 && this.wisdomScore > 0) {
@@ -398,296 +380,113 @@
         this.lastWisdomUpdate = Date.now();
         localStorage.setItem('wisdomScore', this.wisdomScore.toString());
         localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString());
-        console.log(`📉 Wisdom decayed to ${this.wisdomScore} (no Jury activity)`);
       }
     }
-    
     analyzePatterns(content) {
-      let risk = 0;
-      const factors = [];
-      
-      if (this.patterns.scam.some(p => p.test(content))) {
-        risk += 0.4;
-        factors.push('Scam pattern detected');
-      }
-      
+      let risk = 0; const factors = [];
+      if (this.patterns.scam.some(p => p.test(content))) { risk += 0.4; factors.push('Scam pattern detected'); }
       const urgencyMatches = (content.match(this.patterns.urgency[0]) || []).length;
       const capsRatio = (content.match(/[A-Z]/g) || []).length / Math.max(1, content.length);
       const exclamationCount = (content.match(/!/g) || []).length;
-      
-      if (urgencyMatches > 0 || capsRatio > 0.3 || exclamationCount > 3) {
-        risk += 0.25;
-        factors.push('FOMO/urgency signals detected');
-      }
-      
+      if (urgencyMatches > 0 || capsRatio > 0.3 || exclamationCount > 3) { risk += 0.25; factors.push('FOMO/urgency signals detected'); }
       const urlMatches = content.match(this.patterns.urls) || [];
-      if (urlMatches.length > 2) {
-        risk += 0.2;
-        factors.push('Multiple external links');
-      }
-      
+      if (urlMatches.length > 2) { risk += 0.2; factors.push('Multiple external links'); }
       return { risk: Math.min(1, risk), factors };
     }
-    
     analyzeWallet(wallet) {
       if (!wallet || wallet === 'guest') return { risk: 0.1, factors: ['Guest user'] };
-      
-      if (this.blacklist.includes(wallet)) {
-        return { risk: 0.9, factors: ['Wallet in community blacklist'] };
-      }
-      
+      if (this.blacklist.includes(wallet)) { return { risk: 0.9, factors: ['Wallet in community blacklist'] }; }
       const walletLower = wallet.toLowerCase();
-      if (this.walletPatterns.some(p => walletLower.includes(p))) {
-        return { risk: 0.3, factors: ['Wallet matches suspicious pattern'] };
-      }
-      
+      if (this.walletPatterns.some(p => walletLower.includes(p))) { return { risk: 0.3, factors: ['Wallet matches suspicious pattern'] }; }
       return { risk: 0.1, factors: ['Wallet not flagged'] };
     }
-    
-    isValidWallet(wallet) {
-      if (!wallet || wallet.length < 32 || wallet.length > 44) return false;
-      return !/[0OlI]/.test(wallet);
-    }
-    
-    // FIX: Removed async/await (no async operations inside)
+    isValidWallet(wallet) { if (!wallet || wallet.length < 32 || wallet.length > 44) return false; return !/[0OlI]/.test(wallet); }
     vote(content, wallet, isNewUser) {
       const patternVote = this.analyzePatterns(content);
       const walletVote = this.analyzeWallet(wallet);
-      
-      let patternWeight = 0.6;
-      let walletWeight = 0.3;
-      
+      let patternWeight = 0.6; let walletWeight = 0.3;
       if (this.juryCount > 0 && this.juryCount % 10 === 0) {
         const mutation = (Math.random() - 0.5) * 0.1;
         patternWeight = Math.max(0.4, Math.min(0.8, patternWeight + mutation));
         walletWeight = Math.max(0.1, Math.min(0.5, walletWeight - mutation * 0.5));
-        console.log(`🧬 Swarm mutation: Pattern ${patternWeight.toFixed(2)} | Wallet ${walletWeight.toFixed(2)}`);
       }
-      
-      const weightedRisk = 
-        patternVote.risk * patternWeight + 
-        walletVote.risk * walletWeight + 
-        (isNewUser ? 0.1 : 0);
-      
+      const weightedRisk = patternVote.risk * patternWeight + walletVote.risk * walletWeight + (isNewUser ? 0.1 : 0);
       const allFactors = [...patternVote.factors, ...walletVote.factors];
-      
       const blockThreshold = Math.max(0.55, 0.7 - this.wisdomScore * 0.015);
       const reviewThreshold = Math.max(0.3, 0.45 - this.wisdomScore * 0.01);
-      
       let action = 'PUBLISH';
       if (weightedRisk >= blockThreshold) action = 'BLOCK';
       else if (weightedRisk >= reviewThreshold) action = 'REVIEW';
-      
-      return {
-        score: parseFloat(weightedRisk.toFixed(2)),
-        action,
-        factors: allFactors,
-        agentVotes: { 
-          pattern: parseFloat(patternVote.risk.toFixed(2)), 
-          wallet: parseFloat(walletVote.risk.toFixed(2)) 
-        },
-        thresholds: { block: parseFloat(blockThreshold.toFixed(2)), review: parseFloat(reviewThreshold.toFixed(2)) },
-        weights: { pattern: parseFloat(patternWeight.toFixed(2)), wallet: parseFloat(walletWeight.toFixed(2)) }
-      };
+      return { score: parseFloat(weightedRisk.toFixed(2)), action, factors: allFactors, agentVotes: { pattern: parseFloat(patternVote.risk.toFixed(2)), wallet: parseFloat(walletVote.risk.toFixed(2)) }, thresholds: { block: parseFloat(blockThreshold.toFixed(2)), review: parseFloat(reviewThreshold.toFixed(2)) }, weights: { pattern: parseFloat(patternWeight.toFixed(2)), wallet: parseFloat(walletWeight.toFixed(2)) } };
     }
-    
     evolveFromJury(verdict, content, userFeedback = null) {
-      if (userFeedback === 'disagree' && this.wisdomScore > 0) {
-        this.wisdomScore = Math.max(0, this.wisdomScore - 0.5);
-        localStorage.setItem('wisdomScore', this.wisdomScore.toString());
-        console.log(`🔄 Loop feedback: Wisdom reduced to ${this.wisdomScore}`);
-        return;
-      }
-      
+      if (userFeedback === 'disagree' && this.wisdomScore > 0) { this.wisdomScore = Math.max(0, this.wisdomScore - 0.5); localStorage.setItem('wisdomScore', this.wisdomScore.toString()); return; }
       if (verdict === 'BAN') {
-        this.juryCount++;
-        localStorage.setItem('juryCount', this.juryCount.toString());
-        
+        this.juryCount++; localStorage.setItem('juryCount', this.juryCount.toString());
         const words = content.toLowerCase().match(/\b\w+\b/g) || [];
-        const suspiciousWords = words.filter(w => 
-          ['scam', 'rug', 'fake', 'steal', 'trap'].some(k => w.includes(k))
-        );
-        
+        const suspiciousWords = words.filter(w => ['scam', 'rug', 'fake', 'steal', 'trap'].some(k => w.includes(k)));
         if (suspiciousWords.length > 0 && !this.patterns.scam.some(p => p.test(content))) {
           const newWord = suspiciousWords[0];
-          if (!this.patterns.scam.some(p => p.source.includes(newWord))) {
-            this.patterns.scam.push(new RegExp(`\\b${newWord}\\b`, 'i'));
-            console.log(`🧠 Sentinel evolved: new pattern /\\b${newWord}\\b/i`);
-          }
+          if (!this.patterns.scam.some(p => p.source.includes(newWord))) { this.patterns.scam.push(new RegExp(`\\b${newWord}\\b`, 'i')); }
         }
-        
-        this.wisdomScore += 0.25;
-        this.lastWisdomUpdate = Date.now();
+        this.wisdomScore += 0.25; this.lastWisdomUpdate = Date.now();
         localStorage.setItem('wisdomScore', this.wisdomScore.toString());
         localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString());
-        
       } else if (verdict === 'TRUST') {
-        // FIX: Added lastWisdomUpdate for TRUST verdict
-        this.wisdomScore += 0.1;
-        this.lastWisdomUpdate = Date.now();
+        this.wisdomScore += 0.1; this.lastWisdomUpdate = Date.now();
         localStorage.setItem('wisdomScore', this.wisdomScore.toString());
         localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString());
       }
     }
-    
     addToBlacklist(wallet) {
       if (!wallet || wallet === 'guest') return;
-      
-      if (!this.isValidWallet(wallet)) {
-        console.warn(`⚠️ Invalid wallet format, skipping blacklist: ${wallet}`);
-        return;
-      }
-      
-      if (!this.blacklist.includes(wallet)) {
-        this.blacklist.push(wallet);
-        localStorage.setItem('walletBlacklist', JSON.stringify(this.blacklist));
-        const display = wallet.length > 8 ? `${wallet.slice(0, 8)}...${wallet.slice(-4)}` : wallet;
-        console.log(`👻 Wallet ${display} added to Ghost blacklist`);
-      }
-      
-      const walletLower = wallet.toLowerCase();
-      const patterns = ['scam', 'rug', 'fake', '0000', 'dead', 'burn'];
-      patterns.forEach(p => {
-        if (walletLower.includes(p) && !this.walletPatterns.includes(p)) {
-          this.walletPatterns.push(p);
-          localStorage.setItem('walletPatterns', JSON.stringify(this.walletPatterns));
-          console.log(`👻 Ghost Memory: added pattern '${p}'`);
-        }
-      });
+      if (!this.isValidWallet(wallet)) { console.warn(`⚠️ Invalid wallet format, skipping blacklist: ${wallet}`); return; }
+      if (!this.blacklist.includes(wallet)) { this.blacklist.push(wallet); localStorage.setItem('walletBlacklist', JSON.stringify(this.blacklist)); }
     }
-    
-    awardAUS(amount = 1) {
-      this.userAUS += amount;
-      localStorage.setItem('mockAUS', this.userAUS.toString());
-      console.log(`💰 Mock AUS awarded: +${amount} (total: ${this.userAUS})`);
-      return this.userAUS;
-    }
-    
+    awardAUS(amount = 1) { this.userAUS += amount; localStorage.setItem('mockAUS', this.userAUS.toString()); return this.userAUS; }
     getMockAUS() { return this.userAUS; }
-    
     static cleanupStorage() {
       try {
         const posts = JSON.parse(localStorage.getItem('feedPosts')) || [];
         const postCount = parseInt(localStorage.getItem('postCountSinceCleanup')) || 0;
-        
         if (postCount >= 50) {
           const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
           const cleaned = posts.filter(p => p.timestamp > thirtyDaysAgo);
-          
-          if (cleaned.length !== posts.length) {
-            localStorage.setItem('feedPosts', JSON.stringify(cleaned));
-            console.log(`🧹 Storage cleanup: removed ${posts.length - cleaned.length} old posts`);
-          }
+          if (cleaned.length !== posts.length) { localStorage.setItem('feedPosts', JSON.stringify(cleaned)); }
           localStorage.setItem('postCountSinceCleanup', '0');
-        } else {
-          localStorage.setItem('postCountSinceCleanup', String(postCount + 1));
-        }
-      } catch (e) {
-        console.error('❌ Storage cleanup failed:', e);
-      }
+        } else { localStorage.setItem('postCountSinceCleanup', String(postCount + 1)); }
+      } catch (e) { console.error('❌ Storage cleanup failed:', e); }
     }
-    
     getWisdomScore() { return this.wisdomScore; }
     getJuryCount() { return this.juryCount; }
     getBlacklistCount() { return this.blacklist.length; }
   }
-
   const sentinel = new SentinelSwarm();
-
-  // === TOAST NOTIFICATIONS (fallback if not defined) ===
-  if (typeof showToast !== 'function') {
-    window.showToast = function(msg, type = 'success') {
-      const existing = document.querySelector('.toast');
-      if (existing) existing.remove();
-      
-      const div = document.createElement('div');
-      div.className = `toast ${type}`;
-      div.textContent = msg;
-      div.style.cssText = `
-        position:fixed; bottom:20px; right:20px; padding:1rem 1.5rem;
-        background:${type==='error'?'#ff4d4d':type==='warning'?'#ffd700':'#28a745'};
-        color:#0a0a0f; border-radius:12px; z-index:10000;
-        font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,0.2);
-        animation: toastIn 0.3s ease-out;
-      `;
-      document.body.appendChild(div);
-      setTimeout(() => {
-        div.style.animation = 'toastOut 0.3s ease-in forwards';
-        setTimeout(() => div.remove(), 300);
-      }, 3500);
-    };
+  function showToast(msg, type = 'success') {
+    const existing = document.querySelector('.toast'); if (existing) existing.remove();
+    const div = document.createElement('div');
+    div.className = `toast ${type}`; div.textContent = msg;
+    div.style.cssText = `position:fixed; bottom:20px; right:20px; padding:1rem 1.5rem; background:${type==='error'?'#ff4d4d':type==='warning'?'#ffd700':'#28a745'}; color:#0a0a0f; border-radius:12px; z-index:10000; font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,0.2); animation: toastIn 0.3s ease-out;`;
+    document.body.appendChild(div);
+    setTimeout(() => { div.style.animation = 'toastOut 0.3s ease-in forwards'; setTimeout(() => div.remove(), 300); }, 3500);
   }
-
-  // === SWARM VERDICT MODAL ===
   function showSwarmModal(analysis, content, wallet) {
-    const existing = document.querySelector('.swarm-modal');
-    if (existing) existing.remove();
-    
-    const modal = document.createElement('div');
-    modal.className = 'swarm-modal';
-    modal.innerHTML = `
-      <div class="swarm-content">
-        <h3>🛡️ Sentinel Swarm Verdict</h3>
-        <div class="verdict-badge risk-${analysis.action.toLowerCase()}">
-          ${analysis.action}
-        </div>
-        <p><strong>Risk Score:</strong> ${analysis.score}/1.00</p>
-        <p><strong>Thresholds:</strong> Block ≥${analysis.thresholds.block} | Review ≥${analysis.thresholds.review}</p>
-        <p><strong>Agent Weights:</strong> Pattern ${analysis.weights.pattern} | Wallet ${analysis.weights.wallet}</p>
-        <p><strong>Factors:</strong></p>
-        <ul>${analysis.factors.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>
-        
-        <div class="agent-votes">
-          <small>Agent Scores: Pattern ${analysis.agentVotes.pattern} | Wallet ${analysis.agentVotes.wallet}</small>
-        </div>
-        
-        <div class="governance-hint">
-          <small>🧠 Wisdom Score: ${sentinel.getWisdomScore()} | Jury Decisions: ${sentinel.getJuryCount()}</small>
-        </div>
-        
-        <div class="modal-actions">
-          <button class="btn-close" onclick="this.closest('.swarm-modal').remove()">Close</button>
-          <button class="btn-appeal" onclick="submitAppeal('${escapeHtml(content)}', ${analysis.score}, '${wallet}')">
-            ⚖️ Appeal to Tribunal
-          </button>
-        </div>
-      </div>
-    `;
-    
+    const existing = document.querySelector('.swarm-modal'); if (existing) existing.remove();
+    const modal = document.createElement('div'); modal.className = 'swarm-modal';
+    modal.innerHTML = `<div class="swarm-content"><h3>🛡️ Sentinel Swarm Verdict</h3><div class="verdict-badge risk-${analysis.action.toLowerCase()}">${analysis.action}</div><p><strong>Risk Score:</strong> ${analysis.score}/1.00</p><p><strong>Thresholds:</strong> Block ≥${analysis.thresholds.block} | Review ≥${analysis.thresholds.review}</p><p><strong>Agent Weights:</strong> Pattern ${analysis.weights.pattern} | Wallet ${analysis.weights.wallet}</p><p><strong>Factors:</strong></p><ul>${analysis.factors.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul><div class="agent-votes"><small>Agent Scores: Pattern ${analysis.agentVotes.pattern} | Wallet ${analysis.agentVotes.wallet}</small></div><div class="governance-hint"><small>🧠 Wisdom Score: ${sentinel.getWisdomScore()} | Jury Decisions: ${sentinel.getJuryCount()}</small></div><div class="modal-actions"><button class="btn-close" onclick="this.closest('.swarm-modal').remove()">Close</button><button class="btn-appeal" onclick="submitAppeal('${escapeHtml(content)}', ${analysis.score}, '${wallet}')">⚖️ Appeal to Tribunal</button></div></div>`;
     document.body.appendChild(modal);
-    
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.remove();
-    });
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
   }
-
   function submitAppeal(content, riskScore, wallet) {
     console.log(`⚖️ Appeal submitted: risk=${riskScore}, wallet=${wallet}`);
-    
     const modal = document.querySelector('.swarm-modal');
-    if (modal) {
-      modal.querySelector('.swarm-content').innerHTML = `
-        <h3>✅ Appeal Submitted</h3>
-        <p>Your post will be reviewed by the community Jury.</p>
-        <p><small>Mock mode: No real AUS staked yet.</small></p>
-        <button onclick="this.closest('.swarm-modal').remove()" style="margin-top:1rem;padding:0.8rem 1.5rem;background:var(--accent-gold);border:none;border-radius:8px;cursor:pointer;font-weight:600">
-          Close
-        </button>
-      `;
-    }
+    if (modal) { modal.querySelector('.swarm-content').innerHTML = `<h3>✅ Appeal Submitted</h3><p>Your post will be reviewed by the community Jury.</p><p><small>Mock mode: No real AUS staked yet.</small></p><button onclick="this.closest('.swarm-modal').remove()" style="margin-top:1rem;padding:0.8rem 1.5rem;background:var(--accent-gold);border:none;border-radius:8px;cursor:pointer;font-weight:600">Close</button>`; }
   }
-
-  // === THEME ===
   function initTheme() {
     const saved = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (saved === 'dark' || (!saved && prefersDark)) {
-      document.body.classList.add('dark-theme');
-      document.getElementById('themeToggle').textContent = '☀️';
-    } else {
-      document.body.classList.remove('dark-theme');
-      document.getElementById('themeToggle').textContent = '🌙';
-    }
+    if (saved === 'dark' || (!saved && prefersDark)) { document.body.classList.add('dark-theme'); document.getElementById('themeToggle').textContent = '☀️'; }
+    else { document.body.classList.remove('dark-theme'); document.getElementById('themeToggle').textContent = '🌙'; }
   }
   function toggleTheme() {
     const isDark = document.body.classList.contains('dark-theme');
@@ -700,14 +499,10 @@
     if (bg && bg !== 'none') document.body.style.backgroundImage = `url(${bg})`;
     else document.body.style.backgroundImage = 'none';
   }
-
-  // === XSS SAFE ===
   function escapeHtml(text) {
     const map = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' };
     return text.replace(/[&<>"']/g, m => map[m]);
   }
-
-  // === SAFE LOCALSTORAGE ===
   function safeGetItem(key, fallback = null) {
     try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : fallback; }
     catch(e) { console.error(`localStorage error (${key}):`, e); return fallback; }
@@ -716,162 +511,98 @@
     try { localStorage.setItem(key, JSON.stringify(value)); return true; }
     catch(e) { console.error(`localStorage full (${key}):`, e); showToast('Storage full! Delete some posts.', 'error'); return false; }
   }
-
-  // === CREATE POST ===
   function createPost() {
     const content = document.getElementById('postInput').value.trim();
     if (!content) { showToast('Please enter some text first', 'error'); return; }
     if (content.length > 2000) { showToast('Post too long (max 2000 characters)', 'error'); return; }
-    
     const wallet = localStorage.getItem('walletAddress') || 'guest';
     const isNewUser = !localStorage.getItem('hasPostedBefore');
-    
     const riskAnalysis = sentinel.vote(content, wallet, isNewUser);
-    
-    if (riskAnalysis.action === 'BLOCK') {
-      showSwarmModal(riskAnalysis, content, wallet);
-      return;
-    }
-    
-    if (riskAnalysis.action === 'REVIEW') {
-      showToast('Post published with review flag 🟡', 'warning');
-    }
-    
+    if (riskAnalysis.action === 'BLOCK') { showSwarmModal(riskAnalysis, content, wallet); return; }
+    if (riskAnalysis.action === 'REVIEW') { showToast('Post published with review flag 🟡', 'warning'); }
     const posts = safeGetItem('feedPosts', []);
-    posts.unshift({ 
-      id: Date.now(), 
-      content, 
-      timestamp: Date.now(), 
-      likes: 0, 
-      username: '@cryptobros', 
-      comments: [],
-      moderation: riskAnalysis,
-      likedByMe: false, 
-      repostedByMe: false 
-    });
-    
+    posts.unshift({ id: Date.now(), content, timestamp: Date.now(), likes: 0, username: '@cryptobros', comments: [], moderation: riskAnalysis, likedByMe: false, repostedByMe: false });
     if (safeSetItem('feedPosts', posts)) {
       document.getElementById('postInput').value = '';
+      document.getElementById('charCount').textContent = '0 / 2000';
       localStorage.setItem('hasPostedBefore', 'true');
-      
-      if (riskAnalysis.action === 'PUBLISH') {
-        sentinel.awardAUS(1);
-        showToast(`Post published! +1 mock AUS 🛡️`);
-      }
-      
+      if (riskAnalysis.action === 'PUBLISH') { sentinel.awardAUS(1); showToast(`Post published! +1 mock AUS 🛡️`); }
       SentinelSwarm.cleanupStorage();
-      
       loadPosts();
     }
   }
-
-  // === DELETE POST ===
+  const postInput = document.getElementById('postInput');
+  const charCount = document.getElementById('charCount');
+  if (postInput && charCount) {
+    postInput.addEventListener('input', () => {
+      const currentLength = postInput.value.length;
+      charCount.textContent = `${currentLength} / 2000`;
+      if (currentLength > 1800) { charCount.style.color = 'var(--error)'; }
+      else if (currentLength > 1500) { charCount.style.color = 'var(--warning)'; }
+      else { charCount.style.color = 'var(--text-secondary)'; }
+    });
+  }
   function deletePost(postId) {
     if (confirm('Delete this post? This action cannot be undone.')) {
       let posts = safeGetItem('feedPosts', []);
       posts = posts.filter(p => p.id !== postId);
       safeSetItem('feedPosts', posts);
-      // FIX: Added cleanupStorage call in deletePost
       SentinelSwarm.cleanupStorage();
       loadPosts();
       showToast('Post deleted');
     }
   }
-
-  // === LOAD POSTS ===
   function loadPosts() {
     const container = document.getElementById('feedPosts');
     container.innerHTML = '<div class="loader">Loading posts...</div>';
-    
     setTimeout(() => {
       const posts = safeGetItem('feedPosts', []);
       let html = '';
-      
-      if (!posts.length) {
-        html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)">No posts yet. Be the first!</div>';
-      } else {
+      if (!posts.length) { html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)">No posts yet. Be the first!</div>'; }
+      else {
         html = posts.map(post => {
           const date = new Date(post.timestamp);
-          const commentsHTML = post.comments?.length 
-            ? `<div class="comment-list">${post.comments.map(c=>`<div class="comment-item">💬 ${escapeHtml(c)}</div>`).join('')}</div>` 
-            : '';
-          return `
-            <article class="post" data-id="${post.id}">
-              <button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button>
-              <div class="post-header">
-                <div class="post-avatar avatar-base">${post.username.charAt(1)}</div>
-                <div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div>
-              </div>
-              <div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div>
-              <div class="comment-section">
-                <textarea class="comment-input" placeholder="Comment..." id="comment-${post.id}" maxlength="500"></textarea>
-                <button class="comment-save-btn" onclick="saveComment(${post.id})">Save</button>
-                ${commentsHTML}
-              </div>
-              <div class="post-actions">
-                <div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)">
-                  ❤️ <span class="count">${post.likes}</span>
-                </div>
-                <div class="action-btn" onclick="scrollToComment(${post.id})">💬 Comment</div>
-                <div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)">
-                  🔁 Repost
-                </div>
-              </div>
-            </article>`;
+          const commentsHTML = post.comments?.length ? `<div class="comment-list">${post.comments.map(c=>`<div class="comment-item">💬 ${escapeHtml(c)}</div>`).join('')}</div>` : '';
+          return `<article class="post" data-id="${post.id}"><button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button><div class="post-header"><div class="post-avatar avatar-base">${post.username.charAt(1)}</div><div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div></div><div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div><div class="comment-section"><textarea class="comment-input" placeholder="Comment..." id="comment-${post.id}" maxlength="500"></textarea><button class="comment-save-btn" onclick="saveComment(${post.id})">Save</button>${commentsHTML}</div><div class="post-actions"><div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)">❤️ <span class="count">${post.likes}</span></div><div class="action-btn" onclick="scrollToComment(${post.id})">💬 Comment</div><div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)">🔁 Repost</div></div></article>`;
         }).join('');
       }
       container.innerHTML = html;
     }, 100);
   }
-
-  // === SAVE COMMENT ===
   function saveComment(postId) {
     const input = document.getElementById(`comment-${postId}`);
     const comment = input.value.trim();
     if (!comment || comment.length > 500) { showToast(comment ? 'Max 500 chars' : 'Enter comment', 'error'); return; }
-    const posts = safeGetItem('feedPosts', []);
+    const posts = safeGetItem('feed.html', []);
     const idx = posts.findIndex(p => p.id === postId);
     if (idx !== -1) {
       if (!posts[idx].comments) posts[idx].comments = [];
       posts[idx].comments.unshift(comment);
-      if (safeSetItem('feedPosts', posts)) {
-        loadPosts();
-        showToast('Comment saved!');
-      }
+      if (safeSetItem('feedPosts', posts)) { loadPosts(); showToast('Comment saved!'); }
     }
   }
-
   function scrollToComment(id) {
     const el = document.getElementById(`comment-${id}`);
     if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
   }
-
-  // === TOGGLE LIKE ===
   function toggleLike(postId, btn) {
     const posts = safeGetItem('feedPosts', []);
     const post = posts.find(p => p.id === postId);
     if (!post) return;
-    
     if (post.likedByMe) { post.likes--; post.likedByMe = false; btn.classList.remove('liked'); }
     else { post.likes++; post.likedByMe = true; btn.classList.add('liked'); }
-    
     btn.querySelector('.count').textContent = post.likes;
     safeSetItem('feedPosts', posts);
   }
-
-  // === TOGGLE REPOST ===
   function toggleRepost(postId, btn) {
     const posts = safeGetItem('feedPosts', []);
     const post = posts.find(p => p.id === postId);
     if (!post) return;
-    
     post.repostedByMe = !post.repostedByMe;
     btn.classList.toggle('reposted', post.repostedByMe);
     safeSetItem('feedPosts', posts);
     showToast(post.repostedByMe ? 'Reposted!' : 'Repost removed');
   }
-
-  // === INIT MOCK USERS ===
   function initMockUsers() {
     if (!localStorage.getItem('users')) {
       safeSetItem('users', [
@@ -880,46 +611,28 @@
       ]);
     }
   }
-
-  // === DYNAMIC TRENDS ===
   function initTrends() {
-    const trendData = {
-      trend1: { value: 2100, prev: 2100 },
-      trend2: { value: 1800, prev: 1800 },
-      trend3: { value: 942, prev: 942 }
-    };
-    
+    const trendData = { trend1: { value: 2100, prev: 2100 }, trend2: { value: 1800, prev: 1800 }, trend3: { value: 942, prev: 942 } };
     setInterval(() => {
       Object.keys(trendData).forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        
+        const el = document.getElementById(id); if (!el) return;
         const delta = Math.floor(Math.random() * 21) - 10;
         trendData[id].prev = trendData[id].value;
         trendData[id].value = Math.max(0, trendData[id].value + delta);
-        
         const diff = trendData[id].value - trendData[id].prev;
-        let indicator = '●';
-        let indicatorClass = 'trend-neutral';
-        
+        let indicator = '●'; let indicatorClass = 'trend-neutral';
         if (diff > 0) { indicator = '↑ +' + diff; indicatorClass = 'trend-up'; }
         else if (diff < 0) { indicator = '↓ ' + diff; indicatorClass = 'trend-down'; }
-        
-        // Keep raw numbers for <1000 (looks more alive)
         const formatted = trendData[id].value >= 1000 ? (trendData[id].value / 1000).toFixed(1) + 'k' : trendData[id].value;
         el.innerHTML = `${formatted} <span class="trend-indicator ${indicatorClass}">${indicator}</span>`;
       });
     }, 30000);
   }
-
-  // === INIT ===
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
   document.addEventListener('DOMContentLoaded', () => {
     initTheme(); applySavedBackground(); initMockUsers(); initTrends(); loadPosts();
     console.log(`🛡️ Sentinel Swarm ready | Wisdom: ${sentinel.getWisdomScore()} | Blacklist: ${sentinel.getBlacklistCount()}`);
   });
-
-  // === GLOBAL SEARCH ===
   (function() {
     'use strict';
     const input = document.getElementById('globalSearchInput');
@@ -927,20 +640,16 @@
     const clearBtn = document.getElementById('searchClearBtn');
     const container = document.getElementById('searchContainer');
     if (!input || !results || !container) return;
-    
     let timeout = null;
     const getUsers = () => safeGetItem('users', []);
     const getPosts = () => safeGetItem('feedPosts', []);
     const norm = s => (s||'').toLowerCase().trim();
-    
     const searchUsers = q => getUsers().filter(u => norm(u.username).includes(q)||norm(u.bio||'').includes(q)).slice(0,5);
     const searchPosts = q => getPosts().filter(p => norm(p.content||'').includes(q)||(q.startsWith('#')&&norm(p.content||'').includes(q))).slice(0,5);
     const searchTokens = q => [{symbol:'AUS',name:'AURASPACE',chain:'Solana'},{symbol:'SOL',name:'Solana',chain:'Solana'},{symbol:'WIF',name:'dogwifhat',chain:'Solana'}].filter(t=>norm(t.symbol).includes(q)||norm(t.name).includes(q)).slice(0,5);
     const searchHashtags = q => q.startsWith('#') ? [...new Set(getPosts().flatMap(p=>(p.content||'').match(/#\w+/g)||[]))].filter(h=>norm(h).includes(q)).slice(0,5).map(h=>({tag:h,count:Math.floor(Math.random()*100)+1})) : [];
-    
     const createResult = (item,type) => {
-      const el = document.createElement('div');
-      el.className = 'search-result-item';
+      const el = document.createElement('div'); el.className = 'search-result-item';
       const icons = {user:'👤',post:'📝',token:'🪙',hashtag:'🔖'};
       let title,subtitle;
       switch(type) {
@@ -952,28 +661,24 @@
       el.innerHTML = `<span class="result-icon">${icons[type]||'📄'}</span><div class="result-content"><div class="result-title">${title}</div><div class="result-subtitle">${subtitle}</div></div><span class="result-type ${type}">${type}</span>`;
       return el;
     };
-    
     const performSearch = async query => {
       if (!query || query.length<2) { results.style.display='none'; results.innerHTML=''; return; }
-      results.innerHTML = '<div class="search-loading">Searching...</div>';
-      results.style.display = 'block';
+      results.innerHTML = '<div class="search-loading">Searching...</div>'; results.style.display = 'block';
       const [users,posts,tokens,hashtags] = await Promise.all([searchUsers(query),searchPosts(query),searchTokens(query),searchHashtags(query)]);
       results.innerHTML = '';
-      const sections = [{hashtags,type:'hashtag',title:'Hashtags',color:'#9D00FF'},{users,type:'user',title:'Users',color:'#9D00FF'},{tokens,type:'token',title:'Tokens',color:'#FFD700'},{posts,type:'post',title:'Posts',color:'#00F0FF'}];
+      const sections = [{data:hashtags,type:'hashtag',title:'Hashtags',color:'#9D00FF'},{data:users,type:'user',title:'Users',color:'#9D00FF'},{data:tokens,type:'token',title:'Tokens',color:'#FFD700'},{data:posts,type:'post',title:'Posts',color:'#00F0FF'}];
       let has = false;
       sections.forEach(sec => {
         if (sec.data?.length) {
           has = true;
           const h = document.createElement('div');
           h.style.cssText = `padding:0.75rem 1rem;font-weight:600;color:${sec.color};border-bottom:1px solid var(--border-color);font-size:0.8rem;text-transform:uppercase;`;
-          h.textContent = sec.title;
-          results.appendChild(h);
+          h.textContent = sec.title; results.appendChild(h);
           sec.data.forEach(item => results.appendChild(createResult(item, sec.type)));
         }
       });
       if (!has) results.innerHTML = '<div class="search-empty">No results found.</div>';
     };
-    
     input.addEventListener('input', e => {
       const q = e.target.value.trim();
       if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
@@ -983,13 +688,7 @@
     input.addEventListener('focus', () => { if (input.value.trim()) performSearch(input.value); });
     input.addEventListener('blur', () => { clearTimeout(timeout); setTimeout(()=>{ if(!input.value.trim()){results.style.display='none';results.innerHTML='';} },200); });
     if (clearBtn) clearBtn.addEventListener('click', () => { input.value=''; results.style.display='none'; results.innerHTML=''; clearBtn.style.display='none'; input.focus(); });
-    
-    document.addEventListener('click', e => {
-      if (!e.target.closest('#searchContainer') && !e.target.closest('.search-result-item')) {
-        results.style.display = 'none';
-        results.innerHTML = '';
-      }
-    });
+    document.addEventListener('click', e => { if (!e.target.closest('#searchContainer') && !e.target.closest('.search-result-item')) { results.style.display='none'; results.innerHTML=''; } });
     input.addEventListener('keydown', e => { if(e.key==='Escape'){results.style.display='none';results.innerHTML='';input.blur();} });
     console.log('✅ Search initialized');
   })();
