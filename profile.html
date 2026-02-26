@@ -84,7 +84,7 @@
       0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
       20%,24%,55%,81%,85% { opacity:0.8; }
     }
-    /* Toast notifications — moved from JS to CSS */
+    /* Toast notifications */
     .toast {
       position: fixed; bottom: 20px; right: 20px;
       padding: 1rem 1.5rem; border-radius: 12px; z-index: 9999;
@@ -96,12 +96,63 @@
     .toast.warning { background: #ffd700; color: #0a0a0f; }
     @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
+    
+    /* ✅ WALLET STATUS BADGE */
+    .wallet-badge {
+      position: absolute;
+      bottom: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid #333;
+      border-radius: 20px;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    .wallet-badge:hover {
+      border-color: #00ff9d;
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
+      transform: translateX(-50%) scale(1.05);
+    }
+    .badge-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #666;
+      animation: pulse 2s infinite;
+    }
+    .badge-indicator.connected { background: #00ff9d; }
+    .badge-indicator.locked { background: #ffd700; }
+    .badge-text {
+      color: #ffcc00;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: Arial, sans-serif;
+    }
+    .badge-text.locked { color: #ffd700; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
   </style>
 </head>
 <body>
   <div class="top-section">
     <div class="header" id="header"></div>
     <div class="avatar" id="avatar"></div>
+    
+    <!-- ✅ WALLET STATUS BADGE -->
+    <div class="wallet-badge" id="walletBadge" onclick="handleWalletClick()">
+      <div class="badge-indicator" id="badgeIndicator"></div>
+      <div class="badge-text" id="badgeText">Connect Wallet</div>
+    </div>
+    
     <div class="theme-switch" id="themeSwitch">🌙</div>
     <div class="edit-btn" id="editBtn">⚙️</div>
     <div class="edit-menu" id="editMenu"></div>
@@ -149,7 +200,6 @@
       try {
         const val = localStorage.getItem(key);
         if (val === null) return defaultVal;
-        // Don't parse strings (base64/URL)
         if (typeof defaultVal === 'string') return val;
         return JSON.parse(val);
       } catch(e) {
@@ -160,7 +210,6 @@
 
     function safeSet(key, val) {
       try {
-        // Don't stringify strings (base64/URL)
         const valueToStore = typeof val === 'string' ? val : JSON.stringify(val);
         localStorage.setItem(key, valueToStore);
       } catch(e) {
@@ -189,14 +238,12 @@
 
     // ✅ APPLY ALL BACKGROUNDS (with corrupted base64 check)
     function applyAllBackgrounds() {
-      // Page background
       let pageBg = safeGet('pageBg', '');
       if (!pageBg) pageBg = sessionStorage.getItem('pageBgTemp') || '';
       
       if (pageBg && pageBg !== 'none') {
         const isBase64 = pageBg.startsWith('image');
         
-        // ✅ VALIDATE: if base64, check via Image
         if (isBase64) {
           const img = new Image();
           img.onload = () => {
@@ -212,7 +259,6 @@
           };
           img.src = pageBg;
         } else {
-          // URL — apply directly
           document.body.style.backgroundImage = `url(${pageBg})`;
           applyBgStyles();
         }
@@ -222,7 +268,6 @@
         sessionStorage.removeItem('pageBgTemp');
       }
 
-      // Header
       const headerImg = safeGet('header', '');
       const headerEl = document.getElementById('header');
       if (headerImg) {
@@ -232,7 +277,6 @@
         headerEl.style.backgroundPosition = `${pos.x}px ${pos.y}px`;
       }
 
-      // Avatar
       const avatarImg = safeGet('avatar', '');
       const avatarEl = document.getElementById('avatar');
       if (avatarImg) {
@@ -240,7 +284,6 @@
       }
     }
 
-    // ✅ Helper: apply background styles
     function applyBgStyles() {
       document.body.style.backgroundSize = 'cover';
       document.body.style.backgroundPosition = 'center';
@@ -248,7 +291,7 @@
       document.body.style.backgroundRepeat = 'no-repeat';
     }
 
-    // ✅ SAVE BACKGROUND (pageBg)
+    // ✅ SAVE BACKGROUND
     function saveProfileBg(file) {
       if (!file) return;
       if (file.size > 2 * 1024 * 1024) {
@@ -294,10 +337,47 @@
       });
     }
 
+    // === 💰 WALLET BADGE FUNCTIONS ===
+    function updateWalletBadge() {
+      const wallet = localStorage.getItem('walletAddress');
+      const badge = document.getElementById('walletBadge');
+      const indicator = document.getElementById('badgeIndicator');
+      const text = document.getElementById('badgeText');
+      
+      if (!badge || !indicator || !text) return;
+      
+      if (wallet) {
+        indicator.className = 'badge-indicator connected';
+        text.textContent = `${wallet.slice(0, 6)}...${wallet.slice(-4)}`;
+        badge.title = 'Click to disconnect';
+      } else {
+        indicator.className = 'badge-indicator';
+        text.textContent = 'Connect Wallet';
+        badge.title = 'Click to connect';
+      }
+    }
+
+    function handleWalletClick() {
+      const wallet = localStorage.getItem('walletAddress');
+      
+      if (wallet) {
+        if (confirm('Disconnect wallet?')) {
+          localStorage.removeItem('walletAddress');
+          localStorage.removeItem('walletName');
+          localStorage.removeItem('walletConnected');
+          updateWalletBadge();
+          showToast('🔌 Disconnected', 'success');
+        }
+      } else {
+        window.location.href = 'wallet-connect.html';
+      }
+    }
+
     // === INITIALIZATION ===
     function init() {
       applyTheme();
       applyAllBackgrounds();
+      updateWalletBadge(); // ✅ Update wallet badge on load
       
       const headerImg = safeGet('header', '');
       const headerEl = document.getElementById('header');
@@ -321,7 +401,6 @@
       document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
       document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
       
-      // Re-apply backgrounds after theme toggle
       const originalToggleTheme = toggleTheme;
       toggleTheme = function() {
         originalToggleTheme();
