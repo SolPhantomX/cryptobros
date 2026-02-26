@@ -84,7 +84,7 @@
       0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
       20%,24%,55%,81%,85% { opacity:0.8; }
     }
-    /* ✅ Toast notifications — вынесено из JS в CSS */
+    /* Toast notifications — moved from JS to CSS */
     .toast {
       position: fixed; bottom: 20px; right: 20px;
       padding: 1rem 1.5rem; border-radius: 12px; z-index: 9999;
@@ -123,7 +123,7 @@
   <input type="file" id="bg-upload" accept="image/*">
 
   <script>
-    // ✅ TOAST NOTIFICATIONS (использует CSS классы)
+    // ✅ TOAST NOTIFICATIONS (uses CSS classes)
     function showToast(msg, type = 'success') {
       const existing = document.querySelector('.toast');
       if (existing) existing.remove();
@@ -137,18 +137,19 @@
       }, 3000);
     }
 
-    // === АВТОМАТИЧЕСКИЙ РЕЖИМ СОЗДАТЕЛЯ ===
+    // === AUTO CREATOR MODE ===
     if (!localStorage.getItem('isCreator')) {
       try { localStorage.setItem('isCreator', 'true'); } catch(e) {}
       try { localStorage.setItem('selectedTier', 'Premium'); } catch(e) {}
       try { localStorage.setItem('tierExpiry', 'lifetime'); } catch(e) {}
     }
 
-    // ✅ БЕЗОПАСНЫЕ GET/SET
+    // ✅ SAFE GET/SET FOR LOCALSTORAGE
     function safeGet(key, defaultVal) {
       try {
         const val = localStorage.getItem(key);
         if (val === null) return defaultVal;
+        // Don't parse strings (base64/URL)
         if (typeof defaultVal === 'string') return val;
         return JSON.parse(val);
       } catch(e) {
@@ -159,15 +160,16 @@
 
     function safeSet(key, val) {
       try {
+        // Don't stringify strings (base64/URL)
         const valueToStore = typeof val === 'string' ? val : JSON.stringify(val);
         localStorage.setItem(key, valueToStore);
       } catch(e) {
         console.warn(`safeSet failed for ${key}:`, e);
-        showToast('Хранилище переполнено — удали старые посты', 'warning');
+        showToast('Storage full — delete old posts', 'warning');
       }
     }
 
-    // === ДАННЫЕ ПРОФИЛЯ ===
+    // === PROFILE DATA ===
     let profileData = safeGet('profileData', { 
       name: '@cryptobros', 
       about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype', 
@@ -185,7 +187,7 @@
       'bg11.jpg', 'bg12.jpg', 'bg13.jpg'
     ];
 
-    // ✅ ПРИМЕНЕНИЕ ВСЕХ ФОНОВ (с проверкой повреждённого base64)
+    // ✅ APPLY ALL BACKGROUNDS (with corrupted base64 check)
     function applyAllBackgrounds() {
       // Page background
       let pageBg = safeGet('pageBg', '');
@@ -194,7 +196,7 @@
       if (pageBg && pageBg !== 'none') {
         const isBase64 = pageBg.startsWith('image');
         
-        // ✅ ПРОВЕРКА: если base64 — валидируем через Image
+        // ✅ VALIDATE: if base64, check via Image
         if (isBase64) {
           const img = new Image();
           img.onload = () => {
@@ -206,11 +208,11 @@
             localStorage.removeItem('pageBg');
             sessionStorage.removeItem('pageBgTemp');
             document.body.style.backgroundImage = 'none';
-            showToast('Повреждённый фон — сброшен', 'warning');
+            showToast('Corrupted background — reset', 'warning');
           };
           img.src = pageBg;
         } else {
-          // URL — применяем напрямую
+          // URL — apply directly
           document.body.style.backgroundImage = `url(${pageBg})`;
           applyBgStyles();
         }
@@ -238,7 +240,7 @@
       }
     }
 
-    // ✅ Вспомогательная: стили фона
+    // ✅ Helper: apply background styles
     function applyBgStyles() {
       document.body.style.backgroundSize = 'cover';
       document.body.style.backgroundPosition = 'center';
@@ -246,11 +248,11 @@
       document.body.style.backgroundRepeat = 'no-repeat';
     }
 
-    // ✅ СОХРАНЕНИЕ ФОНА (pageBg)
+    // ✅ SAVE BACKGROUND (pageBg)
     function saveProfileBg(file) {
       if (!file) return;
       if (file.size > 2 * 1024 * 1024) {
-        showToast('Картинка слишком большая (макс. 2MB)', 'error');
+        showToast('Image too large (max 2MB)', 'error');
         return;
       }
       const reader = new FileReader();
@@ -259,13 +261,13 @@
         safeSet('pageBg', base64);
         sessionStorage.setItem('pageBgTemp', base64);
         applyAllBackgrounds();
-        showToast('✅ Фон сохранён!', 'success');
+        showToast('✅ Background saved!', 'success');
       };
-      reader.onerror = () => showToast('❌ Ошибка загрузки', 'error');
+      reader.onerror = () => showToast('❌ Failed to load image', 'error');
       reader.readAsDataURL(file);
     }
 
-    // ✅ СОХРАНЕНИЕ HEADER/AVATAR
+    // ✅ SAVE HEADER/AVATAR
     function safeSaveHeader(base64) {
       safeSet('header', base64);
       headerPos = { x: 0, y: 0 };
@@ -278,7 +280,7 @@
       applyAllBackgrounds();
     }
 
-    // ✅ ОЧИСТКА localStorage
+    // ✅ CLEANUP LOCALSTORAGE
     function cleanupLocalStorage() {
       const protectedKeys = [
         'pageBg', 'header', 'avatar', 'profileData', 'headerPos', 
@@ -292,7 +294,7 @@
       });
     }
 
-    // === ИНИЦИАЛИЗАЦИЯ ===
+    // === INITIALIZATION ===
     function init() {
       applyTheme();
       applyAllBackgrounds();
@@ -319,7 +321,7 @@
       document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
       document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
       
-      // При смене темы — переприменяем все фоны
+      // Re-apply backgrounds after theme toggle
       const originalToggleTheme = toggleTheme;
       toggleTheme = function() {
         originalToggleTheme();
