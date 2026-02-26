@@ -11,167 +11,91 @@
       background-attachment: fixed;
       background-color: #000;
       color: #ffcc00;
+      transition: background 0.3s ease, color 0.3s ease;
     }
-    .top-section {
-      position: relative;
-      height: 300px;
-    }
+    .top-section { position: relative; height: 300px; }
     .header {
-      width: 100%;
-      height: 100%;
-      background: center/cover;
-      border: 2px dashed #555;
-      border-radius: 8px;
-      cursor: pointer;
+      width: 100%; height: 100%; background: center/cover;
+      border: 2px dashed #555; border-radius: 8px; cursor: pointer;
     }
-    .header.loaded {
-      border: none;
-    }
+    .header.loaded { border: none; }
     .avatar {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      border: 4px solid white;
-      background: center/cover;
-      position: absolute;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      width: 200px; height: 200px; border-radius: 50%;
+      border: 4px solid white; background: center/cover;
+      position: absolute; bottom: -100px; left: 50%;
+      transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       cursor: pointer;
     }
     .main-layout {
-      max-width: 1200px;
-      margin: 220px auto 0;
-      display: flex;
-      gap: 20px;
-      padding: 0 20px;
+      max-width: 1200px; margin: 220px auto 0;
+      display: flex; gap: 20px; padding: 0 20px;
     }
     .theme-switch {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      width: 32px;
-      height: 32px;
-      background: #333;
-      border: 1px solid #666;
-      border-radius: 50%;
-      color: #ffcc00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 100;
-      font-size: 16px;
+      position: absolute; top: 16px; left: 16px;
+      width: 32px; height: 32px; background: #333;
+      border: 1px solid #666; border-radius: 50%;
+      color: #ffcc00; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; z-index: 100; font-size: 16px;
     }
     .edit-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 32px;
-      height: 32px;
-      background: #333;
-      border: 1px solid #666;
-      border-radius: 50%;
-      color: #ffcc00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 100;
+      position: absolute; top: 16px; right: 16px;
+      width: 32px; height: 32px; background: #333;
+      border: 1px solid #666; border-radius: 50%;
+      color: #ffcc00; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; z-index: 100;
     }
     .edit-menu {
-      position: absolute;
-      top: 50px;
-      right: 16px;
-      background: #000;
-      border: 1px solid #ffcc00;
-      border-radius: 6px;
-      padding: 10px;
-      display: none;
-      z-index: 100;
-      min-width: 180px;
-      max-width: 250px;
-      max-height: 400px;
-      overflow-y: auto;
+      position: absolute; top: 50px; right: 16px;
+      background: #000; border: 1px solid #ffcc00;
+      border-radius: 6px; padding: 10px; display: none;
+      z-index: 100; min-width: 180px; max-width: 250px;
+      max-height: 400px; overflow-y: auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
     .edit-menu button {
-      background: #222;
-      color: #ffcc00;
-      border: 1px solid #555;
-      border-radius: 4px;
-      padding: 6px 10px;
-      margin: 3px 0;
-      cursor: pointer;
-      font-size: 12px;
-      display: inline-block;
-      width: 100%;
-      text-align: left;
+      background: #222; color: #ffcc00; border: 1px solid #555;
+      border-radius: 4px; padding: 6px 10px; margin: 3px 0;
+      cursor: pointer; font-size: 12px; display: inline-block;
+      width: 100%; text-align: left;
     }
     .sidebar { width: 200px; }
     .nav-item {
-      padding: 10px 0;
-      color: #ffcc00;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 18px;
-      animation: flicker 3s infinite alternate;
+      padding: 10px 0; color: #ffcc00; font-weight: bold;
+      cursor: pointer; font-size: 18px; animation: flicker 3s infinite alternate;
     }
-    .nav-item:hover {
-      opacity: 0.8;
-      text-shadow: 0 0 8px #ffcc00;
-    }
-    a.nav-item {
-      text-decoration: none;
-      display: block;
-      color: #ffcc00;
-    }
+    .nav-item:hover { opacity: 0.8; text-shadow: 0 0 8px #ffcc00; }
+    a.nav-item { text-decoration: none; display: block; color: #ffcc00; }
     .main { flex: 1; }
-    .name { 
-      font-size: 28px; 
-      font-weight: bold; 
-      margin-bottom: 8px; 
-      animation: flicker 3s infinite alternate;
-    }
-    .rank { 
-      margin-bottom: 20px; 
-      font-weight: bold;
-      animation: flicker 3s infinite alternate;
-    }
-    .field-label { 
-      color: #aaa; 
-      margin: 10px 0 4px; 
-      font-weight: bold; 
-    }
-    .field-value {
-      color: #ffcc00;
-      margin-bottom: 15px;
-      animation: flicker 3s infinite alternate;
-    }
+    .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; animation: flicker 3s infinite alternate; }
+    .rank { margin-bottom: 20px; font-weight: bold; animation: flicker 3s infinite alternate; }
+    .field-label { color: #aaa; margin: 10px 0 4px; font-weight: bold; }
+    .field-value { color: #ffcc00; margin-bottom: 15px; animation: flicker 3s infinite alternate; }
     input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0 15px;
-      background: rgba(0,0,0,0.3);
-      color: #ffcc00;
-      border: 1px solid #555;
-      border-radius: 4px;
+      width: 100%; padding: 10px; margin: 5px 0 15px;
+      background: rgba(0,0,0,0.3); color: #ffcc00;
+      border: 1px solid #555; border-radius: 4px;
     }
     .btn {
-      background: #4267B2;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 10px;
+      background: #4267B2; color: white; border: none;
+      padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 10px;
     }
     #header-upload, #avatar-upload, #bg-upload { display: none; }
     @keyframes flicker {
       0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
       20%,24%,55%,81%,85% { opacity:0.8; }
     }
+    /* ✅ Toast notifications — вынесено из JS в CSS */
+    .toast {
+      position: fixed; bottom: 20px; right: 20px;
+      padding: 1rem 1.5rem; border-radius: 12px; z-index: 9999;
+      font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      animation: toastIn 0.3s ease-out;
+    }
+    .toast.success { background: #00ff9d; color: #0a0a0f; }
+    .toast.error { background: #ff4d4d; color: #fff; }
+    .toast.warning { background: #ffd700; color: #0a0a0f; }
+    @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
   </style>
 </head>
 <body>
@@ -199,46 +123,190 @@
   <input type="file" id="bg-upload" accept="image/*">
 
   <script>
-    // === АВТОМАТИЧЕСКИЙ РЕЖИМ СОЗДАТЕЛЯ ===
-    if (!localStorage.getItem('isCreator')) {
-      localStorage.setItem('isCreator', 'true');
-      localStorage.setItem('selectedTier', 'Premium');
-      localStorage.setItem('tierExpiry', 'lifetime');
+    // ✅ TOAST NOTIFICATIONS (использует CSS классы)
+    function showToast(msg, type = 'success') {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const div = document.createElement('div');
+      div.className = `toast ${type}`;
+      div.textContent = msg;
+      document.body.appendChild(div);
+      setTimeout(() => {
+        div.style.animation = 'toastOut 0.3s ease-in forwards';
+        setTimeout(() => div.remove(), 300);
+      }, 3000);
     }
 
-    let profileData = JSON.parse(localStorage.getItem('profileData')) || { 
+    // === АВТОМАТИЧЕСКИЙ РЕЖИМ СОЗДАТЕЛЯ ===
+    if (!localStorage.getItem('isCreator')) {
+      try { localStorage.setItem('isCreator', 'true'); } catch(e) {}
+      try { localStorage.setItem('selectedTier', 'Premium'); } catch(e) {}
+      try { localStorage.setItem('tierExpiry', 'lifetime'); } catch(e) {}
+    }
+
+    // ✅ БЕЗОПАСНЫЕ GET/SET
+    function safeGet(key, defaultVal) {
+      try {
+        const val = localStorage.getItem(key);
+        if (val === null) return defaultVal;
+        if (typeof defaultVal === 'string') return val;
+        return JSON.parse(val);
+      } catch(e) {
+        console.warn(`safeGet failed for ${key}:`, e);
+        return defaultVal;
+      }
+    }
+
+    function safeSet(key, val) {
+      try {
+        const valueToStore = typeof val === 'string' ? val : JSON.stringify(val);
+        localStorage.setItem(key, valueToStore);
+      } catch(e) {
+        console.warn(`safeSet failed for ${key}:`, e);
+        showToast('Хранилище переполнено — удали старые посты', 'warning');
+      }
+    }
+
+    // === ДАННЫЕ ПРОФИЛЯ ===
+    let profileData = safeGet('profileData', { 
       name: '@cryptobros', 
       about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype', 
       city: 'Cyberspace' 
-    };
-    let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
-    let isProfileSaved = localStorage.getItem('isProfileSaved') === 'true';
-    let textColor = localStorage.getItem('textColor') || '#ffcc00';
-    let pageBg = localStorage.getItem('pageBg') || '';
-    let currentTheme = localStorage.getItem('theme') || 'dark';
-    let isCreator = true; // Всегда true для тебя
+    });
+    let headerPos = safeGet('headerPos', { x: 0, y: 0 });
+    let isProfileSaved = safeGet('isProfileSaved', false) === true;
+    let textColor = safeGet('textColor', '#ffcc00');
+    let currentTheme = safeGet('theme', 'dark');
+    let isCreator = true;
+
     const bgPresets = [
       'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png', 
       'bg6.jpg', 'bg7.jpg', 'bg8.jpg', 'bg9.jpg', 'bg10.jpg',
       'bg11.jpg', 'bg12.jpg', 'bg13.jpg'
     ];
 
-    function init() {
-      applyTheme();
+    // ✅ ПРИМЕНЕНИЕ ВСЕХ ФОНОВ (с проверкой повреждённого base64)
+    function applyAllBackgrounds() {
+      // Page background
+      let pageBg = safeGet('pageBg', '');
+      if (!pageBg) pageBg = sessionStorage.getItem('pageBgTemp') || '';
       
-      if (pageBg) {
-        document.body.style.backgroundImage = `url(${pageBg})`;
+      if (pageBg && pageBg !== 'none') {
+        const isBase64 = pageBg.startsWith('image');
+        
+        // ✅ ПРОВЕРКА: если base64 — валидируем через Image
+        if (isBase64) {
+          const img = new Image();
+          img.onload = () => {
+            document.body.style.backgroundImage = pageBg;
+            applyBgStyles();
+          };
+          img.onerror = () => {
+            console.warn('Corrupted base64 background, resetting');
+            localStorage.removeItem('pageBg');
+            sessionStorage.removeItem('pageBgTemp');
+            document.body.style.backgroundImage = 'none';
+            showToast('Повреждённый фон — сброшен', 'warning');
+          };
+          img.src = pageBg;
+        } else {
+          // URL — применяем напрямую
+          document.body.style.backgroundImage = `url(${pageBg})`;
+          applyBgStyles();
+        }
+        sessionStorage.setItem('pageBgTemp', pageBg);
+      } else {
+        document.body.style.backgroundImage = 'none';
+        sessionStorage.removeItem('pageBgTemp');
       }
 
-      const headerImg = localStorage.getItem('header') || '';
+      // Header
+      const headerImg = safeGet('header', '');
       const headerEl = document.getElementById('header');
       if (headerImg) {
         headerEl.style.backgroundImage = `url(${headerImg})`;
         headerEl.classList.add('loaded');
-        headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+        const pos = safeGet('headerPos', {x:0, y:0});
+        headerEl.style.backgroundPosition = `${pos.x}px ${pos.y}px`;
       }
 
-      const avatarImg = localStorage.getItem('avatar') || '';
+      // Avatar
+      const avatarImg = safeGet('avatar', '');
+      const avatarEl = document.getElementById('avatar');
+      if (avatarImg) {
+        avatarEl.style.backgroundImage = `url(${avatarImg})`;
+      }
+    }
+
+    // ✅ Вспомогательная: стили фона
+    function applyBgStyles() {
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.body.style.backgroundRepeat = 'no-repeat';
+    }
+
+    // ✅ СОХРАНЕНИЕ ФОНА (pageBg)
+    function saveProfileBg(file) {
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Картинка слишком большая (макс. 2MB)', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64 = e.target.result;
+        safeSet('pageBg', base64);
+        sessionStorage.setItem('pageBgTemp', base64);
+        applyAllBackgrounds();
+        showToast('✅ Фон сохранён!', 'success');
+      };
+      reader.onerror = () => showToast('❌ Ошибка загрузки', 'error');
+      reader.readAsDataURL(file);
+    }
+
+    // ✅ СОХРАНЕНИЕ HEADER/AVATAR
+    function safeSaveHeader(base64) {
+      safeSet('header', base64);
+      headerPos = { x: 0, y: 0 };
+      safeSet('headerPos', headerPos);
+      applyAllBackgrounds();
+    }
+
+    function safeSaveAvatar(base64) {
+      safeSet('avatar', base64);
+      applyAllBackgrounds();
+    }
+
+    // ✅ ОЧИСТКА localStorage
+    function cleanupLocalStorage() {
+      const protectedKeys = [
+        'pageBg', 'header', 'avatar', 'profileData', 'headerPos', 
+        'textColor', 'theme', 'isCreator', 'selectedTier', 'tierExpiry',
+        'isProfileSaved', 'walletAddress', 'walletName', 'walletConnected'
+      ];
+      Object.keys(localStorage).forEach(key => {
+        if (!protectedKeys.includes(key) && !key.startsWith('feedPosts')) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+
+    // === ИНИЦИАЛИЗАЦИЯ ===
+    function init() {
+      applyTheme();
+      applyAllBackgrounds();
+      
+      const headerImg = safeGet('header', '');
+      const headerEl = document.getElementById('header');
+      if (headerImg) {
+        headerEl.style.backgroundImage = `url(${headerImg})`;
+        headerEl.classList.add('loaded');
+        const pos = safeGet('headerPos', {x:0, y:0});
+        headerEl.style.backgroundPosition = `${pos.x}px ${pos.y}px`;
+      }
+
+      const avatarImg = safeGet('avatar', '');
       const avatarEl = document.getElementById('avatar');
       if (avatarImg) {
         avatarEl.style.backgroundImage = `url(${avatarImg})`;
@@ -250,6 +318,13 @@
       
       document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
       document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
+      
+      // При смене темы — переприменяем все фоны
+      const originalToggleTheme = toggleTheme;
+      toggleTheme = function() {
+        originalToggleTheme();
+        setTimeout(applyAllBackgrounds, 100);
+      };
     }
 
     function applyTheme() {
@@ -274,7 +349,7 @@
 
     function toggleTheme() {
       currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', currentTheme);
+      safeSet('theme', currentTheme);
       applyTheme();
     }
 
@@ -290,11 +365,9 @@
 
     function buildEditMenuContent() {
       const menu = document.getElementById('editMenu');
-      
       let bgButtons = bgPresets.map(bg => 
         `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
       ).join('');
-      
       let menuHTML = `
         <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
         <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
@@ -312,40 +385,25 @@
         </div>
         <button onclick="document.getElementById('editMenu').style.display='none'">❌ Close</button>
       `;
-      
       menu.innerHTML = menuHTML;
     }
 
     function generateInviteCode(tier) {
       const code = Math.floor(1000 + Math.random() * 9000);
       const fullCode = `${tier.charAt(0)}${tier.charAt(1)}${tier.charAt(2).toUpperCase()}-${code}`;
-      
-      let activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
-      activeCodes.push({
-        code: fullCode,
-        tier: tier,
-        generatedAt: Date.now(),
-        used: false
-      });
-      localStorage.setItem('activeInviteCodes', JSON.stringify(activeCodes));
-      
+      let activeCodes = safeGet('activeInviteCodes', []);
+      activeCodes.push({ code: fullCode, tier, generatedAt: Date.now(), used: false });
+      safeSet('activeInviteCodes', activeCodes);
       navigator.clipboard.writeText(fullCode).then(() => {
         alert(`✅ Invite code generated!\n\nCode: ${fullCode}\nTier: ${tier}\n\nCopied to clipboard!`);
       });
     }
 
     function showActiveCodes() {
-      const activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
-      if (activeCodes.length === 0) {
-        alert('No active invite codes.');
-        return;
-      }
-      
+      const activeCodes = safeGet('activeInviteCodes', []);
+      if (activeCodes.length === 0) { alert('No active invite codes.'); return; }
       let message = 'Active Invite Codes:\n\n';
-      activeCodes.forEach(code => {
-        message += `${code.code} - ${code.tier} - ${code.used ? 'USED' : 'ACTIVE'}\n`;
-      });
-      
+      activeCodes.forEach(code => { message += `${code.code} - ${code.tier} - ${code.used ? 'USED' : 'ACTIVE'}\n`; });
       alert(message);
     }
 
@@ -358,15 +416,15 @@
     }
 
     function setPresetBg(filename) {
-      pageBg = filename;
-      localStorage.setItem('pageBg', pageBg);
-      document.body.style.backgroundImage = `url(${filename})`;
+      safeSet('pageBg', filename);
+      sessionStorage.setItem('pageBgTemp', filename);
+      applyAllBackgrounds();
       document.getElementById('editMenu').style.display = 'none';
     }
 
     function changeTextColor(color) {
       textColor = color;
-      localStorage.setItem('textColor', color);
+      safeSet('textColor', color);
       updateElementColors(color);
       document.getElementById('editMenu').style.display = 'none';
     }
@@ -375,15 +433,7 @@
       document.getElementById('bg-upload').click();
       document.getElementById('bg-upload').onchange = function(e) {
         const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(event) {
-            pageBg = event.target.result;
-            localStorage.setItem('pageBg', pageBg);
-            document.body.style.backgroundImage = `url(${pageBg})`;
-          };
-          reader.readAsDataURL(file);
-        }
+        if (file) saveProfileBg(file);
         document.getElementById('editMenu').style.display = 'none';
       };
     }
@@ -416,83 +466,48 @@
       profileData.about = document.getElementById('aboutInput').value;
       profileData.city = document.getElementById('cityInput').value;
       profileData.name = '@cryptobros';
-      
-      localStorage.setItem('profileData', JSON.stringify(profileData));
-      localStorage.setItem('isProfileSaved', 'true');
+      safeSet('profileData', profileData);
+      safeSet('isProfileSaved', true);
+      isProfileSaved = true;
       renderViewMode();
       alert('✅ Profile saved successfully!');
     }
 
     function setupDragToPan() {
       const headerEl = document.getElementById('header');
-      let isDragging = false;
-      let startX, startY, startXPx, startYPx;
-
+      let isDragging = false, startX, startY, startXPx, startYPx;
       headerEl.addEventListener('mousedown', (e) => {
         if (headerEl.classList.contains('loaded')) {
-          isDragging = true;
-          startX = e.clientX;
-          startY = e.clientY;
+          isDragging = true; startX = e.clientX; startY = e.clientY;
           const bgPos = headerEl.style.backgroundPosition.split(' ');
-          startXPx = parseInt(bgPos[0]) || 0;
-          startYPx = parseInt(bgPos[1]) || 0;
+          startXPx = parseInt(bgPos[0]) || 0; startYPx = parseInt(bgPos[1]) || 0;
           document.body.style.cursor = 'grabbing';
         }
       });
-
       document.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        headerPos.x = startXPx + dx;
-        headerPos.y = startYPx + dy;
+        headerPos.x = startXPx + (e.clientX - startX);
+        headerPos.y = startYPx + (e.clientY - startY);
         headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-        localStorage.setItem('headerPos', JSON.stringify(headerPos));
+        safeSet('headerPos', headerPos);
       });
-
-      document.addEventListener('mouseup', () => {
-        if (isDragging) {
-          isDragging = false;
-          document.body.style.cursor = 'default';
-        }
-      });
+      document.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; document.body.style.cursor = 'default'; } });
     }
 
     function buildEditMenu() {
-      document.getElementById('header').addEventListener('click', () => {
-        if (!isProfileSaved) document.getElementById('header-upload').click();
-      });
-      
+      document.getElementById('header').addEventListener('click', () => { if (!isProfileSaved) document.getElementById('header-upload').click(); });
       document.getElementById('header-upload').onchange = function(e) {
         const file = e.target.files[0];
         if (file) {
           const reader = new FileReader();
-          reader.onload = function(event) {
-            localStorage.setItem('header', event.target.result);
-            document.getElementById('header').style.backgroundImage = `url(${event.target.result})`;
-            document.getElementById('header').classList.add('loaded');
-            headerPos = { x: 0, y: 0 };
-            localStorage.setItem('headerPos', JSON.stringify(headerPos));
-            document.getElementById('header').style.backgroundPosition = '0px 0px';
-          };
+          reader.onload = function(event) { safeSaveHeader(event.target.result); headerEl.style.backgroundImage = `url(${event.target.result})`; headerEl.classList.add('loaded'); headerEl.style.backgroundPosition = '0px 0px'; };
           reader.readAsDataURL(file);
         }
       };
-
-      document.getElementById('avatar').addEventListener('click', () => {
-        document.getElementById('avatar-upload').click();
-      });
-
+      document.getElementById('avatar').addEventListener('click', () => { document.getElementById('avatar-upload').click(); });
       document.getElementById('avatar-upload').onchange = function(e) {
         const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(event) {
-            localStorage.setItem('avatar', event.target.result);
-            document.getElementById('avatar').style.backgroundImage = `url(${event.target.result})`;
-          };
-          reader.readAsDataURL(file);
-        }
+        if (file) { const reader = new FileReader(); reader.onload = function(event) { safeSaveAvatar(event.target.result); document.getElementById('avatar').style.backgroundImage = `url(${event.target.result})`; }; reader.readAsDataURL(file); }
       };
     }
 
