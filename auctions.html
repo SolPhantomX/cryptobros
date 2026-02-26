@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auctions — CryptoBros</title>
+  
+  <!-- ✅ FIX: Убраны пробелы в URL -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-body: #0f0c29; --bg-card: #1e1e3f; --text-primary: #e0e0ff;
+      --text-secondary: #a0a0cc; --border-color: #3a3a6e; --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --accent-gold: #ffd700; --accent-cyan: #00f0ff; --accent-purple: #9d00ff;
+      --hover-bg: #2a2a5a; --active: #ffd70033;
+      --success: #00ff9d; --error: #ff4d4d; --warning: #ffd700;
+    }
+    .light-theme {
+      --bg-body: #f0f4ff; --bg-card: #ffffff; --text-primary: #1a1a3f;
+      --text-secondary: #6c7293; --border-color: #d0d8ff; --shadow: 0 8px 32px rgba(0,0,0,0.1);
+      --hover-bg: #e8efff; --active: #ffd70011;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Inter',sans-serif; background:var(--bg-body); color:var(--text-primary);
+      min-height:100vh; transition:all 0.4s ease;
+    }
+    .container { max-width:1200px; margin:0 auto; padding:2rem 1rem; }
+    header { text-align:center; margin-bottom:3rem; }
+    h1 { font-size:3rem; color:var(--accent-gold); margin-bottom:0.5rem; text-shadow:0 0 20px var(--accent-gold); }
+    .theme-toggle {
+      position:absolute; top:1.5rem; right:1.5rem;
+      width:48px; height:48px; border-radius:50%;
+      background:var(--bg-card); border:2px solid var(--border-color);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.5rem; cursor:pointer; transition:all 0.3s;
+      box-shadow:var(--shadow);
+    }
+    .theme-toggle:hover { transform:scale(1.15); }
+    .stats { display:flex; justify-content:center; gap:3rem; margin-bottom:2rem; flex-wrap:wrap; }
+    .stat-card {
+      background:var(--bg-card); padding:1.5rem 2rem; border-radius:16px;
+      border:1px solid var(--border-color); box-shadow:var(--shadow);
+      text-align:center; min-width:180px;
+    }
+    .stat-value { font-size:2.2rem; font-weight:700; color:var(--accent-cyan); }
+    .stat-label { font-size:1rem; color:var(--text-secondary); margin-top:0.5rem; }
+    .section-title { font-size:2rem; color:var(--accent-gold); margin:3rem 0 1.5rem; text-align:center; }
+    .auction-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1.5rem; }
+    .auction-card {
+      background:var(--bg-card); border-radius:16px; overflow:hidden;
+      border:2px solid var(--border-color); transition:all 0.3s;
+      box-shadow:var(--shadow);
+    }
+    .auction-card:hover { transform:translateY(-8px); border-color:var(--accent-gold); box-shadow:0 16px 48px rgba(255,215,0,0.2); }
+    .auction-card.ended { border-style:dashed; opacity:0.8; }
+    .auction-header { padding:1.2rem; background:linear-gradient(135deg,var(--accent-purple),var(--accent-cyan)); color:#000; font-weight:700; text-align:center; font-size:1.3rem; }
+    .auction-body { padding:1.5rem; }
+    .post-preview { background:var(--hover-bg); padding:1rem; border-radius:12px; margin-bottom:1rem; max-height:100px; overflow:hidden; font-size:0.95rem; color:var(--text-secondary); line-height:1.5; }
+    .current-bid { font-size:1.8rem; font-weight:800; text-align:center; color:var(--accent-gold); margin:1rem 0; text-shadow:0 0 10px var(--accent-gold); }
+    .timer { text-align:center; font-size:1.4rem; font-weight:600; margin:1rem 0; color:var(--warning); background:var(--hover-bg); padding:0.8rem; border-radius:12px; font-family:'Roboto Mono',monospace; }
+    .timer.ended { color:var(--success); }
+    .bid-form { display:flex; flex-direction:column; gap:1rem; }
+    .bid-input { padding:0.9rem; font-size:1.1rem; background:var(--bg-body); border:2px solid var(--border-color); border-radius:12px; color:var(--text-primary); text-align:center; }
+    .bid-input:focus { outline:none; border-color:var(--accent-cyan); }
+    .bid-btn { padding:1rem; font-size:1.2rem; font-weight:700; background:linear-gradient(135deg,var(--accent-gold),var(--accent-cyan)); border:none; border-radius:12px; color:#000; cursor:pointer; transition:all 0.3s; }
+    .bid-btn:hover { transform:scale(1.05); box-shadow:0 8px 24px rgba(255,215,0,0.4); }
+    .bid-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .history-item { padding:1rem; border-bottom:1px solid var(--border-color); font-size:0.95rem; color:var(--text-secondary); }
+    .history-item strong { color:var(--accent-gold); }
+    .empty-state { text-align:center; padding:6rem 1rem; color:var(--text-secondary); font-size:1.4rem; }
+    .back-btn { display:inline-block; margin-bottom:2rem; padding:0.8rem 1.5rem; background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; color:var(--text-primary); text-decoration:none; font-weight:600; transition:all 0.3s; }
+    .back-btn:hover { background:var(--hover-bg); transform:translateX(-6px); }
+    .toast { position:fixed; bottom:20px; right:20px; padding:1rem 1.5rem; border-radius:12px; z-index:9999; font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,0.3); animation:toastIn 0.3s ease-out; }
+    .toast.success { background:var(--success); color:#0a0a0f; }
+    .toast.error { background:var(--error); color:#fff; }
+    .toast.warning { background:var(--warning); color:#0a0a0f; }
+    
+    /* ✅ FIX: Добавлен missing keyframes для pulse-анимации таймера */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    @keyframes toastIn { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    @keyframes toastOut { from { transform:translateY(0); opacity:1; } to { transform:translateY(20px); opacity:0; } }
+    
+    @media (max-width:768px) { .stats { gap:1rem; } .stat-card { min-width:140px; padding:1rem 1.5rem; } .stat-value { font-size:1.8rem; } .auction-grid { grid-template-columns:1fr; } .current-bid { font-size:1.4rem; } .timer { font-size:1.2rem; } h1 { font-size:2.2rem; } .theme-toggle { top:1rem; right:1rem; width:40px; height:40px; font-size:1.2rem; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="feed.html" class="back-btn">← Back to Feed</a>
+    <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</div>
+    
+    <header>
+      <h1>🔥 Pin Auctions</h1>
+      <p style="text-align:center;color:var(--text-secondary);max-width:600px;margin:1rem auto;">
+        Burn $AUS to win top spot for 24h. Highest bidder gets the pin — all burns count toward glory!
+      </p>
+    </header>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="totalBurned">0</div>
+        <div class="stat-label">$AUS Burned All-Time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="activeCount">0</div>
+        <div class="stat-label">Active Auctions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="topBurn">0</div>
+        <div class="stat-label">Biggest Single Burn</div>
+      </div>
+    </div>
+
+    <section class="active-auctions">
+      <h2 class="section-title">Live Auctions 🔥</h2>
+      <div class="auction-grid" id="activeAuctions"></div>
+    </section>
+
+    <section class="leaderboard">
+      <h2 class="section-title">Top Burners All-Time</h2>
+      <div id="leaderboard"></div>
+    </section>
+
+    <section class="history">
+      <h2 class="section-title">Auction History</h2>
+      <div id="historyList"></div>
+    </section>
+  </div>
+
+  <script>
+    // === TOAST ===
+    function showToast(msg, type = 'success') {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const div = document.createElement('div');
+      div.className = `toast ${type}`;
+      div.textContent = msg;
+      document.body.appendChild(div);
+      setTimeout(() => {
+        div.style.animation = 'toastOut 0.3s ease-in forwards';
+        setTimeout(() => div.remove(), 300);
+      }, 3000);
+    }
+
+    // === SAFE STORAGE ===
+    function safeGet(key, defaultVal) {
+      try {
+        const val = localStorage.getItem(key);
+        return val ? JSON.parse(val) : defaultVal;
+      } catch(e) {
+        console.warn(`safeGet failed for ${key}:`, e);
+        return defaultVal;
+      }
+    }
+
+    function safeSet(key, val) {
+      try {
+        localStorage.setItem(key, JSON.stringify(val));
+      } catch(e) {
+        console.warn(`safeSet failed for ${key}:`, e);
+        showToast('Storage full — clean some data', 'warning');
+      }
+    }
+
+    // === DATA ===
+    let auctions = safeGet('auctions', []);
+    let completedAuctions = safeGet('completedAuctions', []);
+
+    const MIN_BID_INCREMENT = 10;
+    const MAX_BID = 1_000_000;
+    const AUCTION_DURATION = 15 * 60 * 1000;
+    const EXTEND_TIME = 2 * 60 * 1000;
+
+    // === THEME ===
+    function initTheme() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light') document.body.classList.add('light-theme');
+      document.getElementById('themeToggle').textContent = saved === 'light' ? '☀️' : '🌙';
+    }
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+      const isLight = document.body.classList.contains('light-theme');
+      safeSet('theme', isLight ? 'light' : 'dark');
+      document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+    });
+
+    // === PIN POST IN FEED ===
+    function pinPostInFeed(postId, burnAmount) {
+      try {
+        const postsRaw = localStorage.getItem('feedPosts');
+        if (!postsRaw) return;
+        const posts = JSON.parse(postsRaw);
+        const post = posts.find(p => String(p.id) === String(postId));
+        if (post && !post.pinned) {
+          post.pinned = true;
+          post.pinnedAt = Date.now();
+          post.pinnedByAuction = true;
+          post.auctionBurn = burnAmount;
+          safeSet('feedPosts', posts);
+        }
+      } catch(e) {
+        console.warn('Could not pin post in feed:', e);
+      }
+    }
+
+    // === RENDER ACTIVE AUCTIONS ===
+    function renderActiveAuctions() {
+      const container = document.getElementById('activeAuctions');
+      const now = Date.now();
+
+      // Filter and finalize ended auctions (only once)
+      let changed = false;
+      auctions = auctions.filter(auc => {
+        if (auc.endTime <= now && !auc.winnerBurn) {
+          auc.winnerBurn = auc.currentBurn;
+          completedAuctions.unshift({
+            postPreview: auc.postPreview,
+            winner: auc.leader,
+            burnAmount: auc.currentBurn,
+            date: new Date().toLocaleString()
+          });
+          pinPostInFeed(auc.postId, auc.currentBurn);
+          if (auc.leader === '@you') {
+            showToast(`🏆 You won! Post pinned for 24h`, 'success');
+          }
+          changed = true;
+          return false;
+        }
+        return true;
+      });
+
+      if (changed) {
+        safeSet('auctions', auctions);
+        safeSet('completedAuctions', completedAuctions);
+        renderHistory();
+        updateStats();
+      }
+
+      // Sort: soonest end time first, then highest burn
+      const sortedActive = [...auctions].sort((a, b) => {
+        if (a.endTime !== b.endTime) return a.endTime - b.endTime;
+        return b.currentBurn - a.currentBurn;
+      });
+
+      container.innerHTML = sortedActive.length === 0 
+        ? '<p class="empty-state">No active auctions yet. <a href="feed.html" style="color:var(--accent-cyan)">Start one from feed</a>!</p>'
+        : '';
+
+      sortedActive.forEach(auc => {
+        const timeLeft = Math.max(0, auc.endTime - now);
+        const min = Math.floor(timeLeft / 60000);
+        const sec = Math.floor((timeLeft % 60000) / 1000);
+        const isEnded = timeLeft <= 0;
+        const minBid = auc.currentBurn + MIN_BID_INCREMENT;
+
+        const card = document.createElement('div');
+        card.className = `auction-card ${isEnded ? 'ended' : ''}`;
+        card.dataset.auctionId = auc.id;
+        card.innerHTML = `
+          <div class="auction-header">${isEnded ? 'Ended' : 'Live Auction'}</div>
+          <div class="auction-body">
+            <div class="post-preview">${escapeHtml(auc.postPreview)}</div>
+            <div class="current-bid">${auc.currentBurn.toLocaleString()} $AUS by ${escapeHtml(auc.leader)}</div>
+            <div class="timer ${isEnded ? 'ended' : ''}" data-timer="${auc.id}">
+              ${isEnded ? '🏆 Auction Complete' : `⏱️ ${min}:${sec.toString().padStart(2,'0')}`}
+            </div>
+            ${!isEnded ? `
+              <div class="bid-form">
+                <input type="number" class="bid-input" data-auction="${auc.id}" placeholder="Min bid: ${minBid}" min="${minBid}" step="${MIN_BID_INCREMENT}" value="${minBid}">
+                <button class="bid-btn" data-auction="${auc.id}">Burn & Outbid 🔥</button>
+              </div>
+            ` : `<p style="text-align:center;color:var(--success);font-weight:600;">Winner: ${escapeHtml(auc.leader)}</p>`}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // === EVENT DELEGATION FOR BIDS ===
+    document.getElementById('activeAuctions').addEventListener('click', (e) => {
+      const btn = e.target.closest('.bid-btn');
+      if (!btn) return;
+
+      const auctionId = btn.dataset.auction;
+      const auc = auctions.find(a => String(a.id) === String(auctionId));
+      if (!auc) return;
+
+      const input = document.querySelector(`.bid-input[data-auction="${auctionId}"]`);
+      const bid = parseInt(input?.value);
+
+      const now = Date.now();
+      if (!bid || isNaN(bid) || bid <= 0 || bid > MAX_BID) {
+        showToast('Invalid bid amount', 'error');
+        return;
+      }
+      if (bid < auc.currentBurn + MIN_BID_INCREMENT) {
+        showToast(`Min bid: ${auc.currentBurn + MIN_BID_INCREMENT} $AUS`, 'error');
+        if (input) { input.value = auc.currentBurn + MIN_BID_INCREMENT; input.blur(); }
+        return;
+      }
+
+      // Extend time if bid in last EXTEND_TIME
+      const timeLeft = auc.endTime - now;
+      if (timeLeft < EXTEND_TIME) {
+        auc.endTime = now + EXTEND_TIME;
+        showToast('Bid placed! Auction extended by 2 min', 'warning');
+      }
+
+      // Visual feedback on button
+      btn.disabled = true;
+      setTimeout(() => { btn.disabled = false; }, 300);
+
+      auc.currentBurn = bid;
+      auc.leader = '@you';
+      auc.bids.push({ user: '@you', amount: bid });
+      safeSet('auctions', auctions);
+
+      renderActiveAuctions();
+      renderLeaderboard();
+      updateStats();
+      showToast(`You outbid! Burned ${bid} $AUS 🔥`, 'success');
+    });
+
+    // === UPDATE TIMERS ONLY ===
+    function updateTimers() {
+      const now = Date.now();
+      document.querySelectorAll('.timer:not(.ended)').forEach(timerEl => {
+        const auctionId = timerEl.dataset.timer;
+        const auc = auctions.find(a => String(a.id) === String(auctionId));
+        if (!auc) return;
+
+        const timeLeft = Math.max(0, auc.endTime - now);
+        const min = Math.floor(timeLeft / 60000);
+        const sec = Math.floor((timeLeft % 60000) / 1000);
+        timerEl.textContent = `⏱️ ${min}:${sec.toString().padStart(2,'0')}`;
+
+        if (timeLeft < 30000) {
+          timerEl.style.color = 'var(--error)';
+          timerEl.style.animation = 'pulse 1s infinite';
+        } else {
+          timerEl.style.animation = 'none';
+        }
+      });
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboard');
+      const topBurners = {};
+      auctions.forEach(a => a.bids.forEach(b => { topBurners[b.user] = (topBurners[b.user] || 0) + b.amount; }));
+      completedAuctions.forEach(a => { topBurners[a.winner] = (topBurners[a.winner] || 0) + a.burnAmount; });
+      const sorted = Object.entries(topBurners).sort((a,b) => b[1]-a[1]).slice(0,5);
+      container.innerHTML = sorted.length === 0 ? '<p class="empty-state">No burns yet — be first!</p>' : sorted.map(([user, burn], i) => `
+        <div class="history-item" style="display:flex;justify-content:space-between;">
+          <span>#${i+1} ${escapeHtml(user)}</span>
+          <span style="color:var(--accent-gold);font-weight:bold;">${burn.toLocaleString()} $AUS</span>
+        </div>
+      `).join('');
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyList');
+      container.innerHTML = completedAuctions.length === 0 ? '<p class="empty-state">No completed auctions yet</p>' : completedAuctions.map(a => `
+        <div class="history-item">
+          <strong>${escapeHtml(a.winner)}</strong> won with <span style="color:var(--accent-gold);">${a.burnAmount.toLocaleString()} $AUS</span><br>
+          <small>${a.date}</small>
+        </div>
+      `).join('');
+    }
+
+    function updateStats() {
+      const total = auctions.reduce((sum,a) => sum + a.bids.reduce((s,b)=>s+b.amount,0), 0) +
+                   completedAuctions.reduce((sum,a) => sum + a.burnAmount,0);
+      document.getElementById('totalBurned').textContent = total.toLocaleString();
+      document.getElementById('activeCount').textContent = auctions.length;
+      const max = Math.max(...auctions.map(a => a.currentBurn), ...completedAuctions.map(a => a.burnAmount), 0);
+      document.getElementById('topBurn').textContent = max.toLocaleString();
+    }
+
+    function escapeHtml(text) {
+      const map = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // === INIT ===
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      renderActiveAuctions();
+      renderLeaderboard();
+      renderHistory();
+      updateStats();
+      
+      // Update timers every second
+      setInterval(updateTimers, 1000);
+      
+      // Full re-render every 30 seconds (for new auctions from other tabs)
+      setInterval(() => {
+        renderActiveAuctions();
+        updateStats();
+      }, 30000);
+    });
+  </script>
+</body>
+</html>
