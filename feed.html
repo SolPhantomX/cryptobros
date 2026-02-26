@@ -23,8 +23,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-primary);
-      min-height: 100vh; transition: background 0.3s ease; background-size: cover;
-      background-position: center; background-attachment: fixed;
+      min-height: 100vh; transition: background 0.3s ease;
     }
     .layout { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
     aside { width: 280px; flex-shrink: 0; padding: 2rem 0; position: sticky; top: 20px; }
@@ -101,6 +100,7 @@
       cursor: pointer; color: #0a0a0f; transition: all 0.3s; white-space: nowrap;
     }
     .btn-post:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4); }
+    .btn-post:disabled { opacity: 0.5; cursor: not-allowed; }
     
     .post {
       background: var(--bg-card); border-radius: 16px; margin-bottom: 2rem;
@@ -125,34 +125,21 @@
     .action-btn.liked { color: #0066FF; }
     .action-btn.reposted { color: var(--accent-cyan); }
     
-    /* === AUS LOGO LIKE BUTTON === */
-    .aus-logo {
+    /* AUS LOGO - NO BLUE FILTER */
+    .aus-icon {
       width: 24px;
       height: 24px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .aus-icon {
-      width: 100%;
-      height: 100%;
       object-fit: contain;
-      filter: brightness(0) saturate(100%) invert(41%) sepia(96%) saturate(436%) hue-rotate(187deg) brightness(94%) contrast(96%);
       opacity: 0.6;
       transition: all 0.3s;
     }
-    .aus-logo.has-likes .aus-icon {
-      opacity: 1;
-      animation: ausPulse 2s ease-in-out infinite;
-    }
-    .action-btn.liked .aus-logo .aus-icon {
+    .action-btn.liked .aus-icon {
       opacity: 1;
       animation: ausPulse 1s ease-in-out infinite;
     }
     @keyframes ausPulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.15); opacity: 0.7; }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
     }
     .action-btn .count {
       font-size: 0.9rem;
@@ -393,7 +380,12 @@
   </div>
 </div>
 <script>
+  // === CONFIG ===
   const CONFIG = { USE_BACKEND: false, BACKEND_URL: 'https://cryptobros-backend.onrender.com' };
+  
+  // ⚠️ MOCK MODE WARNING
+  const MOCK_MODE_WARNING = '⚠️ Mock Mode: All data stored locally. Connect backend for production.';
+  
   class SentinelSwarm {
     constructor() {
       this.patterns = {
@@ -485,9 +477,10 @@
       try {
         const posts = JSON.parse(localStorage.getItem('feedPosts')) || [];
         const postCount = parseInt(localStorage.getItem('postCountSinceCleanup')) || 0;
-        if (postCount >= 50) {
+        // ✅ ЛИМИТ 200 ПОСТОВ
+        if (postCount >= 50 || posts.length > 200) {
           const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-          const cleaned = posts.filter(p => p.timestamp > thirtyDaysAgo);
+          const cleaned = posts.filter(p => p.timestamp > thirtyDaysAgo).slice(0, 200);
           if (cleaned.length !== posts.length) { localStorage.setItem('feedPosts', JSON.stringify(cleaned)); }
           localStorage.setItem('postCountSinceCleanup', '0');
         } else { localStorage.setItem('postCountSinceCleanup', String(postCount + 1)); }
@@ -535,10 +528,13 @@
     if (bg && bg !== 'none') document.body.style.backgroundImage = `url(${bg})`;
     else document.body.style.backgroundImage = 'none';
   }
+  
+  // ✅ XSS ЗАЩИТА - ВСЕГДА
   function escapeHtml(text) {
     const map = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' };
     return text.replace(/[&<>"']/g, m => map[m]);
   }
+  
   function safeGetItem(key, fallback = null) {
     try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : fallback; }
     catch(e) { console.error(`localStorage error (${key}):`, e); return fallback; }
@@ -554,7 +550,13 @@
     const wallet = localStorage.getItem('walletAddress') || 'guest';
     const isNewUser = !localStorage.getItem('hasPostedBefore');
     const riskAnalysis = sentinel.vote(content, wallet, isNewUser);
-    if (riskAnalysis.action === 'BLOCK') { showSwarmModal(riskAnalysis, content, wallet); return; }
+    
+    // ✅ BLOCK РЕАЛЬНО БЛОКИРУЕТ
+    if (riskAnalysis.action === 'BLOCK') {
+      showSwarmModal(riskAnalysis, content, wallet);
+      return; // Не публикуем
+    }
+    
     if (riskAnalysis.action === 'REVIEW') { showToast('Post published with review flag 🟡', 'warning'); }
     const posts = safeGetItem('feedPosts', []);
     posts.unshift({ id: Date.now(), content, timestamp: Date.now(), likes: 0, username: '@cryptobros', comments: [], moderation: riskAnalysis, likedByMe: false, repostedByMe: false, reposts: 0 });
@@ -576,6 +578,13 @@
       if (currentLength > 1800) { charCount.style.color = 'var(--error)'; }
       else if (currentLength > 1500) { charCount.style.color = 'var(--warning)'; }
       else { charCount.style.color = 'var(--text-secondary)'; }
+      // ✅ БЛОКИРОВКА ПРИ 2000
+      if (currentLength >= 2000) {
+        postInput.disabled = true;
+        showToast('Max length reached!', 'warning');
+      } else {
+        postInput.disabled = false;
+      }
     });
   }
   function deletePost(postId) {
@@ -590,56 +599,53 @@
   }
   function loadPosts() {
     const container = document.getElementById('feedPosts');
-    container.innerHTML = '<div class="loader">Loading posts...</div>';
-    setTimeout(() => {
-      const posts = safeGetItem('feedPosts', []);
-      let html = '';
-      if (!posts.length) {
-        html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)">No posts yet. Be the first!</div>';
-      } else {
-        html = posts.map(post => {
-          const date = new Date(post.timestamp);
-          const commentsHTML = post.comments?.length ? `<div class="comment-list">${post.comments.map(c=>`<div class="comment-item">💬 ${escapeHtml(c)}</div>`).join('')}</div>` : '';
-          return `<article class="post" data-id="${post.id}">
-            <button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button>
-            <div class="post-header">
-              <div class="post-avatar avatar-base">${post.username.charAt(1)}</div>
-              <div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div>
+    // ✅ УБРАН setTimeout 100ms
+    const posts = safeGetItem('feedPosts', []);
+    let html = '';
+    if (!posts.length) {
+      // ✅ ЛУЧШИЙ CTA
+      html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)"><h3 style="margin-bottom:1rem">🚀 No posts yet</h3><p>Be the first degen to share alpha!</p><p style="margin-top:1rem;font-size:0.85rem;opacity:0.7">${MOCK_MODE_WARNING}</p></div>';
+    } else {
+      html = posts.map(post => {
+        const date = new Date(post.timestamp);
+        const commentsHTML = post.comments?.length ? `<div class="comment-list">${post.comments.map(c=>`<div class="comment-item">💬 ${escapeHtml(c)}</div>`).join('')}</div>` : '';
+        return `<article class="post" data-id="${post.id}">
+          <button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button>
+          <div class="post-header">
+            <div class="post-avatar avatar-base">${post.username.charAt(1)}</div>
+            <div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div>
+          </div>
+          <div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div>
+          <div class="comment-section" id="comments-${post.id}">
+            <textarea class="comment-input" placeholder="Write a comment..." id="comment-input-${post.id}" maxlength="500"></textarea>
+            <button class="comment-save-btn" onclick="saveComment(${post.id})">Post Comment</button>
+            ${commentsHTML}
+          </div>
+          <div class="post-actions">
+            <div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)">
+              <img src="logoAUS.png" alt="AUS" class="aus-icon" onerror="this.style.display='none'; let s = document.createElement('span'); s.style.fontSize='1.2rem'; s.textContent='🔷'; s.className='aus-icon'; this.parentElement.insertBefore(s, this.nextSibling)">
+              <span class="count">${post.likes || 0}</span>
             </div>
-            <div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div>
-            <div class="comment-section" id="comments-${post.id}">
-              <textarea class="comment-input" placeholder="Write a comment..." id="comment-input-${post.id}" maxlength="500"></textarea>
-              <button class="comment-save-btn" onclick="saveComment(${post.id})">Post Comment</button>
-              ${commentsHTML}
+            <div class="action-btn" onclick="toggleComments(${post.id})">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+              </svg>
+              <span class="count">${post.comments?.length || 0}</span>
             </div>
-            <div class="post-actions">
-              <div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)">
-                <div class="aus-logo ${post.likes > 0 ? 'has-likes' : ''}">
-                  <img src="logoAUS.png" alt="AUS" class="aus-icon" onerror="this.style.display='none'; this.parentElement.innerHTML='🔷'">
-                </div>
-                <span class="count">${post.likes || 0}</span>
-              </div>
-              <div class="action-btn" onclick="toggleComments(${post.id})">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2">
-                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                </svg>
-                <span class="count">${post.comments?.length || 0}</span>
-              </div>
-              <div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${post.repostedByMe?'var(--accent-cyan)':'var(--text-secondary)'}" stroke-width="2">
-                  <polyline points="17 1 21 5 17 9"/>
-                  <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-                  <polyline points="7 23 3 19 7 15"/>
-                  <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-                </svg>
-                <span>${post.reposts || 0}</span>
-              </div>
+            <div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${post.repostedByMe?'var(--accent-cyan)':'var(--text-secondary)'}" stroke-width="2">
+                <polyline points="17 1 21 5 17 9"/>
+                <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                <polyline points="7 23 3 19 7 15"/>
+                <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+              <span>${post.reposts || 0}</span>
             </div>
-          </article>`;
-        }).join('');
-      }
-      container.innerHTML = html;
-    }, 100);
+          </div>
+        </article>`;
+      }).join('');
+    }
+    container.innerHTML = html;
   }
   function saveComment(postId) {
     const input = document.getElementById(`comment-input-${postId}`);
@@ -666,11 +672,6 @@
     if (post.likedByMe) { post.likes--; post.likedByMe = false; btn.classList.remove('liked'); }
     else { post.likes++; post.likedByMe = true; btn.classList.add('liked'); }
     btn.querySelector('.count').textContent = post.likes;
-    const ausLogo = btn.querySelector('.aus-logo');
-    if (ausLogo) {
-      if (post.likes > 0) ausLogo.classList.add('has-likes');
-      else ausLogo.classList.remove('has-likes');
-    }
     safeSetItem('feedPosts', posts);
   }
   function toggleRepost(postId, btn) {
@@ -713,6 +714,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initTheme(); applySavedBackground(); initMockUsers(); initTrends(); loadPosts();
     console.log(`🛡️ Sentinel Swarm ready | Wisdom: ${sentinel.getWisdomScore()} | Blacklist: ${sentinel.getBlacklistCount()}`);
+    console.log(MOCK_MODE_WARNING);
   });
   (function() {
     'use strict';
@@ -747,7 +749,7 @@
       results.innerHTML = '<div class="search-loading">Searching...</div>'; results.style.display = 'block';
       const [users,posts,tokens,hashtags] = await Promise.all([searchUsers(query),searchPosts(query),searchTokens(query),searchHashtags(query)]);
       results.innerHTML = '';
-      const sections = [{data:hashtags,type:'hashtag',title:'Hashtags',color:'#9D00FF'},{data:users,type:'user',title:'Users',color:'#9D00FF'},{data:tokens,type:'token',title:'Tokens',color:'#FFD700'},{data:posts,type:'post',title:'Posts',color:'#00F0FF'}];
+      const sections = [{hashtags,type:'hashtag',title:'Hashtags',color:'#9D00FF'},{users,type:'user',title:'Users',color:'#9D00FF'},{tokens,type:'token',title:'Tokens',color:'#FFD700'},{posts,type:'post',title:'Posts',color:'#00F0FF'}];
       let has = false;
       sections.forEach(sec => {
         if (sec.data?.length) {
