@@ -166,7 +166,8 @@
       color: #ff3b5c; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; z-index: 10;
     }
     .btn-delete:hover { background: #ff3b5c; color: white; }
-    .comment-section { padding: 0 1.5rem 1rem; }
+    .comment-section { padding: 0 1.5rem 1rem; display: none; }
+    .comment-section.visible { display: block; }
     .comment-input {
       width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 12px;
       outline: none; font-size: 1rem; background: var(--bg-body); color: var(--text-primary);
@@ -387,7 +388,7 @@
       <div class="trends-title">Your Wallet</div>
       <div style="font-weight: 600; color: var(--accent-gold); margin: 0.8rem 0;">0.00 SOL</div>
       <div style="color: var(--text-secondary); font-size: 0.95rem;">AUS: pending launch</div>
-      <button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='connect-wallet.html'">Connect Phantom</button>
+      <button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='wallet-connect.html'">Connect Phantom</button>
     </div>
   </div>
 </div>
@@ -593,19 +594,55 @@
     setTimeout(() => {
       const posts = safeGetItem('feedPosts', []);
       let html = '';
-      if (!posts.length) { html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)">No posts yet. Be the first!</div>'; }
-      else {
+      if (!posts.length) {
+        html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)">No posts yet. Be the first!</div>';
+      } else {
         html = posts.map(post => {
           const date = new Date(post.timestamp);
           const commentsHTML = post.comments?.length ? `<div class="comment-list">${post.comments.map(c=>`<div class="comment-item">💬 ${escapeHtml(c)}</div>`).join('')}</div>` : '';
-          return `<article class="post" data-id="${post.id}"><button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button><div class="post-header"><div class="post-avatar avatar-base">${post.username.charAt(1)}</div><div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div></div><div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div><div class="comment-section"><textarea class="comment-input" placeholder="Comment..." id="comment-${post.id}" maxlength="500"></textarea><button class="comment-save-btn" onclick="saveComment(${post.id})">Save</button>${commentsHTML}</div><div class="post-actions"><div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)"><div class="aus-logo ${post.likes > 0 ? 'has-likes' : ''}"><img src="logoAUS.png" alt="AUS" class="aus-icon"></div><span class="count">${post.likes || 0}</span></div><div class="action-btn" onclick="toggleComments(${post.id})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="count">${post.comments?.length || 0}</span></div><div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${post.repostedByMe?'var(--accent-cyan)':'var(--text-secondary)'}" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>${post.reposts || 0}</span></div></div></article>`;
+          return `<article class="post" data-id="${post.id}">
+            <button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button>
+            <div class="post-header">
+              <div class="post-avatar avatar-base">${post.username.charAt(1)}</div>
+              <div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div>
+            </div>
+            <div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div>
+            <div class="comment-section" id="comments-${post.id}">
+              <textarea class="comment-input" placeholder="Write a comment..." id="comment-input-${post.id}" maxlength="500"></textarea>
+              <button class="comment-save-btn" onclick="saveComment(${post.id})">Post Comment</button>
+              ${commentsHTML}
+            </div>
+            <div class="post-actions">
+              <div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)">
+                <div class="aus-logo ${post.likes > 0 ? 'has-likes' : ''}">
+                  <img src="logoAUS.png" alt="AUS" class="aus-icon" onerror="this.style.display='none'; this.parentElement.innerHTML='🔷'">
+                </div>
+                <span class="count">${post.likes || 0}</span>
+              </div>
+              <div class="action-btn" onclick="toggleComments(${post.id})">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+                <span class="count">${post.comments?.length || 0}</span>
+              </div>
+              <div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${post.repostedByMe?'var(--accent-cyan)':'var(--text-secondary)'}" stroke-width="2">
+                  <polyline points="17 1 21 5 17 9"/>
+                  <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                  <polyline points="7 23 3 19 7 15"/>
+                  <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                </svg>
+                <span>${post.reposts || 0}</span>
+              </div>
+            </div>
+          </article>`;
         }).join('');
       }
       container.innerHTML = html;
     }, 100);
   }
   function saveComment(postId) {
-    const input = document.getElementById(`comment-${postId}`);
+    const input = document.getElementById(`comment-input-${postId}`);
     const comment = input.value.trim();
     if (!comment || comment.length > 500) { showToast(comment ? 'Max 500 chars' : 'Enter comment', 'error'); return; }
     const posts = safeGetItem('feedPosts', []);
@@ -617,10 +654,9 @@
     }
   }
   function toggleComments(postId) {
-    const commentSection = document.querySelector(`.post[data-id="${postId}"] .comment-section`);
+    const commentSection = document.getElementById(`comments-${postId}`);
     if (commentSection) {
-      const isVisible = commentSection.style.display !== 'none';
-      commentSection.style.display = isVisible ? 'none' : 'block';
+      commentSection.classList.toggle('visible');
     }
   }
   function toggleLike(postId, btn) {
