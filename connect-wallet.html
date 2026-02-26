@@ -373,21 +373,43 @@
     const COMMITMENT = 'confirmed';
     const AUTO_RECONNECT_MIN_INTERVAL = 5 * 60 * 1000;
 
+    // ✅ ANKR RPC — БЕЗ КЛЮЧА, БЕЗ СТРЕССА
+    // Fallback на публичный RPC если Ankr не отвечает
     const RPC_ENDPOINTS = {
-      'mainnet-beta': 'https://api.mainnet-beta.solana.com',
-      'devnet': 'https://api.devnet.solana.com',
-      'testnet': 'https://api.testnet.solana.com'
+      'mainnet-beta': ['https://rpc.ankr.com/solana', 'https://api.mainnet-beta.solana.com'],
+      'devnet': ['https://rpc.ankr.com/solana_devnet', 'https://api.devnet.solana.com'],
+      'testnet': ['https://rpc.ankr.com/solana_testnet', 'https://api.testnet.solana.com']
     };
 
     let connection;
     try {
-      connection = new solanaWeb3.Connection(
-        RPC_ENDPOINTS[CLUSTER] || solanaWeb3.clusterApiUrl(CLUSTER),
-        COMMITMENT
-      );
-      console.log('✅ Solana connection established');
+      // ✅ TRY ANKR FIRST, FALLBACK TO PUBLIC
+      const endpoints = RPC_ENDPOINTS[CLUSTER] || [solanaWeb3.clusterApiUrl(CLUSTER)];
+      let lastError = null;
+      
+      for (const endpoint of endpoints) {
+        try {
+          connection = new solanaWeb3.Connection(endpoint, { 
+            commitment: COMMITMENT,
+            confirmTransactionInitialTimeout: 10000 
+          });
+          console.log(`✅ Connected to RPC: ${endpoint}`);
+          break;
+        } catch (e) {
+          lastError = e;
+          console.warn(`⚠️ Failed to connect to ${endpoint}, trying next...`);
+        }
+      }
+      
+      if (!connection) throw lastError || new Error('All RPC endpoints failed');
+      
     } catch (e) {
       console.error('❌ Solana connection failed:', e);
+      // Last resort fallback
+      connection = new solanaWeb3.Connection(
+        solanaWeb3.clusterApiUrl(CLUSTER),
+        COMMITMENT
+      );
     }
 
     // === WALLET DETECTION ===
@@ -780,58 +802,60 @@
     }
     
     console.log('✅ All event listeners set up');
+    
     // === GLOBAL WALLET SYNC FOR OTHER PAGES ===
-function syncWalletToLocalStorage(address) {
-  if (address) {
-    localStorage.setItem('walletAddress', address);
-    localStorage.setItem('walletConnected', 'true');
-    console.log('💾 Wallet synced:', address.slice(0,6)+'...'+address.slice(-4));
-  }
-}
-
-function clearWalletFromLocalStorage() {
-  localStorage.removeItem('walletAddress');
-  localStorage.removeItem('walletConnected');
-  localStorage.removeItem('walletName');
-  console.log('🗑️ Wallet cleared from localStorage');
-}
-// === UPDATE UI ON OTHER PAGES ===
-function updateWalletUI() {
-  const address = localStorage.getItem('walletAddress');
-  const walletElements = document.querySelectorAll('#walletBtn, .wallet-display, button[onclick*="connect-wallet"]');
-  
-  walletElements.forEach(el => {
-    if (address) {
-      const short = `${address.slice(0,6)}...${address.slice(-4)}`;
-      el.textContent = short;
-      el.onclick = disconnectWallet;
-      el.title = 'Click to disconnect';
-    } else {
-      el.textContent = el.dataset.originalText || 'Connect Phantom';
-      el.onclick = connectWallet;
+    function syncWalletToLocalStorage(address) {
+      if (address) {
+        localStorage.setItem('walletAddress', address);
+        localStorage.setItem('walletConnected', 'true');
+        console.log('💾 Wallet synced:', address.slice(0,6)+'...'+address.slice(-4));
+      }
     }
-  });
-}
 
-// === DISCONNECT (GLOBAL) ===
-async function disconnectWallet() {
-  if (currentProvider?.disconnect) {
-    try { await currentProvider.disconnect(); } catch(e) {}
-  }
-  clearWalletFromLocalStorage();
-  handleProviderDisconnect();
-  updateWalletUI();
-  alert('🔌 Disconnected');
-}
+    function clearWalletFromLocalStorage() {
+      localStorage.removeItem('walletAddress');
+      localStorage.removeItem('walletConnected');
+      localStorage.removeItem('walletName');
+      console.log('🗑️ Wallet cleared from localStorage');
+    }
+    
+    // === UPDATE UI ON OTHER PAGES ===
+    function updateWalletUI() {
+      const address = localStorage.getItem('walletAddress');
+      const walletElements = document.querySelectorAll('#walletBtn, .wallet-display, button[onclick*="connect-wallet"]');
+      
+      walletElements.forEach(el => {
+        if (address) {
+          const short = `${address.slice(0,6)}...${address.slice(-4)}`;
+          el.textContent = short;
+          el.onclick = disconnectWallet;
+          el.title = 'Click to disconnect';
+        } else {
+          el.textContent = el.dataset.originalText || 'Connect Phantom';
+          el.onclick = connectWallet;
+        }
+      });
+    }
 
-// === AUTO-CHECK ON LOAD (FOR OTHER PAGES) ===
-document.addEventListener('DOMContentLoaded', () => {
-  const savedAddr = localStorage.getItem('walletAddress');
-  if (savedAddr) {
-    updateWalletUI();
-    console.log('✅ Wallet restored from localStorage:', savedAddr.slice(0,6)+'...'+savedAddr.slice(-4));
-  }
-});
+    // === DISCONNECT (GLOBAL) ===
+    async function disconnectWalletGlobal() {
+      if (currentProvider?.disconnect) {
+        try { await currentProvider.disconnect(); } catch(e) {}
+      }
+      clearWalletFromLocalStorage();
+      handleProviderDisconnect();
+      updateWalletUI();
+      alert('🔌 Disconnected');
+    }
+
+    // === AUTO-CHECK ON LOAD (FOR OTHER PAGES) ===
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedAddr = localStorage.getItem('walletAddress');
+      if (savedAddr) {
+        updateWalletUI();
+        console.log('✅ Wallet restored from localStorage:', savedAddr.slice(0,6)+'...'+savedAddr.slice(-4));
+      }
+    });
   </script>
 </body>
 </html>
