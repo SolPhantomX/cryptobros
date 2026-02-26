@@ -141,10 +141,11 @@
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
   
-  <button class="btn" onclick="location.href='onboarding.html'">Enter the Club</button>
-  <footer>Cryptobros 2026 ©</footer>
+  <button class="btn" id="enterBtn" onclick="location.href='onboarding.html'">Enter the Club</button>
+  <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
+    // === 🌍 TRANSLATIONS ===
     const translations = {
       en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
       fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
@@ -156,38 +157,57 @@
       ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
     };
 
+    // === 🌐 LANGUAGE PERSISTENCE (localStorage) ===
+    function applyLanguage(lang) {
+      // Save to localStorage (works across ALL pages on your domain)
+      localStorage.setItem('lang', lang);
+      
+      // Apply translations
+      const t = translations[lang] || translations.en;
+      document.getElementById('enterBtn').textContent = t.btn;
+      document.getElementById('footer').textContent = t.footer;
+      
+      // Update active state in menu
+      document.querySelectorAll('.language-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+      });
+      
+      // Handle RTL for Arabic/Hebrew
+      if (lang === 'ar' || lang === 'he') {
+        document.body.setAttribute('dir', 'rtl');
+        document.documentElement.lang = lang;
+      } else {
+        document.body.removeAttribute('dir');
+        document.documentElement.lang = lang;
+      }
+    }
+
+    // === INIT: Load saved language on page load ===
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('lang') || 'en';
+      applyLanguage(savedLang);
+    });
+
+    // === UI HANDLERS ===
     const languageBtn = document.getElementById('languageBtn');
     const languageMenu = document.getElementById('languageMenu');
     const options = document.querySelectorAll('.language-option');
-    const enterBtn = document.querySelector('.btn');
-    const footer = document.querySelector('footer');
 
-    languageBtn.addEventListener('click', () => {
+    languageBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       languageMenu.classList.toggle('active');
     });
 
     options.forEach(opt => {
-      opt.addEventListener('click', () => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
         const lang = opt.dataset.lang;
-        document.documentElement.lang = lang;
-        
-        // Установка RTL для арабского и иврита
-        if (lang === 'ar' || lang === 'he') {
-          document.body.setAttribute('dir', 'rtl');
-        } else {
-          document.body.removeAttribute('dir');
-        }
-        
-        options.forEach(o => o.classList.remove('active'));
-        opt.classList.add('active');
-        
-        enterBtn.textContent = translations[lang].btn;
-        footer.textContent = translations[lang].footer;
-        
+        applyLanguage(lang);
         languageMenu.classList.remove('active');
       });
     });
 
+    // Close menu when clicking outside
     document.addEventListener('click', e => {
       if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
         languageMenu.classList.remove('active');
