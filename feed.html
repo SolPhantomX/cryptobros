@@ -24,6 +24,8 @@
     body {
       font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-primary);
       min-height: 100vh; transition: background 0.3s ease;
+      background-size: cover; background-position: center;
+      background-attachment: fixed; background-repeat: no-repeat;
     }
     .layout { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
     aside { width: 280px; flex-shrink: 0; padding: 2rem 0; position: sticky; top: 20px; }
@@ -74,20 +76,10 @@
       box-shadow: var(--shadow);
     }
     .create-input {
-      width: 100%; 
-      background: var(--bg-body); 
-      border: 2px solid var(--border-color);
-      border-radius: 12px; 
-      padding: 1rem; 
-      font-size: 1rem; 
-      color: var(--text-primary);
-      resize: vertical; 
-      outline: none; 
-      min-height: 120px;
-      max-height: 400px;
-      font-family: inherit;
-      line-height: 1.6;
-      transition: border-color 0.3s;
+      width: 100%; background: var(--bg-body); border: 2px solid var(--border-color);
+      border-radius: 12px; padding: 1rem; font-size: 1rem; color: var(--text-primary);
+      resize: vertical; outline: none; min-height: 120px; max-height: 400px;
+      font-family: inherit; line-height: 1.6; transition: border-color 0.3s;
     }
     .create-input:focus { border-color: var(--accent-gold); }
     .create-input::placeholder { color: var(--text-secondary); opacity: 0.7; }
@@ -125,27 +117,18 @@
     .action-btn.liked { color: #0066FF; }
     .action-btn.reposted { color: var(--accent-cyan); }
     
-    /* AUS LOGO - NO BLUE FILTER */
     .aus-icon {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-      opacity: 0.6;
-      transition: all 0.3s;
+      width: 24px; height: 24px; object-fit: contain;
+      opacity: 0.6; transition: all 0.3s;
     }
     .action-btn.liked .aus-icon {
-      opacity: 1;
-      animation: ausPulse 1s ease-in-out infinite;
+      opacity: 1; animation: ausPulse 1s ease-in-out infinite;
     }
     @keyframes ausPulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.15); }
     }
-    .action-btn .count {
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-left: 0.3rem;
-    }
+    .action-btn .count { font-size: 0.9rem; font-weight: 600; margin-left: 0.3rem; }
     
     .btn-delete {
       position: absolute; top: 1rem; right: 1rem; padding: 0.4rem 0.8rem;
@@ -305,6 +288,110 @@
       color: #0a0a0f; 
     }
     .btn-appeal:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(157, 0, 255, 0.4); }
+    
+    /* ✅ FEED BG SWITCHER (Gear Icon + Modal) */
+    .feed-bg-btn {
+      position: fixed; bottom: 20px; right: 20px;
+      width: 44px; height: 44px;
+      background: var(--bg-card, #fff);
+      border: 2px solid var(--border-color, #e9ecef);
+      border-radius: 50%;
+      font-size: 1.2rem; cursor: pointer;
+      z-index: 1000; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .feed-bg-btn:hover {
+      border-color: var(--accent-gold, #FFD700);
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+    /* ✅ FIX: Dark theme adaptation for gear button */
+    .dark-theme .feed-bg-btn {
+      background: var(--accent-cyan, #00F0FF);
+      color: #000;
+      border-color: var(--accent-cyan, #00F0FF);
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.6);
+    }
+    .dark-theme .feed-bg-btn:hover {
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: 0 6px 20px rgba(0, 240, 255, 0.8);
+    }
+    
+    .feed-bg-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.85); z-index: 9999;
+      justify-content: center; align-items: center; padding: 20px;
+    }
+    .feed-bg-modal.active { display: flex; }
+    .feed-bg-modal-content {
+      background: var(--bg-card, #fff); color: var(--text-primary, #212529);
+      padding: 2rem; border-radius: 16px;
+      border: 2px solid var(--accent-gold, #FFD700);
+      max-width: 600px; width: 100%; max-height: 85vh;
+      overflow-y: auto; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    .feed-bg-modal-content h3 {
+      text-align: center; color: var(--accent-gold, #FFD700);
+      margin-bottom: 1.5rem; font-size: 1.3rem;
+    }
+    .bg-presets-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .bg-preset-item {
+      cursor: pointer; border: 2px solid transparent;
+      border-radius: 8px; overflow: hidden; transition: all 0.2s;
+      background: var(--bg-body, #f8f9fa);
+    }
+    .bg-preset-item:hover {
+      border-color: var(--accent-gold, #FFD700);
+      transform: translateY(-2px);
+    }
+    .bg-preset-item img {
+      width: 100%; height: 80px; object-fit: cover; display: block;
+    }
+    .bg-preset-item p {
+      text-align: center; margin: 0.5rem 0 0;
+      font-size: 0.8rem; color: var(--text-secondary, #6c757d);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .bg-upload-section {
+      text-align: center; margin: 1rem 0; padding: 1rem;
+      background: var(--hover-bg, #f1f3f5); border-radius: 12px;
+    }
+    .bg-upload-label {
+      padding: 0.8rem 1.5rem; background: var(--accent-gold, #FFD700);
+      color: #0a0a0f; border-radius: 8px; cursor: pointer;
+      display: inline-block; font-weight: 600; font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .bg-upload-label:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+    }
+    .bg-upload-input { display: none; }
+    .bg-actions {
+      display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;
+    }
+    .btn-reset, .btn-close-modal {
+      padding: 0.8rem 1.5rem; border: none; border-radius: 8px;
+      cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s;
+    }
+    .btn-reset { background: var(--error, #ff4d4d); color: #fff; }
+    .btn-reset:hover { background: #ff3333; transform: translateY(-2px); }
+    .btn-close-modal { background: var(--accent-cyan, #00F0FF); color: #0a0a0f; }
+    .btn-close-modal:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 240, 255, 0.4);
+    }
+    .dark-theme .feed-bg-btn {
+      background: var(--bg-card, #1e1e1e);
+      border-color: var(--border-color, #333);
+    }
+    .dark-theme .bg-preset-item { background: var(--bg-body, #121212); }
+    .dark-theme .bg-upload-section { background: var(--hover-bg, #2a2a2a); }
+    
     @media (max-width: 1024px) { .layout { flex-direction: column; } aside, .right-sidebar { width: 100%; } }
     @media (max-width: 768px) { 
       .sidebar-menu { display: none; } 
@@ -379,12 +466,27 @@
     </div>
   </div>
 </div>
+
+<!-- ✅ FEED BACKGROUND SWITCHER (Gear Icon + Modal) -->
+<button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">⚙️</button>
+
+<div id="feedBgModal" class="feed-bg-modal">
+  <div class="feed-bg-modal-content">
+    <h3>Choose Feed Background</h3>
+    <div class="bg-presets-grid" id="bgPresetsGrid"></div>
+    <div class="bg-upload-section">
+      <label for="feedBgUpload" class="bg-upload-label">Upload Custom Background</label>
+      <input type="file" id="feedBgUpload" accept="image/*" class="bg-upload-input">
+    </div>
+    <div class="bg-actions">
+      <button onclick="resetFeedBg()" class="btn-reset">Reset to Default</button>
+      <button onclick="closeFeedBgModal()" class="btn-close-modal">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  // === CONFIG ===
   const CONFIG = { USE_BACKEND: false, BACKEND_URL: 'https://cryptobros-backend.onrender.com' };
-  
-  // ⚠️ MOCK MODE WARNING
-  const MOCK_MODE_WARNING = '⚠️ Mock Mode: All data stored locally. Connect backend for production.';
   
   class SentinelSwarm {
     constructor() {
@@ -477,7 +579,6 @@
       try {
         const posts = JSON.parse(localStorage.getItem('feedPosts')) || [];
         const postCount = parseInt(localStorage.getItem('postCountSinceCleanup')) || 0;
-        // ✅ ЛИМИТ 200 ПОСТОВ
         if (postCount >= 50 || posts.length > 200) {
           const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
           const cleaned = posts.filter(p => p.timestamp > thirtyDaysAgo).slice(0, 200);
@@ -491,6 +592,7 @@
     getBlacklistCount() { return this.blacklist.length; }
   }
   const sentinel = new SentinelSwarm();
+  
   function showToast(msg, type = 'success') {
     const existing = document.querySelector('.toast'); if (existing) existing.remove();
     const div = document.createElement('div');
@@ -499,6 +601,7 @@
     document.body.appendChild(div);
     setTimeout(() => { div.style.animation = 'toastOut 0.3s ease-in forwards'; setTimeout(() => div.remove(), 300); }, 3500);
   }
+  
   function showSwarmModal(analysis, content, wallet) {
     const existing = document.querySelector('.swarm-modal'); if (existing) existing.remove();
     const modal = document.createElement('div'); modal.className = 'swarm-modal';
@@ -506,30 +609,27 @@
     document.body.appendChild(modal);
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
   }
+  
   function submitAppeal(content, riskScore, wallet) {
     console.log(`⚖️ Appeal submitted: risk=${riskScore}, wallet=${wallet}`);
     const modal = document.querySelector('.swarm-modal');
     if (modal) { modal.querySelector('.swarm-content').innerHTML = `<h3>✅ Appeal Submitted</h3><p>Your post will be reviewed by the community Jury.</p><p><small>Mock mode: No real AUS staked yet.</small></p><button onclick="this.closest('.swarm-modal').remove()" style="margin-top:1rem;padding:0.8rem 1.5rem;background:var(--accent-gold);border:none;border-radius:8px;cursor:pointer;font-weight:600">Close</button>`; }
   }
+  
   function initTheme() {
     const saved = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     if (saved === 'dark' || (!saved && prefersDark)) { document.body.classList.add('dark-theme'); document.getElementById('themeToggle').textContent = '☀️'; }
     else { document.body.classList.remove('dark-theme'); document.getElementById('themeToggle').textContent = '🌙'; }
   }
+  
   function toggleTheme() {
     const isDark = document.body.classList.contains('dark-theme');
     document.body.classList.toggle('dark-theme', !isDark);
     localStorage.setItem('theme', isDark ? 'light' : 'dark');
     document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️';
   }
-  function applySavedBackground() {
-    const bg = localStorage.getItem('profileBg');
-    if (bg && bg !== 'none') document.body.style.backgroundImage = `url(${bg})`;
-    else document.body.style.backgroundImage = 'none';
-  }
   
-  // ✅ XSS ЗАЩИТА - ВСЕГДА
   function escapeHtml(text) {
     const map = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' };
     return text.replace(/[&<>"']/g, m => map[m]);
@@ -539,10 +639,12 @@
     try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : fallback; }
     catch(e) { console.error(`localStorage error (${key}):`, e); return fallback; }
   }
+  
   function safeSetItem(key, value) {
     try { localStorage.setItem(key, JSON.stringify(value)); return true; }
     catch(e) { console.error(`localStorage full (${key}):`, e); showToast('Storage full! Delete some posts.', 'error'); return false; }
   }
+  
   function createPost() {
     const content = document.getElementById('postInput').value.trim();
     if (!content) { showToast('Please enter some text first', 'error'); return; }
@@ -550,13 +652,7 @@
     const wallet = localStorage.getItem('walletAddress') || 'guest';
     const isNewUser = !localStorage.getItem('hasPostedBefore');
     const riskAnalysis = sentinel.vote(content, wallet, isNewUser);
-    
-    // ✅ BLOCK РЕАЛЬНО БЛОКИРУЕТ
-    if (riskAnalysis.action === 'BLOCK') {
-      showSwarmModal(riskAnalysis, content, wallet);
-      return; // Не публикуем
-    }
-    
+    if (riskAnalysis.action === 'BLOCK') { showSwarmModal(riskAnalysis, content, wallet); return; }
     if (riskAnalysis.action === 'REVIEW') { showToast('Post published with review flag 🟡', 'warning'); }
     const posts = safeGetItem('feedPosts', []);
     posts.unshift({ id: Date.now(), content, timestamp: Date.now(), likes: 0, username: '@cryptobros', comments: [], moderation: riskAnalysis, likedByMe: false, repostedByMe: false, reposts: 0 });
@@ -569,6 +665,7 @@
       loadPosts();
     }
   }
+  
   const postInput = document.getElementById('postInput');
   const charCount = document.getElementById('charCount');
   if (postInput && charCount) {
@@ -578,15 +675,11 @@
       if (currentLength > 1800) { charCount.style.color = 'var(--error)'; }
       else if (currentLength > 1500) { charCount.style.color = 'var(--warning)'; }
       else { charCount.style.color = 'var(--text-secondary)'; }
-      // ✅ БЛОКИРОВКА ПРИ 2000
-      if (currentLength >= 2000) {
-        postInput.disabled = true;
-        showToast('Max length reached!', 'warning');
-      } else {
-        postInput.disabled = false;
-      }
+      if (currentLength >= 2000) { postInput.disabled = true; showToast('Max length reached!', 'warning'); }
+      else { postInput.disabled = false; }
     });
   }
+  
   function deletePost(postId) {
     if (confirm('Delete this post? This action cannot be undone.')) {
       let posts = safeGetItem('feedPosts', []);
@@ -597,14 +690,13 @@
       showToast('Post deleted');
     }
   }
+  
   function loadPosts() {
     const container = document.getElementById('feedPosts');
-    // ✅ УБРАН setTimeout 100ms
     const posts = safeGetItem('feedPosts', []);
     let html = '';
     if (!posts.length) {
-      // ✅ ЛУЧШИЙ CTA
-      html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)"><h3 style="margin-bottom:1rem">🚀 No posts yet</h3><p>Be the first degen to share alpha!</p><p style="margin-top:1rem;font-size:0.85rem;opacity:0.7">${MOCK_MODE_WARNING}</p></div>';
+      html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)"><h3 style="margin-bottom:1rem">🚀 No posts yet</h3><p>Be the first degen to share alpha!</p><p style="margin-top:1rem;font-size:0.85rem;opacity:0.7">Mock mode: No backend connected yet</p></div>';
     } else {
       html = posts.map(post => {
         const date = new Date(post.timestamp);
@@ -623,7 +715,7 @@
           </div>
           <div class="post-actions">
             <div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)">
-              <img src="logoAUS.png" alt="AUS" class="aus-icon" onerror="this.style.display='none'; let s = document.createElement('span'); s.style.fontSize='1.2rem'; s.textContent='🔷'; s.className='aus-icon'; this.parentElement.insertBefore(s, this.nextSibling)">
+              <img src="logoAUS.png" alt="AUS" class="aus-icon" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<span style=\"font-size:1.2rem\">🔷</span>')">
               <span class="count">${post.likes || 0}</span>
             </div>
             <div class="action-btn" onclick="toggleComments(${post.id})">
@@ -647,6 +739,7 @@
     }
     container.innerHTML = html;
   }
+  
   function saveComment(postId) {
     const input = document.getElementById(`comment-input-${postId}`);
     const comment = input.value.trim();
@@ -659,12 +752,12 @@
       if (safeSetItem('feedPosts', posts)) { loadPosts(); showToast('Comment saved!'); }
     }
   }
+  
   function toggleComments(postId) {
     const commentSection = document.getElementById(`comments-${postId}`);
-    if (commentSection) {
-      commentSection.classList.toggle('visible');
-    }
+    if (commentSection) { commentSection.classList.toggle('visible'); }
   }
+  
   function toggleLike(postId, btn) {
     const posts = safeGetItem('feedPosts', []);
     const post = posts.find(p => p.id === postId);
@@ -674,6 +767,7 @@
     btn.querySelector('.count').textContent = post.likes;
     safeSetItem('feedPosts', posts);
   }
+  
   function toggleRepost(postId, btn) {
     const posts = safeGetItem('feedPosts', []);
     const post = posts.find(p => p.id === postId);
@@ -685,6 +779,7 @@
     safeSetItem('feedPosts', posts);
     showToast(post.repostedByMe ? 'Reposted!' : 'Repost removed');
   }
+  
   function initMockUsers() {
     if (!localStorage.getItem('users')) {
       safeSetItem('users', [
@@ -693,6 +788,7 @@
       ]);
     }
   }
+  
   function initTrends() {
     const trendData = { trend1: { value: 2100, prev: 2100 }, trend2: { value: 1800, prev: 1800 }, trend3: { value: 942, prev: 942 } };
     setInterval(() => {
@@ -710,12 +806,109 @@
       });
     }, 30000);
   }
+  
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+  
+  // === FEED BACKGROUND CONFIG ===
+  const DEFAULT_FEED_BG = 'bg1.jpg';
+  const FEED_BG_PRESETS = [
+    'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png',
+    'bg6.jpg', 'bg7.jpg', 'bg8.jpg', 'bg9.jpg', 'bg10.jpg',
+    'bg11.jpg', 'bg12.jpg', 'bg13.jpg'
+  ];
+
+  function applyFeedBg() {
+    let bg = localStorage.getItem('feedBg');
+    if (!bg) bg = DEFAULT_FEED_BG;
+    if (bg && bg !== 'none') {
+      const isBase64 = bg.startsWith('image');
+      document.body.style.backgroundImage = isBase64 ? bg : `url(${bg})`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.body.style.backgroundRepeat = 'no-repeat';
+    } else {
+      document.body.style.backgroundImage = 'none';
+    }
+  }
+
+  function setFeedBg(bg) {
+    localStorage.setItem('feedBg', bg);
+    applyFeedBg();
+    closeFeedBgModal();
+    showToast(`Background changed to ${bg}`, 'success');
+  }
+
+  function resetFeedBg() {
+    if (confirm('Reset feed background to default (bg1.jpg)?')) {
+      localStorage.removeItem('feedBg');
+      applyFeedBg();
+      closeFeedBgModal();
+      showToast('Background reset to default', 'success');
+    }
+  }
+
+  function openFeedBgModal() {
+    // ✅ FIX: Always render presets on open (lazy render)
+    renderBgPresets();
+    document.getElementById('feedBgModal').classList.add('active');
+  }
+
+  function closeFeedBgModal() {
+    document.getElementById('feedBgModal').classList.remove('active');
+  }
+
+  function renderBgPresets() {
+    const grid = document.getElementById('bgPresetsGrid');
+    if (!grid) return;
+    grid.innerHTML = FEED_BG_PRESETS.map(bg => `
+      <div class="bg-preset-item" onclick="setFeedBg('${bg}')">
+        <img src="${bg}" alt="${bg}" onerror="this.src='image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%2280%22 viewBox=%220 0 120 80%22%3E%3Crect fill=%22%23333%22 width=%22120%22 height=%2280%22/%3E%3Ctext fill=%22%23888%22 x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2210%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+        <p>${bg}</p>
+      </div>
+    `).join('');
+  }
+
+  function handleBgUpload(file) {
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Image too large (max 2MB)', 'error');
+      return;
+    }
+    // ✅ FIX: Loading indicator for custom upload
+    showToast('Loading background...', 'warning');
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      localStorage.setItem('feedBg', e.target.result);
+      applyFeedBg();
+      closeFeedBgModal();
+      showToast('Custom background set!', 'success');
+    };
+    reader.onerror = () => showToast('Failed to load image', 'error');
+    reader.readAsDataURL(file);
+  }
+
+  // === INIT ===
   document.addEventListener('DOMContentLoaded', () => {
-    initTheme(); applySavedBackground(); initMockUsers(); initTrends(); loadPosts();
+    initTheme(); initMockUsers(); initTrends(); loadPosts(); applyFeedBg();
     console.log(`🛡️ Sentinel Swarm ready | Wisdom: ${sentinel.getWisdomScore()} | Blacklist: ${sentinel.getBlacklistCount()}`);
-    console.log(MOCK_MODE_WARNING);
+    
+    const btn = document.getElementById('feedBgBtn');
+    const upload = document.getElementById('feedBgUpload');
+    if (btn) btn.addEventListener('click', openFeedBgModal);
+    if (upload) upload.addEventListener('change', (e) => handleBgUpload(e.target.files[0]));
+    
+    const modal = document.getElementById('feedBgModal');
+    if (modal) {
+      // ✅ FIX: Close modal on backdrop click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeFeedBgModal();
+      });
+    }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFeedBgModal(); });
   });
+  
   (function() {
     'use strict';
     const input = document.getElementById('globalSearchInput');
