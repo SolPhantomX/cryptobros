@@ -1,4 +1,21 @@
-function applyFeedBg() {
+window.openFeedBgModal = function() {
+    const modal = document.getElementById('feedBgModal');
+    if (!modal) { console.error('Modal not found'); return; }
+    if (modal.classList.contains('active')) return;
+    renderBgPresets();
+    modal.classList.add('active');
+    console.log('Modal opened');
+};
+
+window.closeFeedBgModal = function() {
+    const modal = document.getElementById('feedBgModal');
+    if (modal) {
+        modal.classList.remove('active');
+        console.log('Modal closed');
+    }
+};
+
+window.applyFeedBg = function() {
     let bg = localStorage.getItem('feedBg');
     if (!bg) bg = window.DEFAULT_FEED_BG;
     if (bg && bg !== 'none') {
@@ -12,26 +29,16 @@ function applyFeedBg() {
         document.body.style.backgroundImage = 'none';
     }
     applyCustomColors();
-}
+};
 
-function setFeedBg(bg) {
+window.setFeedBg = function(bg) {
     localStorage.setItem('feedBg', bg);
     applyFeedBg();
     closeFeedBgModal();
     showToast(`Background changed to ${bg}`, 'success');
-}
+};
 
-function openFeedBgModal() {
-    if (document.getElementById('feedBgModal').classList.contains('active')) return;
-    renderBgPresets();
-    document.getElementById('feedBgModal').classList.add('active');
-}
-
-function closeFeedBgModal() {
-    document.getElementById('feedBgModal').classList.remove('active');
-}
-
-function renderBgPresets() {
+window.renderBgPresets = function() {
     const grid = document.getElementById('bgPresetsGrid');
     if (!grid) return;
     const fallback = encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80"><rect fill="#222" width="120" height="80"/><text fill="#fff" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="10">No Image</text></svg>');
@@ -46,12 +53,12 @@ function renderBgPresets() {
         `<button class="color-btn" style="background:#0f0c29;border:2px solid #FFD700;width:30px;height:30px" onclick="setModalStyle('#0f0c29','#FFD700')" title="Gold Border"></button>` +
         `<button class="color-btn" style="background:#0f0c29;border:2px solid #00F0FF;width:30px;height:30px" onclick="setModalStyle('#0f0c29','#00F0FF')" title="Cyan Border"></button>` +
         `<button class="color-btn" style="background:#1e1e3f;border:2px solid #9D00FF;width:30px;height:30px" onclick="setModalStyle('#1e1e3f','#9D00FF')" title="Purple Border"></button></div>`;
-}
+};
 
-function handleBgUpload(file) {
+window.handleBgUpload = function(file) {
     if (!file) return;
     if (file.size > window.MAX_BG_SIZE) {
-        showToast(`Image too large (max ${Math.floor(window.MAX_BG_SIZE/1024)}KB after encoding)`, 'error');
+        showToast(`Image too large (max ${Math.floor(window.MAX_BG_SIZE/1024)}KB)`, 'error');
         return;
     }
     showToast('Loading background...', 'warning');
@@ -70,9 +77,9 @@ function handleBgUpload(file) {
     };
     reader.onerror = () => showToast('Failed to load image', 'error');
     reader.readAsDataURL(file);
-}
+};
 
-function renderPinnedPosts() {
+window.renderPinnedPosts = function() {
     const container = document.getElementById('pinnedPostsContainer');
     if (!container) return;
     const posts = safeGetItem('feedPosts', []);
@@ -89,4 +96,4 @@ function renderPinnedPosts() {
             const content = post.content ? escapeHtml(post.content).replace(/\n/g,'<br>') : '<em>No content</em>';
             return `<div class="pinned-post"><div class="pinned-header">Auction Winner — ${auctionBurn} AUS burned 🏆</div><div class="post-header"><div class="post-avatar avatar-base">${firstChar}</div><div><div class="post-user">${username}</div><div class="post-time">Pinned on ${date.toLocaleString()}</div></div></div><div class="post-content">${content}</div></div>`;
         }).join('');
-}
+};
