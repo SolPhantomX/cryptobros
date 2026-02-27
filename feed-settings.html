@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feed Settings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="feed.css">
+<style>
+.settings-container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+.settings-card { background: var(--bg-card); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow); }
+.settings-card h2 { color: var(--accent-gold); margin-bottom: 1.5rem; font-size: 1.5rem; }
+.settings-section { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); }
+.settings-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 1rem; }
+.color-option { cursor: pointer; border: 3px solid var(--border-color); border-radius: 50%; width: 60px; height: 60px; transition: all 0.3s; }
+.color-option:hover { transform: scale(1.1); border-color: var(--accent-gold); }
+.color-option.active { border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(255,215,0,0.5); }
+.bg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+.bg-option { cursor: pointer; border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: all 0.3s; }
+.bg-option:hover { border-color: var(--accent-gold); transform: translateY(-4px); }
+.bg-option.active { border-color: var(--accent-gold); box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+.bg-option img { width: 100%; height: 100px; object-fit: cover; }
+.bg-option p { text-align: center; padding: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); }
+.upload-area { border: 2px dashed var(--accent-gold); border-radius: 12px; padding: 2rem; text-align: center; background: rgba(255,215,0,0.05); }
+.upload-btn { background: var(--accent-gold); color: #0a0a0f; padding: 0.8rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+.upload-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,215,0,0.4); }
+.reset-btn { background: var(--error); color: #fff; padding: 0.8rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.reset-btn:hover { background: #ff3333; }
+.back-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-primary); text-decoration: none; margin-bottom: 2rem; }
+.back-link:hover { border-color: var(--accent-gold); }
+.current-preview { background: var(--bg-body); border-radius: 12px; padding: 1rem; margin-top: 1rem; text-align: center; }
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+<a href="profile.html" class="sidebar-user">
+<div class="sidebar-user-content">
+<div class="avatar avatar-base">C</div>
+<div class="user-info">
+<h3>@cryptobros</h3>
+<p>CHAIRMAN OF THE TRIBUNAL</p>
+</div>
+</div>
+</a>
+<div class="sidebar-menu">
+<a href="feed.html" class="menu-item"> News Feed</a>
+<a href="messages.html" class="menu-item"> Messages</a>
+<a href="groups.html" class="menu-item"> My Groups</a>
+<a href="profile.html" class="menu-item"> Settings</a>
+<a href="tribunal.html" class="menu-item"> Tribunal</a>
+<a href="help.html" class="menu-item"> Help Desk</a>
+<a href="payment.html" class="menu-item"> AUS Token</a>
+</div>
+</aside>
+<main>
+<div class="settings-container">
+<a href="feed.html" class="back-link"> Back to Feed</a>
+
+<div class="settings-card">
+<h2>Feed Background</h2>
+
+<div class="settings-section">
+<h3 style="margin-bottom:1rem;color:var(--text-primary)">Preset Backgrounds</h3>
+<div class="bg-grid" id="bgPresets"></div>
+</div>
+
+<div class="settings-section">
+<h3 style="margin-bottom:1rem;color:var(--text-primary)">Custom Upload</h3>
+<div class="upload-area">
+<p style="color:var(--text-secondary);margin-bottom:1rem">Upload your own background image (max 525KB)</p>
+<input type="file" id="bgUpload" accept="image/*" style="display:none">
+<button class="upload-btn" onclick="document.getElementById('bgUpload').click()">Choose Image</button>
+</div>
+</div>
+
+<div class="settings-section">
+<h3 style="margin-bottom:1rem;color:var(--text-primary)">Current Background</h3>
+<div class="current-preview" id="currentBgPreview">Loading...</div>
+</div>
+</div>
+
+<div class="settings-card">
+<h2>Text Color</h2>
+<div class="settings-section">
+<div class="color-grid" id="textColors"></div>
+</div>
+</div>
+
+<div class="settings-card">
+<h2>Card Background</h2>
+<div class="settings-section">
+<div class="color-grid" id="cardColors"></div>
+</div>
+</div>
+
+<div class="settings-card">
+<h2>Modal Style</h2>
+<div class="settings-section">
+<div class="color-grid" id="modalColors"></div>
+</div>
+</div>
+
+<div class="settings-card">
+<button class="reset-btn" onclick="resetAllSettings()" style="width:100%">Reset All Settings</button>
+</div>
+</div>
+</main>
+</div>
+
+<script src="feed-config.js"></script>
+<script src="feed-utils.js"></script>
+<script src="feed-background.js"></script>
+<script>
+const TEXT_COLORS = ['#ffd700','#00f0ff','#9d00ff','#ff4d4d','#ffffff','#212529'];
+const CARD_COLORS = ['#ffffff','#1e1e1e','#1a1a3f','#0f0c29','#f8f9fa'];
+const MODAL_COLORS = [
+    {bg:'#0f0c29',border:'#FFD700'},
+    {bg:'#0f0c29',border:'#00F0FF'},
+    {bg:'#1e1e3f',border:'#9D00FF'},
+    {bg:'#1a1a3f',border:'#FFD700'}
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderBgPresets();
+    renderTextColors();
+    renderCardColors();
+    renderModalColors();
+    showCurrentBg();
+    applyFeedBg();
+});
+
+function renderBgPresets() {
+    const grid = document.getElementById('bgPresets');
+    const current = localStorage.getItem('feedBg') || window.DEFAULT_FEED_BG;
+    const fallback = encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="150" height="100" viewBox="0 0 150 100"><rect fill="#222" width="150" height="100"/><text fill="#fff" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="12">No Image</text></svg>');
+    grid.innerHTML = window.FEED_BG_PRESETS.map(bg => {
+        const isActive = bg === current ? 'active' : '';
+        return '<div class="bg-option ' + isActive + '" onclick="setBg(\'' + bg + '\',this)"><img src="' + bg + '" alt="' + bg + '" onerror="this.src=\'data:image/svg+xml,' + fallback + '\'"><p>' + bg + '</p></div>';
+    }).join('');
+}
+
+function renderTextColors() {
+    const grid = document.getElementById('textColors');
+    const current = localStorage.getItem('feedTextColor') || '';
+    grid.innerHTML = TEXT_COLORS.map(c => {
+        const isActive = c === current ? 'active' : '';
+        const border = c.toLowerCase() === '#ffffff' ? 'border:2px solid #000' : '';
+        return '<div class="color-option ' + isActive + '" style="background:' + c + ';' + border + '" onclick="setColor(\'feedTextColor\',\'' + c + '\',this)"></div>';
+    }).join('');
+}
+
+function renderCardColors() {
+    const grid = document.getElementById('cardColors');
+    const current = localStorage.getItem('feedCardBg') || '';
+    grid.innerHTML = CARD_COLORS.map(c => {
+        const isActive = c === current ? 'active' : '';
+        const border = c.toLowerCase() === '#ffffff' ? 'border:2px solid #333' : '';
+        return '<div class="color-option ' + isActive + '" style="background:' + c + ';' + border + '" onclick="setColor(\'feedCardBg\',\'' + c + '\',this)"></div>';
+    }).join('');
+}
+
+function renderModalColors() {
+    const grid = document.getElementById('modalColors');
+    const currentBg = localStorage.getItem('feedModalBg') || '';
+    const currentBorder = localStorage.getItem('feedModalBorder') || '';
+    grid.innerHTML = MODAL_COLORS.map(m => {
+        const isActive = m.bg === currentBg && m.border === currentBorder ? 'active' : '';
+        return '<div class="color-option ' + isActive + '" style="background:' + m.bg + ';border:3px solid ' + m.border + '" onclick="setModalColor(\'' + m.bg + '\',\'' + m.border + '\',this)"></div>';
+    }).join('');
+}
+
+function setBg(bg, el) {
+    localStorage.setItem('feedBg', bg);
+    applyFeedBg();
+    renderBgPresets();
+    showCurrentBg();
+    showToast('Background changed!', 'success');
+}
+
+function setColor(key, color, el) {
+    localStorage.setItem(key, color);
+    document.documentElement.style.setProperty('--' + key.replace('feed','custom-').replace('Bg','-bg'), color);
+    if (key === 'feedTextColor') {
+        const isLight = ['#ffffff','#ffd700','#00f0ff'].includes(color.toLowerCase());
+        if (isLight) {
+            localStorage.setItem('feedInputBg','rgba(0,0,0,0.3)');
+            document.documentElement.style.setProperty('--custom-input-bg','rgba(0,0,0,0.3)');
+        }
+    }
+    renderTextColors();
+    renderCardColors();
+    showToast('Color updated!', 'success');
+}
+
+function setModalColor(bg, border, el) {
+    localStorage.setItem('feedModalBg', bg);
+    localStorage.setItem('feedModalBorder', border);
+    document.documentElement.style.setProperty('--custom-modal-bg', bg);
+    document.documentElement.style.setProperty('--custom-modal-border', border);
+    renderModalColors();
+    showToast('Modal style updated!', 'success');
+}
+
+function showCurrentBg() {
+    const preview = document.getElementById('currentBgPreview');
+    const bg = localStorage.getItem('feedBg') || window.DEFAULT_FEED_BG;
+    const isBase64 = bg.startsWith('data:image');
+    preview.innerHTML = isBase64 
+        ? '<div style="height:150px;background:' + bg + ' center/cover;border-radius:8px"></div><p style="margin-top:0.5rem;color:var(--text-secondary)">Custom Image</p>'
+        : '<div style="height:150px;background:url(' + bg + ') center/cover;border-radius:8px"></div><p style="margin-top:0.5rem;color:var(--text-secondary)">' + bg + '</p>';
+}
+
+document.getElementById('bgUpload').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > window.MAX_BG_SIZE) {
+        showToast('Image too large (max ' + Math.floor(window.MAX_BG_SIZE/1024) + 'KB)', 'error');
+        return;
+    }
+    showToast('Loading...', 'warning');
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const result = event.target.result;
+        if (result && result.length <= 700 * 1024) {
+            if (safeSetItem('feedBg', result)) {
+                applyFeedBg();
+                renderBgPresets();
+                showCurrentBg();
+                showToast('Custom background set!', 'success');
+            }
+        } else {
+            showToast('Background too large after encoding', 'error');
+        }
+    };
+    reader.onerror = () => showToast('Failed to load image', 'error');
+    reader.readAsDataURL(file);
+});
+
+function resetAllSettings() {
+    if (confirm('Reset all feed settings to default?')) {
+        ['feedTextColor','feedCardBg','feedModalBg','feedModalBorder','feedInputBg','feedBg'].forEach(k => localStorage.removeItem(k));
+        ['--custom-text-color','--custom-card-bg','--custom-modal-bg','--custom-modal-border','--custom-input-bg'].forEach(p => document.documentElement.style.setProperty(p,''));
+        applyFeedBg();
+        renderBgPresets();
+        renderTextColors();
+        renderCardColors();
+        renderModalColors();
+        showCurrentBg();
+        showToast('All settings reset!', 'success');
+    }
+}
+</script>
+</body>
+</html>
