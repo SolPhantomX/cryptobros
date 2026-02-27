@@ -88,4 +88,4 @@ class SentinelSwarm {
     }
 }
 
-const sentinel = new SentinelSwarm();
+window.sentinel = new SentinelSwarm();
