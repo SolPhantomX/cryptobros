@@ -1,3 +1,54 @@
+window.isPosting = false;
+window.isCommenting = {};
+
+function createPost() {
+    if (window.isPosting) return;
+    const btn = document.getElementById('btnPost');
+    const content = document.getElementById('postInput').value.trim();
+    if (!content) { showToast('Please enter some text first', 'error'); return; }
+    if (content.length > 2000) { showToast('Post too long (max 2000 characters)', 'error'); return; }
+    window.isPosting = true;
+    btn.disabled = true;
+    btn.textContent = 'Posting...';
+    const wallet = localStorage.getItem('walletAddress') || 'guest';
+    const isNewUser = !localStorage.getItem('hasPostedBefore');
+    const risk = window.sentinel.vote(content, wallet, isNewUser);
+    if (risk.action === 'BLOCK') {
+        showSwarmModal(risk, content, wallet);
+        resetPostButton();
+        return;
+    }
+    if (risk.action === 'REVIEW') showToast('Post published with review flag ⚠️', 'warning');
+    const posts = safeGetItem('feedPosts', []);
+    posts.unshift({
+        id: Date.now(), content, timestamp: Date.now(), likes: 0, username: '@cryptobros',
+        comments: [], moderation: risk, likedByMe: false, repostedByMe: false, reposts: 0,
+        pinnedByAuction: false, pinned: false, auctionBurn: 0, pinnedAt: null
+    });
+    if (safeSetItem('feedPosts', posts)) {
+        document.getElementById('postInput').value = '';
+        document.getElementById('charCount').textContent = '0 / 2000';
+        localStorage.setItem('hasPostedBefore', 'true');
+        if (risk.action === 'PUBLISH') { window.sentinel.awardAUS(1); showToast('Post published! +1 mock AUS 🪙'); }
+        SentinelSwarm.cleanupStorage();
+        loadPosts();
+        renderPinnedPosts();
+        resetPostButton();
+    } else {
+        showToast('Failed to save post - storage may be full', 'error');
+        btn.disabled = false;
+        btn.textContent = '📝 Post';
+        window.isPosting = false;
+    }
+}
+
+function resetPostButton() {
+    window.isPosting = false;
+    const btn = document.getElementById('btnPost');
+    btn.disabled = false;
+    btn.textContent = '📝 Post';
+}
+
 function deletePost(id) {
     if (confirm('Delete this post?')) {
         let posts = safeGetItem('feedPosts', []);
@@ -57,27 +108,25 @@ function loadPosts() {
     container.innerHTML = html;
 }
 
-let isCommenting = {};
-
 function saveComment(postId) {
-    if (isCommenting[postId]) return;
+    if (window.isCommenting[postId]) return;
     const btn = document.getElementById(`commentBtn-${postId}`);
     const input = document.getElementById(`comment-input-${postId}`);
     const comment = input.value.trim();
     if (!comment || comment.length > 500) { showToast(comment ? 'Max 500 chars' : 'Enter comment', 'error'); return; }
-    isCommenting[postId] = true;
+    window.isCommenting[postId] = true;
     if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
     const posts = safeGetItem('feedPosts', []);
     const idx = posts.findIndex(p => p.id === postId);
     if (idx !== -1) {
         if (!posts[idx].comments) posts[idx].comments = [];
-        if (posts[idx].comments.length >= MAX_COMMENTS_PER_POST) {
-            showToast(`Max ${MAX_COMMENTS_PER_POST} comments per post`, 'error');
+        if (posts[idx].comments.length >= window.MAX_COMMENTS_PER_POST) {
+            showToast(`Max ${window.MAX_COMMENTS_PER_POST} comments per post`, 'error');
             resetCommentButton(postId);
             return;
         }
         const totalCommentSize = posts[idx].comments.reduce((sum, c) => sum + c.length, 0) + comment.length;
-        if (totalCommentSize > MAX_COMMENT_CHARS_PER_POST) {
+        if (totalCommentSize > window.MAX_COMMENT_CHARS_PER_POST) {
             showToast('Comments too large for this post', 'error');
             resetCommentButton(postId);
             return;
@@ -98,7 +147,7 @@ function saveComment(postId) {
 }
 
 function resetCommentButton(postId) {
-    isCommenting[postId] = false;
+    window.isCommenting[postId] = false;
     const btn = document.getElementById(`commentBtn-${postId}`);
     if (btn) { btn.disabled = false; btn.textContent = 'Post Comment'; }
 }
