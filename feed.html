@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryptoBros Feed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500:600:700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="feed.css">
+</head>
+<body>
+<div class="layout">
+<aside>
+<a href="profile.html" class="sidebar-user">
+<div class="sidebar-user-content">
+<div class="avatar avatar-base" id="sidebarAvatar">C</div>
+<div class="user-info">
+<h3 id="sidebarUsername">@cryptobros</h3>
+<p>CHAIRMAN OF THE TRIBUNAL</p>
+</div>
+</div>
+</a>
+<div class="sidebar-menu">
+<a href="feed.html" class="menu-item active">📰 News Feed</a>
+<a href="messages.html" class="menu-item">💬 Messages</a>
+<a href="groups.html" class="menu-item">👥 My Groups</a>
+<a href="profile.html" class="menu-item">⚙️ Settings</a>
+<a href="tribunal.html" class="menu-item">💡 Tribunal</a>
+<a href="help.html" class="menu-item">🆘 Help Desk</a>
+<a href="payment.html" class="menu-item">💰 AUS Token</a>
+</div>
+</aside>
+<main>
+<div class="top-bar">
+<a href="profile.html" class="back-btn">← Back to Profile</a>
+<div class="theme-toggle" id="themeToggle">🌙</div>
+</div>
+<div class="search-container" id="searchContainer">
+<div class="search-wrapper">
+<span class="search-icon">🔍</span>
+<input type="text" id="globalSearchInput" placeholder="Search posts, #hashtags, $tokens..." autocomplete="off">
+<button class="search-clear" id="searchClearBtn" style="display:none;">✕</button>
+</div>
+<div class="search-results" id="searchResultsBox" style="display:none;"></div>
+</div>
+<div class="create-post">
+<div style="display: flex; gap: 1rem; align-items: flex-start;">
+<div class="create-avatar avatar-base" id="createAvatar">C</div>
+<div style="flex: 1;">
+<textarea class="create-input" id="postInput" placeholder="What's on your mind? (max 2000 chars)" maxlength="2000" rows="4"></textarea>
+<div class="create-actions">
+<span id="charCount">0 / 2000</span>
+<button class="btn-post" id="btnPost" onclick="createPost()">📝 Post</button>
+</div>
+</div>
+</div>
+</div>
+<div class="pinned-auctions">
+<h2>Auction Winners 🏆</h2>
+<div id="pinnedPostsContainer"></div>
+</div>
+<div id="feedPosts"></div>
+</main>
+<div class="right-sidebar">
+<div class="trends-card">
+<div class="trends-title">🔥 Hot Topics</div>
+<div class="trend-item"><div class="trend-name">#WIF Pump</div><div class="trend-count" id="trend1">2.1k <span class="trend-indicator trend-neutral">●</span></div></div>
+<div class="trend-item"><div class="trend-name">#SOL Buy</div><div class="trend-count" id="trend2">1.8k <span class="trend-indicator trend-neutral">●</span></div></div>
+<div class="trend-item"><div class="trend-name">#TribunalVote</div><div class="trend-count" id="trend3">942 <span class="trend-indicator trend-neutral">●</span></div></div>
+</div>
+<div class="trends-card">
+<div class="trends-title">Your Wallet</div>
+<div style="font-weight: 600; color: var(--accent-gold); margin: 0.8rem 0;">0.00 SOL</div>
+<div style="color: var(--text-secondary); font-size: 0.95rem;">AUS: pending launch</div>
+<button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='wallet-connect.html'">Connect Phantom</button>
+</div>
+</div>
+</div>
+<button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">⚙️</button>
+<div id="feedBgModal" class="feed-bg-modal">
+<div class="feed-bg-modal-content">
+<h3>Customize Feed</h3>
+<div class="text-color-section">
+<h4>Text Color</h4>
+<div class="color-buttons">
+<button class="color-btn" style="background:#ffd700;" onclick="setTextColor('#ffd700')"></button>
+<button class="color-btn" style="background:#00f0ff;" onclick="setTextColor('#00f0ff')"></button>
+<button class="color-btn" style="background:#9d00ff;" onclick="setTextColor('#9d00ff')"></button>
+<button class="color-btn" style="background:#ff4d4d;" onclick="setTextColor('#ff4d4d')"></button>
+<button class="color-btn" style="background:#ffffff;border:2px solid #000;" onclick="setTextColor('#ffffff')"></button>
+</div>
+</div>
+<div class="bg-presets-grid" id="bgPresetsGrid"></div>
+<div class="bg-upload-section">
+<label for="feedBgUpload" class="bg-upload-label">Upload Custom Background</label>
+<input type="file" id="feedBgUpload" accept="image/*" class="bg-upload-input">
+</div>
+<div class="bg-actions">
+<button onclick="resetCustomColors()" class="btn-reset">Reset All Colors</button>
+<button onclick="closeFeedBgModal()" class="btn-close-modal">Close</button>
+</div>
+</div>
+</div>
+
+<script src="feed-config.js"></script>
+<script src="feed-utils.js"></script>
+<script src="feed-sentinel.js"></script>
+<script src="feed-background.js"></script>
+<script src="feed-trends.js"></script>
+<script src="feed-search.js"></script>
+<script src="feed-ui.js"></script>
+<script src="feed-main.js"></script>
+</body>
+</html>
