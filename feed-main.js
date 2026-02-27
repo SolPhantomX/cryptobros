@@ -1,53 +1,3 @@
-let isPosting = false;
-
-function createPost() {
-    if (isPosting) return;
-    const btn = document.getElementById('btnPost');
-    const content = document.getElementById('postInput').value.trim();
-    if (!content) { showToast('Please enter some text first', 'error'); return; }
-    if (content.length > 2000) { showToast('Post too long (max 2000 characters)', 'error'); return; }
-    isPosting = true;
-    btn.disabled = true;
-    btn.textContent = 'Posting...';
-    const wallet = localStorage.getItem('walletAddress') || 'guest';
-    const isNewUser = !localStorage.getItem('hasPostedBefore');
-    const risk = sentinel.vote(content, wallet, isNewUser);
-    if (risk.action === 'BLOCK') {
-        showSwarmModal(risk, content, wallet);
-        resetPostButton();
-        return;
-    }
-    if (risk.action === 'REVIEW') showToast('Post published with review flag ⚠️', 'warning');
-    const posts = safeGetItem('feedPosts', []);
-    posts.unshift({
-        id: Date.now(), content, timestamp: Date.now(), likes: 0, username: '@cryptobros',
-        comments: [], moderation: risk, likedByMe: false, repostedByMe: false, reposts: 0,
-        pinnedByAuction: false, pinned: false, auctionBurn: 0, pinnedAt: null
-    });
-    if (safeSetItem('feedPosts', posts)) {
-        document.getElementById('postInput').value = '';
-        document.getElementById('charCount').textContent = '0 / 2000';
-        localStorage.setItem('hasPostedBefore', 'true');
-        if (risk.action === 'PUBLISH') { sentinel.awardAUS(1); showToast('Post published! +1 mock AUS 🪙'); }
-        SentinelSwarm.cleanupStorage();
-        loadPosts();
-        renderPinnedPosts();
-        resetPostButton();
-    } else {
-        showToast('Failed to save post - storage may be full', 'error');
-        btn.disabled = false;
-        btn.textContent = '📝 Post';
-        isPosting = false;
-    }
-}
-
-function resetPostButton() {
-    isPosting = false;
-    const btn = document.getElementById('btnPost');
-    btn.disabled = false;
-    btn.textContent = '📝 Post';
-}
-
 const postInput = document.getElementById('postInput');
 const charCount = document.getElementById('charCount');
 if (postInput && charCount) {
@@ -102,8 +52,6 @@ window.addEventListener('beforeunload', () => {
         trendsInterval = null;
     }
 });
-
-document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
