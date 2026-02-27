@@ -54,6 +54,8 @@ window.addEventListener('beforeunload', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 DOMContentLoaded fired');
+    
     initTheme();
     initMockUsers();
     initTrends();
@@ -62,17 +64,50 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPinnedPosts();
     applyCustomColors();
     
+    // FIX: Явная инициализация кнопки с отладкой
     const btn = document.getElementById('feedBgBtn');
+    console.log('Gear button found:', btn);
+    
+    if (btn) {
+        btn.addEventListener('click', () => {
+            console.log('Gear button clicked!');
+            if (typeof window.openFeedBgModal === 'function') {
+                window.openFeedBgModal();
+            } else {
+                console.error('openFeedBgModal is not defined!');
+                showToast('Error: Modal function not loaded', 'error');
+            }
+        });
+        console.log('Gear button listener attached');
+    } else {
+        console.error('Gear button NOT found in DOM!');
+    }
+    
     const upload = document.getElementById('feedBgUpload');
-    if (btn) btn.addEventListener('click', openFeedBgModal);
-    if (upload) upload.addEventListener('change', e => handleBgUpload(e.target.files[0]));
+    if (upload) {
+        upload.addEventListener('change', e => {
+            console.log('File upload triggered');
+            handleBgUpload(e.target.files[0]);
+        });
+    }
     
     const modal = document.getElementById('feedBgModal');
     if (modal) {
-        modal.addEventListener('click', e => { if (e.target === modal) closeFeedBgModal(); });
-        modal.addEventListener('keydown', e => { if (e.key === 'Escape') closeFeedBgModal(); });
+        modal.addEventListener('click', e => { 
+            if (e.target === modal) {
+                console.log('Modal backdrop clicked');
+                closeFeedBgModal();
+            }
+        });
+        modal.addEventListener('keydown', e => { 
+            if (e.key === 'Escape') closeFeedBgModal(); 
+        });
+        console.log('Modal listeners attached');
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFeedBgModal(); });
+    
+    document.addEventListener('keydown', e => { 
+        if (e.key === 'Escape') closeFeedBgModal(); 
+    });
+    
+    console.log('✅ Feed initialization complete');
 });
-
-console.log('🚀 CryptoBros Feed initialized');
