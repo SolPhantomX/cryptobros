@@ -1,4 +1,5 @@
-let trendsInterval = null;
+// Глобальная переменная для интервала трендов
+window.trendsInterval = null;
 
 function initTrends() {
     const trendData = {
@@ -7,7 +8,7 @@ function initTrends() {
         trend3: { value: 942, prev: 942, name: '#TribunalVote' }
     };
 
-    trendsInterval = setInterval(() => {
+    window.trendsInterval = setInterval(() => {
         Object.keys(trendData).forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -37,12 +38,12 @@ function initTrends() {
     }, 30000);
 }
 
-function cleanupTrends() {
-    if (trendsInterval) {
-        clearInterval(trendsInterval);
-        trendsInterval = null;
+window.cleanupTrends = function() {
+    if (window.trendsInterval) {
+        clearInterval(window.trendsInterval);
+        window.trendsInterval = null;
     }
-}
+};
 
 window.addEventListener('beforeunload', () => {
     cleanupTrends();
