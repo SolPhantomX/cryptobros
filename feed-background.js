@@ -1,6 +1,6 @@
 function applyFeedBg() {
     let bg = localStorage.getItem('feedBg');
-    if (!bg) bg = DEFAULT_FEED_BG;
+    if (!bg) bg = window.DEFAULT_FEED_BG;
     if (bg && bg !== 'none') {
         const isBase64 = bg.startsWith('data:image');
         document.body.style.backgroundImage = isBase64 ? bg : `url(${bg})`;
@@ -36,7 +36,7 @@ function renderBgPresets() {
     if (!grid) return;
     const fallback = encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80"><rect fill="#222" width="120" height="80"/><text fill="#fff" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="10">No Image</text></svg>');
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;margin-bottom:1rem;color:var(--accent-gold)"><strong>Background Presets</strong></div>` +
-        FEED_BG_PRESETS.map(bg => `<div class="bg-preset-item" onclick="setFeedBg('${bg}')"><img src="${bg}" alt="${bg}" onerror="this.src='data:image/svg+xml,${fallback}'"><p>${bg}</p></div>`).join('') +
+        window.FEED_BG_PRESETS.map(bg => `<div class="bg-preset-item" onclick="setFeedBg('${bg}')"><img src="${bg}" alt="${bg}" onerror="this.src='data:image/svg+xml,${fallback}'"><p>${bg}</p></div>`).join('') +
         `<div style="grid-column:1/-1;text-align:center;margin:1rem 0;color:var(--accent-gold)"><strong>Card & Modal Colors</strong></div>` +
         `<div style="grid-column:1/-1;display:flex;justify-content:center;gap:0.5rem;flex-wrap:wrap"><span style="font-size:0.8rem;color:var(--text-secondary)">Cards:</span>` +
         `<button class="color-btn" style="background:#1e1e1e;width:30px;height:30px" onclick="setCardBg('#1e1e1e')" title="Dark"></button>` +
@@ -50,8 +50,8 @@ function renderBgPresets() {
 
 function handleBgUpload(file) {
     if (!file) return;
-    if (file.size > MAX_BG_SIZE) {
-        showToast(`Image too large (max ${Math.floor(MAX_BG_SIZE/1024)}KB after encoding)`, 'error');
+    if (file.size > window.MAX_BG_SIZE) {
+        showToast(`Image too large (max ${Math.floor(window.MAX_BG_SIZE/1024)}KB after encoding)`, 'error');
         return;
     }
     showToast('Loading background...', 'warning');
