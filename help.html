@@ -41,21 +41,22 @@
     }
     .container { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
     
-    /* Back Button */
+    /* Back Button - Text Style */
     .back-btn {
       position: fixed;
       top: 20px;
       left: 20px;
-      width: 48px;
-      height: 48px;
+      padding: 0.7rem 1.4rem;
       background: var(--bg-card);
       border: 2px solid var(--border-color);
-      border-radius: 50%;
+      border-radius: 12px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.5rem;
       cursor: pointer;
-      font-size: 1.5rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
       color: var(--text-primary);
       box-shadow: var(--shadow);
       transition: all 0.3s ease;
@@ -66,6 +67,7 @@
       transform: translateX(-4px);
       border-color: var(--accent-gold);
       box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+      color: var(--accent-gold);
     }
     
     /* Theme Toggle */
@@ -420,29 +422,52 @@
       box-shadow: var(--shadow);
     }
     
-    /* Settings Gear */
-    .settings-gear {
+    /* Settings Gear - Colorful with Label */
+    .settings-wrapper {
       position: fixed;
       bottom: 30px;
       right: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+    }
+    .settings-label {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      background: var(--bg-card);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow);
+      white-space: nowrap;
+    }
+    .settings-gear {
       width: 56px;
       height: 56px;
-      background: var(--bg-card);
-      border: 2px solid var(--border-color);
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan), var(--accent-purple));
+      border: 3px solid var(--bg-card);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       font-size: 1.8rem;
-      box-shadow: var(--shadow);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
       transition: all 0.3s ease;
-      z-index: 1000;
+      animation: gearSpin 20s linear infinite;
+    }
+    @keyframes gearSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
     .settings-gear:hover {
-      transform: rotate(30deg) scale(1.1);
-      border-color: var(--accent-gold);
-      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+      transform: scale(1.15);
+      box-shadow: 0 8px 30px rgba(255, 215, 0, 0.7);
+      animation-play-state: paused;
     }
     
     /* Background Modal */
@@ -536,23 +561,34 @@
       .categories { grid-template-columns: 1fr 1fr; }
       .escalation-links { flex-direction: column; }
       .escalation-btn { width: 100%; }
-      .back-btn, .theme-toggle {
-        width: 42px;
-        height: 42px;
-        font-size: 1.2rem;
+      .back-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+      .settings-label {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+      }
+      .settings-gear {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Back Button -->
-  <a href="/" class="back-btn" title="Go Back">←</a>
+  <!-- Back Button - Text Style -->
+  <a href="/" class="back-btn">↩ Go Back</a>
   
   <!-- Theme Toggle -->
   <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</div>
   
-  <!-- Settings Gear -->
-  <div class="settings-gear" onclick="openBgModal()" title="Customize Background">⚙️</div>
+  <!-- Settings Gear with Label -->
+  <div class="settings-wrapper">
+    <div class="settings-label">Change Background</div>
+    <div class="settings-gear" onclick="openBgModal()" title="Customize Background">⚙️</div>
+  </div>
 
   <div class="container">
     <div class="header">
@@ -654,7 +690,7 @@
     "How can we help you?",
     "Ask anything...",
     "Get instant answers...",
-    "We're here to help!"
+    "We are here to help!"
   ];
   let subIndex = 0;
   function animateSubtitle() {
@@ -743,7 +779,7 @@
   window.addEventListener('DOMContentLoaded', () => {
     const savedBg = localStorage.getItem('customBg');
     if (savedBg) {
-      if (savedBg.startsWith('data:image')) {
+      if (savedBg.startsWith('image')) {
         document.body.style.backgroundImage = `url(${savedBg})`;
       } else if (savedBg.startsWith('gradient')) {
         const gradients = {
@@ -771,7 +807,7 @@
         3. Click "Connect Wallet" in the sidebar<br>
         4. Approve the connection in your wallet<br><br>
         <strong>Still stuck?</strong> Try clearing browser cache or using Chrome/Brave.`,
-      therapist: `Wallet issues can be frustrating. Take a deep breath — we'll get this sorted. 💙`
+      therapist: `Wallet issues can be frustrating. Take a deep breath — we will get this sorted. 💙`
     },
     scam: {
       keywords: ['scam', 'rug', 'honeypot', 'lost', 'stolen', 'fake', 'fraud'],
@@ -781,7 +817,7 @@
         3. Report suspicious activity in the Feed with #ScamAlert<br>
         4. Revoke token approvals at <a href="https://revoke.cash" target="_blank">revoke.cash</a><br><br>
         <strong>Remember:</strong> Never share your seed phrase. Ever.`,
-      therapist: `I'm sorry this happened. Losing funds hurts. But you're not alone — our community has your back. 🤝`
+      therapist: `I am sorry this happened. Losing funds hurts. But you are not alone — our community has your back. 🤝`
     },
     posts: {
       keywords: ['post', 'delete', 'edit', 'disappeared', 'feed', 'comment'],
@@ -791,7 +827,7 @@
         • <strong>Comment disappeared:</strong> Comments are stored locally; clearing cache removes them<br>
         • <strong>Post not visible:</strong> Check if it was flagged by Sentinel AI (risk review)<br><br>
         <strong>Note:</strong> All data is stored in your browser (localStorage) for now.`,
-      therapist: `Missing content? That's annoying. Let's make sure your voice is heard next time. ✨`
+      therapist: `Missing content? That is annoying. Let us make sure your voice is heard next time. ✨`
     },
     tribunal: {
       keywords: ['tribunal', 'analysis', 'token', 'risk', 'verdict', 'scan'],
@@ -805,13 +841,13 @@
     },
     other: {
       keywords: [],
-      answer: `I couldn't find an exact match for your question.<br><br>
+      answer: `I could not find an exact match for your question.<br><br>
         Try these:<br>
         • <a href="feed.html">Ask in the Feed</a> — community might help<br>
-        • <a href="tribunal.html">Analyze a token</a> — if that's your issue<br>
+        • <a href="tribunal.html">Analyze a token</a> — if that is your issue<br>
         • <strong>Contact admin directly</strong> using the buttons below<br><br>
         <em>Pro tip:</em> Be specific in your question for better answers!`,
-      therapist: `Sometimes questions are unique. That's okay — let's find the right path together. 🗺️`
+      therapist: `Sometimes questions are unique. That is okay — let us find the right path together. 🗺️`
     }
   };
 
