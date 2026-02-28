@@ -62,9 +62,23 @@
     .nav-item {
       padding: 10px 0; color: #ffcc00; font-weight: bold;
       cursor: pointer; font-size: 18px; animation: flicker 3s infinite alternate;
+      text-decoration: none; display: block;
     }
     .nav-item:hover { opacity: 0.8; text-shadow: 0 0 8px #ffcc00; }
-    a.nav-item { text-decoration: none; display: block; color: #ffcc00; }
+    .nav-item.help-btn {
+      background: linear-gradient(135deg, #FFD700, #00F0FF);
+      color: #0a0a0f !important;
+      border-radius: 12px;
+      margin-top: 15px;
+      text-align: center;
+      font-weight: 800;
+      animation: none;
+      transition: all 0.3s;
+    }
+    .nav-item.help-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+    }
     .main { flex: 1; }
     .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; animation: flicker 3s infinite alternate; }
     .rank { margin-bottom: 20px; font-weight: bold; animation: flicker 3s infinite alternate; }
@@ -97,7 +111,7 @@
     @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
     
-    /* ✅ WALLET STATUS BADGE */
+    /* WALLET STATUS BADGE */
     .wallet-badge {
       position: absolute;
       bottom: -120px;
@@ -147,7 +161,7 @@
     <div class="header" id="header"></div>
     <div class="avatar" id="avatar"></div>
     
-    <!-- ✅ WALLET STATUS BADGE -->
+    <!-- WALLET STATUS BADGE -->
     <div class="wallet-badge" id="walletBadge" onclick="handleWalletClick()">
       <div class="badge-indicator" id="badgeIndicator"></div>
       <div class="badge-text" id="badgeText">Connect Wallet</div>
@@ -165,6 +179,7 @@
       <a href="groups.html" class="nav-item">👥 My Groups</a>
       <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
       <a href="friends.html" class="nav-item">👫 My Friends</a>
+      <a href="help.html" class="nav-item help-btn">❓ Help Desk</a>
     </div>
     <div class="main" id="profileContent"></div>
   </div>
@@ -174,7 +189,7 @@
   <input type="file" id="bg-upload" accept="image/*">
 
   <script>
-    // ✅ TOAST NOTIFICATIONS (uses CSS classes)
+    // TOAST NOTIFICATIONS
     function showToast(msg, type = 'success') {
       const existing = document.querySelector('.toast');
       if (existing) existing.remove();
@@ -188,14 +203,14 @@
       }, 3000);
     }
 
-    // === AUTO CREATOR MODE ===
+    // AUTO CREATOR MODE
     if (!localStorage.getItem('isCreator')) {
       try { localStorage.setItem('isCreator', 'true'); } catch(e) {}
       try { localStorage.setItem('selectedTier', 'Premium'); } catch(e) {}
       try { localStorage.setItem('tierExpiry', 'lifetime'); } catch(e) {}
     }
 
-    // ✅ SAFE GET/SET FOR LOCALSTORAGE
+    // SAFE GET/SET FOR LOCALSTORAGE
     function safeGet(key, defaultVal) {
       try {
         const val = localStorage.getItem(key);
@@ -218,7 +233,7 @@
       }
     }
 
-    // === PROFILE DATA ===
+    // PROFILE DATA
     let profileData = safeGet('profileData', { 
       name: '@cryptobros', 
       about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype', 
@@ -236,7 +251,7 @@
       'bg11.jpg', 'bg12.jpg', 'bg13.jpg'
     ];
 
-    // ✅ APPLY ALL BACKGROUNDS (with corrupted base64 check)
+    // APPLY ALL BACKGROUNDS
     function applyAllBackgrounds() {
       let pageBg = safeGet('pageBg', '');
       if (!pageBg) pageBg = sessionStorage.getItem('pageBgTemp') || '';
@@ -291,7 +306,7 @@
       document.body.style.backgroundRepeat = 'no-repeat';
     }
 
-    // ✅ SAVE BACKGROUND
+    // SAVE BACKGROUND
     function saveProfileBg(file) {
       if (!file) return;
       if (file.size > 2 * 1024 * 1024) {
@@ -304,13 +319,13 @@
         safeSet('pageBg', base64);
         sessionStorage.setItem('pageBgTemp', base64);
         applyAllBackgrounds();
-        showToast('✅ Background saved!', 'success');
+        showToast('Background saved!', 'success');
       };
-      reader.onerror = () => showToast('❌ Failed to load image', 'error');
+      reader.onerror = () => showToast('Failed to load image', 'error');
       reader.readAsDataURL(file);
     }
 
-    // ✅ SAVE HEADER/AVATAR
+    // SAVE HEADER/AVATAR
     function safeSaveHeader(base64) {
       safeSet('header', base64);
       headerPos = { x: 0, y: 0 };
@@ -323,7 +338,7 @@
       applyAllBackgrounds();
     }
 
-    // ✅ CLEANUP LOCALSTORAGE
+    // CLEANUP LOCALSTORAGE
     function cleanupLocalStorage() {
       const protectedKeys = [
         'pageBg', 'header', 'avatar', 'profileData', 'headerPos', 
@@ -337,7 +352,7 @@
       });
     }
 
-    // === 💰 WALLET BADGE FUNCTIONS ===
+    // WALLET BADGE FUNCTIONS
     function updateWalletBadge() {
       const wallet = localStorage.getItem('walletAddress');
       const badge = document.getElementById('walletBadge');
@@ -366,18 +381,18 @@
           localStorage.removeItem('walletName');
           localStorage.removeItem('walletConnected');
           updateWalletBadge();
-          showToast('🔌 Disconnected', 'success');
+          showToast('Disconnected', 'success');
         }
       } else {
         window.location.href = 'wallet-connect.html';
       }
     }
 
-    // === INITIALIZATION ===
+    // INITIALIZATION
     function init() {
       applyTheme();
       applyAllBackgrounds();
-      updateWalletBadge(); // ✅ Update wallet badge on load
+      updateWalletBadge();
       
       const headerImg = safeGet('header', '');
       const headerEl = document.getElementById('header');
@@ -476,7 +491,7 @@
       activeCodes.push({ code: fullCode, tier, generatedAt: Date.now(), used: false });
       safeSet('activeInviteCodes', activeCodes);
       navigator.clipboard.writeText(fullCode).then(() => {
-        alert(`✅ Invite code generated!\n\nCode: ${fullCode}\nTier: ${tier}\n\nCopied to clipboard!`);
+        alert(`Invite code generated!\n\nCode: ${fullCode}\nTier: ${tier}\n\nCopied to clipboard!`);
       });
     }
 
@@ -491,7 +506,7 @@
     function revokeAllCodes() {
       if (confirm('Revoke all active invite codes?')) {
         localStorage.removeItem('activeInviteCodes');
-        alert('✅ All invite codes revoked!');
+        alert('All invite codes revoked!');
         document.getElementById('editMenu').style.display = 'none';
       }
     }
@@ -551,7 +566,7 @@
       safeSet('isProfileSaved', true);
       isProfileSaved = true;
       renderViewMode();
-      alert('✅ Profile saved successfully!');
+      alert('Profile saved successfully!');
     }
 
     function setupDragToPan() {
