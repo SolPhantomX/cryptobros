@@ -382,7 +382,7 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
   color: var(--custom-text-color) !important;
 }
 
-/* === MERCING TEXT & GEAR BUTTON ONLY === */
+/* Shimmer text and gear button */
 .shimmer-text {
   background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700) !important;
   background-size: 400% 400% !important;
@@ -407,7 +407,7 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
   100% { background-position: 0% 50%; }
 }
 
-/* === AUS LOGO LIKE BUTTON === */
+/* AUS Logo Like Button */
 .aus-like-icon {
   display: inline-block;
   width: 24px;
@@ -424,7 +424,6 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
   transition: fill 0.4s ease, stroke 0.4s ease;
 }
 
-/* Без лайков — только контур */
 .aus-like-icon.outline .petal,
 .aus-like-icon.outline .center {
   fill: none;
@@ -432,7 +431,6 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
   stroke-width: 3;
 }
 
-/* С лайком — заливка + мерцание */
 .aus-like-icon.filled .petal,
 .aus-like-icon.filled .center {
   fill: #0047FF;
@@ -449,7 +447,6 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
   animation: aus-glow-pulse 1.8s infinite ease-in-out;
 }
 
-/* Hover эффект */
 .action-btn:hover .aus-like-icon {
   transform: scale(1.15);
 }
