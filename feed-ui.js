@@ -93,13 +93,16 @@ function loadPosts() {
                 </div>
                 <div class="post-actions">
                     <div class="action-btn ${post.likedByMe ? 'liked' : ''}" onclick="toggleLike(${post.id}, this)">
-                        <img 
-                            src="/logoAUS1.png" 
-                            alt="AUS Like" 
-                            class="aus-like-icon ${post.likes > 0 ? 'filled' : 'outline'} ${post.likes > 0 ? 'glow-active' : ''}"
-                            width="24" 
-                            height="24"
-                        >
+                        <span class="aus-like-icon ${post.likes > 0 ? 'filled glow-active' : 'outline'}">
+                            <svg viewBox="0 0 100 110" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Три лепестка -->
+                                <circle cx="25" cy="45" r="22" class="petal"/>
+                                <circle cx="75" cy="45" r="22" class="petal"/>
+                                <circle cx="50" cy="25" r="20" class="petal"/>
+                                <!-- Центральный круг -->
+                                <circle cx="50" cy="85" r="16" class="center"/>
+                            </svg>
+                        </span>
                         <span class="count">${post.likes || 0}</span>
                     </div>
                     <div class="action-btn" onclick="toggleComments(${post.id})">
