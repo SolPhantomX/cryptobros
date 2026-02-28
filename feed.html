@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CryptoBros Feed</title>
-<link rel="preconnect" href="https://fonts.googleapis.com  ">
-<link rel="preconnect" href="https://fonts.gstatic.com  " crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter  :wght@400;500:600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="feed.css">
 
-<!-- ВСТАВЛЕНА АНИМАЦИЯ МЕРЦАНИЯ -->
+<!-- Мерцание каждой строки отдельно -->
 <style>
 .shimmer-text {
     background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700);
@@ -19,7 +19,8 @@
     color: transparent;
     animation: shimmerCycle 5s linear infinite;
     font-weight: 700;
-    display: inline-block;
+    display: block;
+    text-align: center;
 }
 @keyframes shimmerCycle {
     0% { background-position: 0% 50%; }
@@ -75,10 +76,16 @@
 </div>
 </div>
 <div class="pinned-auctions">
-<h2 class="shimmer-text" style="animation-delay: 0s;">Auction Winners 🏆</h2>
+<h2>Auction Winners 🏆</h2>
 <div id="pinnedPostsContainer"></div>
 </div>
-<div id="feedPosts"></div>
+<div id="feedPosts">
+<div style="text-align:center;padding:3rem;color:var(--text-secondary)">
+<h3 class="shimmer-text" style="animation-delay:0s;">No posts yet</h3>
+<p class="shimmer-text" style="animation-delay:1.7s;">Be the first degen to share alpha!</p>
+<p class="shimmer-text" style="animation-delay:3.4s;margin-top:1rem;font-size:0.85rem;opacity:0.7;">Mock mode</p>
+</div>
+</div>
 </main>
 <div class="right-sidebar">
 <div class="trends-card">
@@ -130,60 +137,5 @@
 <script src="feed-ui.js"></script>
 <script src="feed-main.js"></script>
 
-<!-- ВСТАВЛЕНЫ ФУНКЦИИ С МЕРЦАЮЩИМИ СТРОКАМИ -->
-<script>
-// Переопределяем функцию отрисовки закрепленных постов для мерцания
-if (typeof renderPinnedPosts !== 'undefined') {
-    const originalRenderPinned = renderPinnedPosts;
-    window.renderPinnedPosts = function() {
-        const container = document.getElementById('pinnedPostsContainer');
-        if (!container) return;
-        const posts = typeof safeGetItem === 'function' ? safeGetItem('feedPosts', []) : [];
-        const pinned = posts.filter(p => p.pinnedByAuction && p.pinned);
-        
-        if (pinned.length === 0) {
-            // Мерцающие строки с РАЗНОЙ задержкой (не синхронно)
-            container.innerHTML = `
-                <p class="shimmer-text" style="animation-delay: 0s; text-align:center; color:var(--text-secondary)">No auction winners yet</p>
-                <p class="shimmer-text" style="animation-delay: 1.5s; text-align:center; color:var(--text-secondary); font-size: 0.9rem;">Be the first degen to share alpha!</p>
-                <p class="shimmer-text" style="animation-delay: 3.2s; text-align:center; color:var(--text-secondary); font-size: 0.8rem; opacity: 0.7;">Mock mode</p>
-            `;
-        } else {
-            // Вызов оригинальной логики если есть посты (упрощенно)
-            originalRenderPinned(); 
-        }
-    };
-}
-
-// Переопределяем функцию загрузки постов для мерцания
-if (typeof loadPosts !== 'undefined') {
-    const originalLoad = loadPosts;
-    window.loadPosts = function() {
-        const container = document.getElementById('feedPosts');
-        if (!container) return;
-        const posts = typeof safeGetItem === 'function' ? safeGetItem('feedPosts', []) : [];
-        
-        if (!posts.length) {
-            // Мерцающие строки с РАЗНОЙ задержкой
-            container.innerHTML = `
-            <div style="text-align:center;padding:3rem;color:var(--text-secondary)">
-                <h3 class="shimmer-text" style="margin-bottom:1rem; animation-delay: 0.5s;">No posts yet</h3>
-                <p class="shimmer-text" style="animation-delay: 2.1s;">Be the first degen to share alpha!</p>
-                <p class="shimmer-text" style="margin-top:1rem;font-size:0.85rem;opacity:0.7; animation-delay: 3.8s;">Mock mode</p>
-            </div>`;
-        } else {
-            originalLoad();
-        }
-    };
-}
-
-// Запускаем обновление при загрузке страницы, чтобы сразу применить мерцание
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        if (typeof renderPinnedPosts === 'function') renderPinnedPosts();
-        if (typeof loadPosts === 'function') loadPosts();
-    }, 100);
-});
-</script>
 </body>
 </html>
