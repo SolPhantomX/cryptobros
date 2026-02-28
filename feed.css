@@ -291,7 +291,7 @@ main { flex: 1; max-width: 720px; padding: 0 1rem; }
   background: var(--bg-card); border: 2px solid var(--border-color);
   border-radius: 50%; font-size: 1.2rem; cursor: pointer;
   z-index: 1000; display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.3s; box-shadow: var(--shadow);
 }
 .feed-bg-btn:hover {
   border-color: var(--accent-gold); transform: scale(1.1) rotate(15deg);
@@ -406,23 +406,41 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-/* === LOGO LIKE BUTTON === */
-.logo-icon svg {
-    display: block;
-    transition: all 0.3s ease;
+
+/* === AUS LOGO LIKE BUTTON (NEW) === */
+.aus-like-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  transition: filter 0.4s ease, opacity 0.4s ease;
+  display: block;
 }
 
-.action-btn.liked .logo-icon svg {
-    animation: logoFlicker 1.5s ease-in-out;
+/* Только синий контур (без заливки внутри) */
+.aus-like-icon.outline {
+  filter: brightness(0) invert(0.4) sepia(1) saturate(10) hue-rotate(200deg) brightness(1.2) contrast(1.8);
 }
 
-@keyframes logoFlicker {
-    0%, 100% { 
-        opacity: 1; 
-        filter: drop-shadow(0 0 5px rgba(0, 71, 255, 0.8));
-    }
-    50% { 
-        opacity: 0.5; 
-        filter: drop-shadow(0 0 20px rgba(0, 71, 255, 1));
-    }
+/* Полная заливка цветом логотипа */
+.aus-like-icon.filled {
+  filter: none;
+}
+
+/* Мягкое мерцание (пульсация свечением, не резкое мигание) */
+@keyframes aus-mercanie {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px #0047FF) brightness(1) opacity(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 14px #0047FF) brightness(1.4) opacity(0.9);
+  }
+}
+
+.glow-active {
+  animation: aus-mercanie 2s infinite ease-in-out;
+}
+
+/* Hover эффект для кнопки */
+.action-btn:hover .aus-like-icon {
+  transform: scale(1.15);
 }
