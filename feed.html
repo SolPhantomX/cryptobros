@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="feed.css">
 
-<!-- Only text shimmers, gear button shimmers too -->
+<!-- Shimmer only for text + gear button -->
 <style>
 .shimmer-text {
     background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700);
@@ -19,8 +19,6 @@
     color: transparent !important;
     animation: shimmerCycle 5s linear infinite;
     font-weight: 700;
-    display: block;
-    text-align: center;
 }
 
 /* Gear button - color gradient shimmer */
@@ -30,7 +28,6 @@
     animation: shimmerCycle 5s linear infinite !important;
     color: #0a0a0f !important;
     border: 2px solid transparent !important;
-    transition: none !important;
 }
 
 @keyframes shimmerCycle {
@@ -90,15 +87,15 @@
 <div class="pinned-auctions">
 <h2>Auction Winners 🏆</h2>
 <div id="pinnedPostsContainer">
-    <p class="shimmer-text" style="animation-delay:0s;">No auction winners yet</p>
-    <p class="shimmer-text" style="animation-delay:1.7s;">Be the first degen to share alpha!</p>
-    <p class="shimmer-text" style="animation-delay:3.4s;">Mock mode</p>
+    <p class="shimmer-text">No auction winners yet</p>
+    <p class="shimmer-text">Be the first degen to share alpha!</p>
+    <p class="shimmer-text">Mock mode</p>
 </div>
 </div>
 <div id="feedPosts">
-    <h3 class="shimmer-text" style="animation-delay:0.5s;">No posts yet</h3>
-    <p class="shimmer-text" style="animation-delay:2.2s;">Be the first degen to share alpha!</p>
-    <p class="shimmer-text" style="animation-delay:3.9s;">Mock mode</p>
+    <h3 class="shimmer-text">No posts yet</h3>
+    <p class="shimmer-text">Be the first degen to share alpha!</p>
+    <p class="shimmer-text">Mock mode</p>
 </div>
 </main>
 <div class="right-sidebar">
