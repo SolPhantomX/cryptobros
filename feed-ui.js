@@ -94,9 +94,9 @@ function loadPosts() {
                 <div class="post-actions">
                     <div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id},this)">
                         <span class="logo-icon">${post.likedByMe ? 
-                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="24" height="24"><circle cx="30" cy="40" r="25" fill="#0000FF"/><circle cx="70" cy="40" r="25" fill="#0000FF"/><circle cx="50" cy="20" r="22" fill="#0000FF"/><circle cx="50" cy="90" r="18" fill="#0000FF"/></svg>' 
+                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" width="24" height="24"><circle cx="25" cy="45" r="22" fill="#0047FF"/><circle cx="75" cy="45" r="22" fill="#0047FF"/><circle cx="50" cy="25" r="20" fill="#0047FF"/><circle cx="50" cy="85" r="16" fill="#0047FF"/></svg>' 
                             : 
-                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="24" height="24"><circle cx="30" cy="40" r="25" fill="none" stroke="#0000FF" stroke-width="3"/><circle cx="70" cy="40" r="25" fill="none" stroke="#0000FF" stroke-width="3"/><circle cx="50" cy="20" r="22" fill="none" stroke="#0000FF" stroke-width="3"/><circle cx="50" cy="90" r="18" fill="none" stroke="#0000FF" stroke-width="3"/></svg>'
+                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" width="24" height="24"><circle cx="25" cy="45" r="22" fill="none" stroke="#0047FF" stroke-width="3"/><circle cx="75" cy="45" r="22" fill="none" stroke="#0047FF" stroke-width="3"/><circle cx="50" cy="25" r="20" fill="none" stroke="#0047FF" stroke-width="3"/><circle cx="50" cy="85" r="16" fill="none" stroke="#0047FF" stroke-width="3"/></svg>'
                         }</span>
                         <span class="count">${post.likes||0}</span>
                     </div>
