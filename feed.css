@@ -407,40 +407,49 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
   100% { background-position: 0% 50%; }
 }
 
-/* === AUS LOGO LIKE BUTTON (NEW) === */
+/* === AUS LOGO LIKE BUTTON === */
 .aus-like-icon {
+  display: inline-block;
   width: 24px;
   height: 24px;
-  object-fit: contain;
-  transition: filter 0.4s ease, opacity 0.4s ease;
-  display: block;
 }
 
-/* Только синий контур (без заливки внутри) */
-.aus-like-icon.outline {
-  filter: brightness(0) invert(0.4) sepia(1) saturate(10) hue-rotate(200deg) brightness(1.2) contrast(1.8);
+.aus-like-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
-/* Полная заливка цветом логотипа */
-.aus-like-icon.filled {
-  filter: none;
+.aus-like-icon .petal,
+.aus-like-icon .center {
+  transition: fill 0.4s ease, stroke 0.4s ease;
 }
 
-/* Мягкое мерцание (пульсация свечением, не резкое мигание) */
-@keyframes aus-mercanie {
-  0%, 100% {
-    filter: drop-shadow(0 0 4px #0047FF) brightness(1) opacity(1);
-  }
-  50% {
-    filter: drop-shadow(0 0 14px #0047FF) brightness(1.4) opacity(0.9);
-  }
+/* Без лайков — только контур */
+.aus-like-icon.outline .petal,
+.aus-like-icon.outline .center {
+  fill: none;
+  stroke: #0047FF;
+  stroke-width: 3;
+}
+
+/* С лайком — заливка + мерцание */
+.aus-like-icon.filled .petal,
+.aus-like-icon.filled .center {
+  fill: #0047FF;
+  stroke: #0047FF;
+  stroke-width: 1;
+}
+
+@keyframes aus-glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 4px #0047FF) brightness(1); }
+  50%      { filter: drop-shadow(0 0 14px #0047FF) brightness(1.4); }
 }
 
 .glow-active {
-  animation: aus-mercanie 2s infinite ease-in-out;
+  animation: aus-glow-pulse 1.8s infinite ease-in-out;
 }
 
-/* Hover эффект для кнопки */
+/* Hover эффект */
 .action-btn:hover .aus-like-icon {
   transform: scale(1.15);
 }
