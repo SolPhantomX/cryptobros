@@ -406,3 +406,23 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+/* === LOGO LIKE BUTTON === */
+.logo-icon svg {
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.action-btn.liked .logo-icon svg {
+    animation: logoFlicker 1.5s ease-in-out;
+}
+
+@keyframes logoFlicker {
+    0%, 100% { 
+        opacity: 1; 
+        filter: drop-shadow(0 0 5px rgba(0, 71, 255, 0.8));
+    }
+    50% { 
+        opacity: 0.5; 
+        filter: drop-shadow(0 0 20px rgba(0, 71, 255, 1));
+    }
+}
