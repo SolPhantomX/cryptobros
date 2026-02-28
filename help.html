@@ -4,177 +4,764 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CryptoBros Help Desk</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-body: #f8f9fa; --bg-card: #ffffff; --text-primary: #212529;
       --text-secondary: #6c757d; --border-color: #e9ecef; --shadow: 0 4px 12px rgba(0,0,0,0.05);
       --accent-gold: #FFD700; --accent-cyan: #00F0FF; --accent-purple: #9D00FF;
       --hover-bg: #f1f3f5; --success: #00ff9d; --warning: #ffd700; --error: #ff4d4d;
+      --gradient-wallet: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --gradient-scam: linear-gradient(135deg, #ef4444, #f97316);
+      --gradient-posts: linear-gradient(135deg, #06b6d4, #3b82f6);
+      --gradient-tribunal: linear-gradient(135deg, #f59e0b, #eab308);
     }
     .dark-theme {
-      --bg-body: #121212; --bg-card: #1e1e1e; --text-primary: #e0e0e0;
-      --text-secondary: #a0a0a0; --border-color: #333333; --shadow: 0 4px 12px rgba(0,0,0,0.3);
-      --hover-bg: #2a2a2a;
+      --bg-body: #0f0f1a; --bg-card: #1e1e2e; --text-primary: #e0e0ff;
+      --text-secondary: #a0a0c0; --border-color: #333355; --shadow: 0 4px 12px rgba(0,0,0,0.3);
+      --hover-bg: #2a2a3e;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-primary);
-      min-height: 100vh; transition: background 0.3s ease; padding: 2rem;
+      font-family: 'Inter', sans-serif; 
+      background: var(--bg-body) url('bg3.jpg') center/cover fixed;
+      color: var(--text-primary);
+      min-height: 100vh; 
+      transition: background 0.3s ease; 
+      padding: 2rem;
+      position: relative;
     }
-    .container { max-width: 800px; margin: 0 auto; }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: inherit;
+      filter: blur(0px);
+      z-index: -1;
+    }
+    .container { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+    
+    /* Back Button */
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 48px;
+      height: 48px;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      text-decoration: none;
+    }
+    .back-btn:hover {
+      transform: translateX(-4px);
+      border-color: var(--accent-gold);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+    
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    .theme-toggle:hover {
+      transform: rotate(15deg) scale(1.1);
+      border-color: var(--accent-gold);
+    }
+    
+    /* Header with Animation */
     .header {
-      text-align: center; padding: 2rem 0; border-bottom: 2px solid var(--accent-gold); margin-bottom: 2rem;
+      text-align: center; 
+      padding: 3rem 0; 
+      margin-bottom: 2rem;
+      animation: fadeInDown 0.8s ease-out;
     }
-    .header h1 { font-size: 2rem; color: var(--accent-gold); margin-bottom: 0.5rem; }
-    .header p { color: var(--text-secondary); }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .header h1 { 
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 2.8rem; 
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan), var(--accent-purple));
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientFlow 5s ease infinite;
+      margin-bottom: 0.5rem;
+    }
+    @keyframes gradientFlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .animated-subtitle {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      min-height: 2rem;
+    }
+    .header p { 
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+    
+    /* Search Box */
     .search-box {
-      background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 16px;
-      padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow);
+      background: var(--bg-card); 
+      border: 2px solid var(--border-color); 
+      border-radius: 20px;
+      padding: 2rem; 
+      margin-bottom: 2.5rem; 
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .search-box input {
-      width: 100%; padding: 1rem; border: 2px solid var(--border-color); border-radius: 12px;
-      font-size: 1rem; background: var(--bg-body); color: var(--text-primary); margin-bottom: 1rem;
-    }
-    .search-box input:focus { outline: none; border-color: var(--accent-gold); }
-    .search-btn {
-      width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
-      border: none; border-radius: 12px; font-weight: 700; color: #0a0a0f; cursor: pointer;
+      width: 100%; 
+      padding: 1.2rem; 
+      border: 2px solid var(--border-color); 
+      border-radius: 16px;
+      font-size: 1.1rem; 
+      background: var(--bg-body); 
+      color: var(--text-primary); 
+      margin-bottom: 1rem;
+      font-family: 'Inter', sans-serif;
       transition: all 0.3s;
     }
-    .search-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4); }
+    .search-box input:focus { 
+      outline: none; 
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.1);
+    }
+    .search-btn {
+      width: 100%; 
+      padding: 1.2rem; 
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+      border: none; 
+      border-radius: 16px; 
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; 
+      font-size: 1.1rem;
+      color: #0a0a0f; 
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .search-btn:hover { 
+      transform: translateY(-3px); 
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5); 
+    }
+    
+    /* Category Cards */
     .categories {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.75rem; margin-bottom: 2rem;
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem; 
+      margin-bottom: 2.5rem;
     }
-    .category-btn {
-      padding: 0.8rem; background: var(--bg-card); border: 2px solid var(--border-color);
-      border-radius: 12px; font-weight: 600; color: var(--text-primary); cursor: pointer;
-      transition: all 0.2s; text-align: center;
+    .category-card {
+      position: relative;
+      padding: 1.8rem 1.5rem; 
+      border-radius: 20px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid transparent;
+      color: white;
+      opacity: 0;
+      animation: staggerFadeIn 0.5s ease forwards;
     }
-    .category-btn:hover, .category-btn.active {
-      border-color: var(--accent-gold); background: rgba(255, 215, 0, 0.1);
+    .category-card:nth-child(1) { animation-delay: 0.1s; background: var(--gradient-wallet); }
+    .category-card:nth-child(2) { animation-delay: 0.2s; background: var(--gradient-scam); }
+    .category-card:nth-child(3) { animation-delay: 0.3s; background: var(--gradient-posts); }
+    .category-card:nth-child(4) { animation-delay: 0.4s; background: var(--gradient-tribunal); }
+    
+    @keyframes staggerFadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
+    
+    .category-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+    .category-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.8rem;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    .category-card:hover .icon {
+      animation: bounce 0.5s ease;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    .category-count {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0.9;
+      margin-top: 0.3rem;
+    }
+    
+    /* Response Area */
     .response-area {
-      background: var(--bg-card); border-radius: 16px; padding: 2rem;
-      box-shadow: var(--shadow); margin-bottom: 2rem; display: none;
+      background: var(--bg-card); 
+      border-radius: 20px; 
+      padding: 2.5rem;
+      box-shadow: var(--shadow); 
+      margin-bottom: 2.5rem; 
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+      border: 2px solid var(--border-color);
     }
-    .response-area.visible { display: block; animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .response-area.visible { display: block; }
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(10px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
     .response-header {
-      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
+      display: flex; 
+      align-items: center; 
+      gap: 1rem; 
+      margin-bottom: 1.5rem; 
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
     }
     .response-avatar {
-      width: 48px; height: 48px; border-radius: 50%;
+      width: 56px; 
+      height: 56px; 
+      border-radius: 50%;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
-      display: flex; align-items: center; justify-content: center; color: #0a0a0f; font-weight: 700;
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 2rem;
+      animation: pulse 2s ease-in-out infinite;
     }
-    .response-title { font-weight: 700; color: var(--accent-gold); }
-    .response-content { line-height: 1.7; color: var(--text-primary); }
-    .response-content a { color: var(--accent-cyan); text-decoration: none; }
-    .response-content a:hover { text-decoration: underline; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .response-title { 
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; 
+      font-size: 1.3rem;
+      color: var(--accent-gold); 
+    }
+    .response-content { 
+      line-height: 1.8; 
+      color: var(--text-primary);
+      font-size: 1.05rem;
+    }
+    .response-content a { 
+      color: var(--accent-cyan); 
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .response-content a:hover { 
+      text-decoration: underline; 
+    }
+    
+    /* Escalation */
     .escalation {
-      background: var(--bg-body); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;
+      background: var(--bg-body); 
+      border-radius: 16px; 
+      padding: 2rem; 
+      margin-top: 2rem;
       border-left: 4px solid var(--accent-purple);
     }
-    .escalation h4 { margin-bottom: 1rem; color: var(--accent-purple); }
-    .escalation-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .escalation h4 { 
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 1rem; 
+      color: var(--accent-purple);
+      font-size: 1.2rem;
+    }
+    .escalation-links { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 1rem; 
+      margin-top: 1rem;
+    }
     .escalation-btn {
-      padding: 0.6rem 1.2rem; border: none; border-radius: 8px; font-weight: 600;
-      cursor: pointer; transition: all 0.2s; font-size: 0.9rem;
+      flex: 1;
+      min-width: 200px;
+      padding: 1rem 1.5rem; 
+      border: 2px solid var(--border-color); 
+      border-radius: 12px; 
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer; 
+      transition: all 0.3s; 
+      font-size: 0.95rem;
+      background: var(--bg-card);
+      color: var(--text-primary);
     }
-    .escalation-btn.email { background: var(--bg-card); border: 2px solid var(--border-color); color: var(--text-primary); }
-    .escalation-btn.twitter { background: #000; color: white; }
-    .escalation-btn:hover { transform: translateY(-2px); }
+    .escalation-btn.twitter { 
+      background: #000; 
+      color: white;
+      border-color: #000;
+    }
+    .escalation-btn:hover { 
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* FAQ History */
     .faq-history {
-      background: var(--bg-card); border-radius: 16px; padding: 2rem;
+      background: var(--bg-card); 
+      border-radius: 20px; 
+      padding: 2.5rem;
       box-shadow: var(--shadow);
+      animation: fadeInUp 0.8s ease-out 0.4s both;
     }
-    .faq-history h3 { margin-bottom: 1rem; color: var(--accent-gold); }
+    .faq-history h3 { 
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 1.5rem; 
+      color: var(--accent-gold);
+      font-size: 1.5rem;
+    }
     .faq-item {
-      padding: 1rem; border-bottom: 1px solid var(--border-color);
+      padding: 1.5rem; 
+      border-bottom: 1px solid var(--border-color);
+      transition: all 0.3s;
+    }
+    .faq-item:hover {
+      background: var(--hover-bg);
+      border-radius: 12px;
     }
     .faq-item:last-child { border-bottom: none; }
-    .faq-question { font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; }
-    .faq-answer { color: var(--text-secondary); font-size: 0.95rem; }
+    .faq-question { 
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600; 
+      color: var(--text-primary); 
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .faq-answer { 
+      color: var(--text-secondary); 
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    /* Toast */
     .toast {
-      position: fixed; bottom: 30px; right: 30px; padding: 1rem 1.5rem;
-      background: var(--bg-card); border: 2px solid var(--success); border-radius: 12px;
-      color: var(--text-primary); font-weight: 600; z-index: 9999;
+      position: fixed; 
+      bottom: 30px; 
+      right: 30px; 
+      padding: 1.2rem 2rem;
+      background: var(--bg-card); 
+      border: 2px solid var(--success); 
+      border-radius: 16px;
+      color: var(--text-primary); 
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600; 
+      z-index: 9999;
       animation: toastIn 0.3s ease-out;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
     }
     .toast.error { border-color: var(--error); }
-    @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .sound-indicator {
-      position: fixed; bottom: 30px; left: 30px; padding: 0.5rem 1rem;
-      background: var(--bg-card); border-radius: 8px; font-size: 0.85rem;
-      color: var(--text-secondary); border: 1px solid var(--border-color);
+    @keyframes toastIn { 
+      from { transform: translateY(20px); opacity: 0; } 
+      to { transform: translateY(0); opacity: 1; } 
     }
-    @media (max-width: 600px) {
+    
+    /* Sound Indicator */
+    .sound-indicator {
+      position: fixed; 
+      bottom: 30px; 
+      left: 30px; 
+      padding: 0.8rem 1.2rem;
+      background: var(--bg-card); 
+      border-radius: 12px; 
+      font-size: 0.9rem;
+      color: var(--text-secondary); 
+      border: 2px solid var(--border-color);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+    }
+    
+    /* Settings Gear */
+    .settings-gear {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 56px;
+      height: 56px;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.8rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    .settings-gear:hover {
+      transform: rotate(30deg) scale(1.1);
+      border-color: var(--accent-gold);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+    
+    /* Background Modal */
+    .bg-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .bg-modal.active { display: flex; }
+    .bg-modal-content {
+      background: var(--bg-card);
+      border-radius: 24px;
+      padding: 2.5rem;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 2px solid var(--border-color);
+    }
+    .bg-modal-content h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--accent-gold);
+      text-align: center;
+    }
+    .bg-presets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .bg-preset {
+      aspect-ratio: 16/9;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 3px solid var(--border-color);
+      transition: all 0.3s;
+      background-size: cover;
+      background-position: center;
+    }
+    .bg-preset:hover {
+      transform: scale(1.05);
+      border-color: var(--accent-gold);
+    }
+    .bg-preset.active {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.3);
+    }
+    .bg-upload {
+      margin-top: 1.5rem;
+      padding: 2rem;
+      border: 2px dashed var(--border-color);
+      border-radius: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .bg-upload:hover {
+      border-color: var(--accent-gold);
+      background: var(--hover-bg);
+    }
+    .bg-upload input { display: none; }
+    .modal-close {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 1rem;
+      background: var(--bg-body);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .modal-close:hover {
+      background: var(--hover-bg);
+      transform: translateY(-2px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
       body { padding: 1rem; }
+      .header h1 { font-size: 2rem; }
+      .animated-subtitle { font-size: 1.1rem; }
       .categories { grid-template-columns: 1fr 1fr; }
       .escalation-links { flex-direction: column; }
       .escalation-btn { width: 100%; }
+      .back-btn, .theme-toggle {
+        width: 42px;
+        height: 42px;
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <h1>🤖 Tribunal Help Desk</h1>
-    <p>Ask anything. Get instant answers from the CryptoBros knowledge base.</p>
-  </div>
-  <div class="search-box">
-    <input type="text" id="helpInput" placeholder="Describe your issue (e.g., 'wallet not connecting', 'post disappeared')...">
-    <button class="search-btn" onclick="askHelp()">🔍 Ask Tribunal AI</button>
-  </div>
-  <div class="categories">
-    <button class="category-btn active" onclick="filterCategory('all')">All</button>
-    <button class="category-btn" onclick="filterCategory('wallet')">🔐 Wallet</button>
-    <button class="category-btn" onclick="filterCategory('scam')">🚨 Scam</button>
-    <button class="category-btn" onclick="filterCategory('posts')">📝 Posts</button>
-    <button class="category-btn" onclick="filterCategory('tribunal')">⚖️ Tribunal</button>
-  </div>
-  <div class="response-area" id="responseArea">
-    <div class="response-header">
-      <div class="response-avatar">🤖</div>
-      <div>
-        <div class="response-title">Tribunal AI Assistant</div>
-        <div style="font-size:0.85rem;color:var(--text-secondary)">Instant response</div>
+  <!-- Back Button -->
+  <a href="/" class="back-btn" title="Go Back">←</a>
+  
+  <!-- Theme Toggle -->
+  <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</div>
+  
+  <!-- Settings Gear -->
+  <div class="settings-gear" onclick="openBgModal()" title="Customize Background">⚙️</div>
+
+  <div class="container">
+    <div class="header">
+      <h1>🤖 Tribunal Help Desk</h1>
+      <div class="animated-subtitle" id="animatedSubtitle"></div>
+      <p>Ask anything. Get instant answers from the CryptoBros knowledge base.</p>
+    </div>
+    
+    <div class="search-box">
+      <input type="text" id="helpInput" placeholder="Describe your issue (e.g., 'wallet not connecting', 'post disappeared')...">
+      <button class="search-btn" onclick="askHelp()">🔍 Ask Tribunal AI</button>
+    </div>
+    
+    <div class="categories">
+      <div class="category-card" onclick="filterCategory('wallet')">
+        <span class="icon">🔐</span>
+        <div>Wallet</div>
+        <span class="category-count">12 questions</span>
+      </div>
+      <div class="category-card" onclick="filterCategory('scam')">
+        <span class="icon">🚨</span>
+        <div>Scam Alert</div>
+        <span class="category-count">8 questions</span>
+      </div>
+      <div class="category-card" onclick="filterCategory('posts')">
+        <span class="icon">📝</span>
+        <div>Posts & Feed</div>
+        <span class="category-count">15 questions</span>
+      </div>
+      <div class="category-card" onclick="filterCategory('tribunal')">
+        <span class="icon">⚖️</span>
+        <div>Tribunal AI</div>
+        <span class="category-count">10 questions</span>
       </div>
     </div>
-    <div class="response-content" id="responseContent"></div>
-    <div class="escalation">
-      <h4>Still need help?</h4>
-      <p style="color:var(--text-secondary);margin-bottom:1rem;font-size:0.95rem;">
-        Contact <strong>@MaxCaneCrypto</strong> directly for personalized assistance:
-      </p>
-      <div class="escalation-links">
-        <button class="escalation-btn email" onclick="escalate('email')">
-          ✉️ cryptobros.official10@gmail.com
-        </button>
-        <button class="escalation-btn twitter" onclick="escalate('twitter')">
-          🐦 DM on X (Direct Message)
-        </button>
+    
+    <div class="response-area" id="responseArea">
+      <div class="response-header">
+        <div class="response-avatar">🤖</div>
+        <div>
+          <div class="response-title">Tribunal AI Assistant</div>
+          <div style="font-size:0.9rem;color:var(--text-secondary)">● Online • Instant response</div>
+        </div>
       </div>
-      <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:0.75rem;">
-        💡 Responses within 24–48 hours. For urgent issues, use X/Twitter DM.
-      </p>
+      <div class="response-content" id="responseContent"></div>
+      <div class="escalation">
+        <h4>Still need help?</h4>
+        <p style="color:var(--text-secondary);margin-bottom:1.5rem;font-size:1rem;">
+          Contact <strong>@MaxCaneCrypto</strong> directly for personalized assistance:
+        </p>
+        <div class="escalation-links">
+          <button class="escalation-btn" onclick="escalate('email')">
+            ✉️ cryptobros.official10@gmail.com
+          </button>
+          <button class="escalation-btn twitter" onclick="escalate('twitter')">
+            🐦 DM on X (Direct Message)
+          </button>
+        </div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:1rem;">
+          💡 Responses within 24–48 hours. For urgent issues, use X/Twitter DM.
+        </p>
+      </div>
+    </div>
+    
+    <div class="faq-history">
+      <h3>📚 Recent Questions</h3>
+      <div id="faqList">
+        <p style="color:var(--text-secondary);text-align:center;">No questions yet. Be the first to ask!</p>
+      </div>
     </div>
   </div>
-  <div class="faq-history">
-    <h3>📚 Recent Questions</h3>
-    <div id="faqList">
-      <p style="color:var(--text-secondary);text-align:center;">No questions yet. Be the first to ask!</p>
+  
+  <div class="sound-indicator" id="soundIndicator">🔊 Sounds: ON</div>
+  
+  <!-- Background Modal -->
+  <div class="bg-modal" id="bgModal">
+    <div class="bg-modal-content">
+      <h3>🎨 Choose Background</h3>
+      <div class="bg-presets" id="bgPresets">
+        <div class="bg-preset" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)" onclick="setBg('gradient1')"></div>
+        <div class="bg-preset" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" onclick="setBg('gradient2')"></div>
+        <div class="bg-preset" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" onclick="setBg('gradient3')"></div>
+        <div class="bg-preset" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" onclick="setBg('gradient4')"></div>
+        <div class="bg-preset" style="background-image: url('bg3.jpg'); background-size: cover;" onclick="setBg('bg3.jpg')" title="Default bg3.jpg"></div>
+      </div>
+      <div class="bg-upload" onclick="document.getElementById('bgFileInput').click()">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem">📁</div>
+        <div style="font-family:'Poppins',sans-serif;font-weight:600">Upload Custom Background</div>
+        <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.3rem">Click to upload your image</div>
+        <input type="file" id="bgFileInput" accept="image/*" onchange="uploadBg(event)">
+      </div>
+      <button class="modal-close" onclick="closeBgModal()">Close</button>
     </div>
   </div>
-</div>
-<div class="sound-indicator" id="soundIndicator">🔊 Sounds: ON</div>
 
 <script>
-  // === HELP DESK SYSTEM (NO SERVER) ===
+  // === ANIMATED SUBTITLE ===
+  const subtitles = [
+    "How can we help you?",
+    "Ask anything...",
+    "Get instant answers...",
+    "We're here to help!"
+  ];
+  let subIndex = 0;
+  function animateSubtitle() {
+    const el = document.getElementById('animatedSubtitle');
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.textContent = subtitles[subIndex];
+      el.style.transition = 'opacity 0.5s';
+      el.style.opacity = '1';
+      subIndex = (subIndex + 1) % subtitles.length;
+    }, 500);
+  }
+  setInterval(animateSubtitle, 3500);
+  animateSubtitle();
 
+  // === THEME TOGGLE ===
+  function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    localStorage.setItem('darkTheme', isDark);
+    document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
+  }
+  
+  // Load saved theme
+  if (localStorage.getItem('darkTheme') === 'true') {
+    document.body.classList.add('dark-theme');
+    document.querySelector('.theme-toggle').textContent = '☀️';
+  }
+
+  // === BACKGROUND SETTINGS ===
+  function openBgModal() {
+    document.getElementById('bgModal').classList.add('active');
+    const currentBg = localStorage.getItem('customBg') || 'bg3.jpg';
+    document.querySelectorAll('.bg-preset').forEach((preset, index) => {
+      preset.classList.remove('active');
+      if (index === 4 && currentBg === 'bg3.jpg') preset.classList.add('active');
+    });
+  }
+  
+  function closeBgModal() {
+    document.getElementById('bgModal').classList.remove('active');
+  }
+  
+  function setBg(type) {
+    const gradients = {
+      'gradient1': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'gradient2': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'gradient3': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'gradient4': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+    };
+    
+    if (gradients[type]) {
+      document.body.style.backgroundImage = gradients[type];
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+      localStorage.setItem('customBg', type);
+    } else if (type === 'bg3.jpg') {
+      document.body.style.backgroundImage = "url('bg3.jpg')";
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+      localStorage.setItem('customBg', 'bg3.jpg');
+    }
+    
+    document.querySelectorAll('.bg-preset').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    showToast('Background updated!', 'success');
+  }
+  
+  function uploadBg(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.body.style.backgroundImage = `url(${e.target.result})`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundAttachment = 'fixed';
+        localStorage.setItem('customBg', e.target.result);
+        showToast('Custom background set!', 'success');
+        closeBgModal();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  // Load saved background
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedBg = localStorage.getItem('customBg');
+    if (savedBg) {
+      if (savedBg.startsWith('data:image')) {
+        document.body.style.backgroundImage = `url(${savedBg})`;
+      } else if (savedBg.startsWith('gradient')) {
+        const gradients = {
+          'gradient1': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          'gradient2': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+          'gradient3': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+          'gradient4': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+        };
+        document.body.style.backgroundImage = gradients[savedBg];
+      } else {
+        document.body.style.backgroundImage = "url('bg3.jpg')";
+      }
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+    }
+  });
+
+  // === HELP DESK SYSTEM ===
   const KNOWLEDGE_BASE = {
     wallet: {
       keywords: ['wallet', 'phantom', 'connect', 'sign', 'extension', 'metamask'],
@@ -328,7 +915,7 @@
     responseContent.innerHTML = `
       <strong>🤖 AI Response:</strong><br><br>
       ${result.answer}
-      ${therapistMode && result.therapist ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--border-color);font-style:italic;color:var(--text-secondary)">${result.therapist}</div>` : ''}
+      ${therapistMode && result.therapist ? `<div style="margin-top:1.5rem;padding:1.5rem;background:var(--bg-body);border-radius:12px;border-left:4px solid var(--accent-purple);font-style:italic;color:var(--text-secondary)">${result.therapist}</div>` : ''}
     `;
 
     saveToHistory(question, result.answer, result.category);
@@ -337,15 +924,12 @@
   }
 
   function filterCategory(category) {
-    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-    const btn = event.target;
-    if (btn) btn.classList.add('active');
-
     const input = document.getElementById('helpInput');
     if (category !== 'all') {
       const example = Object.entries(KNOWLEDGE_BASE).find(([k]) => k === category)?.[1]?.keywords?.[0] || '';
       input.placeholder = `Try asking about ${example}...`;
       input.focus();
+      input.value = '';
     } else {
       input.placeholder = "Describe your issue (e.g., 'wallet not connecting', 'post disappeared')...";
     }
@@ -404,7 +988,12 @@
       }
     });
 
-    console.log('Help Desk initialized');
+    console.log('✨ Help Desk initialized with upgrades!');
+  });
+  
+  // Close modal on outside click
+  document.getElementById('bgModal').addEventListener('click', function(e) {
+    if (e.target === this) closeBgModal();
   });
 </script>
 </body>
