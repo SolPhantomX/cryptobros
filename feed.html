@@ -9,24 +9,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="feed.css">
 
-<!-- Shimmer only for text, no background shimmer -->
+<!-- Only text shimmers, gear button shimmers too -->
 <style>
 .shimmer-text {
     background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700);
     background-size: 400% 400%;
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+    color: transparent !important;
     animation: shimmerCycle 5s linear infinite;
     font-weight: 700;
     display: block;
     text-align: center;
 }
-.feed-bg-btn {
-    background: var(--bg-card); /* no shimmer on button */
-    color: var(--text-primary);
-    border: 2px solid var(--border-color);
+
+/* Gear button - color gradient shimmer */
+#feedBgBtn {
+    background: linear-gradient(135deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d) !important;
+    background-size: 400% 400% !important;
+    animation: shimmerCycle 5s linear infinite !important;
+    color: #0a0a0f !important;
+    border: 2px solid transparent !important;
+    transition: none !important;
 }
+
 @keyframes shimmerCycle {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
