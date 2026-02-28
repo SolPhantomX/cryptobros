@@ -1,161 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CryptoBros Feed</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="feed.css">
-
-<!-- Мерцание для всех нужных элементов -->
-<style>
-.shimmer-text, .shimmer-bg {
-    background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700);
-    background-size: 400% 400%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shimmerCycle 5s linear infinite;
-    font-weight: 700;
-}
-.shimmer-bg {
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    color: var(--text-secondary); /* для читаемости текста */
-    border-radius: 12px;
-    padding: 1rem;
-    margin: 1rem auto;
-    max-width: 90%;
-    text-align: center;
-    border: 2px solid transparent;
-    animation: shimmerCycle 5s linear infinite;
-}
-.feed-bg-btn.shimmer-btn {
-    background: linear-gradient(135deg, #FFD700, #00F0FF, #9D00FF);
-    background-size: 400%;
-    animation: shimmerCycle 5s linear infinite;
-    border: none;
-    color: #0a0a0f;
-}
-@keyframes shimmerCycle {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoBros Help Desk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #f8f9fa; --bg-card: #ffffff; --text-primary: #212529;
+      --text-secondary: #6c757d; --border-color: #e9ecef; --shadow: 0 4px 12px rgba(0,0,0,0.05);
+      --accent-gold: #FFD700; --accent-cyan: #00F0FF; --accent-purple: #9D00FF;
+      --hover-bg: #f1f3f5; --success: #00ff9d; --warning: #ffd700; --error: #ff4d4d;
+    }
+    .dark-theme {
+      --bg-body: #121212; --bg-card: #1e1e1e; --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0; --border-color: #333333; --shadow: 0 4px 12px rgba(0,0,0,0.3);
+      --hover-bg: #2a2a2a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-primary);
+      min-height: 100vh; transition: background 0.3s ease; padding: 2rem;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    .header {
+      text-align: center; padding: 2rem 0; border-bottom: 2px solid var(--accent-gold); margin-bottom: 2rem;
+    }
+    .header h1 { font-size: 2rem; color: var(--accent-gold); margin-bottom: 0.5rem; }
+    .header p { color: var(--text-secondary); }
+    .search-box {
+      background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 16px;
+      padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow);
+    }
+    .search-box input {
+      width: 100%; padding: 1rem; border: 2px solid var(--border-color); border-radius: 12px;
+      font-size: 1rem; background: var(--bg-body); color: var(--text-primary); margin-bottom: 1rem;
+    }
+    .search-box input:focus { outline: none; border-color: var(--accent-gold); }
+    .search-btn {
+      width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+      border: none; border-radius: 12px; font-weight: 700; color: #0a0a0f; cursor: pointer;
+      transition: all 0.3s;
+    }
+    .search-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4); }
+    .categories {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem; margin-bottom: 2rem;
+    }
+    .category-btn {
+      padding: 0.8rem; background: var(--bg-card); border: 2px solid var(--border-color);
+      border-radius: 12px; font-weight: 600; color: var(--text-primary); cursor: pointer;
+      transition: all 0.2s; text-align: center;
+    }
+    .category-btn:hover, .category-btn.active {
+      border-color: var(--accent-gold); background: rgba(255, 215, 0, 0.1);
+    }
+    .response-area {
+      background: var(--bg-card); border-radius: 16px; padding: 2rem;
+      box-shadow: var(--shadow); margin-bottom: 2rem; display: none;
+    }
+    .response-area.visible { display: block; animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .response-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .response-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      display: flex; align-items: center; justify-content: center; color: #0a0a0f; font-weight: 700;
+    }
+    .response-title { font-weight: 700; color: var(--accent-gold); }
+    .response-content { line-height: 1.7; color: var(--text-primary); }
+    .response-content a { color: var(--accent-cyan); text-decoration: none; }
+    .response-content a:hover { text-decoration: underline; }
+    .escalation {
+      background: var(--bg-body); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;
+      border-left: 4px solid var(--accent-purple);
+    }
+    .escalation h4 { margin-bottom: 1rem; color: var(--accent-purple); }
+    .escalation-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .escalation-btn {
+      padding: 0.6rem 1.2rem; border: none; border-radius: 8px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; font-size: 0.9rem;
+    }
+    .escalation-btn.email { background: var(--bg-card); border: 2px solid var(--border-color); color: var(--text-primary); }
+    .escalation-btn.twitter { background: #000; color: white; }
+    .escalation-btn:hover { transform: translateY(-2px); }
+    .faq-history {
+      background: var(--bg-card); border-radius: 16px; padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+    .faq-history h3 { margin-bottom: 1rem; color: var(--accent-gold); }
+    .faq-item {
+      padding: 1rem; border-bottom: 1px solid var(--border-color);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-question { font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; }
+    .faq-answer { color: var(--text-secondary); font-size: 0.95rem; }
+    .toast {
+      position: fixed; bottom: 30px; right: 30px; padding: 1rem 1.5rem;
+      background: var(--bg-card); border: 2px solid var(--success); border-radius: 12px;
+      color: var(--text-primary); font-weight: 600; z-index: 9999;
+      animation: toastIn 0.3s ease-out;
+    }
+    .toast.error { border-color: var(--error); }
+    @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .sound-indicator {
+      position: fixed; bottom: 30px; left: 30px; padding: 0.5rem 1rem;
+      background: var(--bg-card); border-radius: 8px; font-size: 0.85rem;
+      color: var(--text-secondary); border: 1px solid var(--border-color);
+    }
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .categories { grid-template-columns: 1fr 1fr; }
+      .escalation-links { flex-direction: column; }
+      .escalation-btn { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-<div class="layout">
-<aside>
-<a href="profile.html" class="sidebar-user">
-<div class="sidebar-user-content">
-<div class="avatar avatar-base" id="sidebarAvatar">C</div>
-<div class="user-info">
-<h3 id="sidebarUsername">@cryptobros</h3>
-<p>CHAIRMAN OF THE TRIBUNAL</p>
+<div class="container">
+  <div class="header">
+    <h1>🤖 Tribunal Help Desk</h1>
+    <p>Ask anything. Get instant answers from the CryptoBros knowledge base.</p>
+  </div>
+  <div class="search-box">
+    <input type="text" id="helpInput" placeholder="Describe your issue (e.g., 'wallet not connecting', 'post disappeared')...">
+    <button class="search-btn" onclick="askHelp()">🔍 Ask Tribunal AI</button>
+  </div>
+  <div class="categories">
+    <button class="category-btn active" onclick="filterCategory('all')">All</button>
+    <button class="category-btn" onclick="filterCategory('wallet')">🔐 Wallet</button>
+    <button class="category-btn" onclick="filterCategory('scam')">🚨 Scam</button>
+    <button class="category-btn" onclick="filterCategory('posts')">📝 Posts</button>
+    <button class="category-btn" onclick="filterCategory('tribunal')">⚖️ Tribunal</button>
+  </div>
+  <div class="response-area" id="responseArea">
+    <div class="response-header">
+      <div class="response-avatar">🤖</div>
+      <div>
+        <div class="response-title">Tribunal AI Assistant</div>
+        <div style="font-size:0.85rem;color:var(--text-secondary)">Instant response</div>
+      </div>
+    </div>
+    <div class="response-content" id="responseContent"></div>
+    <div class="escalation">
+      <h4>Still need help?</h4>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;font-size:0.95rem;">
+        Contact <strong>@MaxCaneCrypto</strong> directly for personalized assistance:
+      </p>
+      <div class="escalation-links">
+        <button class="escalation-btn email" onclick="escalate('email')">
+          ✉️ cryptobros.official10@gmail.com
+        </button>
+        <button class="escalation-btn twitter" onclick="escalate('twitter')">
+          🐦 DM on X (Direct Message)
+        </button>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:0.75rem;">
+        💡 Responses within 24–48 hours. For urgent issues, use X/Twitter DM.
+      </p>
+    </div>
+  </div>
+  <div class="faq-history">
+    <h3>📚 Recent Questions</h3>
+    <div id="faqList">
+      <p style="color:var(--text-secondary);text-align:center;">No questions yet. Be the first to ask!</p>
+    </div>
+  </div>
 </div>
-</div>
-</a>
-<div class="sidebar-menu">
-<a href="feed.html" class="menu-item active">📰 News Feed</a>
-<a href="messages.html" class="menu-item">💬 Messages</a>
-<a href="groups.html" class="menu-item">👥 My Groups</a>
-<a href="profile.html" class="menu-item">⚙️ Settings</a>
-<a href="tribunal.html" class="menu-item">💡 Tribunal</a>
-<a href="help.html" class="menu-item">🆘 Help Desk</a>
-<a href="payment.html" class="menu-item">💰 AUS Token</a>
-</div>
-</aside>
-<main>
-<div class="top-bar">
-<a href="profile.html" class="back-btn">← Back to Profile</a>
-<div class="theme-toggle" id="themeToggle">🌙</div>
-</div>
-<div class="search-container" id="searchContainer">
-<div class="search-wrapper">
-<span class="search-icon">🔍</span>
-<input type="text" id="globalSearchInput" placeholder="Search posts, #hashtags, $tokens..." autocomplete="off">
-<button class="search-clear" id="searchClearBtn" style="display:none;">✕</button>
-</div>
-<div class="search-results" id="searchResultsBox" style="display:none;"></div>
-</div>
-<div class="create-post">
-<div style="display: flex; gap: 1rem; align-items: flex-start;">
-<div class="create-avatar avatar-base" id="createAvatar">C</div>
-<div style="flex: 1;">
-<textarea class="create-input" id="postInput" placeholder="What's on your mind? (max 2000 chars)" maxlength="2000" rows="4"></textarea>
-<div class="create-actions">
-<span id="charCount">0 / 2000</span>
-<button class="btn-post" id="btnPost" onclick="createPost()">📝 Post</button>
-</div>
-</div>
-</div>
-</div>
-<div class="pinned-auctions">
-<h2>Auction Winners 🏆</h2>
-<div id="pinnedPostsContainer" class="shimmer-bg">
-    <p class="shimmer-text" style="animation-delay:0s;">No auction winners yet</p>
-    <p class="shimmer-text" style="animation-delay:1.7s;">Be the first degen to share alpha!</p>
-    <p class="shimmer-text" style="animation-delay:3.4s;">Mock mode</p>
-</div>
-</div>
-<div id="feedPosts" class="shimmer-bg">
-    <h3 class="shimmer-text" style="animation-delay:0.5s;">No posts yet</h3>
-    <p class="shimmer-text" style="animation-delay:2.2s;">Be the first degen to share alpha!</p>
-    <p class="shimmer-text" style="animation-delay:3.9s;">Mock mode</p>
-</div>
-</main>
-<div class="right-sidebar">
-<div class="trends-card">
-<div class="trends-title">🔥 Hot Topics</div>
-<div class="trend-item"><div class="trend-name">#WIF Pump</div><div class="trend-count" id="trend1">2.1k <span class="trend-indicator trend-neutral">●</span></div></div>
-<div class="trend-item"><div class="trend-name">#SOL Buy</div><div class="trend-count" id="trend2">1.8k <span class="trend-indicator trend-neutral">●</span></div></div>
-<div class="trend-item"><div class="trend-name">#TribunalVote</div><div class="trend-count" id="trend3">942 <span class="trend-indicator trend-neutral">●</span></div></div>
-</div>
-<div class="trends-card">
-<div class="trends-title">Your Wallet</div>
-<div style="font-weight: 600; color: var(--accent-gold); margin: 0.8rem 0;">0.00 SOL</div>
-<div style="color: var(--text-secondary); font-size: 0.95rem;">AUS: pending launch</div>
-<button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='wallet-connect.html'">Connect Phantom</button>
-</div>
-</div>
-</div>
-<button id="feedBgBtn" class="feed-bg-btn shimmer-btn" title="Change Feed Background">⚙️</button>
-<div id="feedBgModal" class="feed-bg-modal">
-<div class="feed-bg-modal-content">
-<h3>Customize Feed</h3>
-<div class="text-color-section">
-<h4>Text Color</h4>
-<div class="color-buttons">
-<button class="color-btn" style="background:#ffd700;" onclick="setTextColor('#ffd700')"></button>
-<button class="color-btn" style="background:#00f0ff;" onclick="setTextColor('#00f0ff')"></button>
-<button class="color-btn" style="background:#9d00ff;" onclick="setTextColor('#9d00ff')"></button>
-<button class="color-btn" style="background:#ff4d4d;" onclick="setTextColor('#ff4d4d')"></button>
-<button class="color-btn" style="background:#ffffff;border:2px solid #000;" onclick="setTextColor('#ffffff')"></button>
-</div>
-</div>
-<div class="bg-presets-grid" id="bgPresetsGrid"></div>
-<div class="bg-upload-section">
-<label for="feedBgUpload" class="bg-upload-label">Upload Custom Background</label>
-<input type="file" id="feedBgUpload" accept="image/*" class="bg-upload-input">
-</div>
-<div class="bg-actions">
-<button onclick="resetCustomColors()" class="btn-reset">Reset All Colors</button>
-<button onclick="closeFeedBgModal()" class="btn-close-modal">Close</button>
-</div>
-</div>
-</div>
+<div class="sound-indicator" id="soundIndicator">🔊 Sounds: ON</div>
 
-<script src="feed-config.js"></script>
-<script src="feed-utils.js"></script>
-<script src="feed-sentinel.js"></script>
-<script src="feed-background.js"></script>
-<script src="feed-trends.js"></script>
-<script src="feed-search.js"></script>
-<script src="feed-ui.js"></script>
-<script src="feed-main.js"></script>
+<script>
+  // === HELP DESK SYSTEM (NO SERVER) ===
 
+  const KNOWLEDGE_BASE = {
+    wallet: {
+      keywords: ['wallet', 'phantom', 'connect', 'sign', 'extension', 'metamask'],
+      answer: `To connect your wallet:<br>
+        1. Install <a href="https://phantom.app" target="_blank">Phantom</a> or MetaMask extension<br>
+        2. Refresh the CryptoBros page<br>
+        3. Click "Connect Wallet" in the sidebar<br>
+        4. Approve the connection in your wallet<br><br>
+        <strong>Still stuck?</strong> Try clearing browser cache or using Chrome/Brave.`,
+      therapist: `Wallet issues can be frustrating. Take a deep breath — we'll get this sorted. 💙`
+    },
+    scam: {
+      keywords: ['scam', 'rug', 'honeypot', 'lost', 'stolen', 'fake', 'fraud'],
+      answer: `If you suspect a scam:<br>
+        1. ⚠️ <strong>DO NOT</strong> send more funds or sign transactions<br>
+        2. Check the token on <a href="tribunal.html">AI Tribunal</a> for risk analysis<br>
+        3. Report suspicious activity in the Feed with #ScamAlert<br>
+        4. Revoke token approvals at <a href="https://revoke.cash" target="_blank">revoke.cash</a><br><br>
+        <strong>Remember:</strong> Never share your seed phrase. Ever.`,
+      therapist: `I'm sorry this happened. Losing funds hurts. But you're not alone — our community has your back. 🤝`
+    },
+    posts: {
+      keywords: ['post', 'delete', 'edit', 'disappeared', 'feed', 'comment'],
+      answer: `To manage your content:<br>
+        • <strong>Delete post:</strong> Go to Feed → find your post → click 🗑️<br>
+        • <strong>Edit:</strong> Not available yet (coming soon)<br>
+        • <strong>Comment disappeared:</strong> Comments are stored locally; clearing cache removes them<br>
+        • <strong>Post not visible:</strong> Check if it was flagged by Sentinel AI (risk review)<br><br>
+        <strong>Note:</strong> All data is stored in your browser (localStorage) for now.`,
+      therapist: `Missing content? That's annoying. Let's make sure your voice is heard next time. ✨`
+    },
+    tribunal: {
+      keywords: ['tribunal', 'analysis', 'token', 'risk', 'verdict', 'scan'],
+      answer: `How AI Tribunal works:<br>
+        1. Enter a token address or search by name<br>
+        2. Our AI agents analyze: contract patterns, liquidity, holder distribution<br>
+        3. You get a verdict: TRUST / WATCH / AVOID / BAN<br>
+        4. Premium users see detailed risk factors<br><br>
+        <strong>Disclaimer:</strong> Tribunal provides analysis, not financial advice. Always DYOR.`,
+      therapist: `Analyzing tokens can feel overwhelming. The Tribunal is here to help you make informed decisions. 🧠`
+    },
+    other: {
+      keywords: [],
+      answer: `I couldn't find an exact match for your question.<br><br>
+        Try these:<br>
+        • <a href="feed.html">Ask in the Feed</a> — community might help<br>
+        • <a href="tribunal.html">Analyze a token</a> — if that's your issue<br>
+        • <strong>Contact admin directly</strong> using the buttons below<br><br>
+        <em>Pro tip:</em> Be specific in your question for better answers!`,
+      therapist: `Sometimes questions are unique. That's okay — let's find the right path together. 🗺️`
+    }
+  };
+
+  // === SOUND SYSTEM ===
+  const HelpSounds = {
+    success: null,
+    error: null,
+    isMuted: false,
+
+    init() {
+      this.isMuted = localStorage.getItem('muteAllSounds') === 'true';
+      this.success = new Audio('sounds/coins.mp3');
+      this.error = new Audio('sounds/gavel.mp3');
+      [this.success, this.error].forEach(s => {
+        if (s) {
+          s.volume = 0.4;
+          s.preload = 'auto';
+          s.onerror = () => console.warn('Sound file not found');
+        }
+      });
+      this.updateIndicator();
+    },
+
+    play(type) {
+      if (this.isMuted) return;
+      const sound = this[type];
+      if (sound && sound.play) {
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+      }
+    },
+
+    updateIndicator() {
+      const el = document.getElementById('soundIndicator');
+      if (el) el.textContent = `🔊 Sounds: ${this.isMuted ? 'OFF' : 'ON'}`;
+    }
+  };
+
+  function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+
+  function findAnswer(question) {
+    const q = question.toLowerCase().trim();
+    for (const [category, data] of Object.entries(KNOWLEDGE_BASE)) {
+      if (data.keywords.some(k => q.includes(k))) {
+        return { ...data, category };
+      }
+    }
+    return { ...KNOWLEDGE_BASE.other, category: 'other' };
+  }
+
+  function saveToHistory(question, answer, category) {
+    const history = JSON.parse(localStorage.getItem('helpHistory')) || [];
+    history.unshift({
+      question: escapeHTML(question),
+      answer: answer.replace(/<br>/g, ' '),
+      category,
+      timestamp: Date.now()
+    });
+    localStorage.setItem('helpHistory', JSON.stringify(history.slice(0, 20)));
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const list = document.getElementById('faqList');
+    const history = JSON.parse(localStorage.getItem('helpHistory')) || [];
+    if (!history.length) {
+      list.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">No questions yet. Be the first to ask!</p>';
+      return;
+    }
+    list.innerHTML = history.map(item => `
+      <div class="faq-item">
+        <div class="faq-question">❓ ${item.question}</div>
+        <div class="faq-answer">💡 ${item.answer.substring(0, 120)}${item.answer.length > 120 ? '...' : ''}</div>
+      </div>
+    `).join('');
+  }
+
+  async function askHelp() {
+    const input = document.getElementById('helpInput');
+    const responseArea = document.getElementById('responseArea');
+    const responseContent = document.getElementById('responseContent');
+    const question = input.value.trim();
+
+    if (!question) {
+      showToast('Please describe your issue first', 'error');
+      HelpSounds.play('error');
+      return;
+    }
+
+    responseArea.classList.add('visible');
+    responseContent.innerHTML = '<div style="color:var(--text-secondary);animation:pulse 1s infinite">🤖 Tribunal thinking...</div>';
+
+    await new Promise(r => setTimeout(r, 600));
+
+    const result = findAnswer(question);
+    const therapistMode = /\b(sad|frustrated|angry|lost|help|please)\b/i.test(question);
+
+    responseContent.innerHTML = `
+      <strong>🤖 AI Response:</strong><br><br>
+      ${result.answer}
+      ${therapistMode && result.therapist ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--border-color);font-style:italic;color:var(--text-secondary)">${result.therapist}</div>` : ''}
+    `;
+
+    saveToHistory(question, result.answer, result.category);
+    HelpSounds.play(result.category === 'scam' ? 'error' : 'success');
+    input.value = '';
+  }
+
+  function filterCategory(category) {
+    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+    const btn = event.target;
+    if (btn) btn.classList.add('active');
+
+    const input = document.getElementById('helpInput');
+    if (category !== 'all') {
+      const example = Object.entries(KNOWLEDGE_BASE).find(([k]) => k === category)?.[1]?.keywords?.[0] || '';
+      input.placeholder = `Try asking about ${example}...`;
+      input.focus();
+    } else {
+      input.placeholder = "Describe your issue (e.g., 'wallet not connecting', 'post disappeared')...";
+    }
+  }
+
+  function escalate(channel) {
+    const question = document.getElementById('helpInput').value || 'General help request';
+
+    const actions = {
+      email: () => {
+        const subject = encodeURIComponent('CryptoBros Help Request');
+        const body = encodeURIComponent(`Issue: ${question}\n\nSent from Help Desk at ${window.location.href}`);
+        window.location.href = `mailto:cryptobros.official10@gmail.com?subject=${subject}&body=${body}`;
+        showToast('Opening email client...', 'success');
+        HelpSounds.play('success');
+      },
+      twitter: () => {
+        const twitterId = '1766064671757107200';
+        const encodedMsg = encodeURIComponent(`@MaxCaneCrypto Help: ${question}`);
+        window.open(`https://twitter.com/messages/compose?recipient_id=${twitterId}&text=${encodedMsg}`, '_blank');
+        showToast('Opening X/Twitter DM...', 'success');
+        HelpSounds.play('success');
+      }
+    };
+
+    if (actions[channel]) actions[channel]();
+  }
+
+  function showToast(msg, type = 'success') {
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  document.getElementById('helpInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') askHelp();
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('sent') === '1') {
+      showToast('✅ Your message was sent successfully!', 'success');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    HelpSounds.init();
+    renderHistory();
+
+    window.addEventListener('storage', e => {
+      if (e.key === 'muteAllSounds') {
+        HelpSounds.isMuted = e.newValue === 'true';
+        HelpSounds.updateIndicator();
+      }
+    });
+
+    console.log('Help Desk initialized');
+  });
+</script>
 </body>
 </html>
