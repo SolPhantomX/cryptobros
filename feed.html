@@ -9,22 +9,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="feed.css">
 
-<!-- Мерцание каждой строки отдельно -->
+<!-- Мерцание для всех нужных элементов -->
 <style>
-.shimmer-text {
+.shimmer-text, .shimmer-bg {
     background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700);
-    background-size: 400%;
+    background-size: 400% 400%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     animation: shimmerCycle 5s linear infinite;
     font-weight: 700;
-    display: block;
+}
+.shimmer-bg {
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    color: var(--text-secondary); /* для читаемости текста */
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 1rem auto;
+    max-width: 90%;
     text-align: center;
+    border: 2px solid transparent;
+    animation: shimmerCycle 5s linear infinite;
+}
+.feed-bg-btn.shimmer-btn {
+    background: linear-gradient(135deg, #FFD700, #00F0FF, #9D00FF);
+    background-size: 400%;
+    animation: shimmerCycle 5s linear infinite;
+    border: none;
+    color: #0a0a0f;
 }
 @keyframes shimmerCycle {
     0% { background-position: 0% 50%; }
-    100% { background-position: 400% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 </style>
 </head>
@@ -77,14 +95,16 @@
 </div>
 <div class="pinned-auctions">
 <h2>Auction Winners 🏆</h2>
-<div id="pinnedPostsContainer"></div>
+<div id="pinnedPostsContainer" class="shimmer-bg">
+    <p class="shimmer-text" style="animation-delay:0s;">No auction winners yet</p>
+    <p class="shimmer-text" style="animation-delay:1.7s;">Be the first degen to share alpha!</p>
+    <p class="shimmer-text" style="animation-delay:3.4s;">Mock mode</p>
 </div>
-<div id="feedPosts">
-<div style="text-align:center;padding:3rem;color:var(--text-secondary)">
-<h3 class="shimmer-text" style="animation-delay:0s;">No posts yet</h3>
-<p class="shimmer-text" style="animation-delay:1.7s;">Be the first degen to share alpha!</p>
-<p class="shimmer-text" style="animation-delay:3.4s;margin-top:1rem;font-size:0.85rem;opacity:0.7;">Mock mode</p>
 </div>
+<div id="feedPosts" class="shimmer-bg">
+    <h3 class="shimmer-text" style="animation-delay:0.5s;">No posts yet</h3>
+    <p class="shimmer-text" style="animation-delay:2.2s;">Be the first degen to share alpha!</p>
+    <p class="shimmer-text" style="animation-delay:3.9s;">Mock mode</p>
 </div>
 </main>
 <div class="right-sidebar">
@@ -102,7 +122,7 @@
 </div>
 </div>
 </div>
-<button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">⚙️</button>
+<button id="feedBgBtn" class="feed-bg-btn shimmer-btn" title="Change Feed Background">⚙️</button>
 <div id="feedBgModal" class="feed-bg-modal">
 <div class="feed-bg-modal-content">
 <h3>Customize Feed</h3>
