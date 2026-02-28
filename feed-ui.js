@@ -93,7 +93,12 @@ function loadPosts() {
                 </div>
                 <div class="post-actions">
                     <div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id},this)">
-                        <span style="font-size:1.2rem">💛</span><span class="count">${post.likes||0}</span>
+                        <span class="logo-icon">${post.likedByMe ? 
+                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="24" height="24"><circle cx="30" cy="40" r="25" fill="#0000FF"/><circle cx="70" cy="40" r="25" fill="#0000FF"/><circle cx="50" cy="20" r="22" fill="#0000FF"/><circle cx="50" cy="90" r="18" fill="#0000FF"/></svg>' 
+                            : 
+                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="24" height="24"><circle cx="30" cy="40" r="25" fill="none" stroke="#0000FF" stroke-width="3"/><circle cx="70" cy="40" r="25" fill="none" stroke="#0000FF" stroke-width="3"/><circle cx="50" cy="20" r="22" fill="none" stroke="#0000FF" stroke-width="3"/><circle cx="50" cy="90" r="18" fill="none" stroke="#0000FF" stroke-width="3"/></svg>'
+                        }</span>
+                        <span class="count">${post.likes||0}</span>
                     </div>
                     <div class="action-btn" onclick="toggleComments(${post.id})">
                         <span style="font-size:1.2rem">💬</span><span class="count">${post.comments?.length||0}</span>
@@ -169,6 +174,7 @@ function toggleLike(id, btn) {
     else { post.likes++; post.likedByMe = true; btn.classList.add('liked'); }
     btn.querySelector('.count').textContent = post.likes;
     safeSetItem('feedPosts', posts);
+    loadPosts();
 }
 
 function toggleRepost(id, btn) {
