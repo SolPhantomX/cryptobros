@@ -96,7 +96,7 @@ function loadPosts() {
                         <img 
                             src="/logoAUS1.png" 
                             alt="AUS Like" 
-                            class="aus-like-icon ${post.likes > 0 ? 'filled glow-active' : 'outline'}"
+                            class="aus-like-icon ${post.likes > 0 ? 'filled' : 'outline'} ${post.likes > 0 ? 'glow-active' : ''}"
                             width="24" 
                             height="24"
                         >
@@ -173,8 +173,10 @@ function toggleLike(id, btn) {
     const post = posts.find(p => p.id === id);
     if (!post) return;
 
-    if (post.likedByMe) {
-        post.likes--;
+    const wasLiked = post.likedByMe;
+
+    if (wasLiked) {
+        post.likes = Math.max(0, post.likes - 1);
         post.likedByMe = false;
         btn.classList.remove('liked');
     } else {
@@ -185,12 +187,16 @@ function toggleLike(id, btn) {
 
     btn.querySelector('.count').textContent = post.likes;
 
-    // Trigger glow only on first like
     const icon = btn.querySelector('.aus-like-icon');
-    if (post.likes === 1 && icon) {
-        icon.classList.add('glow-active');
-    } else if (post.likes === 0 && icon) {
-        icon.classList.remove('glow-active');
+    if (icon) {
+        if (post.likes > 0) {
+            icon.classList.add('filled');
+            if (!wasLiked && post.likes === 1) {
+                icon.classList.add('glow-active');
+            }
+        } else {
+            icon.classList.remove('filled', 'glow-active');
+        }
     }
 
     safeSetItem('feedPosts', posts);
