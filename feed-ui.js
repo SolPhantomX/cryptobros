@@ -92,13 +92,15 @@ function loadPosts() {
                     ${commentsHTML}
                 </div>
                 <div class="post-actions">
-                    <div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id},this)">
-                        <span class="logo-icon">${post.likedByMe ? 
-                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" width="24" height="24"><circle cx="25" cy="45" r="22" fill="#0047FF"/><circle cx="75" cy="45" r="22" fill="#0047FF"/><circle cx="50" cy="25" r="20" fill="#0047FF"/><circle cx="50" cy="85" r="16" fill="#0047FF"/></svg>' 
-                            : 
-                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" width="24" height="24"><circle cx="25" cy="45" r="22" fill="none" stroke="#0047FF" stroke-width="3"/><circle cx="75" cy="45" r="22" fill="none" stroke="#0047FF" stroke-width="3"/><circle cx="50" cy="25" r="20" fill="none" stroke="#0047FF" stroke-width="3"/><circle cx="50" cy="85" r="16" fill="none" stroke="#0047FF" stroke-width="3"/></svg>'
-                        }</span>
-                        <span class="count">${post.likes||0}</span>
+                    <div class="action-btn ${post.likedByMe ? 'liked' : ''}" onclick="toggleLike(${post.id}, this)">
+                        <img 
+                            src="/logoAUS1.png" 
+                            alt="AUS Like" 
+                            class="aus-like-icon ${post.likes > 0 ? 'filled glow-active' : 'outline'}"
+                            width="24" 
+                            height="24"
+                        >
+                        <span class="count">${post.likes || 0}</span>
                     </div>
                     <div class="action-btn" onclick="toggleComments(${post.id})">
                         <span style="font-size:1.2rem">💬</span><span class="count">${post.comments?.length||0}</span>
@@ -170,9 +172,27 @@ function toggleLike(id, btn) {
     const posts = safeGetItem('feedPosts', []);
     const post = posts.find(p => p.id === id);
     if (!post) return;
-    if (post.likedByMe) { post.likes--; post.likedByMe = false; btn.classList.remove('liked'); }
-    else { post.likes++; post.likedByMe = true; btn.classList.add('liked'); }
+
+    if (post.likedByMe) {
+        post.likes--;
+        post.likedByMe = false;
+        btn.classList.remove('liked');
+    } else {
+        post.likes++;
+        post.likedByMe = true;
+        btn.classList.add('liked');
+    }
+
     btn.querySelector('.count').textContent = post.likes;
+
+    // Trigger glow only on first like
+    const icon = btn.querySelector('.aus-like-icon');
+    if (post.likes === 1 && icon) {
+        icon.classList.add('glow-active');
+    } else if (post.likes === 0 && icon) {
+        icon.classList.remove('glow-active');
+    }
+
     safeSetItem('feedPosts', posts);
     loadPosts();
 }
