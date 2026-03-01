@@ -26,12 +26,29 @@
 
 /* Gear button - ALWAYS SLOWLY SPINNING + gradient */
 #feedBgBtn {
+    width: 42px;  /* Уменьшил с 48px до 42px */
+    height: 42px; /* Уменьшил с 48px до 42px */
     background: linear-gradient(135deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d) !important;
     background-size: 400% 400% !important;
     animation: shimmerCycle 5s linear infinite, slowSpin 8s linear infinite !important;
     color: #0a0a0f !important;
     border: 2px solid transparent !important;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(255,215,0,0.3);
     transition: transform 0.3s ease;
+}
+
+#feedBgBtn:hover {
+    transform: scale(1.1);
 }
 
 /* Slower spin for gear */
@@ -46,7 +63,7 @@
     100% { background-position: 0% 50%; }
 }
 
-/* ===== SWINGING PANELS (everything except search) ===== */
+/* ===== SWINGING PANELS ===== */
 .sidebar-user,
 .sidebar-menu a,
 .create-post,
@@ -157,8 +174,12 @@
 </div>
 </div>
 </div>
+
+<!-- Gear Button - Smaller -->
 <button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">⚙️</button>
-<div id="feedBgModal" class="feed-bg-modal">
+
+<!-- Modal -->
+<div id="feedBgModal" class="feed-bg-modal" style="display:none;">
 <div class="feed-bg-modal-content">
 <h3>Customize Feed</h3>
 <div class="text-color-section">
@@ -219,10 +240,10 @@ function setTextColor(color) {
     
     // Save to localStorage
     localStorage.setItem('feedTextColor', color);
+    
+    // Close modal after selection
+    closeFeedBgModal();
 }
-
-// ===== GEAR BUTTON ALWAYS SPINNING =====
-// Already in CSS: animation: slowSpin 8s linear infinite
 
 // ===== RESET COLORS =====
 function resetCustomColors() {
@@ -258,9 +279,24 @@ window.addEventListener('DOMContentLoaded', () => {
     loadSavedColor();
     
     // Gear button click toggles modal
-    document.getElementById('feedBgBtn').addEventListener('click', () => {
+    document.getElementById('feedBgBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
         const modal = document.getElementById('feedBgModal');
-        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        if (modal.style.display === 'flex' || modal.style.display === 'block') {
+            modal.style.display = 'none';
+        } else {
+            modal.style.display = 'flex';
+        }
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('feedBgModal');
+        const btn = document.getElementById('feedBgBtn');
+        if (e.target !== btn && !btn.contains(e.target) && 
+            e.target !== modal && !modal.contains(e.target)) {
+            modal.style.display = 'none';
+        }
     });
 });
 </script>
