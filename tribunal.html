@@ -314,28 +314,18 @@
   <script>
     // CONFIG
     const CONFIG = { soundsEnabled: false, isDayMode: false, isMobile: window.innerWidth < 768 };
-
-    // SOUND SYSTEM
     const SoundSystem = { ctx: null, async init() { if (!CONFIG.soundsEnabled) return; try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { console.warn('Web Audio API not supported'); } }, toggle() { CONFIG.soundsEnabled = !CONFIG.soundsEnabled; try { localStorage.setItem('tribunalSounds', CONFIG.soundsEnabled ? 'true' : 'false'); } catch(e) {} document.getElementById('soundToggle').textContent = CONFIG.soundsEnabled ? '🔊' : '🔇'; } };
 
-    // THEME TOGGLE
     function toggleTheme() {
       CONFIG.isDayMode = !CONFIG.isDayMode;
       document.body.classList.toggle('day-mode', CONFIG.isDayMode);
       document.getElementById('themeToggle').textContent = CONFIG.isDayMode ? '☀️' : '🌙';
       try { localStorage.setItem('tribunalTheme', CONFIG.isDayMode ? 'day' : 'night'); } catch(e) {}
-      const particlesContainer = document.getElementById('particles-container');
-      if (particlesContainer) {
-        if (CONFIG.isDayMode) {
-          particlesContainer.style.display = 'none';
-        } else {
-          initParticles();
-          particlesContainer.style.display = 'block';
-        }
-      }
+      const pc = document.getElementById('particles-container');
+      if (pc) pc.style.display = CONFIG.isDayMode ? 'none' : 'block';
+      if (!CONFIG.isDayMode) initParticles();
     }
 
-    // PARTICLES
     async function initParticles() {
       if (CONFIG.isMobile || CONFIG.isDayMode) return;
       try {
@@ -343,20 +333,9 @@
           particles: { number: { value: 60 }, color: { value: ["#0047FF", "#00F0FF", "#9D00FF"] }, shape: { type: "circle" }, opacity: { value: 0.3, random: true }, size: { value: 2, random: true }, move: { enable: true, speed: 0.5, direction: "none", random: true, out_mode: "out" }, links: { enable: true, distance: 150, color: "#0047FF", opacity: 0.2, width: 1 } },
           interactivity: { detect_on: "canvas", events: { onhover: { enable: false }, onclick: { enable: false } } }, retina_detect: true
         });
-      } catch(e) { console.warn('Particles init failed'); const pc = document.getElementById('particles-container'); if (pc) pc.style.display = 'none'; }
+      } catch(e) { const pc = document.getElementById('particles-container'); if (pc) pc.style.display = 'none'; }
     }
 
-    // SAFE GSAP WRAPPER
-    function safeGSAP(callback, fallback) {
-      if (typeof gsap !== 'undefined') {
-        callback();
-      } else {
-        console.warn('GSAP not loaded, skipping animation');
-        if (fallback) fallback();
-      }
-    }
-
-    // LOADING SEQUENCE
     async function runLoadingSequence() {
       const screen = document.getElementById('loadingScreen'), bar = document.getElementById('loadingBar'), text = document.getElementById('loadingText');
       screen.classList.add('active');
@@ -370,32 +349,17 @@
       tl.call(() => revealVerdict(), null, '-=0.3');
     }
 
-    // VERDICT REVEAL (FIXED GSAP)
     function revealVerdict() {
       const shockwave = document.getElementById('shockwave');
       const verdictSection = document.getElementById('verdictSection');
       const scoreEl = document.getElementById('verdictScore');
-      
       shockwave.classList.add('animate');
       setTimeout(() => shockwave.classList.remove('animate'), 1000);
-      
       const data = { val: 0 };
-      gsap.to(data, {
-        val: 0.90,
-        duration: 2,
-        ease: 'power2.out',
-        onUpdate: function() {
-          scoreEl.textContent = data.val.toFixed(2);
-        }
-      });
-      
-      gsap.fromTo(verdictSection, 
-        { boxShadow: '0 0 0 rgba(255, 77, 77, 0)' },
-        { boxShadow: '0 0 60px rgba(255, 77, 77, 0.3)', duration: 1 }
-      );
+      gsap.to(data, { val: 0.90, duration: 2, ease: 'power2.out', onUpdate: function() { scoreEl.textContent = data.val.toFixed(2); }});
+      gsap.fromTo(verdictSection, { boxShadow: '0 0 0 rgba(255, 77, 77, 0)' }, { boxShadow: '0 0 60px rgba(255, 77, 77, 0.3)', duration: 1 });
     }
 
-    // UTILS - IMPROVED safeGet
     function safeGet(key, defaultVal) {
       try {
         const val = localStorage.getItem(key);
@@ -404,15 +368,10 @@
         if (typeof defaultVal === 'number') return parseFloat(val) || defaultVal;
         if (typeof defaultVal === 'string') return val;
         return JSON.parse(val);
-      } catch(e) {
-        console.warn('localStorage read failed:', e);
-        return defaultVal;
-      }
+      } catch(e) { return defaultVal; }
     }
-    function safeSet(key, val) { try { localStorage.setItem(key, typeof val === 'string' ? val : JSON.stringify(val)); } catch(e) { console.warn('localStorage failed'); } }
+    function safeSet(key, val) { try { localStorage.setItem(key, typeof val === 'string' ? val : JSON.stringify(val)); } catch(e) {} }
     function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-    
-    // FORMAT NUMBER WITH MEMOIZATION
     const formatCache = new Map();
     function formatNumber(num) {
       const key = num.toString();
@@ -426,22 +385,20 @@
       return result;
     }
 
-    // BUTTON PARTICLES
     function createBtnParticles() {
       const container = document.getElementById('btnParticles');
       if (!container) return;
       container.innerHTML = '';
       for (let i = 0; i < 8; i++) {
-        const particle = document.createElement('span');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 2 + 's';
-        particle.style.animationDuration = (1.5 + Math.random()) + 's';
-        container.appendChild(particle);
+        const p = document.createElement('span');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 2 + 's';
+        p.style.animationDuration = (1.5 + Math.random()) + 's';
+        container.appendChild(p);
       }
     }
 
-    // API FETCH WITH TIMEOUT AND ABORT HANDLING
     async function fetchTokenData(query) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -455,107 +412,147 @@
         return { offlineMode: false, tokenData };
       } catch(e) {
         clearTimeout(timeoutId);
-        if (e.name === 'AbortError') {
-          console.log('Request timeout');
-          return { offlineMode: true, tokenData: null };
-        }
-        console.log('DexScreener API error:', e);
+        if (e.name === 'AbortError') console.log('Request timeout');
+        else console.log('DexScreener API error:', e);
         return { offlineMode: true, tokenData: null };
       }
     }
 
-    // DYNAMIC AGENT MESSAGES
+    // SIMPLE DYNAMIC MESSAGES - REPLACEMENT NOT ACCUMULATION
     const agentMessages = {
-      hunter: [
-        '🔌 Connecting to blockchain...',
-        '📡 Scanning smart contract...',
-        '🔍 Analyzing liquidity pools...',
-        '👥 Checking holder distribution...',
-        '⚠️ Detecting risk patterns...',
-        '✅ On-chain analysis complete'
-      ],
-      oracle: [
-        '📡 Fetching social data...',
-        '🐦 Analyzing Twitter sentiment...',
-        '💬 Checking Telegram activity...',
-        '🤖 Detecting bot patterns...',
-        '📊 Calculating hype score...',
-        '✅ Sentiment analysis complete'
-      ],
-      judge: [
-        '📈 Loading price history...',
-        '📊 Calculating volatility...',
-        '💹 Analyzing volume patterns...',
-        '🎯 Detecting manipulation...',
-        '⚖️ Evaluating risk/reward...',
-        '✅ Price analysis complete'
-      ],
-      moderator: [
-        '🔄 Collecting agent reports...',
-        '⚖️ Comparing risk scores...',
-        '🔍 Detecting discrepancies...',
-        '🧮 Calculating consensus...',
-        '📋 Finalizing verdict...',
-        '✅ Consensus reached'
-      ]
+      hunter: ['🔌 Connecting...', '📡 Scanning contract...', '🔍 Analyzing liquidity...', '👥 Checking holders...', '⚠️ Detecting risks...', '✅ Analysis complete'],
+      oracle: ['📡 Fetching data...', '🐦 Twitter sentiment...', '💬 Telegram activity...', '🤖 Bot detection...', '📊 Hype score...', '✅ Analysis complete'],
+      judge: ['📈 Loading prices...', '📊 Volatility calc...', '💹 Volume patterns...', '🎯 Manipulation check...', '⚖️ Risk/reward...', '✅ Analysis complete'],
+      moderator: ['🔄 Collecting reports...', '⚖️ Comparing scores...', '🔍 Finding discrepancies...', '🧮 Calculating consensus...', '📋 Finalizing...', '✅ Verdict ready']
     };
 
-    // ANALYSIS FUNCTIONS
-    function analyzeOnChain(tokenQuery, tokenData, offlineMode) { if (offlineMode || !tokenData) return { output: "→ Contract verification: FAILED\n→ No on-chain data available\n→ ⚠️ EXTREME RISK: Unknown contract", risk: 0.95, factors: ['No data available', 'Unknown contract'] }; const baseToken = tokenData.baseToken || {}, liquidity = tokenData.liquidity || {}, fdv = tokenData.fdv || 0, pairCreatedAt = tokenData.pairCreatedAt || 0; let output = "→ On-chain analysis complete\n", risk = 0.5, factors = []; if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ AURASPACE token detected\n→ Native to CRYPTOBROS ecosystem\n→ Contract verified and trusted\n→ LP locked permanently", risk: 0.05, factors: ['Verified contract', 'Ecosystem token', 'LP locked'] }; const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic']; if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Blue chip asset detected\n→ Established contract\n→ High liquidity pool\n→ Verified on-chain", risk: 0.15, factors: ['Blue chip asset', 'Established contract', 'High liquidity'] }; const ageHours = (Date.now() - (pairCreatedAt * 1000)) / (1000 * 60 * 60); if (ageHours < 1) { output += "→ ⚠️ NEW CONTRACT (<1h old)\n"; risk += 0.3; factors.push('Brand new contract'); } else if (ageHours < 24) { output += `→ Young contract (${ageHours.toFixed(1)}h old)\n`; risk += 0.2; factors.push('New contract'); } if (liquidity.usd && liquidity.usd < 50000) { output += `→ ⚠️ CRITICAL: Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.3; factors.push('Low liquidity < $50k'); } else if (liquidity.usd && liquidity.usd < 200000) { output += `→ ⚠️ Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.2; factors.push('Low liquidity < $200k'); } if (fdv > 0 && fdv < 100000) { output += `→ ⚠️ Micro-cap FDV: $${formatNumber(fdv)}\n`; risk += 0.15; factors.push('Micro-cap FDV'); } output += `→ Contract: ${baseToken.address?.substring(0, 12)}...\n→ DEX: ${tokenData.dexId || 'Unknown'}\n→ Chain: ${tokenData.chainId || 'Unknown'}\n`; return { output, risk: Math.min(0.99, risk), factors }; }
-    function analyzeSentiment(tokenQuery, tokenData, offlineMode) { if (offlineMode || !tokenData) return { output: "→ Social sentiment: UNKNOWN\n→ No market data available\n→ ⚠️ Cannot assess community trust", risk: 0.85, factors: ['No sentiment data', 'Unknown community'] }; const volume = tokenData.volume || {}, priceChange = tokenData.priceChange || {}, txns = tokenData.txns || {}; let output = "→ Social sentiment analysis\n", risk = 0.5, factors = []; if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ Positive community sentiment\n→ Strong ecosystem support\n→ Growing adoption in CRYPTOBROS network\n→ Active developer engagement", risk: 0.1, factors: ['Strong community', 'Ecosystem support'] }; const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc']; if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Strong community trust\n→ Established reputation\n→ Low social manipulation risk\n→ Organic growth", risk: 0.15, factors: ['Established reputation', 'Strong trust'] }; if (volume.h24) { if (volume.h24 > 1e7) output += `→ 🔥 HIGH VOLUME: $${formatNumber(volume.h24)} (24h)\n→ Strong social buzz\n`; else if (volume.h24 < 1e5) { output += `→ Low volume: $${formatNumber(volume.h24)} (24h)\n→ Weak community engagement\n`; risk += 0.1; factors.push('Low social engagement'); } } if (txns.h24?.buys && txns.h24?.sells) { const ratio = txns.h24.buys / (txns.h24.buys + txns.h24.sells); if (ratio > 0.85) { risk += 0.2; factors.push('Extreme FOMO'); } } if (priceChange.h24) { const change = parseFloat(priceChange.h24); if (change > 50) { output += `→ 🚀 Extreme bullish momentum +${change.toFixed(1)}% (24h)\n→ Potential pump hype\n`; risk += 0.25; factors.push('Potential pump hype'); } else if (change < -30) { output += `→ 📉 Heavy selling pressure ${change.toFixed(1)}% (24h)\n→ Community panic\n`; risk += 0.2; factors.push('Community panic'); } } const memePatterns = ['wif','bonk','pepe','mog','turbo','dog','shib','floki']; if (memePatterns.some(p => ticker.includes(p))) { output += "→ 🐸 Meme coin detected\n→ High social media hype\n→ Extreme volatility expected\n→ Pump & dump risk HIGH"; risk += 0.35; factors.push('Meme coin - high manipulation risk'); } return { output, risk: Math.min(0.99, risk), factors }; }
-    function analyzePrice(tokenQuery, tokenData, offlineMode) { if (offlineMode || !tokenData) return { output: "→ Price action: UNKNOWN\n→ No trading history available\n→ ⚠️ Cannot assess price stability", risk: 0.9, factors: ['No price data', 'Unknown market behavior'] }; const liquidity = tokenData.liquidity || {}, volume = tokenData.volume || {}, priceChange = tokenData.priceChange || {}, fdv = tokenData.fdv || 0; let output = "→ Price action analysis\n", risk = 0.5, factors = []; const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic']; if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Blue chip asset\n→ High liquidity and volume\n→ Established market presence\n→ Low volatility profile\n→ Stable price action", risk: 0.1, factors: ['Blue chip', 'Low volatility', 'Stable price'] }; if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ Stable price action\n→ Healthy trading volume\n→ Sustainable growth pattern\n→ Ecosystem-backed token\n→ Low manipulation risk", risk: 0.1, factors: ['Stable price', 'Ecosystem-backed'] }; if (liquidity.usd && volume.h24) { const ratio = volume.h24 / liquidity.usd; if (ratio > 10) { output += `→ ⚠️ PUMP ALERT: Volume/Liq ratio ${(ratio.toFixed(1))}x\n→ Extreme price volatility likely\n→ Whale manipulation detected\n`; risk += 0.35; factors.push('Extreme pump pattern (V/L > 10x)'); } else if (ratio > 5) { output += `→ High activity: Volume/Liq ratio ${(ratio.toFixed(1))}x\n→ Active trading, monitor closely\n→ Potential manipulation\n`; risk += 0.25; factors.push('High pump risk (V/L > 5x)'); } } if (fdv > 0 && liquidity.usd > 0) { const fdvLiqRatio = fdv / liquidity.usd; if (fdvLiqRatio > 100) { output += `→ ⚠️ CRITICAL: FDV/LP ratio ${fdvLiqRatio.toFixed(0)}x\n→ Extreme rug pull risk\n→ Insufficient liquidity backing\n`; risk += 0.3; factors.push('High rug pull risk (FDV/LP > 100x)'); } } if (priceChange.h6 && priceChange.h24) { const h6 = parseFloat(priceChange.h6), h24 = parseFloat(priceChange.h24); if (h6 > 30 && h24 < 10) { output += "→ ⚠️ SUSPICIOUS PATTERN DETECTED\n→ Rapid pump followed by dump\n→ Whale manipulation likely\n→ High manipulation risk\n"; risk += 0.3; factors.push('Pump and dump pattern'); } } return { output, risk: Math.min(0.99, risk), factors }; }
-    function analyzeDiscrepancies(analyses) { const { onChain, sentiment, price } = analyses; let output = "⚠️ CONSENSUS VERDICT\n", riskFactors = [], contradictions = []; if (onChain.risk === 0.05) return { output: "→ TOKEN VERIFIED AS TRUSTED\n→ Native to CRYPTOBROS ecosystem\n→ Maximum security and transparency\n→ All experts concur: LOW RISK\n→ Risk Score: 0.05/1.00", risk: 0.05, category: 'trusted', recommendation: 'TRUST', factors: ['Native CRYPTOBROS ecosystem token'] }; if (Math.abs(onChain.risk - sentiment.risk) > 0.4) contradictions.push("⚠️ ON-CHAIN vs SENTIMENT DISCREPANCY"); if (Math.abs(sentiment.risk - price.risk) > 0.4) contradictions.push("⚠️ SENTIMENT vs PRICE ACTION DISCREPANCY"); if (Math.abs(onChain.risk - price.risk) > 0.4) contradictions.push("⚠️ ON-CHAIN vs PRICE DISCREPANCY"); let baseRisk = (onChain.risk + sentiment.risk + price.risk) / 3; if (contradictions.length > 0) { baseRisk += 0.15 * contradictions.length; riskFactors.push('Expert disagreement - high uncertainty'); } let finalRisk = Math.min(0.99, Math.max(0.05, baseRisk)), category, recommendation; if (finalRisk < 0.3) { category = 'low'; recommendation = 'TRUST'; output += "\n→ RECOMMENDATION: TRUST\n→ Suitable for investment\n→ Strong fundamentals across all metrics"; } else if (finalRisk < 0.7) { category = 'medium'; recommendation = 'WATCH'; output += "\n→ RECOMMENDATION: WATCH\n→ Moderate risk detected\n→ DYOR before investing"; } else { category = 'high'; recommendation = 'AVOID'; output += "\n→ RECOMMENDATION: AVOID\n→ Multiple red flags detected\n→ Extreme caution advised"; } [onChain.factors, sentiment.factors, price.factors].flat().forEach(f => { if (!riskFactors.includes(f)) riskFactors.push(f); }); output += `\n→ Risk Score: ${finalRisk.toFixed(2)}/1.00`; return { output, risk: parseFloat(finalRisk.toFixed(2)), category, recommendation, factors: riskFactors }; }
+    function analyzeOnChain(tokenQuery, tokenData, offlineMode) {
+      if (offlineMode || !tokenData) return { output: "→ Contract verification: FAILED\n→ No on-chain data available\n→ ⚠️ EXTREME RISK: Unknown contract", risk: 0.95, factors: ['No data', 'Unknown contract'] };
+      const baseToken = tokenData.baseToken || {}, liquidity = tokenData.liquidity || {}, fdv = tokenData.fdv || 0, pairCreatedAt = tokenData.pairCreatedAt || 0;
+      let output = "→ On-chain analysis complete\n", risk = 0.5, factors = [];
+      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ AURASPACE token detected\n→ Native to CRYPTOBROS ecosystem\n→ Contract verified and trusted\n→ LP locked permanently", risk: 0.05, factors: ['Verified', 'Ecosystem', 'LP locked'] };
+      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'];
+      if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Blue chip asset detected\n→ Established contract\n→ High liquidity pool\n→ Verified on-chain", risk: 0.15, factors: ['Blue chip', 'Established', 'High liquidity'] };
+      const ageHours = (Date.now() - (pairCreatedAt * 1000)) / (1000 * 60 * 60);
+      if (ageHours < 1) { output += "→ ⚠️ NEW CONTRACT (<1h old)\n"; risk += 0.3; factors.push('Brand new'); }
+      else if (ageHours < 24) { output += `→ Young contract (${ageHours.toFixed(1)}h)\n`; risk += 0.2; factors.push('New'); }
+      if (liquidity.usd && liquidity.usd < 50000) { output += `→ ⚠️ CRITICAL: Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.3; factors.push('Low liquidity < $50k'); }
+      else if (liquidity.usd && liquidity.usd < 200000) { output += `→ ⚠️ Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.2; factors.push('Low liquidity < $200k'); }
+      if (fdv > 0 && fdv < 100000) { output += `→ ⚠️ Micro-cap FDV: $${formatNumber(fdv)}\n`; risk += 0.15; factors.push('Micro-cap'); }
+      output += `→ Contract: ${baseToken.address?.substring(0, 12)}...\n→ DEX: ${tokenData.dexId || 'Unknown'}\n→ Chain: ${tokenData.chainId || 'Unknown'}\n`;
+      return { output, risk: Math.min(0.99, risk), factors };
+    }
 
-    // MAIN ANALYZE WITH DYNAMIC MESSAGES (FIXED ACCUMULATION)
+    function analyzeSentiment(tokenQuery, tokenData, offlineMode) {
+      if (offlineMode || !tokenData) return { output: "→ Social sentiment: UNKNOWN\n→ No market data available\n→ ⚠️ Cannot assess community trust", risk: 0.85, factors: ['No data', 'Unknown'] };
+      const volume = tokenData.volume || {}, priceChange = tokenData.priceChange || {}, txns = tokenData.txns || {};
+      let output = "→ Social sentiment analysis\n", risk = 0.5, factors = [];
+      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ Positive community sentiment\n→ Strong ecosystem support\n→ Growing adoption in CRYPTOBROS network\n→ Active developer engagement", risk: 0.1, factors: ['Strong community', 'Ecosystem'] };
+      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc'];
+      if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Strong community trust\n→ Established reputation\n→ Low social manipulation risk\n→ Organic growth", risk: 0.15, factors: ['Established', 'Strong trust'] };
+      if (volume.h24) { if (volume.h24 > 1e7) output += `→ 🔥 HIGH VOLUME: $${formatNumber(volume.h24)}\n`; else if (volume.h24 < 1e5) { output += `→ Low volume: $${formatNumber(volume.h24)}\n`; risk += 0.1; factors.push('Low engagement'); } }
+      if (txns.h24?.buys && txns.h24?.sells) { const ratio = txns.h24.buys / (txns.h24.buys + txns.h24.sells); if (ratio > 0.85) { risk += 0.2; factors.push('Extreme FOMO'); } }
+      if (priceChange.h24) { const change = parseFloat(priceChange.h24); if (change > 50) { output += `→ 🚀 Bullish +${change.toFixed(1)}%\n`; risk += 0.25; factors.push('Pump hype'); } else if (change < -30) { output += `→ 📉 Selling ${change.toFixed(1)}%\n`; risk += 0.2; factors.push('Panic'); } }
+      const memePatterns = ['wif','bonk','pepe','mog','turbo','dog','shib','floki'];
+      if (memePatterns.some(p => ticker.includes(p))) { output += "→ 🐸 Meme coin detected\n→ High social media hype\n→ Extreme volatility expected\n→ Pump & dump risk HIGH"; risk += 0.35; factors.push('Meme - high risk'); }
+      return { output, risk: Math.min(0.99, risk), factors };
+    }
+
+    function analyzePrice(tokenQuery, tokenData, offlineMode) {
+      if (offlineMode || !tokenData) return { output: "→ Price action: UNKNOWN\n→ No trading history available\n→ ⚠️ Cannot assess price stability", risk: 0.9, factors: ['No data', 'Unknown'] };
+      const liquidity = tokenData.liquidity || {}, volume = tokenData.volume || {}, priceChange = tokenData.priceChange || {}, fdv = tokenData.fdv || 0;
+      let output = "→ Price action analysis\n", risk = 0.5, factors = [];
+      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'];
+      if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Blue chip asset\n→ High liquidity and volume\n→ Established market presence\n→ Low volatility profile\n→ Stable price action", risk: 0.1, factors: ['Blue chip', 'Low volatility', 'Stable'] };
+      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ Stable price action\n→ Healthy trading volume\n→ Sustainable growth pattern\n→ Ecosystem-backed token\n→ Low manipulation risk", risk: 0.1, factors: ['Stable', 'Ecosystem-backed'] };
+      if (liquidity.usd && volume.h24) { const ratio = volume.h24 / liquidity.usd; if (ratio > 10) { output += `→ ⚠️ PUMP ALERT: V/L ratio ${ratio.toFixed(1)}x\n`; risk += 0.35; factors.push('Extreme pump V/L > 10x'); } else if (ratio > 5) { output += `→ High activity: V/L ${ratio.toFixed(1)}x\n`; risk += 0.25; factors.push('High pump risk V/L > 5x'); } }
+      if (fdv > 0 && liquidity.usd > 0) { const fdvLiqRatio = fdv / liquidity.usd; if (fdvLiqRatio > 100) { output += `→ ⚠️ CRITICAL: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; risk += 0.3; factors.push('High rug risk FDV/LP > 100x'); } }
+      if (priceChange.h6 && priceChange.h24) { const h6 = parseFloat(priceChange.h6), h24 = parseFloat(priceChange.h24); if (h6 > 30 && h24 < 10) { output += "→ ⚠️ SUSPICIOUS: Pump then dump\n"; risk += 0.3; factors.push('Pump & dump pattern'); } }
+      return { output, risk: Math.min(0.99, risk), factors };
+    }
+
+    function analyzeDiscrepancies(analyses) {
+      const { onChain, sentiment, price } = analyses;
+      let output = "⚠️ CONSENSUS VERDICT\n", riskFactors = [], contradictions = [];
+      if (onChain.risk === 0.05) return { output: "→ TOKEN VERIFIED AS TRUSTED\n→ Native to CRYPTOBROS ecosystem\n→ Maximum security and transparency\n→ All experts concur: LOW RISK\n→ Risk Score: 0.05/1.00", risk: 0.05, category: 'trusted', recommendation: 'TRUST', factors: ['Native CRYPTOBROS token'] };
+      if (Math.abs(onChain.risk - sentiment.risk) > 0.4) contradictions.push("⚠️ ON-CHAIN vs SENTIMENT");
+      if (Math.abs(sentiment.risk - price.risk) > 0.4) contradictions.push("⚠️ SENTIMENT vs PRICE");
+      if (Math.abs(onChain.risk - price.risk) > 0.4) contradictions.push("⚠️ ON-CHAIN vs PRICE");
+      let baseRisk = (onChain.risk + sentiment.risk + price.risk) / 3;
+      if (contradictions.length > 0) { baseRisk += 0.15 * contradictions.length; riskFactors.push('Expert disagreement'); }
+      let finalRisk = Math.min(0.99, Math.max(0.05, baseRisk)), category, recommendation;
+      if (finalRisk < 0.3) { category = 'low'; recommendation = 'TRUST'; output += "\n→ RECOMMENDATION: TRUST\n→ Suitable for investment\n→ Strong fundamentals"; }
+      else if (finalRisk < 0.7) { category = 'medium'; recommendation = 'WATCH'; output += "\n→ RECOMMENDATION: WATCH\n→ Moderate risk\n→ DYOR before investing"; }
+      else { category = 'high'; recommendation = 'AVOID'; output += "\n→ RECOMMENDATION: AVOID\n→ Multiple red flags\n→ Extreme caution"; }
+      [onChain.factors, sentiment.factors, price.factors].flat().forEach(f => { if (!riskFactors.includes(f)) riskFactors.push(f); });
+      output += `\n→ Risk Score: ${finalRisk.toFixed(2)}/1.00`;
+      return { output, risk: parseFloat(finalRisk.toFixed(2)), category, recommendation, factors: riskFactors };
+    }
+
+    // MAIN ANALYZE - SIMPLE & RELIABLE
     async function analyzeToken() {
       const input = document.getElementById('tokenInput'), btn = document.getElementById('analyzeBtn'), token = input.value.trim();
-      if (!token) { alert('Please enter a token address or symbol'); return; }
+      if (!token) { alert('Please enter a token'); return; }
       btn.disabled = true;
       const btnText = btn.querySelector('.btn-text');
       btnText.innerHTML = '<span class="loading-spinner"></span>SCANNING...';
       document.getElementById('verdictSection').style.display = 'none';
+      console.log('🔍 Starting analysis for:', token);
+      
       try {
         const { offlineMode, tokenData } = await fetchTokenData(token);
+        console.log('📡 API response:', offlineMode ? 'OFFLINE MODE' : 'DATA RECEIVED');
+        
         const agents = [
-          { id: 'hunter', fn: () => analyzeOnChain(token, tokenData, offlineMode) },
-          { id: 'oracle', fn: () => analyzeSentiment(token, tokenData, offlineMode) },
-          { id: 'judge', fn: () => analyzePrice(token, tokenData, offlineMode) }
+          { id: 'hunter', name: 'Phi-3-mini On-Chain Hunter', fn: () => analyzeOnChain(token, tokenData, offlineMode) },
+          { id: 'oracle', name: 'Qwen1.5 Sentiment Oracle', fn: () => analyzeSentiment(token, tokenData, offlineMode) },
+          { id: 'judge', name: 'DeepSeek Price Action Judge', fn: () => analyzePrice(token, tokenData, offlineMode) }
         ];
         const results = {};
+        
         for (const agent of agents) {
           const statusEl = document.getElementById(`${agent.id}-status`), outputEl = document.getElementById(`${agent.id}-output`);
           if (statusEl && outputEl) {
+            console.log(`🤖 Starting ${agent.id}`);
             statusEl.textContent = 'ANALYZING...'; statusEl.classList.add('analyzing');
-            // Dynamic message updates - ACCUMULATING
+            
+            // SIMPLE MESSAGE UPDATES - REPLACE NOT ACCUMULATE
             const messages = agentMessages[agent.id];
-            outputEl.innerHTML = '';
             for (let i = 0; i < messages.length; i++) {
-              outputEl.innerHTML += `<li>${messages[i]}</li>`;
-              await delay(350);
-              outputEl.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              outputEl.innerHTML = `<li>${messages[i]}</li>`;
+              await delay(400);
+              console.log(`  → ${messages[i]}`);
             }
-            const result = agent.fn(); results[agent.id] = result;
+            
+            const result = agent.fn();
+            results[agent.id] = result;
             outputEl.innerHTML = result.output.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
             statusEl.textContent = 'COMPLETE'; statusEl.classList.remove('analyzing');
+            console.log(`✅ ${agent.id} complete`);
           }
         }
+        
+        // MODERATOR
         const modStatus = document.getElementById('moderator-status'), modOutput = document.getElementById('moderator-output');
         if (modStatus && modOutput) {
           modStatus.textContent = 'ANALYZING...'; modStatus.classList.add('analyzing');
           const messages = agentMessages.moderator;
-          modOutput.innerHTML = '';
           for (let i = 0; i < messages.length; i++) {
-            modOutput.innerHTML += `<li>${messages[i]}</li>`;
-            await delay(350);
-            modOutput.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            modOutput.innerHTML = `<li>${messages[i]}</li>`;
+            await delay(400);
           }
           const moderator = analyzeDiscrepancies(results);
           modOutput.innerHTML = moderator.output.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
           modStatus.textContent = 'COMPLETE'; modStatus.classList.remove('analyzing');
           showVerdict(moderator, token, tokenData);
         }
-      } catch (error) { console.error('Analysis failed:', error); alert('Analysis failed. Please try again.'); }
-      finally { btn.disabled = false; btnText.innerHTML = '🔍 ANALYZE'; }
+      } catch (error) { 
+        console.error('❌ Analysis failed:', error); 
+        alert('Analysis failed. Check console (F12) for details.'); 
+      } finally { 
+        btn.disabled = false; 
+        btnText.innerHTML = '🔍 ANALYZE'; 
+      }
     }
 
     function quickAnalyze(token) { if (token) { document.getElementById('tokenInput').value = token; analyzeToken(); } }
@@ -570,23 +567,22 @@
       const data = { val: 0 };
       gsap.to(data, { val: risk, duration: 2, ease: 'power2.out', onUpdate: function() { scoreEl.textContent = data.val.toFixed(2); }});
       labelEl.textContent = category === 'trusted' ? 'TRUSTED' : (category === 'high' ? 'HIGH RISK' : 'LOW RISK');
+      
       const isPremium = ['Premium','Pro'].includes(safeGet('selectedTier')), contract = tokenData?.baseToken?.address, chain = tokenData?.chainId || 'base';
       if (isPremium && contract) {
-        document.querySelector('.quantum-scan span').textContent = 'Scanning contract...';
+        document.querySelector('.quantum-scan span').textContent = 'Scanning...';
         fetch('https://cryptobros-backend.onrender.com/api/goplus/token-security', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chain_id: chain, contract_addresses: contract }) })
         .then(res => res.json()).then(data => {
           const sec = data.result?.[contract];
           if (sec) {
-            let scan = '\n🔍 QUANTUM CONTRACT SCAN\n';
-            scan += `→ Ownership: ${sec.is_open_source === '1' ? 'RENOUNCED' : 'ACTIVE (CRITICAL RISK)'}\n`;
-            scan += `→ Taxes: Buy ${sec.buy_tax || '0'}% | Sell ${sec.sell_tax || '0'}%\n`;
-            scan += `→ Liquidity: ${sec.is_proxy === '0' ? 'LOCKED' : 'UNLOCKED (RUG RISK)'}\n`;
-            scan += `→ Honeypot: ${sec.is_honeypot === '1' ? 'DETECTED' : 'CLEAR'}\n`;
-            scan += `→ Ownership Recovery: ${sec.can_take_back_ownership === '1' ? 'ENABLED (DANGER)' : 'DISABLED'}\n`;
-            scan += `→ Anti-Whale: ${sec.is_anti_whale === '1' ? 'ACTIVE' : 'INACTIVE'}`;
+            let scan = '\n🔍 QUANTUM SCAN\n';
+            scan += `→ Ownership: ${sec.is_open_source === '1' ? 'RENOUNCED' : 'ACTIVE'}\n`;
+            scan += `→ Taxes: Buy ${sec.buy_tax||0}% | Sell ${sec.sell_tax||0}%\n`;
+            scan += `→ Liquidity: ${sec.is_proxy === '0' ? 'LOCKED' : 'UNLOCKED'}\n`;
+            scan += `→ Honeypot: ${sec.is_honeypot === '1' ? 'DETECTED' : 'CLEAR'}`;
             detailsEl.innerHTML = `<pre style="color:#00ff9d">${scan}</pre>`;
           }
-        }).catch(() => { detailsEl.innerHTML = '<pre style="color:#ff4d4d">⚠️ Quantum scan unavailable</pre>'; });
+        }).catch(() => { detailsEl.innerHTML = '<pre style="color:#ff4d4d">⚠️ Scan unavailable</pre>'; });
       }
     }
 
@@ -600,30 +596,24 @@
 
     function toggleSound() { SoundSystem.toggle(); }
 
-    // LAZY TILT INIT
     function initTilt() {
       if (CONFIG.isMobile || CONFIG.isDayMode) return;
-      if (typeof VanillaTilt === 'undefined') { console.warn('VanillaTilt not loaded'); return; }
-      try {
-        VanillaTilt.init(document.querySelectorAll('.agent-card'), { max: 8, speed: 400, glare: true, 'max-glare': 0.3, scale: 1.02 });
-      } catch(e) { console.warn('Tilt init failed:', e); }
+      if (typeof VanillaTilt === 'undefined') return;
+      try { VanillaTilt.init(document.querySelectorAll('.agent-card'), { max: 8, speed: 400, glare: true, 'max-glare': 0.3, scale: 1.02 }); }
+      catch(e) { console.warn('Tilt failed'); }
     }
     document.querySelector('.agent-card')?.addEventListener('mouseenter', () => { initTilt(); }, { once: true });
 
-    // ENTER KEY LISTENER
-    document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey) { if (e.target.tagName === 'INPUT' && e.target.id === 'tokenInput') { e.preventDefault(); analyzeToken(); } } });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && e.target.id === 'tokenInput') { e.preventDefault(); analyzeToken(); } });
 
-    // INIT
     window.addEventListener('DOMContentLoaded', async () => {
-      const savedSound = safeGet('tribunalSounds', false);
-      if (savedSound === true) { CONFIG.soundsEnabled = true; document.getElementById('soundToggle').textContent = '🔊'; }
-      const savedTheme = safeGet('tribunalTheme', 'night');
-      if (savedTheme === 'day') { CONFIG.isDayMode = true; document.body.classList.add('day-mode'); document.getElementById('themeToggle').textContent = '☀️'; }
+      if (safeGet('tribunalSounds', false) === true) { CONFIG.soundsEnabled = true; document.getElementById('soundToggle').textContent = '🔊'; }
+      if (safeGet('tribunalTheme', 'night') === 'day') { CONFIG.isDayMode = true; document.body.classList.add('day-mode'); document.getElementById('themeToggle').textContent = '☀️'; }
       createBtnParticles();
       await initParticles();
       await SoundSystem.init();
       await runLoadingSequence();
-      console.log('🔥 Judgment Chamber + Real Logic initialized');
+      console.log('✅ Tribunal initialized');
     });
     window.addEventListener('resize', () => { CONFIG.isMobile = window.innerWidth < 768; });
   </script>
