@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cryptobros News — Live Crypto Feed</title>
 
-  <!-- Fonts -->
+  <!-- Fonts: Orbitron + Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -42,6 +42,45 @@
       min-height: 100vh;
       padding: 20px 15px;
       transition: background 0.5s, color 0.5s;
+      background-size: 400% 400%;
+    }
+
+    /* Background variants */
+    body[data-bg="default"] {
+      background: var(--bg);
+    }
+    body[data-bg="gradient"] {
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1a4e 50%, #0a0e27 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+    body[data-bg="particles"] {
+      background: 
+        radial-gradient(circle at 15% 25%, rgba(0, 240, 255, 0.08), transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(157, 0, 255, 0.08), transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(0, 71, 255, 0.05), transparent 50%),
+        var(--bg);
+    }
+    body[data-bg="gold"] {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 25%, #FFF8DC 50%, #FFD700 75%, #FFA500 100%);
+      background-size: 400% 400%;
+      animation: goldSilk 8s ease infinite;
+    }
+    body[data-bg="cyber"] {
+      background: 
+        linear-gradient(rgba(10, 14, 39, 0.9), rgba(10, 14, 39, 0.9)),
+        repeating-linear-gradient(0deg, rgba(0, 240, 255, 0.03) 0px, rgba(0, 240, 255, 0.03) 1px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(0, 240, 255, 0.03) 0px, rgba(0, 240, 255, 0.03) 1px, transparent 1px, transparent 40px),
+        var(--bg);
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    @keyframes goldSilk {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
     header {
@@ -83,7 +122,7 @@
       transform: translateX(-5px);
     }
 
-    .theme-toggle {
+    .theme-toggle, .bg-toggle {
       padding: 10px 16px;
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -91,6 +130,24 @@
       color: var(--accent);
       cursor: pointer;
       font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover, .bg-toggle:hover {
+      background: rgba(0,71,255,0.2);
+      transform: scale(1.05);
+    }
+
+    /* SPINNING GEAR */
+    .bg-toggle.spinning {
+      animation: gearSpin 1s linear infinite;
+    }
+    @keyframes gearSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .search-container {
@@ -192,7 +249,7 @@
     }
   </style>
 </head>
-<body data-theme="dark">
+<body data-theme="dark" data-bg="default">
   <header>
     <h1>Cryptobros News</h1>
     <p style="opacity:0.7; text-align:center;">Live crypto updates from top sources</p>
@@ -203,7 +260,10 @@
     <div class="search-container">
       <input type="text" id="searchInput" placeholder="Search news...">
     </div>
-    <button class="theme-toggle" id="themeToggle">☀️ Day mode</button>
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button class="theme-toggle" id="themeToggle">☀️ Day mode</button>
+      <button class="bg-toggle" id="bgToggle" title="Change background">⚙️</button>
+    </div>
   </div>
 
   <div id="loading">Loading news...</div>
@@ -250,6 +310,10 @@
       }
     ];
 
+    // Background variants - EXACTLY LIKE HELP DESK
+    const bgVariants = ['default', 'gradient', 'particles', 'gold', 'cyber'];
+    let currentBgIndex = 0;
+
     function escapeHTML(str) {
       if (!str) return str;
       const escape = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
@@ -262,45 +326,43 @@
       const noResults = document.getElementById('no-results');
       grid.innerHTML = '';
 
-      loading.style.display = 'block';
+      const trimmed = filter.trim().toLowerCase();
+      const filtered = mockNews.filter(n => 
+        n.title.toLowerCase().includes(trimmed) || 
+        n.desc.toLowerCase().includes(trimmed)
+      );
 
-      setTimeout(() => {
-        const trimmed = filter.trim().toLowerCase();
-        const filtered = mockNews.filter(n => 
-          n.title.toLowerCase().includes(trimmed) || 
-          n.desc.toLowerCase().includes(trimmed)
-        );
-
-        if (filtered.length === 0 && trimmed) {
-          noResults.style.display = 'block';
-          loading.style.display = 'none';
-          return;
-        }
-
-        noResults.style.display = 'none';
-
-        filtered.forEach(n => {
-          const card = document.createElement('div');
-          card.className = 'news-card';
-          card.innerHTML = `
-            <div class="news-title">${escapeHTML(n.title)}</div>
-            <div class="news-desc">${escapeHTML(n.desc)}</div>
-            <div class="news-meta">
-              <span class="news-source">${escapeHTML(n.source)}</span> • ${escapeHTML(n.date)}
-            </div>
-            <a href="${n.link}" target="_blank" class="news-link">Read more →</a>
-          `;
-          grid.appendChild(card);
-        });
-
+      if (filtered.length === 0 && trimmed) {
+        noResults.style.display = 'block';
         loading.style.display = 'none';
-      }, 300);
+        return;
+      }
+
+      noResults.style.display = 'none';
+
+      filtered.forEach(n => {
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        card.innerHTML = `
+          <div class="news-title">${escapeHTML(n.title)}</div>
+          <div class="news-desc">${escapeHTML(n.desc)}</div>
+          <div class="news-meta">
+            <span class="news-source">${escapeHTML(n.source)}</span> • ${escapeHTML(n.date)}
+          </div>
+          <a href="${n.link}" target="_blank" class="news-link">Read more →</a>
+        `;
+        grid.appendChild(card);
+      });
+
+      loading.style.display = 'none';
     }
 
+    // Search
     document.getElementById('searchInput').addEventListener('input', e => {
       renderNews(e.target.value);
     });
 
+    // Day/Night toggle
     document.getElementById('themeToggle').addEventListener('click', () => {
       const body = document.body;
       if (body.dataset.theme === 'dark') {
@@ -310,10 +372,53 @@
         body.dataset.theme = 'dark';
         document.getElementById('themeToggle').textContent = '☀️ Day mode';
       }
+      try { localStorage.setItem('feedTheme', body.dataset.theme); } catch(e) {}
     });
 
-    // Initial render
-    renderNews();
+    // BACKGROUND TOGGLE - EXACTLY LIKE HELP DESK
+    document.getElementById('bgToggle').addEventListener('click', function() {
+      const body = document.body;
+      const btn = this;
+      
+      // Add spinning animation
+      btn.classList.add('spinning');
+      
+      // Cycle to next background
+      currentBgIndex = (currentBgIndex + 1) % bgVariants.length;
+      const newBg = bgVariants[currentBgIndex];
+      
+      // Apply with slight delay for visual feedback
+      setTimeout(() => {
+        body.setAttribute('data-bg', newBg);
+        try { localStorage.setItem('feedBg', newBg); } catch(e) {}
+        
+        // Stop spinning after change
+        setTimeout(() => {
+          btn.classList.remove('spinning');
+        }, 300);
+      }, 200);
+    });
+
+    // Load saved preferences
+    window.addEventListener('DOMContentLoaded', () => {
+      // Load theme
+      const savedTheme = localStorage.getItem('feedTheme');
+      if (savedTheme) {
+        document.body.dataset.theme = savedTheme;
+        document.getElementById('themeToggle').textContent = savedTheme === 'light' ? '🌙 Night mode' : '☀️ Day mode';
+      }
+      
+      // Load background
+      const savedBg = localStorage.getItem('feedBg');
+      if (savedBg && bgVariants.includes(savedBg)) {
+        document.body.setAttribute('data-bg', savedBg);
+        currentBgIndex = bgVariants.indexOf(savedBg);
+      }
+      
+      // Initial render
+      renderNews();
+    });
   </script>
 </body>
 </html>
+
