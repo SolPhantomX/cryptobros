@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="feed.css">
+
+<!-- VanillaTilt for swinging panels -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 
 <style>
@@ -34,33 +36,29 @@
     -webkit-background-clip: text !important;
     color: transparent !important;
     font-weight: 700;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    animation: shimmerCycle linear infinite;
+    display: block;
 }
 
 /* --- PINNED AUCTIONS --- */
 .pinned-auctions h2.shimmer-text {
     background: linear-gradient(90deg, #FFD700, #FFA500, #FF6B00, #FFD700);
     background-size: 300% 100%;
-    animation-name: shimmerCycle;
     animation-duration: 20s;
 }
 #pinnedPostsContainer p.shimmer-text:nth-of-type(1) {
     background: linear-gradient(90deg, #00F0FF, #00BFFF, #0080FF, #00F0FF);
     background-size: 300% 100%;
-    animation-name: shimmerCycle;
     animation-duration: 25s;
 }
 #pinnedPostsContainer p.shimmer-text:nth-of-type(2) {
     background: linear-gradient(90deg, #9D00FF, #BD00FF, #DD00FF, #9D00FF);
     background-size: 300% 100%;
-    animation-name: shimmerCycle;
     animation-duration: 28s;
 }
 #pinnedPostsContainer p.shimmer-text:nth-of-type(3) {
     background: linear-gradient(90deg, #ff4d4d, #ff7a7a, #ff4d4d, #ff1a1a);
     background-size: 300% 100%;
-    animation-name: shimmerCycle;
     animation-duration: 34s;
 }
 
@@ -68,19 +66,16 @@
 #feedPosts p.shimmer-text:nth-of-type(1) {
     background: linear-gradient(90deg, #00ff9d, #00cc7a, #00ff9d, #00ffcc);
     background-size: 300% 100%;
-    animation-name: shimmerCycle;
     animation-duration: 22s;
 }
 #feedPosts p.shimmer-text:nth-of-type(2) {
     background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700, #ffb300);
     background-size: 300% 100%;
-    animation-name: shimmerCycle;
     animation-duration: 30s;
 }
 #feedPosts p.shimmer-text:nth-of-type(3) {
     background: linear-gradient(90deg, #ff6ec7, #ff9ddb, #ff6ec7, #ff3fa3);
     background-size: 300% 100%;
-    animation-name: shimmerCycle;
     animation-duration: 26s;
 }
 
@@ -104,13 +99,14 @@
     box-shadow: 0 0 15px rgba(255,215,0,0.3) !important;
     padding: 0 !important;
     overflow: hidden !important;
+    color: transparent !important;
 }
 
 #feedBgBtn svg {
-    width: 22px;
-    height: 22px;
-    fill: #ffffff; /* FIX: белый для контраста на градиенте */
-    stroke: #0a0a0f; /* FIX: тёмная обводка для читаемости */
+    width: 20px;
+    height: 20px;
+    fill: #ffffff;
+    stroke: #0a0a0f;
     stroke-width: 0.5;
     filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
 }
@@ -145,13 +141,19 @@
     border: 1px solid rgba(255,255,255,0.1) !important;
 }
 
-/* ===== 🎨 COLOR CONTROL — BACK BTN + USERNAME ===== */
+/* ===== 🎨 COLOR CONTROL — BACK BTN + USERNAME — FIX #3 ===== */
 .back-btn,
 .theme-toggle,
 .sidebar-user h3 {
     transition: color 0.3s ease, transform 0.3s ease;
     display: inline-block;
     color: var(--text-primary);
+}
+
+/* FIX: Remove underline from Back Button */
+.back-btn {
+    text-decoration: none !important;
+    border-bottom: none !important;
 }
 
 /* ===== 📊 TREND INDICATOR — FIX #6 ===== */
@@ -335,7 +337,10 @@ function setTextColor(color) {
     if (username) username.style.color = color;
     
     const backBtn = document.querySelector('.back-btn');
-    if (backBtn) backBtn.style.color = color;
+    if (backBtn) {
+        backBtn.style.color = color;
+        backBtn.style.textDecoration = 'none';
+    }
     
     localStorage.setItem('feedTextColor', color);
     closeFeedBgModal();
@@ -345,7 +350,10 @@ function resetCustomColors() {
     const username = document.getElementById('sidebarUsername');
     if (username) username.style.color = '';
     const backBtn = document.querySelector('.back-btn');
-    if (backBtn) backBtn.style.color = '';
+    if (backBtn) {
+        backBtn.style.color = '';
+        backBtn.style.textDecoration = 'none';
+    }
     localStorage.removeItem('feedTextColor');
     closeFeedBgModal();
 }
@@ -356,7 +364,10 @@ function loadSavedColor() {
         const username = document.getElementById('sidebarUsername');
         if (username) username.style.color = savedColor;
         const backBtn = document.querySelector('.back-btn');
-        if (backBtn) backBtn.style.color = savedColor;
+        if (backBtn) {
+            backBtn.style.color = savedColor;
+            backBtn.style.textDecoration = 'none';
+        }
     }
 }
 
