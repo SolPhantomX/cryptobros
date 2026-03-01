@@ -24,31 +24,30 @@
     font-weight: 700;
 }
 
-/* Gear button - ALWAYS SLOWLY SPINNING + gradient */
+/* Gear button - smaller 42px */
 #feedBgBtn {
-    width: 42px;  /* Уменьшил с 48px до 42px */
-    height: 42px; /* Уменьшил с 48px до 42px */
+    width: 42px !important;
+    height: 42px !important;
     background: linear-gradient(135deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d) !important;
     background-size: 400% 400% !important;
     animation: shimmerCycle 5s linear infinite, slowSpin 8s linear infinite !important;
     color: #0a0a0f !important;
     border: 2px solid transparent !important;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 1000;
-    box-shadow: 0 0 15px rgba(255,215,0,0.3);
-    transition: transform 0.3s ease;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    font-size: 1.3rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    z-index: 1000 !important;
+    box-shadow: 0 0 15px rgba(255,215,0,0.3) !important;
 }
 
 #feedBgBtn:hover {
-    transform: scale(1.1);
+    transform: scale(1.1) !important;
 }
 
 /* Slower spin for gear */
@@ -74,6 +73,15 @@
     will-change: transform;
 }
 
+/* Fix white panels */
+.pinned-auctions,
+.trends-card,
+.create-post {
+    background: var(--card-bg, rgba(10, 14, 39, 0.7)) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
 /* Back button and theme toggle also swing */
 .back-btn,
 .theme-toggle {
@@ -95,6 +103,34 @@
 /* @cryptobros username - can be colored */
 .sidebar-user h3 {
     transition: color 0.3s ease;
+}
+
+/* Modal styles */
+.feed-bg-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+}
+
+.feed-bg-modal[style*="flex"] {
+    display: flex !important;
+}
+
+.feed-bg-modal-content {
+    background: var(--card-bg, #1a1a2e);
+    padding: 2rem;
+    border-radius: 24px;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 </style>
 </head>
@@ -175,31 +211,31 @@
 </div>
 </div>
 
-<!-- Gear Button - Smaller -->
+<!-- Gear Button - Smaller 42px -->
 <button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">⚙️</button>
 
 <!-- Modal -->
-<div id="feedBgModal" class="feed-bg-modal" style="display:none;">
+<div id="feedBgModal" class="feed-bg-modal">
 <div class="feed-bg-modal-content">
-<h3>Customize Feed</h3>
+<h3 style="color: var(--text-primary); margin-bottom: 1.5rem;">Customize Feed</h3>
 <div class="text-color-section">
-<h4>Text Color</h4>
-<div class="color-buttons">
-<button class="color-btn" style="background:#ffd700;" onclick="setTextColor('#ffd700')"></button>
-<button class="color-btn" style="background:#00f0ff;" onclick="setTextColor('#00f0ff')"></button>
-<button class="color-btn" style="background:#9d00ff;" onclick="setTextColor('#9d00ff')"></button>
-<button class="color-btn" style="background:#ff4d4d;" onclick="setTextColor('#ff4d4d')"></button>
-<button class="color-btn" style="background:#ffffff;border:2px solid #000;" onclick="setTextColor('#ffffff')"></button>
+<h4 style="color: var(--text-secondary); margin-bottom: 1rem;">Text Color</h4>
+<div class="color-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffd700; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ffd700')"></button>
+<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#00f0ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#00f0ff')"></button>
+<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#9d00ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#9d00ff')"></button>
+<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ff4d4d; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ff4d4d')"></button>
+<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffffff; border: 2px solid #000; cursor: pointer;" onclick="setTextColor('#ffffff')"></button>
 </div>
 </div>
 <div class="bg-presets-grid" id="bgPresetsGrid"></div>
-<div class="bg-upload-section">
-<label for="feedBgUpload" class="bg-upload-label">Upload Custom Background</label>
-<input type="file" id="feedBgUpload" accept="image/*" class="bg-upload-input">
+<div class="bg-upload-section" style="margin: 1.5rem 0;">
+<label for="feedBgUpload" style="display: block; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 12px; text-align: center; cursor: pointer;">Upload Custom Background</label>
+<input type="file" id="feedBgUpload" accept="image/*" style="display: none;">
 </div>
-<div class="bg-actions">
-<button onclick="resetCustomColors()" class="btn-reset">Reset All Colors</button>
-<button onclick="closeFeedBgModal()" class="btn-close-modal">Close</button>
+<div class="bg-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+<button onclick="resetCustomColors()" style="padding: 0.8rem 1.5rem; background: transparent; border: 1px solid var(--accent); border-radius: 8px; color: var(--text-primary); cursor: pointer;">Reset</button>
+<button onclick="closeFeedBgModal()" style="padding: 0.8rem 1.5rem; background: var(--accent); border: none; border-radius: 8px; color: #0a0a0f; cursor: pointer;">Close</button>
 </div>
 </div>
 </div>
@@ -212,14 +248,13 @@ function initTilt() {
         return;
     }
     
-    // All panels except search
     const swingElements = document.querySelectorAll(
         '.sidebar-user, .sidebar-menu a, .create-post, .pinned-auctions, ' +
         '.trends-card, #feedPosts > *, .back-btn, .theme-toggle'
     );
     
     VanillaTilt.init(swingElements, {
-        max: 6,           // Gentle swing
+        max: 6,
         speed: 400,
         glare: true,
         'max-glare': 0.2,
@@ -230,22 +265,16 @@ function initTilt() {
 
 // ===== COLOR CUSTOMIZATION =====
 function setTextColor(color) {
-    // Change @cryptobros color
     const username = document.getElementById('sidebarUsername');
     if (username) username.style.color = color;
     
-    // Change back button color
     const backBtn = document.querySelector('.back-btn');
     if (backBtn) backBtn.style.color = color;
     
-    // Save to localStorage
     localStorage.setItem('feedTextColor', color);
-    
-    // Close modal after selection
     closeFeedBgModal();
 }
 
-// ===== RESET COLORS =====
 function resetCustomColors() {
     const username = document.getElementById('sidebarUsername');
     if (username) username.style.color = '';
@@ -254,9 +283,9 @@ function resetCustomColors() {
     if (backBtn) backBtn.style.color = '';
     
     localStorage.removeItem('feedTextColor');
+    closeFeedBgModal();
 }
 
-// ===== LOAD SAVED COLOR =====
 function loadSavedColor() {
     const savedColor = localStorage.getItem('feedTextColor');
     if (savedColor) {
@@ -269,6 +298,10 @@ function loadSavedColor() {
 }
 
 // ===== MODAL FUNCTIONS =====
+function openFeedBgModal() {
+    document.getElementById('feedBgModal').style.display = 'flex';
+}
+
 function closeFeedBgModal() {
     document.getElementById('feedBgModal').style.display = 'none';
 }
@@ -278,23 +311,25 @@ window.addEventListener('DOMContentLoaded', () => {
     initTilt();
     loadSavedColor();
     
-    // Gear button click toggles modal
-    document.getElementById('feedBgBtn').addEventListener('click', (e) => {
+    const modal = document.getElementById('feedBgModal');
+    const btn = document.getElementById('feedBgBtn');
+    
+    // Open modal
+    btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const modal = document.getElementById('feedBgModal');
-        if (modal.style.display === 'flex' || modal.style.display === 'block') {
+        modal.style.display = 'flex';
+    });
+    
+    // Close on outside click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
             modal.style.display = 'none';
-        } else {
-            modal.style.display = 'flex';
         }
     });
     
-    // Close modal when clicking outside
-    window.addEventListener('click', (e) => {
-        const modal = document.getElementById('feedBgModal');
-        const btn = document.getElementById('feedBgBtn');
-        if (e.target !== btn && !btn.contains(e.target) && 
-            e.target !== modal && !modal.contains(e.target)) {
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
             modal.style.display = 'none';
         }
     });
