@@ -9,8 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="feed.css">
 
-<!-- Shimmer only for text + gear button -->
+<!-- VanillaTilt for swinging panels -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
 <style>
+/* Shimmer only for text + gear button */
 .shimmer-text {
     background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700);
     background-size: 400% 400%;
@@ -21,19 +24,60 @@
     font-weight: 700;
 }
 
-/* Gear button - color gradient shimmer */
+/* Gear button - ALWAYS SLOWLY SPINNING + gradient */
 #feedBgBtn {
     background: linear-gradient(135deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d) !important;
     background-size: 400% 400% !important;
-    animation: shimmerCycle 5s linear infinite !important;
+    animation: shimmerCycle 5s linear infinite, slowSpin 8s linear infinite !important;
     color: #0a0a0f !important;
     border: 2px solid transparent !important;
+    transition: transform 0.3s ease;
+}
+
+/* Slower spin for gear */
+@keyframes slowSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 @keyframes shimmerCycle {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+}
+
+/* ===== SWINGING PANELS (everything except search) ===== */
+.sidebar-user,
+.sidebar-menu a,
+.create-post,
+.pinned-auctions,
+.trends-card,
+#feedPosts > * {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+}
+
+/* Back button and theme toggle also swing */
+.back-btn,
+.theme-toggle {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+/* Color picker from gear button */
+.text-color-section .color-btn {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.text-color-section .color-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 15px currentColor;
+}
+
+/* @cryptobros username - can be colored */
+.sidebar-user h3 {
+    transition: color 0.3s ease;
 }
 </style>
 </head>
@@ -138,6 +182,88 @@
 </div>
 </div>
 </div>
+
+<script>
+// ===== VANILLA TILT FOR SWINGING PANELS =====
+function initTilt() {
+    if (typeof VanillaTilt === 'undefined') {
+        setTimeout(initTilt, 100);
+        return;
+    }
+    
+    // All panels except search
+    const swingElements = document.querySelectorAll(
+        '.sidebar-user, .sidebar-menu a, .create-post, .pinned-auctions, ' +
+        '.trends-card, #feedPosts > *, .back-btn, .theme-toggle'
+    );
+    
+    VanillaTilt.init(swingElements, {
+        max: 6,           // Gentle swing
+        speed: 400,
+        glare: true,
+        'max-glare': 0.2,
+        scale: 1.02,
+        easing: "cubic-bezier(.03,.98,.52,.99)"
+    });
+}
+
+// ===== COLOR CUSTOMIZATION =====
+function setTextColor(color) {
+    // Change @cryptobros color
+    const username = document.getElementById('sidebarUsername');
+    if (username) username.style.color = color;
+    
+    // Change back button color
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) backBtn.style.color = color;
+    
+    // Save to localStorage
+    localStorage.setItem('feedTextColor', color);
+}
+
+// ===== GEAR BUTTON ALWAYS SPINNING =====
+// Already in CSS: animation: slowSpin 8s linear infinite
+
+// ===== RESET COLORS =====
+function resetCustomColors() {
+    const username = document.getElementById('sidebarUsername');
+    if (username) username.style.color = '';
+    
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) backBtn.style.color = '';
+    
+    localStorage.removeItem('feedTextColor');
+}
+
+// ===== LOAD SAVED COLOR =====
+function loadSavedColor() {
+    const savedColor = localStorage.getItem('feedTextColor');
+    if (savedColor) {
+        const username = document.getElementById('sidebarUsername');
+        if (username) username.style.color = savedColor;
+        
+        const backBtn = document.querySelector('.back-btn');
+        if (backBtn) backBtn.style.color = savedColor;
+    }
+}
+
+// ===== MODAL FUNCTIONS =====
+function closeFeedBgModal() {
+    document.getElementById('feedBgModal').style.display = 'none';
+}
+
+// Initialize on load
+window.addEventListener('DOMContentLoaded', () => {
+    initTilt();
+    loadSavedColor();
+    
+    // Gear button click toggles modal
+    document.getElementById('feedBgBtn').addEventListener('click', () => {
+        const modal = document.getElementById('feedBgModal');
+        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    });
+});
+</script>
 
 <script src="feed-config.js"></script>
 <script src="feed-utils.js"></script>
