@@ -13,7 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 
 <style>
-/* ===== 🔧 CSS VARIABLES — FIX #1 ===== */
+/* ===== CSS VARIABLES ===== */
 :root {
     --text-primary: #e0e0ff;
     --text-secondary: #a0a0c0;
@@ -23,63 +23,73 @@
     --bg-overlay: rgba(0, 0, 0, 0.4);
 }
 
-/* ===== ✨ SHARED SHIMMER ANIMATION — FIX #4 ===== */
+/* ===== SHARED SHIMMER ANIMATION ===== */
 @keyframes shimmerCycle {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-/* ===== 🎨 INDIVIDUAL SHIMMER STYLES — FIX #2 ===== */
+@keyframes slowSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ===== SHIMMER TEXT STYLES ===== */
 .shimmer-text {
     background-clip: text !important;
     -webkit-background-clip: text !important;
     color: transparent !important;
-    font-weight: 700;
-    animation: shimmerCycle linear infinite;
-    display: block;
+    font-weight: 700 !important;
+    animation: shimmerCycle linear infinite !important;
+    display: block !important;
 }
 
-/* --- PINNED AUCTIONS --- */
+/* --- PINNED AUCTIONS SHIMMER --- */
 .pinned-auctions h2.shimmer-text {
-    background: linear-gradient(90deg, #FFD700, #FFA500, #FF6B00, #FFD700);
-    background-size: 300% 100%;
-    animation-duration: 20s;
+    background: linear-gradient(90deg, #FFD700, #FFA500, #FF6B00, #FFD700) !important;
+    background-size: 300% 100% !important;
+    animation-duration: 20s !important;
 }
+
 #pinnedPostsContainer p.shimmer-text:nth-of-type(1) {
-    background: linear-gradient(90deg, #00F0FF, #00BFFF, #0080FF, #00F0FF);
-    background-size: 300% 100%;
-    animation-duration: 25s;
+    background: linear-gradient(90deg, #00F0FF, #00BFFF, #0080FF, #00F0FF) !important;
+    background-size: 300% 100% !important;
+    animation-duration: 25s !important;
 }
+
 #pinnedPostsContainer p.shimmer-text:nth-of-type(2) {
-    background: linear-gradient(90deg, #9D00FF, #BD00FF, #DD00FF, #9D00FF);
-    background-size: 300% 100%;
-    animation-duration: 28s;
+    background: linear-gradient(90deg, #9D00FF, #BD00FF, #DD00FF, #9D00FF) !important;
+    background-size: 300% 100% !important;
+    animation-duration: 28s !important;
 }
+
 #pinnedPostsContainer p.shimmer-text:nth-of-type(3) {
-    background: linear-gradient(90deg, #ff4d4d, #ff7a7a, #ff4d4d, #ff1a1a);
-    background-size: 300% 100%;
-    animation-duration: 34s;
+    background: linear-gradient(90deg, #ff4d4d, #ff7a7a, #ff4d4d, #ff1a1a) !important;
+    background-size: 300% 100% !important;
+    animation-duration: 34s !important;
 }
 
-/* --- FEED POSTS --- */
+/* --- FEED POSTS SHIMMER --- */
 #feedPosts p.shimmer-text:nth-of-type(1) {
-    background: linear-gradient(90deg, #00ff9d, #00cc7a, #00ff9d, #00ffcc);
-    background-size: 300% 100%;
-    animation-duration: 22s;
-}
-#feedPosts p.shimmer-text:nth-of-type(2) {
-    background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700, #ffb300);
-    background-size: 300% 100%;
-    animation-duration: 30s;
-}
-#feedPosts p.shimmer-text:nth-of-type(3) {
-    background: linear-gradient(90deg, #ff6ec7, #ff9ddb, #ff6ec7, #ff3fa3);
-    background-size: 300% 100%;
-    animation-duration: 26s;
+    background: linear-gradient(90deg, #00ff9d, #00cc7a, #00ff9d, #00ffcc) !important;
+    background-size: 300% 100% !important;
+    animation-duration: 22s !important;
 }
 
-/* ===== 🔧 GEAR BUTTON — 39px + SVG FIX #5 ===== */
+#feedPosts p.shimmer-text:nth-of-type(2) {
+    background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700, #ffb300) !important;
+    background-size: 300% 100% !important;
+    animation-duration: 30s !important;
+}
+
+#feedPosts p.shimmer-text:nth-of-type(3) {
+    background: linear-gradient(90deg, #ff6ec7, #ff9ddb, #ff6ec7, #ff3fa3) !important;
+    background-size: 300% 100% !important;
+    animation-duration: 26s !important;
+}
+
+/* ===== GEAR BUTTON - 39px + SVG ===== */
 #feedBgBtn {
     width: 39px !important;
     height: 39px !important;
@@ -100,15 +110,16 @@
     padding: 0 !important;
     overflow: hidden !important;
     color: transparent !important;
+    font-size: 0 !important;
 }
 
 #feedBgBtn svg {
-    width: 20px;
-    height: 20px;
-    fill: #ffffff;
-    stroke: #0a0a0f;
-    stroke-width: 0.5;
-    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+    width: 20px !important;
+    height: 20px !important;
+    fill: #ffffff !important;
+    stroke: #0a0a0f !important;
+    stroke-width: 0.5 !important;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)) !important;
 }
 
 #feedBgBtn:hover {
@@ -116,12 +127,7 @@
     box-shadow: 0 0 25px rgba(255,215,0,0.6) !important;
 }
 
-@keyframes slowSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* ===== 🎭 SWINGING PANELS ===== */
+/* ===== PANELS & LAYOUT ===== */
 .sidebar-user,
 .sidebar-menu a,
 .create-post,
@@ -141,7 +147,7 @@
     border: 1px solid rgba(255,255,255,0.1) !important;
 }
 
-/* ===== 🎨 COLOR CONTROL — BACK BTN + USERNAME — FIX #3 ===== */
+/* ===== COLOR CONTROL - BACK BTN + USERNAME ===== */
 .back-btn,
 .theme-toggle,
 .sidebar-user h3 {
@@ -150,13 +156,12 @@
     color: var(--text-primary);
 }
 
-/* FIX: Remove underline from Back Button */
 .back-btn {
     text-decoration: none !important;
     border-bottom: none !important;
 }
 
-/* ===== 📊 TREND INDICATOR — FIX #6 ===== */
+/* ===== TREND INDICATOR ===== */
 .trend-indicator {
     display: inline-block;
     margin-left: 4px;
@@ -166,7 +171,7 @@
 .trend-up { color: #00ff9d; }
 .trend-down { color: #ff4d4d; }
 
-/* ===== 🎨 COLOR PICKER HOVER ===== */
+/* ===== COLOR PICKER HOVER ===== */
 .text-color-section .color-btn {
     transition: all 0.3s ease;
     cursor: pointer;
@@ -176,7 +181,7 @@
     box-shadow: 0 0 15px currentColor;
 }
 
-/* ===== 🪟 MODAL STYLES ===== */
+/* ===== MODAL STYLES ===== */
 .feed-bg-modal {
     display: none;
     position: fixed;
@@ -247,7 +252,7 @@
 </div>
 </div>
 
-<!-- ✅ AUCTION WINNERS SECTION -->
+<!-- AUCTION WINNERS SECTION -->
 <div class="pinned-auctions">
 <h2 class="shimmer-text">Auction Winners 🏆</h2>
 <div id="pinnedPostsContainer">
@@ -257,7 +262,7 @@
 </div>
 </div>
 
-<!-- ✅ FEED POSTS SECTION -->
+<!-- FEED POSTS SECTION -->
 <div id="feedPosts">
     <p class="shimmer-text">No posts yet</p>
     <p class="shimmer-text">Be the first degen to share alpha!</p>
@@ -281,14 +286,14 @@
 </div>
 </div>
 
-<!-- ✅ GEAR BUTTON — 39px + DETAILED SVG -->
+<!-- GEAR BUTTON - 39px + DETAILED SVG -->
 <button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84 c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.66,6.32L5.27,5.35c-0.22-0.08-0.47,0-0.59,0.22L2.76,8.87 C2.64,9.08,2.7,9.34,2.88,9.48l2.03,1.58C4.89,11.36,4.87,11.69,4.87,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
     </svg>
 </button>
 
-<!-- ✅ MODAL -->
+<!-- MODAL -->
 <div id="feedBgModal" class="feed-bg-modal">
 <div class="feed-bg-modal-content">
 <h3 style="color: var(--text-primary); margin-bottom: 1.5rem;">Customize Feed</h3>
@@ -331,15 +336,17 @@ function initTilt() {
     });
 }
 
-// ===== COLOR CUSTOMIZATION — FIX: applies to back-btn + username =====
+// ===== COLOR CUSTOMIZATION =====
 function setTextColor(color) {
     const username = document.getElementById('sidebarUsername');
-    if (username) username.style.color = color;
+    if (username) {
+        username.style.setProperty('color', color, 'important');
+    }
     
     const backBtn = document.querySelector('.back-btn');
     if (backBtn) {
-        backBtn.style.color = color;
-        backBtn.style.textDecoration = 'none';
+        backBtn.style.setProperty('color', color, 'important');
+        backBtn.style.setProperty('text-decoration', 'none', 'important');
     }
     
     localStorage.setItem('feedTextColor', color);
@@ -362,11 +369,11 @@ function loadSavedColor() {
     const savedColor = localStorage.getItem('feedTextColor');
     if (savedColor) {
         const username = document.getElementById('sidebarUsername');
-        if (username) username.style.color = savedColor;
+        if (username) username.style.setProperty('color', savedColor, 'important');
         const backBtn = document.querySelector('.back-btn');
         if (backBtn) {
-            backBtn.style.color = savedColor;
-            backBtn.style.textDecoration = 'none';
+            backBtn.style.setProperty('color', savedColor, 'important');
+            backBtn.style.setProperty('text-decoration', 'none', 'important');
         }
     }
 }
