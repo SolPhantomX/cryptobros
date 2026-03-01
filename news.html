@@ -141,7 +141,6 @@
       transform: scale(1.05);
     }
 
-    /* SPINNING GEAR */
     .bg-toggle.spinning {
       animation: gearSpin 1s linear infinite;
     }
@@ -271,9 +270,9 @@
   <div id="news-grid" class="news-grid"></div>
 
   <script>
-    // ==================== ТВОЙ ОРИГИНАЛЬНЫЙ КОД (СОХРАНЕН ПОЛНОСТЬЮ) ====================
+    // ==================== ORIGINAL CODE ====================
     
-    // Моковые новости как fallback
+    // Mock news as fallback
     const mockNews = [
       {
         title: "Bitcoin Hits New All-Time High",
@@ -322,12 +321,12 @@
       return String(str).replace(/[&<>"']/g, m => escape[m]);
     }
 
-    // ==================== НОВЫЙ КОД ДЛЯ РЕАЛЬНЫХ НОВОСТЕЙ ====================
+    // ==================== REAL NEWS CODE ====================
     
-    // RSS to JSON конвертер (бесплатно, без регистрации)
+    // RSS to JSON converter
     const RSS_CONVERTER = 'https://api.rss2json.com/v1/api.json?rss_url=';
     
-    // Источники новостей
+    // News sources
     const NEWS_SOURCES = [
       { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
       { name: 'Cointelegraph', url: 'https://cointelegraph.com/rss' },
@@ -336,18 +335,18 @@
       { name: 'CryptoSlate', url: 'https://cryptoslate.com/feed/' }
     ];
 
-    // Хранилище всех новостей
+    // News storage
     let allNews = [];
 
-    // Функция загрузки реальных новостей
+    // Fetch real news function
     async function fetchRealNews() {
       const loading = document.getElementById('loading');
       
-      // Проверяем кэш
+      // Check cache
       const cache = JSON.parse(localStorage.getItem('newsCache') || '{}');
       const now = Date.now();
       
-      // Если кэш свежий (менее 2 минут) - используем его
+      // Use cache if fresh (less than 2 minutes)
       if (cache.timestamp && (now - cache.timestamp) < 120000) {
         allNews = cache.data;
         renderFilteredNews(document.getElementById('searchInput').value);
@@ -367,7 +366,7 @@
               return data.items.map(item => ({
                 title: item.title || 'No title',
                 desc: (item.description || item.content || '')
-                  .replace(/<[^>]*>/g, '') // Убираем HTML теги
+                  .replace(/<[^>]*>/g, '')
                   .substring(0, 200) + '...',
                 link: item.link || '#',
                 date: new Date(item.pubDate || item.isoDate || now),
@@ -383,11 +382,11 @@
 
         const results = await Promise.all(newsPromises);
         
-        // Объединяем все новости
+        // Combine all news
         allNews = results
           .flat()
-          .filter(item => item.title !== 'No title') // Убираем пустые
-          .sort((a, b) => b.date - a.date) // Сортируем по дате (свежие сверху)
+          .filter(item => item.title !== 'No title')
+          .sort((a, b) => b.date - a.date)
           .map(item => ({
             ...item,
             date: item.date.toLocaleString('en-US', { 
@@ -396,12 +395,12 @@
             })
           }));
 
-        // Если новостей нет - используем моковые
+        // If no news, use mock
         if (allNews.length === 0) {
           allNews = mockNews;
         }
 
-        // Сохраняем в кэш
+        // Save to cache
         localStorage.setItem('newsCache', JSON.stringify({
           timestamp: now,
           data: allNews
@@ -409,7 +408,6 @@
 
       } catch(error) {
         console.error('News fetch failed:', error);
-        // При ошибке используем моковые
         allNews = mockNews;
       } finally {
         loading.style.display = 'none';
@@ -417,7 +415,7 @@
       }
     }
 
-    // Функция рендера с фильтром
+    // Render with filter
     function renderFilteredNews(filter = '') {
       const grid = document.getElementById('news-grid');
       const noResults = document.getElementById('no-results');
@@ -450,7 +448,7 @@
       `).join('');
     }
 
-    // ==================== ТВОЙ ОРИГИНАЛЬНЫЙ КОД (ПРОДОЛЖЕНИЕ) ====================
+    // ==================== ORIGINAL CODE CONTINUED ====================
 
     // Day/Night toggle
     document.getElementById('themeToggle').addEventListener('click', () => {
@@ -490,7 +488,7 @@
       renderFilteredNews(e.target.value);
     });
 
-    // Загрузка при старте
+    // Initial load
     window.addEventListener('DOMContentLoaded', () => {
       // Load theme
       const savedTheme = localStorage.getItem('feedTheme');
@@ -506,10 +504,10 @@
         currentBgIndex = bgVariants.indexOf(savedBg);
       }
       
-      // Загружаем реальные новости
+      // Load real news
       fetchRealNews();
       
-      // Обновляем каждые 2 минуты
+      // Update every 2 minutes
       setInterval(fetchRealNews, 120000);
     });
   </script>
