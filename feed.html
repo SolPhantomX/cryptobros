@@ -1,355 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CryptoBros Feed</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="feed.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoBros Feed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="feed.css">
+    <!-- VanillaTilt for swinging panels -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <style>
+        /* Shimmer only for text + gear button */
+        .shimmer-text {
+            background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+            animation: shimmerCycle 5s linear infinite;
+            font-weight: 700;
+        }
 
-<!-- VanillaTilt for swinging panels -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+        /* Gear button - 42px and always spinning */
+        #feedBgBtn {
+            width: 42px !important;
+            height: 42px !important;
+            background: linear-gradient(135deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d) !important;
+            background-size: 400% 400% !important;
+            animation: shimmerCycle 5s linear infinite, slowSpin 8s linear infinite !important;
+            color: #0a0a0f !important;
+            border: 2px solid transparent !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            font-size: 1.3rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: fixed !important;
+            bottom: 30px !important;
+            right: 30px !important;
+            z-index: 1000 !important;
+            box-shadow: 0 0 15px rgba(255,215,0,0.3) !important;
+        }
 
-<style>
-/* Shimmer only for text + gear button */
-.shimmer-text {
-    background: linear-gradient(90deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d, #00ff9d, #FFD700);
-    background-size: 400% 400%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent !important;
-    animation: shimmerCycle 5s linear infinite;
-    font-weight: 700;
-}
+        #feedBgBtn:hover {
+            transform: scale(1.1) !important;
+        }
 
-/* Gear button - smaller 42px */
-#feedBgBtn {
-    width: 42px !important;
-    height: 42px !important;
-    background: linear-gradient(135deg, #FFD700, #00F0FF, #9D00FF, #ff4d4d) !important;
-    background-size: 400% 400% !important;
-    animation: shimmerCycle 5s linear infinite, slowSpin 8s linear infinite !important;
-    color: #0a0a0f !important;
-    border: 2px solid transparent !important;
-    border-radius: 50% !important;
-    cursor: pointer !important;
-    font-size: 1.3rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 1000 !important;
-    box-shadow: 0 0 15px rgba(255,215,0,0.3) !important;
-    line-height: 1 !important;
-    padding: 0 !important;
-}
+        /* Slow spin for gear - always on */
+        @keyframes slowSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-#feedBgBtn:hover {
-    transform: scale(1.1) !important;
-}
+        @keyframes shimmerCycle {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-/* Slower spin for gear */
-@keyframes slowSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+        /* ===== SWINGING PANELS ===== */
+        .sidebar-user,
+        .sidebar-menu a,
+        .create-post,
+        .pinned-auctions,
+        .trends-card,
+        #feedPosts > * {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
+        }
 
-@keyframes shimmerCycle {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
+        /* White panels → dark (like on screenshot) */
+        .pinned-auctions,
+        .trends-card,
+        .create-post {
+            background: rgba(10, 14, 39, 0.85) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            color: #fff !important;
+        }
 
-/* ===== SWINGING PANELS ===== */
-.sidebar-user,
-.sidebar-menu a,
-.create-post,
-.pinned-auctions,
-.trends-card,
-#feedPosts > *,
-.back-btn,
-.theme-toggle {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    will-change: transform;
-}
+        .pinned-auctions h2,
+        .trends-title,
+        .create-post textarea {
+            color: #fff !important;
+        }
 
-/* Fix white panels */
-.pinned-auctions,
-.trends-card,
-.create-post {
-    background: rgba(10, 14, 39, 0.9) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    border-radius: 16px !important;
-}
+        .create-post textarea::placeholder {
+            color: rgba(255,255,255,0.6) !important;
+        }
 
-/* ТОЛЬКО ЭТО ИЗМЕНИЛ - УБРАЛ БУКВУ L */
-#sidebarAvatar {
-    display: none !important;
-}
+        /* Back button and theme toggle also swing */
+        .back-btn,
+        .theme-toggle {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
 
-/* Back button and theme toggle also swing */
-.back-btn,
-.theme-toggle {
-    transition: transform 0.3s ease;
-    display: inline-block;
-}
+        /* Color picker from gear button */
+        .text-color-section .color-btn {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
 
-/* Color picker from gear button */
-.text-color-section .color-btn {
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+        .text-color-section .color-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 15px currentColor;
+        }
 
-.text-color-section .color-btn:hover {
-    transform: scale(1.15);
-    box-shadow: 0 0 15px currentColor;
-}
+        /* @cryptobros username - can be colored */
+        .sidebar-user h3 {
+            transition: color 0.3s ease;
+        }
 
-/* @cryptobros username - can be colored */
-.sidebar-user h3 {
-    transition: color 0.3s ease;
-}
+        /* Modal styles */
+        .feed-bg-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
 
-/* Modal styles */
-.feed-bg-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(10px);
-    z-index: 1001;
-    align-items: center;
-    justify-content: center;
-}
+        .feed-bg-modal[style*="flex"] {
+            display: flex !important;
+        }
 
-.feed-bg-modal[style*="flex"] {
-    display: flex !important;
-}
-
-.feed-bg-modal-content {
-    background: rgba(10, 14, 39, 0.95);
-    padding: 2rem;
-    border-radius: 24px;
-    max-width: 500px;
-    width: 90%;
-    border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-}
-</style>
+        .feed-bg-modal-content {
+            background: #1a1a2e;
+            padding: 2rem;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
 </head>
 <body>
-<div class="layout">
-<aside>
-<a href="profile.html" class="sidebar-user">
-<div class="sidebar-user-content">
-<div class="avatar avatar-base" id="sidebarAvatar">L</div>
-<div class="user-info">
-<h3 id="sidebarUsername">@cryptobros</h3>
-<p>CHAIRMAN OF THE TRIBUNAL</p>
-</div>
-</div>
-</a>
-<div class="sidebar-menu">
-<a href="feed.html" class="menu-item active">📰 News Feed</a>
-<a href="messages.html" class="menu-item">💬 Messages</a>
-<a href="groups.html" class="menu-item">👥 My Groups</a>
-<a href="profile.html" class="menu-item">⚙️ Settings</a>
-<a href="tribunal.html" class="menu-item">💡 Tribunal</a>
-<a href="help.html" class="menu-item">🆘 Help Desk</a>
-<a href="payment.html" class="menu-item">💰 AUS Token</a>
-</div>
-</aside>
-<main>
-<div class="top-bar">
-<a href="profile.html" class="back-btn">← Back to Profile</a>
-<div class="theme-toggle" id="themeToggle">🌙</div>
-</div>
-<div class="search-container" id="searchContainer">
-<div class="search-wrapper">
-<span class="search-icon">🔍</span>
-<input type="text" id="globalSearchInput" placeholder="Search posts, #hashtags, $tokens..." autocomplete="off">
-<button class="search-clear" id="searchClearBtn" style="display:none;">✕</button>
-</div>
-<div class="search-results" id="searchResultsBox" style="display:none;"></div>
-</div>
-<div class="create-post">
-<div style="display: flex; gap: 1rem; align-items: flex-start;">
-<div class="create-avatar avatar-base" id="createAvatar">L</div>
-<div style="flex: 1;">
-<textarea class="create-input" id="postInput" placeholder="What's on your mind? (max 2000 chars)" maxlength="2000" rows="4"></textarea>
-<div class="create-actions">
-<span id="charCount">0 / 2000</span>
-<button class="btn-post" id="btnPost" onclick="createPost()">📝 Post</button>
-</div>
-</div>
-</div>
-</div>
-<div class="pinned-auctions">
-<h2>Auction Winners 🏆</h2>
-<div id="pinnedPostsContainer">
-    <p class="shimmer-text">No auction winners yet</p>
-    <p class="shimmer-text">Be the first degen to share alpha!</p>
-    <p class="shimmer-text">Mock mode</p>
-</div>
-</div>
-<div id="feedPosts">
-    <h3 class="shimmer-text">No posts yet</h3>
-    <p class="shimmer-text">Be the first degen to share alpha!</p>
-    <p class="shimmer-text">Mock mode</p>
-</div>
-</main>
-<div class="right-sidebar">
-<div class="trends-card">
-<div class="trends-title">🔥 Hot Topics</div>
-<div class="trend-item"><div class="trend-name">#WIF Pump</div><div class="trend-count" id="trend1">2.1k <span class="trend-indicator trend-neutral">●</span></div></div>
-<div class="trend-item"><div class="trend-name">#SOL Buy</div><div class="trend-count" id="trend2">1.8k <span class="trend-indicator trend-neutral">●</span></div></div>
-<div class="trend-item"><div class="trend-name">#TribunalVote</div><div class="trend-count" id="trend3">942 <span class="trend-indicator trend-neutral">●</span></div></div>
-</div>
-<div class="trends-card">
-<div class="trends-title">Your Wallet</div>
-<div style="font-weight: 600; color: #FFD700; margin: 0.8rem 0;">0.00 SOL</div>
-<div style="color: rgba(255,255,255,0.5); font-size: 0.95rem;">AUS: pending launch</div>
-<button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #FFD700; color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='wallet-connect.html'">Connect Phantom</button>
-</div>
-</div>
-</div>
+    <div class="layout">
+        <aside>
+            <a href="profile.html" class="sidebar-user">
+                <div class="sidebar-user-content">
+                    <div class="avatar avatar-base" id="sidebarAvatar">C</div>
+                    <div class="user-info">
+                        <h3 id="sidebarUsername">@cryptobros</h3>
+                        <p>CHAIRMAN OF THE TRIBUNAL</p>
+                    </div>
+                </div>
+            </a>
 
-<!-- Gear Button - Smaller 42px -->
-<button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">⚙️</button>
+            <div class="sidebar-menu">
+                <a href="feed.html" class="menu-item active">📰 News Feed</a>
+                <a href="messages.html" class="menu-item">💬 Messages</a>
+                <a href="groups.html" class="menu-item">👥 My Groups</a>
+                <a href="profile.html" class="menu-item">⚙️ Settings</a>
+                <a href="tribunal.html" class="menu-item">⚖️ Tribunal</a>
+                <a href="help.html" class="menu-item">❓ Help Desk</a>
+                <a href="payment.html" class="menu-item">🪙 AUS Token</a>
+            </div>
+        </aside>
 
-<!-- Modal -->
-<div id="feedBgModal" class="feed-bg-modal">
-<div class="feed-bg-modal-content">
-<h3 style="color: white; margin-bottom: 1.5rem;">Customize Feed</h3>
-<div class="text-color-section">
-<h4 style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">Text Color</h4>
-<div class="color-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffd700; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ffd700')"></button>
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#00f0ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#00f0ff')"></button>
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#9d00ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#9d00ff')"></button>
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ff4d4d; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ff4d4d')"></button>
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffffff; border: 2px solid #000; cursor: pointer;" onclick="setTextColor('#ffffff')"></button>
-</div>
-</div>
-<div class="bg-presets-grid" id="bgPresetsGrid"></div>
-<div class="bg-upload-section" style="margin: 1.5rem 0;">
-<label for="feedBgUpload" style="display: block; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 12px; text-align: center; cursor: pointer;">Upload Custom Background</label>
-<input type="file" id="feedBgUpload" accept="image/*" style="display: none;">
-</div>
-<div class="bg-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
-<button onclick="resetCustomColors()" style="padding: 0.8rem 1.5rem; background: transparent; border: 1px solid #00f0ff; border-radius: 8px; color: white; cursor: pointer;">Reset</button>
-<button onclick="closeFeedBgModal()" style="padding: 0.8rem 1.5rem; background: #00f0ff; border: none; border-radius: 8px; color: #0a0a0f; cursor: pointer;">Close</button>
-</div>
-</div>
-</div>
+        <main>
+            <div class="top-bar">
+                <a href="profile.html" class="back-btn">← Back to Profile</a>
+                <div class="theme-toggle" id="themeToggle">🌓</div>
+            </div>
 
-<script>
-// ===== VANILLA TILT =====
-function initTilt() {
-    if (typeof VanillaTilt === 'undefined') {
-        setTimeout(initTilt, 100);
-        return;
-    }
-    
-    const swingElements = document.querySelectorAll(
-        '.sidebar-user, .sidebar-menu a, .create-post, .pinned-auctions, ' +
-        '.trends-card, #feedPosts > *, .back-btn, .theme-toggle'
-    );
-    
-    VanillaTilt.init(swingElements, {
-        max: 6,
-        speed: 400,
-        glare: true,
-        'max-glare': 0.2,
-        scale: 1.02
-    });
-}
+            <div class="search-container" id="searchContainer">
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="globalSearchInput" placeholder="Search posts, #hashtags, $tokens..." autocomplete="off">
+                    <button class="search-clear" id="searchClearBtn" style="display:none;">✕</button>
+                </div>
+                <div class="search-results" id="searchResultsBox" style="display:none;"></div>
+            </div>
 
-// ===== COLOR CUSTOMIZATION =====
-function setTextColor(color) {
-    const username = document.getElementById('sidebarUsername');
-    if (username) username.style.color = color;
-    
-    const backBtn = document.querySelector('.back-btn');
-    if (backBtn) backBtn.style.color = color;
-    
-    localStorage.setItem('feedTextColor', color);
-    closeFeedBgModal();
-}
+            <div class="create-post">
+                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    <div class="create-avatar avatar-base" id="createAvatar">C</div>
+                    <div style="flex: 1;">
+                        <textarea class="create-input" id="postInput" placeholder="What's on your mind? (max 2000 chars)" maxlength="2000" rows="4"></textarea>
+                        <div class="create-actions">
+                            <span id="charCount">0 / 2000</span>
+                            <button class="btn-post" id="btnPost" onclick="createPost()">📤 Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-function resetCustomColors() {
-    const username = document.getElementById('sidebarUsername');
-    if (username) username.style.color = '';
-    
-    const backBtn = document.querySelector('.back-btn');
-    if (backBtn) backBtn.style.color = '';
-    
-    localStorage.removeItem('feedTextColor');
-    closeFeedBgModal();
-}
+            <div class="pinned-auctions">
+                <h2>Auction Winners 🏆</h2>
+                <div id="pinnedPostsContainer">
+                    <p class="shimmer-text">No auction winners yet</p>
+                    <p class="shimmer-text">Be the first degen to share alpha!</p>
+                    <p class="shimmer-text">Mock mode</p>
+                </div>
+            </div>
 
-function loadSavedColor() {
-    const savedColor = localStorage.getItem('feedTextColor');
-    if (savedColor) {
-        const username = document.getElementById('sidebarUsername');
-        if (username) username.style.color = savedColor;
-        
-        const backBtn = document.querySelector('.back-btn');
-        if (backBtn) backBtn.style.color = savedColor;
-    }
-}
+            <div id="feedPosts">
+                <h3 class="shimmer-text">No posts yet</h3>
+                <p class="shimmer-text">Be the first degen to share alpha!</p>
+                <p class="shimmer-text">Mock mode</p>
+            </div>
+        </main>
 
-// ===== MODAL FUNCTIONS =====
-function closeFeedBgModal() {
-    document.getElementById('feedBgModal').style.display = 'none';
-}
+        <div class="right-sidebar">
+            <div class="trends-card">
+                <div class="trends-title">🔥 Hot Topics</div>
+                <div class="trend-item">
+                    <div class="trend-name">#WIF Pump</div>
+                    <div class="trend-count" id="trend1">2.1k <span class="trend-indicator trend-neutral">●</span></div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-name">#SOL Buy</div>
+                    <div class="trend-count" id="trend2">1.8k <span class="trend-indicator trend-neutral">●</span></div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-name">#TribunalVote</div>
+                    <div class="trend-count" id="trend3">942 <span class="trend-indicator trend-neutral">●</span></div>
+                </div>
+            </div>
 
-// Initialize
-window.addEventListener('DOMContentLoaded', () => {
-    initTilt();
-    loadSavedColor();
-    
-    const modal = document.getElementById('feedBgModal');
-    const btn = document.getElementById('feedBgBtn');
-    
-    // Open modal
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        modal.style.display = 'flex';
-    });
-    
-    // Close on outside click
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
+            <div class="trends-card">
+                <div class="trends-title">Your Wallet</div>
+                <div style="font-weight: 600; color: #FFD700; margin: 0.8rem 0;">0.00 SOL</div>
+                <div style="color: #aaa; font-size: 0.95rem;">AUS: pending launch</div>
+                <button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #FFD700; color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='wallet-connect.html'">Connect Phantom</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gear Button - 42px always spinning -->
+    <button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">⚙️</button>
+
+    <!-- Modal -->
+    <div id="feedBgModal" class="feed-bg-modal">
+        <div class="feed-bg-modal-content">
+            <h3 style="color: #fff; margin-bottom: 1.5rem;">Customize Feed</h3>
+
+            <div class="text-color-section">
+                <h4 style="color: #aaa; margin-bottom: 1rem;">Text Color</h4>
+                <div class="color-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+                    <button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffd700; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ffd700')"></button>
+                    <button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#00f0ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#00f0ff')"></button>
+                    <button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#9d00ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#9d00ff')"></button>
+                    <button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ff4d4d; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ff4d4d')"></button>
+                    <button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffffff; border: 2px solid #000; cursor: pointer;" onclick="setTextColor('#ffffff')"></button>
+                </div>
+            </div>
+
+            <div class="bg-presets-grid" id="bgPresetsGrid"></div>
+
+            <div class="bg-upload-section" style="margin: 1.5rem 0;">
+                <label for="feedBgUpload" style="display: block; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 12px; text-align: center; cursor: pointer;">Upload Custom Background</label>
+                <input type="file" id="feedBgUpload" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="bg-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button onclick="resetCustomColors()" style="padding: 0.8rem 1.5rem; background: transparent; border: 1px solid #FFD700; border-radius: 8px; color: #fff; cursor: pointer;">Reset</button>
+                <button onclick="closeFeedBgModal()" style="padding: 0.8rem 1.5rem; background: #FFD700; border: none; border-radius: 8px; color: #0a0a0f; cursor: pointer;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== VANILLA TILT FOR SWINGING PANELS =====
+        function initTilt() {
+            if (typeof VanillaTilt === 'undefined') {
+                setTimeout(initTilt, 100);
+                return;
+            }
+
+            const swingElements = document.querySelectorAll(
+                '.sidebar-user, .sidebar-menu a, .create-post, .pinned-auctions, ' +
+                '.trends-card, #feedPosts > *, .back-btn, .theme-toggle'
+            );
+
+            VanillaTilt.init(swingElements, {
+                max: 6,
+                speed: 400,
+                glare: true,
+                'max-glare': 0.2,
+                scale: 1.02,
+                easing: "cubic-bezier(.03,.98,.52,.99)"
+            });
         }
-    });
-    
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'flex') {
-            modal.style.display = 'none';
+
+        // ===== COLOR CUSTOMIZATION =====
+        // Set color for @cryptobros and Back button
+        function setTextColor(color) {
+            const username = document.getElementById('sidebarUsername');
+            if (username) username.style.color = color;
+
+            const backBtn = document.querySelector('.back-btn');
+            if (backBtn) backBtn.style.color = color;
+
+            localStorage.setItem('feedTextColor', color);
+            closeFeedBgModal();
         }
-    });
-});
-</script>
 
-<script src="feed-config.js"></script>
-<script src="feed-utils.js"></script>
-<script src="feed-sentinel.js"></script>
-<script src="feed-background.js"></script>
-<script src="feed-trends.js"></script>
-<script src="feed-search.js"></script>
-<script src="feed-ui.js"></script>
-<script src="feed-main.js"></script>
+        // Reset colors
+        function resetCustomColors() {
+            const username = document.getElementById('sidebarUsername');
+            if (username) username.style.color = '';
 
+            const backBtn = document.querySelector('.back-btn');
+            if (backBtn) backBtn.style.color = '';
+
+            localStorage.removeItem('feedTextColor');
+            closeFeedBgModal();
+        }
+
+        // Load saved color
+        function loadSavedColor() {
+            const savedColor = localStorage.getItem('feedTextColor');
+            if (savedColor) {
+                const username = document.getElementById('sidebarUsername');
+                if (username) username.style.color = savedColor;
+
+                const backBtn = document.querySelector('.back-btn');
+                if (backBtn) backBtn.style.color = savedColor;
+            }
+        }
+
+        // ===== MODAL FUNCTIONS =====
+        function openFeedBgModal() {
+            document.getElementById('feedBgModal').style.display = 'flex';
+        }
+
+        function closeFeedBgModal() {
+            document.getElementById('feedBgModal').style.display = 'none';
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initTilt();
+            loadSavedColor();
+
+            const modal = document.getElementById('feedBgModal');
+            const btn = document.getElementById('feedBgBtn');
+
+            // Open modal
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                modal.style.display = 'flex';
+            });
+
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.style.display === 'flex') {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    <script src="feed-config.js"></script>
+    <script src="feed-utils.js"></script>
+    <script src="feed-sentinel.js"></script>
+    <script src="feed-background.js"></script>
+    <script src="feed-trends.js"></script>
+    <script src="feed-search.js"></script>
+    <script src="feed-ui.js"></script>
+    <script src="feed-main.js"></script>
 </body>
 </html>
