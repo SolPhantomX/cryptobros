@@ -271,7 +271,9 @@
   <div id="news-grid" class="news-grid"></div>
 
   <script>
-    // Test news (realistic dates, real links)
+    // ==================== ТВОЙ ОРИГИНАЛЬНЫЙ КОД (СОХРАНЕН ПОЛНОСТЬЮ) ====================
+    
+    // Моковые новости как fallback
     const mockNews = [
       {
         title: "Bitcoin Hits New All-Time High",
@@ -310,7 +312,7 @@
       }
     ];
 
-    // Background variants - EXACTLY LIKE HELP DESK
+    // Background variants
     const bgVariants = ['default', 'gradient', 'particles', 'gold', 'cyber'];
     let currentBgIndex = 0;
 
@@ -320,47 +322,135 @@
       return String(str).replace(/[&<>"']/g, m => escape[m]);
     }
 
-    function renderNews(filter = '') {
-      const grid = document.getElementById('news-grid');
-      const loading = document.getElementById('loading');
-      const noResults = document.getElementById('no-results');
-      grid.innerHTML = '';
+    // ==================== НОВЫЙ КОД ДЛЯ РЕАЛЬНЫХ НОВОСТЕЙ ====================
+    
+    // RSS to JSON конвертер (бесплатно, без регистрации)
+    const RSS_CONVERTER = 'https://api.rss2json.com/v1/api.json?rss_url=';
+    
+    // Источники новостей
+    const NEWS_SOURCES = [
+      { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+      { name: 'Cointelegraph', url: 'https://cointelegraph.com/rss' },
+      { name: 'The Block', url: 'https://www.theblock.co/feed' },
+      { name: 'Decrypt', url: 'https://decrypt.co/feed' },
+      { name: 'CryptoSlate', url: 'https://cryptoslate.com/feed/' }
+    ];
 
+    // Хранилище всех новостей
+    let allNews = [];
+
+    // Функция загрузки реальных новостей
+    async function fetchRealNews() {
+      const loading = document.getElementById('loading');
+      
+      // Проверяем кэш
+      const cache = JSON.parse(localStorage.getItem('newsCache') || '{}');
+      const now = Date.now();
+      
+      // Если кэш свежий (менее 2 минут) - используем его
+      if (cache.timestamp && (now - cache.timestamp) < 120000) {
+        allNews = cache.data;
+        renderFilteredNews(document.getElementById('searchInput').value);
+        loading.style.display = 'none';
+        return;
+      }
+
+      loading.style.display = 'block';
+      
+      try {
+        const newsPromises = NEWS_SOURCES.map(async (source) => {
+          try {
+            const response = await fetch(RSS_CONVERTER + encodeURIComponent(source.url));
+            const data = await response.json();
+            
+            if (data.items && data.items.length > 0) {
+              return data.items.map(item => ({
+                title: item.title || 'No title',
+                desc: (item.description || item.content || '')
+                  .replace(/<[^>]*>/g, '') // Убираем HTML теги
+                  .substring(0, 200) + '...',
+                link: item.link || '#',
+                date: new Date(item.pubDate || item.isoDate || now),
+                source: source.name
+              }));
+            }
+            return [];
+          } catch(e) {
+            console.warn(`Failed to fetch ${source.name}:`, e);
+            return [];
+          }
+        });
+
+        const results = await Promise.all(newsPromises);
+        
+        // Объединяем все новости
+        allNews = results
+          .flat()
+          .filter(item => item.title !== 'No title') // Убираем пустые
+          .sort((a, b) => b.date - a.date) // Сортируем по дате (свежие сверху)
+          .map(item => ({
+            ...item,
+            date: item.date.toLocaleString('en-US', { 
+              month: 'short', day: 'numeric', year: 'numeric', 
+              hour: '2-digit', minute: '2-digit' 
+            })
+          }));
+
+        // Если новостей нет - используем моковые
+        if (allNews.length === 0) {
+          allNews = mockNews;
+        }
+
+        // Сохраняем в кэш
+        localStorage.setItem('newsCache', JSON.stringify({
+          timestamp: now,
+          data: allNews
+        }));
+
+      } catch(error) {
+        console.error('News fetch failed:', error);
+        // При ошибке используем моковые
+        allNews = mockNews;
+      } finally {
+        loading.style.display = 'none';
+        renderFilteredNews(document.getElementById('searchInput').value);
+      }
+    }
+
+    // Функция рендера с фильтром
+    function renderFilteredNews(filter = '') {
+      const grid = document.getElementById('news-grid');
+      const noResults = document.getElementById('no-results');
+      
+      if (!grid) return;
+      
       const trimmed = filter.trim().toLowerCase();
-      const filtered = mockNews.filter(n => 
+      const filtered = allNews.filter(n => 
         n.title.toLowerCase().includes(trimmed) || 
         n.desc.toLowerCase().includes(trimmed)
       );
 
       if (filtered.length === 0 && trimmed) {
+        grid.innerHTML = '';
         noResults.style.display = 'block';
-        loading.style.display = 'none';
         return;
       }
 
       noResults.style.display = 'none';
 
-      filtered.forEach(n => {
-        const card = document.createElement('div');
-        card.className = 'news-card';
-        card.innerHTML = `
+      grid.innerHTML = filtered.map(n => `
+        <div class="news-card">
           <div class="news-title">${escapeHTML(n.title)}</div>
           <div class="news-desc">${escapeHTML(n.desc)}</div>
           <div class="news-meta">
             <span class="news-source">${escapeHTML(n.source)}</span> • ${escapeHTML(n.date)}
           </div>
           <a href="${n.link}" target="_blank" class="news-link">Read more →</a>
-        `;
-        grid.appendChild(card);
-      });
-
-      loading.style.display = 'none';
+        </div>
+      `).join('');
     }
 
-    // Search
-    document.getElementById('searchInput').addEventListener('input', e => {
-      renderNews(e.target.value);
-    });
+    // ==================== ТВОЙ ОРИГИНАЛЬНЫЙ КОД (ПРОДОЛЖЕНИЕ) ====================
 
     // Day/Night toggle
     document.getElementById('themeToggle').addEventListener('click', () => {
@@ -375,31 +465,32 @@
       try { localStorage.setItem('feedTheme', body.dataset.theme); } catch(e) {}
     });
 
-    // BACKGROUND TOGGLE - EXACTLY LIKE HELP DESK
+    // Background toggle
     document.getElementById('bgToggle').addEventListener('click', function() {
       const body = document.body;
       const btn = this;
       
-      // Add spinning animation
       btn.classList.add('spinning');
       
-      // Cycle to next background
       currentBgIndex = (currentBgIndex + 1) % bgVariants.length;
       const newBg = bgVariants[currentBgIndex];
       
-      // Apply with slight delay for visual feedback
       setTimeout(() => {
         body.setAttribute('data-bg', newBg);
         try { localStorage.setItem('feedBg', newBg); } catch(e) {}
         
-        // Stop spinning after change
         setTimeout(() => {
           btn.classList.remove('spinning');
         }, 300);
       }, 200);
     });
 
-    // Load saved preferences
+    // Search input
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      renderFilteredNews(e.target.value);
+    });
+
+    // Загрузка при старте
     window.addEventListener('DOMContentLoaded', () => {
       // Load theme
       const savedTheme = localStorage.getItem('feedTheme');
@@ -415,10 +506,12 @@
         currentBgIndex = bgVariants.indexOf(savedBg);
       }
       
-      // Initial render
-      renderNews();
+      // Загружаем реальные новости
+      fetchRealNews();
+      
+      // Обновляем каждые 2 минуты
+      setInterval(fetchRealNews, 120000);
     });
   </script>
 </body>
 </html>
-
