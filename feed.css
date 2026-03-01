@@ -490,3 +490,11 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
 .action-btn:hover .aus-like-icon {
   transform: scale(1.15);
 }
+/* ===== FIX: Gear button 39px + SVG ===== */
+#feedBgBtn { width: 39px !important; height: 39px !important; font-size: 0 !important; color: transparent !important; display: flex !important; align-items: center !important; justify-content: center !important; }
+#feedBgBtn svg { width: 20px !important; height: 20px !important; fill: #ffffff !important; stroke: #0a0a0f !important; stroke-width: 0.5 !important; }
+
+/* ===== FIX: Individual shimmer animations ===== */
+@keyframes shimmerCycle { 0% { bac…ffcc) !important; background-size: 300% 100% !important; animation-duration: 22s !important; }
+#feedPosts p.shimmer-text:nth-of-type(2) { background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700, #ffb300) !important; background-size: 300% 100% !important; animation-duration: 30s !important; }
+#feedPosts p.shimmer-text:nth-of-type(3) { background: linear-gradient(90deg, #ff6ec7, #ff9ddb, #ff6ec7, #ff3fa3) !important; background-size: 300% 100% !important; animation-duration: 26s !important; }
