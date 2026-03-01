@@ -44,6 +44,8 @@
     right: 30px !important;
     z-index: 1000 !important;
     box-shadow: 0 0 15px rgba(255,215,0,0.3) !important;
+    line-height: 1 !important;
+    padding: 0 !important;
 }
 
 #feedBgBtn:hover {
@@ -68,7 +70,9 @@
 .create-post,
 .pinned-auctions,
 .trends-card,
-#feedPosts > * {
+#feedPosts > *,
+.back-btn,
+.theme-toggle {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     will-change: transform;
 }
@@ -77,9 +81,15 @@
 .pinned-auctions,
 .trends-card,
 .create-post {
-    background: var(--card-bg, rgba(10, 14, 39, 0.7)) !important;
+    background: rgba(10, 14, 39, 0.9) !important;
     backdrop-filter: blur(10px) !important;
     border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 16px !important;
+}
+
+/* ТОЛЬКО ЭТО ИЗМЕНИЛ - УБРАЛ БУКВУ L */
+#sidebarAvatar {
+    display: none !important;
 }
 
 /* Back button and theme toggle also swing */
@@ -125,12 +135,13 @@
 }
 
 .feed-bg-modal-content {
-    background: var(--card-bg, #1a1a2e);
+    background: rgba(10, 14, 39, 0.95);
     padding: 2rem;
     border-radius: 24px;
     max-width: 500px;
     width: 90%;
     border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
 }
 </style>
 </head>
@@ -139,7 +150,7 @@
 <aside>
 <a href="profile.html" class="sidebar-user">
 <div class="sidebar-user-content">
-<div class="avatar avatar-base" id="sidebarAvatar">C</div>
+<div class="avatar avatar-base" id="sidebarAvatar">L</div>
 <div class="user-info">
 <h3 id="sidebarUsername">@cryptobros</h3>
 <p>CHAIRMAN OF THE TRIBUNAL</p>
@@ -171,7 +182,7 @@
 </div>
 <div class="create-post">
 <div style="display: flex; gap: 1rem; align-items: flex-start;">
-<div class="create-avatar avatar-base" id="createAvatar">C</div>
+<div class="create-avatar avatar-base" id="createAvatar">L</div>
 <div style="flex: 1;">
 <textarea class="create-input" id="postInput" placeholder="What's on your mind? (max 2000 chars)" maxlength="2000" rows="4"></textarea>
 <div class="create-actions">
@@ -204,9 +215,9 @@
 </div>
 <div class="trends-card">
 <div class="trends-title">Your Wallet</div>
-<div style="font-weight: 600; color: var(--accent-gold); margin: 0.8rem 0;">0.00 SOL</div>
-<div style="color: var(--text-secondary); font-size: 0.95rem;">AUS: pending launch</div>
-<button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: var(--accent-gold); color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='wallet-connect.html'">Connect Phantom</button>
+<div style="font-weight: 600; color: #FFD700; margin: 0.8rem 0;">0.00 SOL</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 0.95rem;">AUS: pending launch</div>
+<button style="width: 100%; margin-top: 1rem; padding: 0.8rem; background: #FFD700; color: #0a0a0f; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="window.location.href='wallet-connect.html'">Connect Phantom</button>
 </div>
 </div>
 </div>
@@ -217,9 +228,9 @@
 <!-- Modal -->
 <div id="feedBgModal" class="feed-bg-modal">
 <div class="feed-bg-modal-content">
-<h3 style="color: var(--text-primary); margin-bottom: 1.5rem;">Customize Feed</h3>
+<h3 style="color: white; margin-bottom: 1.5rem;">Customize Feed</h3>
 <div class="text-color-section">
-<h4 style="color: var(--text-secondary); margin-bottom: 1rem;">Text Color</h4>
+<h4 style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">Text Color</h4>
 <div class="color-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
 <button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffd700; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ffd700')"></button>
 <button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#00f0ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#00f0ff')"></button>
@@ -234,14 +245,14 @@
 <input type="file" id="feedBgUpload" accept="image/*" style="display: none;">
 </div>
 <div class="bg-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
-<button onclick="resetCustomColors()" style="padding: 0.8rem 1.5rem; background: transparent; border: 1px solid var(--accent); border-radius: 8px; color: var(--text-primary); cursor: pointer;">Reset</button>
-<button onclick="closeFeedBgModal()" style="padding: 0.8rem 1.5rem; background: var(--accent); border: none; border-radius: 8px; color: #0a0a0f; cursor: pointer;">Close</button>
+<button onclick="resetCustomColors()" style="padding: 0.8rem 1.5rem; background: transparent; border: 1px solid #00f0ff; border-radius: 8px; color: white; cursor: pointer;">Reset</button>
+<button onclick="closeFeedBgModal()" style="padding: 0.8rem 1.5rem; background: #00f0ff; border: none; border-radius: 8px; color: #0a0a0f; cursor: pointer;">Close</button>
 </div>
 </div>
 </div>
 
 <script>
-// ===== VANILLA TILT FOR SWINGING PANELS =====
+// ===== VANILLA TILT =====
 function initTilt() {
     if (typeof VanillaTilt === 'undefined') {
         setTimeout(initTilt, 100);
@@ -258,8 +269,7 @@ function initTilt() {
         speed: 400,
         glare: true,
         'max-glare': 0.2,
-        scale: 1.02,
-        easing: "cubic-bezier(.03,.98,.52,.99)"
+        scale: 1.02
     });
 }
 
@@ -298,15 +308,11 @@ function loadSavedColor() {
 }
 
 // ===== MODAL FUNCTIONS =====
-function openFeedBgModal() {
-    document.getElementById('feedBgModal').style.display = 'flex';
-}
-
 function closeFeedBgModal() {
     document.getElementById('feedBgModal').style.display = 'none';
 }
 
-// Initialize on load
+// Initialize
 window.addEventListener('DOMContentLoaded', () => {
     initTilt();
     loadSavedColor();
@@ -327,7 +333,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Close on Escape key
+    // Close on Escape
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.style.display === 'flex') {
             modal.style.display = 'none';
