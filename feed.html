@@ -6,18 +6,588 @@
 <title>CryptoBros Feed</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="feed.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500:600:700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-body: #f8f9fa; --bg-card: #ffffff; --text-primary: #212529;
+  --text-secondary: #6c757d; --border-color: #e9ecef; --shadow: 0 4px 12px rgba(0,0,0,0.05);
+  --accent-gold: #FFD700; --accent-cyan: #00F0FF; --accent-purple: #9D00FF;
+  --hover-bg: #f1f3f5; --active-sidebar: #fff9e6;
+  --success: #00ff9d; --error: #ff4d4d; --warning: #ffd700;
+  --custom-text-color: var(--text-primary);
+  --custom-card-bg: var(--bg-card);
+  --custom-modal-bg: var(--bg-card);
+  --custom-modal-border: var(--accent-gold);
+  --custom-input-bg: var(--bg-body);
+}
+.dark-theme {
+  --bg-body: #121212; --bg-card: #1e1e1e; --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0; --border-color: #333333; --shadow: 0 4px 12px rgba(0,0,0,0.3);
+  --hover-bg: #2a2a2a; --active-sidebar: #2a2515;
+  --custom-text-color: var(--text-primary);
+  --custom-card-bg: var(--bg-card);
+  --custom-modal-bg: #1a1a3f;
+  --custom-modal-border: var(--accent-cyan);
+  --custom-input-bg: var(--bg-body);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-primary);
+  min-height: 100vh; transition: background 0.3s ease;
+  background-size: cover; background-position: center;
+  background-attachment: fixed; background-repeat: no-repeat;
+}
+.layout { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
+aside { width: 280px; flex-shrink: 0; padding: 2rem 0; position: sticky; top: 20px; }
+.avatar-base {
+  border-radius: 50%;
+  background: linear-gradient(45deg, var(--accent-gold), var(--accent-cyan));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #0a0a0f; font-family: 'Roboto Mono', monospace;
+  flex-shrink: 0; cursor: pointer;
+}
+.avatar { width: 60px; height: 60px; font-size: 1.4rem; }
+.post-avatar { width: 48px; height: 48px; font-size: 1.2rem; margin-right: 1rem; }
+.create-avatar { width: 52px; height: 52px; font-size: 1.3rem; }
+.sidebar-user {
+  display: block; padding: 1rem; margin-bottom: 2rem; background: var(--bg-card);
+  border-radius: 16px; box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s;
+  text-decoration: none; color: inherit;
+}
+.sidebar-user:hover { transform: translateX(4px); box-shadow: 0 6px 16px rgba(255, 215, 0, 0.3); }
+.sidebar-user-content { display: flex; align-items: center; gap: 1rem; }
+.user-info { cursor: pointer; }
+.user-info h3 { font-weight: 700; font-size: 1.3rem; color: var(--text-primary); margin: 0; }
+.user-info p { font-size: 0.95rem; color: var(--text-secondary); margin: 0; }
+.sidebar-menu { background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+.menu-item {
+  padding: 1.2rem 1.5rem; font-size: 1.2rem; font-weight: 600; display: flex;
+  align-items: center; gap: 1rem; cursor: pointer; transition: all 0.3s;
+  color: var(--text-primary); text-decoration: none;
+}
+.menu-item:hover { background: var(--hover-bg); color: var(--accent-gold); }
+.menu-item.active { background: var(--active-sidebar); color: var(--accent-gold); border-left: 4px solid var(--accent-gold); }
+main { flex: 1; max-width: 720px; padding: 0 1rem; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem;
+  background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px;
+  font-weight: 600; color: var(--text-primary); text-decoration: none; cursor: pointer;
+  transition: all 0.3s; box-shadow: var(--shadow);
+}
+.back-btn:hover { background: var(--hover-bg); transform: translateX(-4px); border-color: var(--accent-gold); }
+.create-post {
+  background: var(--bg-card); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+.create-input {
+  width: 100%; background: var(--bg-body); border: 2px solid var(--border-color);
+  border-radius: 12px; padding: 1rem; font-size: 1rem; color: var(--text-primary);
+  resize: vertical; outline: none; min-height: 120px; max-height: 400px;
+  font-family: inherit; line-height: 1.6; transition: border-color 0.3s;
+}
+.create-input:focus { border-color: var(--accent-gold); }
+.create-input::placeholder { color: var(--text-secondary); opacity: 0.7; }
+.create-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; }
+#charCount { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; }
+.btn-post {
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+  border: none; border-radius: 12px; font-weight: 700; font-size: 0.95rem;
+  cursor: pointer; color: #0a0a0f; transition: all 0.3s; white-space: nowrap;
+}
+.btn-post:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4); }
+.btn-post:disabled { opacity: 0.5; cursor: not-allowed; }
+.post {
+  background: var(--bg-card); border-radius: 16px; margin-bottom: 2rem;
+  box-shadow: var(--shadow); overflow: hidden; position: relative;
+}
+.post-header { display: flex; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
+.post-user { font-weight: 600; font-size: 1.1rem; color: var(--text-primary); }
+.post-time { color: var(--text-secondary); font-size: 0.9rem; margin-left: 0.8rem; }
+.post-content, .comment-item {
+  padding: 1.5rem; line-height: 1.6; font-size: 1.05rem; color: var(--text-primary);
+  word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; white-space: pre-wrap;
+}
+.post-actions {
+  display: flex; justify-content: space-around; padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color); color: var(--text-secondary);
+}
+.action-btn {
+  display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; cursor: pointer;
+  padding: 0.5rem 1rem; border-radius: 12px; transition: all 0.2s; user-select: none;
+}
+.action-btn:hover { background: var(--hover-bg); }
+.action-btn.liked { color: #0066FF; }
+.action-btn.reposted { color: var(--accent-cyan); }
+.aus-icon {
+  width: 24px; height: 24px; object-fit: contain;
+  opacity: 0.6; transition: all 0.3s;
+}
+.action-btn.liked .aus-icon {
+  opacity: 1; animation: ausPulse 1s ease-in-out infinite;
+}
+@keyframes ausPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+.action-btn .count { font-size: 0.9rem; font-weight: 600; margin-left: 0.3rem; }
+.btn-delete {
+  position: absolute; top: 1rem; right: 1rem; padding: 0.4rem 0.8rem;
+  background: rgba(255, 59, 92, 0.1); border: 1px solid #ff3b5c; border-radius: 8px;
+  color: #ff3b5c; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; z-index: 10;
+}
+.btn-delete:hover { background: #ff3b5c; color: white; }
+.comment-section { padding: 0 1.5rem 1rem; display: none; }
+.comment-section.visible { display: block; }
+.comment-input {
+  width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 12px;
+  outline: none; font-size: 1rem; background: var(--bg-body); color: var(--text-primary);
+  min-height: 60px; margin-top: 0.5rem; resize: none;
+}
+.comment-save-btn {
+  margin-top: 0.5rem; padding: 0.4rem 1rem; background: var(--accent-cyan); border: none;
+  border-radius: 8px; font-weight: 600; color: #0a0a0f; cursor: pointer; font-size: 0.9rem;
+}
+.comment-list { margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem; }
+.comment-item {
+  padding: 0.5rem 0; font-size: 0.95rem; color: var(--text-secondary);
+  border-bottom: 1px dashed var(--border-color);
+}
+.comment-item:last-child { border-bottom: none; }
+.right-sidebar { width: 300px; flex-shrink: 0; padding-left: 1rem; position: sticky; top: 20px; }
+.trends-card { background: var(--bg-card); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; }
+.trends-title { font-weight: 700; font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem; }
+.trend-item { padding: 0.8rem 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.trend-name { font-weight: 600; color: var(--accent-gold); }
+.trend-count { color: var(--text-secondary); font-size: 0.9rem; display: flex; align-items: center; gap: 0.3rem; }
+.trend-indicator { font-size: 0.8rem; font-weight: 700; }
+.trend-up { color: var(--success); }
+.trend-down { color: var(--error); }
+.trend-neutral { color: var(--text-secondary); }
+.theme-toggle {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--bg-card);
+  border: 1px solid var(--border-color); display: flex; align-items: center;
+  justify-content: center; cursor: pointer; font-size: 1.2rem; transition: all 0.3s; box-shadow: var(--shadow);
+}
+.theme-toggle:hover { transform: scale(1.1); }
+.loader { text-align: center; padding: 2rem; color: var(--text-secondary); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+.search-container { position: relative; max-width: 100%; margin: 0 0 1.5rem 0; z-index: 1000; }
+.search-wrapper {
+  display: flex; align-items: center; background: var(--bg-card); border: 2px solid var(--border-color);
+  border-radius: 12px; padding: 0.5rem 1rem; transition: all 0.3s;
+}
+.search-wrapper:focus-within { border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2); }
+.search-icon { color: var(--text-secondary); margin-right: 0.5rem; font-size: 1rem; pointer-events: none; }
+#globalSearchInput {
+  flex: 1; background: transparent; border: none; color: var(--text-primary);
+  font-family: inherit; font-size: 1rem; outline: none; padding: 0.5rem 0;
+}
+#globalSearchInput::placeholder { color: var(--text-secondary); opacity: 0.7; }
+#searchClearBtn {
+  background: none; border: none; color: var(--text-secondary); cursor: pointer;
+  font-size: 1.2rem; padding: 0.2rem 0.5rem; opacity: 0.7; transition: opacity 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+#searchClearBtn:hover { opacity: 1; color: var(--text-primary); }
+#searchResultsBox {
+  position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card);
+  border: 1px solid var(--border-color); border-radius: 12px; margin-top: 0.5rem;
+  max-height: 400px; overflow-y: auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); z-index: 1001;
+}
+.search-result-item {
+  padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer;
+  transition: background 0.2s; display: flex; align-items: center; gap: 0.75rem;
+}
+.search-result-item:hover { background: var(--hover-bg); }
+.search-result-item:last-child { border-bottom: none; }
+.result-icon { font-size: 1.2rem; min-width: 24px; pointer-events: none; }
+.result-content { flex: 1; min-width: 0; pointer-events: none; }
+.result-title {
+  color: var(--text-primary); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.result-subtitle {
+  color: var(--text-secondary); font-size: 0.85rem; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.result-type {
+  font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 4px;
+  background: var(--accent-gold); color: #0a0a0f; text-transform: uppercase;
+  font-weight: 600; pointer-events: none;
+}
+.result-type.user { background: rgba(157, 0, 255, 0.15); color: var(--accent-purple); }
+.result-type.post { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); }
+.result-type.token { background: rgba(255, 215, 0, 0.15); color: var(--accent-gold); }
+.result-type.hashtag { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); }
+.search-empty, .search-loading {
+  padding: 1.5rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;
+}
+.search-loading { color: var(--accent-cyan); }
+.dark-theme .search-wrapper { background: var(--bg-card); border-color: var(--border-color); }
+.dark-theme #searchResultsBox {
+  background: var(--bg-card); border-color: var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+.dark-theme .result-type.user { background: rgba(157, 0, 255, 0.25); }
+.dark-theme .result-type.post { background: rgba(0, 240, 255, 0.25); }
+.dark-theme .result-type.token { background: rgba(255, 215, 0, 0.25); }
+.dark-theme .result-type.hashtag { background: rgba(0, 240, 255, 0.25); }
+.dark-theme .search-empty, .dark-theme .search-loading { color: var(--text-secondary); }
+.toast {
+  position: fixed; bottom: 30px; right: 30px;
+  padding: 1rem 1.5rem; background: var(--bg-card);
+  border: 2px solid var(--success); border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 255, 157, 0.3);
+  color: var(--text-primary); font-weight: 600;
+  z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
+  animation: toastIn 0.3s ease-out; max-width: 350px;
+}
+.toast.error { border-color: var(--error); box-shadow: 0 4px 20px rgba(255, 77, 77, 0.3); }
+.toast.warning { border-color: var(--warning); box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3); }
+.toast.hiding { animation: toastOut 0.3s ease-in forwards; }
+@keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
+.swarm-modal {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.75); display: flex; align-items: center;
+  justify-content: center; z-index: 10000; padding: 1rem;
+}
+.swarm-content {
+  background: var(--custom-modal-bg) !important; padding: 2rem; border-radius: 16px;
+  max-width: 520px; width: 100%; border: 2px solid var(--custom-modal-border) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+.swarm-content h3 { margin-bottom: 1rem; color: var(--custom-text-color) !important; }
+.verdict-badge {
+  padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700;
+  text-align: center; margin: 1rem 0; text-transform: uppercase;
+  font-size: 0.9rem;
+}
+.verdict-badge.publish { background: rgba(0, 255, 157, 0.15); color: #00ff9d; border: 1px solid #00ff9d; }
+.verdict-badge.review { background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px solid #ffd700; }
+.verdict-badge.block { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 1px solid #ff4d4d; }
+.dark-theme .verdict-badge.block { background: rgba(255, 77, 77, 0.25); }
+.dark-theme .verdict-badge.review { background: rgba(255, 215, 0, 0.25); }
+.swarm-content ul { margin: 1rem 0; padding-left: 1.5rem; color: var(--text-secondary); }
+.swarm-content li { margin: 0.3rem 0; }
+.agent-votes, .governance-hint {
+  margin: 1rem 0; padding: 0.8rem;
+  background: var(--hover-bg); border-radius: 8px;
+  font-size: 0.85rem; color: var(--text-secondary);
+}
+.dark-theme .agent-votes, .dark-theme .governance-hint { background: rgba(255,255,255,0.05); }
+.modal-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+.modal-actions button {
+  flex: 1; padding: 0.9rem; border: none; border-radius: 10px;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-close { background: var(--hover-bg); color: var(--text-primary); }
+.btn-close:hover { background: var(--border-color); }
+.btn-appeal {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  color: #0a0a0f;
+}
+.btn-appeal:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(157, 0, 255, 0.4); }
+.feed-bg-btn {
+  position: fixed; bottom: 20px; right: 20px;
+  width: 44px; height: 44px;
+  background: var(--bg-card, #fff);
+  border: 2px solid var(--border-color, #e9ecef);
+  border-radius: 50%;
+  font-size: 1.2rem; cursor: pointer;
+  z-index: 1000; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.feed-bg-btn:hover {
+  border-color: var(--accent-gold, #FFD700);
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+.dark-theme .feed-bg-btn {
+  background: var(--accent-cyan, #00F0FF);
+  color: #000;
+  border-color: var(--accent-cyan, #00F0FF);
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.6);
+}
+.dark-theme .feed-bg-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 6px 20px rgba(0, 240, 255, 0.8);
+}
+.feed-bg-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.85); z-index: 9999;
+  justify-content: center; align-items: center; padding: 20px;
+}
+.feed-bg-modal.active { display: flex; }
+.feed-bg-modal-content {
+  background: var(--custom-modal-bg) !important; color: var(--custom-text-color) !important;
+  padding: 2rem; border-radius: 16px;
+  border: 2px solid var(--custom-modal-border) !important;
+  max-width: 600px; width: 90%; max-height: 85vh;
+  overflow-y: auto; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+.feed-bg-modal-content h3 {
+  text-align: center; color: var(--accent-gold) !important;
+  margin-bottom: 1.5rem; font-size: 1.6rem;
+  text-shadow: 0 0 10px rgba(255,215,0,0.5);
+}
+.bg-presets-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem; margin-bottom: 1.5rem;
+}
+.bg-preset-item {
+  cursor: pointer; border: 2px solid transparent;
+  border-radius: 8px; overflow: hidden; transition: all 0.2s;
+  background: transparent;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.bg-preset-item:hover {
+  border-color: var(--accent-gold);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255,215,0,0.4);
+}
+.bg-preset-item img {
+  width: 100%; height: 80px; object-fit: cover; display: block;
+  border-radius: 8px;
+}
+.bg-preset-item p {
+  text-align: center; margin: 0.5rem 0 0;
+  font-size: 0.8rem; color: var(--text-secondary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.bg-upload-section {
+  text-align: center; margin: 1rem 0; padding: 1rem;
+  background: rgba(255,215,0,0.05);
+  border: 1px dashed var(--accent-gold);
+  border-radius: 12px;
+}
+.bg-upload-label {
+  padding: 0.8rem 1.5rem; background: var(--accent-gold);
+  color: #0a0a0f; border-radius: 8px; cursor: pointer;
+  display: inline-block; font-weight: 600; font-size: 0.95rem;
+  transition: all 0.2s;
+}
+.bg-upload-label:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+.bg-upload-input { display: none; }
+.bg-actions {
+  display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;
+}
+.btn-reset, .btn-close-modal {
+  padding: 0.8rem 1.5rem; border: none; border-radius: 8px;
+  cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s;
+}
+.btn-reset { background: var(--error); color: #fff; }
+.btn-reset:hover { background: #ff3333; transform: translateY(-2px); }
+.btn-close-modal { background: var(--accent-cyan); color: #0a0a0f; }
+.btn-close-modal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 240, 255, 0.4);
+}
+.text-color-section {
+  margin: 1.5rem 0; text-align: center;
+  padding: 1rem; background: rgba(255,215,0,0.05);
+  border-radius: 12px; border: 1px dashed var(--accent-gold);
+}
+.text-color-section h4 {
+  color: var(--accent-gold); margin-bottom: 1rem; font-size: 1.2rem;
+}
+.color-buttons {
+  display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+}
+.color-btn {
+  width: 60px; height: 60px; border-radius: 50%;
+  border: 3px solid var(--border-color); cursor: pointer; transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.color-btn:hover { transform: scale(1.15); box-shadow: 0 8px 24px rgba(0,0,0,0.5); border-color: var(--accent-gold); }
+.pinned-auctions {
+  margin: 3rem 0; padding: 2rem;
+  background: rgba(255,215,0,0.05); border-radius: 16px;
+  border: 2px solid var(--accent-gold);
+  box-shadow: 0 8px 32px rgba(255,215,0,0.2);
+}
+.pinned-auctions h2 {
+  text-align: center; color: var(--accent-gold); margin-bottom: 1.5rem;
+}
+.pinned-post {
+  background: var(--bg-card); border-radius: 16px; margin-bottom: 1.5rem;
+  padding: 1.5rem; border: 2px solid var(--accent-gold);
+  box-shadow: 0 8px 24px rgba(255,215,0,0.15);
+}
+.pinned-header {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
+  font-weight: 700; color: var(--accent-gold);
+}
+@media (max-width: 1024px) { .layout { flex-direction: column; } aside, .right-sidebar { width: 100%; } }
+@media (max-width: 768px) {
+  .sidebar-menu { display: none; }
+  main { padding: 0; }
+  .create-input { min-height: 100px; font-size: 0.95rem; }
+  .create-actions { flex-direction: column; gap: 0.5rem; }
+  .btn-post { width: 100%; }
+}
+.custom-text, .post-content, .post-user, .trend-name, .stat-value,
+h1, h2, h3, h4, .post-time, .comment-item,
+.menu-item, .user-info h3, .trends-title,
+.feed-bg-modal-content h3, .swarm-content h3,
+.result-title, .result-subtitle, .pinned-header, .pinned-auctions h2 {
+  color: var(--custom-text-color) !important;
+}
+.custom-card-bg,
+.post, .sidebar-menu, .trends-card, .wallet-card,
+.create-post, .search-wrapper, #searchResultsBox,
+.feed-bg-modal-content, .swarm-content,
+.search-result-item, .agent-votes, .governance-hint,
+.pinned-post {
+  background: var(--custom-card-bg) !important;
+}
+.custom-modal-bg,
+.feed-bg-modal-content, .swarm-content {
+  background: var(--custom-modal-bg) !important;
+  border-color: var(--custom-modal-border) !important;
+}
+.custom-input-bg,
+.create-input, .comment-input, .bid-input,
+#globalSearchInput {
+  background: var(--custom-input-bg) !important;
+  color: var(--custom-text-color) !important;
+}
+
+/* ===== EMBED MODAL STYLES ===== */
+.embed-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(12px);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.embed-modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+.embed-modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 680px;
+  background: var(--custom-modal-bg) !important;
+  border: 2px solid var(--custom-modal-border) !important;
+  border-radius: 24px;
+  padding: 3rem 2.5rem 2.5rem;
+  box-shadow: 0 0 80px rgba(0,71,255,0.6), inset 0 0 40px rgba(0,240,255,0.08);
+  transform: scale(0.7) translateY(80px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  color: var(--custom-text-color) !important;
+}
+.embed-modal-overlay.active .embed-modal-content {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+.embed-modal-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.8rem;
+  background: none;
+  border: none;
+  color: var(--accent-cyan);
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.4s;
+}
+.embed-modal-close:hover {
+  color: var(--error);
+  transform: rotate(90deg) scale(1.15);
+}
+.embed-modal-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 30px var(--accent-cyan), 0 0 60px rgba(0,240,255,0.4);
+  text-align: center;
+  margin-bottom: 1.2rem;
+  animation: pulseGlow 3s ease-in-out infinite alternate;
+}
+.embed-modal-subtitle {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  color: var(--text-secondary);
+}
+.embed-code-box {
+  background: rgba(0,71,255,0.12);
+  border: 1px solid rgba(0,71,255,0.4);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  color: #e0f7ff;
+}
+.embed-copy-btn {
+  padding: 14px 40px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+  color: #0a0e27;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,240,255,0.4);
+  transition: all 0.3s;
+  display: block;
+  margin: 1.5rem auto;
+}
+.embed-copy-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(0,240,255,0.6);
+}
+.embed-modal-note {
+  font-size: 0.95rem;
+  text-align: center;
+  opacity: 0.7;
+  color: var(--text-secondary);
+}
+.embed-modal-note code {
+  background: rgba(255,215,0,0.15);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  color: var(--accent-gold);
+}
+@keyframes pulseGlow {
+  0% { text-shadow: 0 0 20px var(--accent-cyan), 0 0 40px rgba(0,240,255,0.3); }
+  100% { text-shadow: 0 0 40px var(--accent-cyan), 0 0 80px rgba(0,240,255,0.6); }
+}
+@media (max-width: 768px) {
+  .embed-modal-content { padding: 2rem 1.5rem; }
+  .embed-modal-title { font-size: 2.2rem; }
+}
+</style>
 </head>
 <body>
 <div class="layout">
 <aside>
 <a href="profile.html" class="sidebar-user">
 <div class="sidebar-user-content">
-<div class="avatar avatar-base" id="sidebarAvatar">C</div>
+<div class="avatar avatar-base">C</div>
 <div class="user-info">
-<h3 id="sidebarUsername">@cryptobros</h3>
+<h3>@cryptobros</h3>
 <p>CHAIRMAN OF THE TRIBUNAL</p>
 </div>
 </div>
@@ -34,7 +604,7 @@
 </aside>
 <main>
 <div class="top-bar">
-<a href="profile.html" class="back-btn">Back to Profile</a>
+<a href="profile.html" class="back-btn">← Back to Profile</a>
 <div class="theme-toggle" id="themeToggle">🌙</div>
 </div>
 <div class="search-container" id="searchContainer">
@@ -47,29 +617,39 @@
 </div>
 <div class="create-post">
 <div style="display: flex; gap: 1rem; align-items: flex-start;">
-<div class="create-avatar avatar-base" id="createAvatar">C</div>
+<div class="create-avatar avatar-base">C</div>
 <div style="flex: 1;">
 <textarea class="create-input" id="postInput" placeholder="What's on your mind? (max 2000 chars)" maxlength="2000" rows="4"></textarea>
 <div class="create-actions">
 <span id="charCount">0 / 2000</span>
-<button class="btn-post" id="btnPost" onclick="createPost()">📝 Post</button>
+<button class="btn-post" onclick="createPost()">📝 Post</button>
 </div>
 </div>
 </div>
 </div>
+<!-- Embed Button -->
+<button id="embedBtn" style="
+  padding: 14px 32px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+  color: #0a0a0f;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255,215,0,0.4);
+  transition: all 0.3s;
+  margin: 2rem auto;
+  display: block;
+">
+  Embed Tribunal on Your Site
+</button>
+<!-- Auction Winners Section -->
 <div class="pinned-auctions">
-<h2 class="shimmer-text">Auction Winners 🏆</h2>
-<div id="pinnedPostsContainer">
-    <p class="shimmer-text">No auction winners yet</p>
-    <p class="shimmer-text">Be the first degen to share alpha!</p>
-    <p class="shimmer-text">Mock mode</p>
+<h2>Auction Winners 🏆</h2>
+<div id="pinnedPostsContainer"></div>
 </div>
-</div>
-<div id="feedPosts">
-    <p class="shimmer-text">No posts yet</p>
-    <p class="shimmer-text">Be the first degen to share alpha!</p>
-    <p class="shimmer-text">Mock mode</p>
-</div>
+<div id="feedPosts"></div>
 </main>
 <div class="right-sidebar">
 <div class="trends-card">
@@ -86,103 +666,156 @@
 </div>
 </div>
 </div>
-<button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84 c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.66,6.32L5.27,5.35c-0.22-0.08-0.47,0-0.59,0.22L2.76,8.87 C2.64,9.08,2.7,9.34,2.88,9.48l2.03,1.58C4.89,11.36,4.87,11.69,4.87,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg></button>
+<!-- FEED BACKGROUND SWITCHER -->
+<button id="feedBgBtn" class="feed-bg-btn" title="Change Feed Background">⚙️</button>
 <div id="feedBgModal" class="feed-bg-modal">
 <div class="feed-bg-modal-content">
-<h3 style="color: var(--text-primary); margin-bottom: 1.5rem;">Customize Feed</h3>
+<h3>Customize Feed</h3>
+<!-- Text Color Selection -->
 <div class="text-color-section">
-<h4 style="color: var(--text-secondary); margin-bottom: 1rem;">Text Color</h4>
-<div class="color-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffd700; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ffd700')"></button>
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#00f0ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#00f0ff')"></button>
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#9d00ff; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#9d00ff')"></button>
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ff4d4d; border: 2px solid transparent; cursor: pointer;" onclick="setTextColor('#ff4d4d')"></button>
-<button class="color-btn" style="width: 40px; height: 40px; border-radius: 50%; background:#ffffff; border: 2px solid #000; cursor: pointer;" onclick="setTextColor('#ffffff')"></button>
+<h4>Text Color</h4>
+<div class="color-buttons">
+<button class="color-btn" style="background:#ffd700;" onclick="setTextColor('#ffd700')"></button>
+<button class="color-btn" style="background:#00f0ff;" onclick="setTextColor('#00f0ff')"></button>
+<button class="color-btn" style="background:#9d00ff;" onclick="setTextColor('#9d00ff')"></button>
+<button class="color-btn" style="background:#ff4d4d;" onclick="setTextColor('#ff4d4d')"></button>
+<button class="color-btn" style="background:#ffffff;border:2px solid #000;" onclick="setTextColor('#ffffff')"></button>
 </div>
 </div>
 <div class="bg-presets-grid" id="bgPresetsGrid"></div>
-<div class="bg-upload-section" style="margin: 1.5rem 0;">
-<label for="feedBgUpload" style="display: block; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 12px; text-align: center; cursor: pointer;">Upload Custom Background</label>
-<input type="file" id="feedBgUpload" accept="image/*" style="display: none;">
+<div class="bg-upload-section">
+<label for="feedBgUpload" class="bg-upload-label">Upload Custom Background</label>
+<input type="file" id="feedBgUpload" accept="image/*" class="bg-upload-input">
 </div>
-<div class="bg-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
-<button onclick="resetCustomColors()" style="padding: 0.8rem 1.5rem; background: transparent; border: 1px solid var(--accent); border-radius: 8px; color: var(--text-primary); cursor: pointer;">Reset</button>
-<button onclick="closeFeedBgModal()" style="padding: 0.8rem 1.5rem; background: var(--accent); border: none; border-radius: 8px; color: #0a0a0f; cursor: pointer;">Close</button>
+<div class="bg-actions">
+<button onclick="resetCustomColors()" class="btn-reset">Reset All Colors</button>
+<button onclick="closeFeedBgModal()" class="btn-close-modal">Close</button>
 </div>
 </div>
+</div>
+<!-- Embed Modal -->
+<div id="embedModal" class="embed-modal-overlay">
+  <div class="embed-modal-content">
+    <button class="embed-modal-close" id="closeEmbed">&times;</button>
+    <div class="embed-modal-title">This is your path to truth!</div>
+    <p class="embed-modal-subtitle">
+      Embed the Cryptobros Tribunal widget on your site.<br>
+      Users get instant AI-powered risk analysis — no setup required.
+    </p>
+    <div class="embed-code-box">
+      <pre id="embedCode">&lt;iframe 
+  src="https://www.cryptobros.pro/tribunal-widget.html?token=WIF&amp;verified=true" 
+  width="100%" 
+  height="680" 
+  frameborder="0" 
+  style="border-radius:16px; border:1px solid var(--accent-cyan);"&gt;&lt;/iframe&gt;</pre>
+    </div>
+    <button id="copyEmbed" class="embed-copy-btn">Copy Embed Code</button>
+    <p class="embed-modal-note">
+      Replace <code>?token=WIF</code> with any token (SOL, BONK, PEPE, etc.).<br>
+      <strong>Verified links require AUS payment</strong> — no free access.
+    </p>
+  </div>
 </div>
 <script>
-function initTilt() {
-    if (typeof VanillaTilt === 'undefined') {
-        setTimeout(initTilt, 100);
-        return;
+const CONFIG = { USE_BACKEND: false, BACKEND_URL: 'https://cryptobros-backend.onrender.com' };
+function safeGetItem(key, fallback = null) { try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : fallback; } catch(e) { console.error(`localStorage error (${key}):`, e); return fallback; } }
+function safeSetItem(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch(e) { console.error(`localStorage full (${key}):`, e); showToast('Storage full! Delete some posts.', 'error'); return false; } }
+function escapeHtml(text) { const map = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }; return String(text).replace(/[&<>"']/g, m => map[m]); }
+function showToast(msg, type = 'success') { const existing = document.querySelector('.toast'); if (existing) existing.remove(); const div = document.createElement('div'); div.className = `toast ${type}`; div.textContent = msg; div.style.cssText = `position:fixed;bottom:20px;right:20px;padding:1rem 1.5rem;background:${type==='error'?'#ff4d4d':type==='warning'?'#ffd700':'#28a745'};color:#0a0a0f;border-radius:12px;z-index:10000;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:toastIn 0.3s ease-out;`; document.body.appendChild(div); setTimeout(() => { div.style.animation = 'toastOut 0.3s ease-in forwards'; setTimeout(() => div.remove(), 300); }, 3500); }
+function showSwarmModal(analysis, content, wallet) { const existing = document.querySelector('.swarm-modal'); if (existing) existing.remove(); const modal = document.createElement('div'); modal.className = 'swarm-modal'; modal.innerHTML = `<div class="swarm-content"><h3>🛡️ Sentinel Swarm Verdict</h3><div class="verdict-badge risk-${analysis.action.toLowerCase()}">${analysis.action}</div><p><strong>Risk Score:</strong> ${analysis.score}/1.00</p><p><strong>Thresholds:</strong> Block ≥${analysis.thresholds.block} | Review ≥${analysis.thresholds.review}</p><p><strong>Agent Weights:</strong> Pattern ${analysis.weights.pattern} | Wallet ${analysis.weights.wallet}</p><p><strong>Factors:</strong></p><ul>${analysis.factors.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul><div class="agent-votes"><small>Agent Scores: Pattern ${analysis.agentVotes.pattern} | Wallet ${analysis.agentVotes.wallet}</small></div><div class="governance-hint"><small>🧠 Wisdom Score: ${sentinel.getWisdomScore()} | Jury Decisions: ${sentinel.getJuryCount()}</small></div><div class="modal-actions"><button class="btn-close" onclick="this.closest('.swarm-modal').remove()">Close</button><button class="btn-appeal" onclick="submitAppeal('${escapeHtml(content)}', ${analysis.score}, '${wallet}')">⚖️ Appeal to Tribunal</button></div></div>`; document.body.appendChild(modal); modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); }); }
+function submitAppeal(content, riskScore, wallet) { console.log(`⚖️ Appeal submitted: risk=${riskScore}, wallet=${wallet}`); const modal = document.querySelector('.swarm-modal'); if (modal) { modal.querySelector('.swarm-content').innerHTML = `<h3>✅ Appeal Submitted</h3><p>Your post will be reviewed by the community Jury.</p><p><small>Mock mode: No real AUS staked yet.</small></p><button onclick="this.closest('.swarm-modal').remove()" style="margin-top:1rem;padding:0.8rem 1.5rem;background:var(--accent-gold);border:none;border-radius:8px;cursor:pointer;font-weight:600">Close</button>`; } }
+function initTheme() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.body.classList.add('dark-theme'); document.getElementById('themeToggle').textContent = '☀️'; } else { document.body.classList.remove('dark-theme'); document.getElementById('themeToggle').textContent = '🌙'; } }
+function toggleTheme() { const isDark = document.body.classList.contains('dark-theme'); document.body.classList.toggle('dark-theme', !isDark); localStorage.setItem('theme', isDark ? 'light' : 'dark'); document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️'; }
+function applyCustomColors() { const textColor = localStorage.getItem('feedTextColor') || ''; if (textColor) document.documentElement.style.setProperty('--custom-text-color', textColor); const cardBg = localStorage.getItem('feedCardBg') || ''; if (cardBg) document.documentElement.style.setProperty('--custom-card-bg', cardBg); const modalBg = localStorage.getItem('feedModalBg') || ''; if (modalBg) document.documentElement.style.setProperty('--custom-modal-bg', modalBg); const modalBorder = localStorage.getItem('feedModalBorder') || ''; if (modalBorder) document.documentElement.style.setProperty('--custom-modal-border', modalBorder); const inputBg = localStorage.getItem('feedInputBg') || ''; if (inputBg) document.documentElement.style.setProperty('--custom-input-bg', inputBg); }
+function setTextColor(color) { localStorage.setItem('feedTextColor', color); document.documentElement.style.setProperty('--custom-text-color', color); const isLight = ['#ffffff', '#ffd700', '#00f0ff'].includes(color.toLowerCase()); if (isLight) { document.documentElement.style.setProperty('--custom-input-bg', 'rgba(0,0,0,0.3)'); localStorage.setItem('feedInputBg', 'rgba(0,0,0,0.3)'); } showToast(`Text color changed`, 'success'); }
+function setCardBg(color) { localStorage.setItem('feedCardBg', color); document.documentElement.style.setProperty('--custom-card-bg', color); showToast(`Card background changed`, 'success'); }
+function setModalStyle(bgColor, borderColor) { localStorage.setItem('feedModalBg', bgColor); localStorage.setItem('feedModalBorder', borderColor); document.documentElement.style.setProperty('--custom-modal-bg', bgColor); document.documentElement.style.setProperty('--custom-modal-border', borderColor); showToast(`Modal style updated`, 'success'); }
+function resetCustomColors() { if (confirm('Reset all custom colors to default?')) { ['feedTextColor', 'feedCardBg', 'feedModalBg', 'feedModalBorder', 'feedInputBg'].forEach(key => { localStorage.removeItem(key); }); ['--custom-text-color', '--custom-card-bg', '--custom-modal-bg', '--custom-modal-border', '--custom-input-bg'].forEach(prop => { document.documentElement.style.setProperty(prop, ''); }); closeFeedBgModal(); showToast('All colors reset to default', 'success'); applyCustomColors(); } }
+const DEFAULT_FEED_BG = 'bg1.jpg';
+const FEED_BG_PRESETS = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png', 'bg6.jpg', 'bg7.jpg', 'bg8.jpg', 'bg9.jpg', 'bg10.jpg', 'bg11.jpg', 'bg12.jpg', 'bg13.jpg'];
+function applyFeedBg() { let bg = localStorage.getItem('feedBg'); if (!bg) bg = DEFAULT_FEED_BG; if (bg && bg !== 'none') { const isBase64 = bg.startsWith('image'); document.body.style.backgroundImage = isBase64 ? bg : `url(${bg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; document.body.style.backgroundAttachment = 'fixed'; document.body.style.backgroundRepeat = 'no-repeat'; } else { document.body.style.backgroundImage = 'none'; } applyCustomColors(); }
+function setFeedBg(bg) { localStorage.setItem('feedBg', bg); applyFeedBg(); closeFeedBgModal(); showToast(`Background changed to ${bg}`, 'success'); }
+function openFeedBgModal() { renderBgPresets(); document.getElementById('feedBgModal').classList.add('active'); }
+function closeFeedBgModal() { document.getElementById('feedBgModal').classList.remove('active'); }
+function renderBgPresets() { const grid = document.getElementById('bgPresetsGrid'); if (!grid) return; const fallback = encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80"><rect fill="#222" width="120" height="80"/><text fill="#fff" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="10">No Image</text></svg>'); grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; margin-bottom: 1rem; color: var(--accent-gold);"><strong>Background Presets</strong></div>${FEED_BG_PRESETS.map(bg => `<div class="bg-preset-item" onclick="setFeedBg('${bg}')"><img src="${bg}" alt="${bg}" onerror="this.src='image/svg+xml,${fallback}'"><p>${bg}</p></div>`).join('')}<div style="grid-column: 1 / -1; text-align: center; margin: 1rem 0; color: var(--accent-gold);"><strong>Card & Modal Colors</strong></div><div style="grid-column: 1 / -1; display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;"><span style="font-size: 0.8rem; color: var(--text-secondary);">Cards:</span><button class="color-btn" style="background:#1e1e1e; width: 30px; height: 30px;" onclick="setCardBg('#1e1e1e')" title="Dark"></button><button class="color-btn" style="background:#ffffff; width: 30px; height: 30px; border: 1px solid #333;" onclick="setCardBg('#ffffff')" title="Light"></button><button class="color-btn" style="background:#1a1a3f; width: 30px; height: 30px;" onclick="setCardBg('#1a1a3f')" title="Purple"></button></div><div style="grid-column: 1 / -1; display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;"><span style="font-size: 0.8rem; color: var(--text-secondary);">Modals:</span><button class="color-btn" style="background:#0f0c29; border: 2px solid #FFD700; width: 30px; height: 30px;" onclick="setModalStyle('#0f0c29', '#FFD700')" title="Gold Border"></button><button class="color-btn" style="background:#0f0c29; border: 2px solid #00F0FF; width: 30px; height: 30px;" onclick="setModalStyle('#0f0c29', '#00F0FF')" title="Cyan Border"></button><button class="color-btn" style="background:#1e1e3f; border: 2px solid #9D00FF; width: 30px; height: 30px;" onclick="setModalStyle('#1e1e3f', '#9D00FF')" title="Purple Border"></button></div>`; }
+function handleBgUpload(file) { if (!file) return; if (file.size > 2 * 1024 * 1024) { showToast('Image too large (max 2MB)', 'error'); return; } showToast('Loading background...', 'warning'); const reader = new FileReader(); reader.onload = (e) => { localStorage.setItem('feedBg', e.target.result); applyFeedBg(); closeFeedBgModal(); showToast('Custom background set!', 'success'); }; reader.onerror = () => showToast('Failed to load image', 'error'); reader.readAsDataURL(file); }
+function renderPinnedPosts() { const container = document.getElementById('pinnedPostsContainer'); if (!container) return; const posts = safeGetItem('feedPosts', []); const pinned = posts.filter(p => p.pinnedByAuction && p.pinned); container.innerHTML = pinned.length === 0 ? '<p style="text-align:center;color:var(--text-secondary);">No auction winners yet</p>' : pinned.map(post => { const date = new Date(post.pinnedAt); return `<div class="pinned-post"><div class="pinned-header">Auction Winner — ${post.auctionBurn} AUS burned 🔥</div><div class="post-header"><div class="post-avatar avatar-base">${post.username.charAt(1)}</div><div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">Pinned on ${date.toLocaleString()}</div></div></div><div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div></div>`; }).join(''); }
+class SentinelSwarm { constructor() { this.patterns = { scam: [/rug\s*pull/i, /send\s+sol/i, /double\s+crypto/i, /private\s+key/i, /seed\s+phrase/i, /guaranteed\s+profit/i], urgency: [/\b(now|urgent|fast|limited|last\s+chance|act\s+fast)\b/i], urls: /(https?:\/\/[^\s]+)/g }; this.blacklist = JSON.parse(localStorage.getItem('walletBlacklist')) || []; this.walletPatterns = JSON.parse(localStorage.getItem('walletPatterns')) || ['scam', '0000', 'dead', 'fake']; this.wisdomScore = parseFloat(localStorage.getItem('wisdomScore')) || 0; this.lastWisdomUpdate = parseInt(localStorage.getItem('lastWisdomUpdate')) || Date.now(); this.juryCount = parseInt(localStorage.getItem('juryCount')) || 0; this.userAUS = parseInt(localStorage.getItem('mockAUS')) || 0; this.checkWisdomDecay(); } checkWisdomDecay() { const daysSinceUpdate = (Date.now() - this.lastWisdomUpdate) / (1000 * 60 * 60 * 24); if (daysSinceUpdate >= 7 && this.wisdomScore > 0) { this.wisdomScore = Math.max(0, this.wisdomScore - 1); this.lastWisdomUpdate = Date.now(); localStorage.setItem('wisdomScore', this.wisdomScore.toString()); localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString()); } } analyzePatterns(content) { let risk = 0; const factors = []; if (this.patterns.scam.some(p => p.test(content))) { risk += 0.4; factors.push('Scam pattern detected'); } const urgencyMatches = (content.match(this.patterns.urgency[0]) || []).length; const capsRatio = (content.match(/[A-Z]/g) || []).length / Math.max(1, content.length); const exclamationCount = (content.match(/!/g) || []).length; if (urgencyMatches > 0 || capsRatio > 0.3 || exclamationCount > 3) { risk += 0.25; factors.push('FOMO/urgency signals detected'); } const urlMatches = content.match(this.patterns.urls) || []; if (urlMatches.length > 2) { risk += 0.2; factors.push('Multiple external links'); } return { risk: Math.min(1, risk), factors }; } analyzeWallet(wallet) { if (!wallet || wallet === 'guest') return { risk: 0.1, factors: ['Guest user'] }; if (this.blacklist.includes(wallet)) { return { risk: 0.9, factors: ['Wallet in community blacklist'] }; } const walletLower = wallet.toLowerCase(); if (this.walletPatterns.some(p => walletLower.includes(p))) { return { risk: 0.3, factors: ['Wallet matches suspicious pattern'] }; } return { risk: 0.1, factors: ['Wallet not flagged'] }; } isValidWallet(wallet) { if (!wallet || wallet.length < 32 || wallet.length > 44) return false; return !/[0OlI]/.test(wallet); } vote(content, wallet, isNewUser) { const patternVote = this.analyzePatterns(content); const walletVote = this.analyzeWallet(wallet); let patternWeight = 0.6; let walletWeight = 0.3; if (this.juryCount > 0 && this.juryCount % 10 === 0) { const mutation = (Math.random() - 0.5) * 0.1; patternWeight = Math.max(0.4, Math.min(0.8, patternWeight + mutation)); walletWeight = Math.max(0.1, Math.min(0.5, walletWeight - mutation * 0.5)); } const weightedRisk = patternVote.risk * patternWeight + walletVote.risk * walletWeight + (isNewUser ? 0.1 : 0); const allFactors = [...patternVote.factors, ...walletVote.factors]; const blockThreshold = Math.max(0.55, 0.7 - this.wisdomScore * 0.015); const reviewThreshold = Math.max(0.3, 0.45 - this.wisdomScore * 0.01); let action = 'PUBLISH'; if (weightedRisk >= blockThreshold) action = 'BLOCK'; else if (weightedRisk >= reviewThreshold) action = 'REVIEW'; return { score: parseFloat(weightedRisk.toFixed(2)), action, factors: allFactors, agentVotes: { pattern: parseFloat(patternVote.risk.toFixed(2)), wallet: parseFloat(walletVote.risk.toFixed(2)) }, thresholds: { block: parseFloat(blockThreshold.toFixed(2)), review: parseFloat(reviewThreshold.toFixed(2)) }, weights: { pattern: parseFloat(patternWeight.toFixed(2)), wallet: parseFloat(walletWeight.toFixed(2)) } }; } evolveFromJury(verdict, content, userFeedback = null) { if (userFeedback === 'disagree' && this.wisdomScore > 0) { this.wisdomScore = Math.max(0, this.wisdomScore - 0.5); localStorage.setItem('wisdomScore', this.wisdomScore.toString()); return; } if (verdict === 'BAN') { this.juryCount++; localStorage.setItem('juryCount', this.juryCount.toString()); const words = content.toLowerCase().match(/\b\w+\b/g) || []; const suspiciousWords = words.filter(w => ['scam', 'rug', 'fake', 'steal', 'trap'].some(k => w.includes(k))); if (suspiciousWords.length > 0 && !this.patterns.scam.some(p => p.test(content))) { const newWord = suspiciousWords[0]; if (!this.patterns.scam.some(p => p.source.includes(newWord))) { this.patterns.scam.push(new RegExp(`\\b${newWord}\\b`, 'i')); } } this.wisdomScore += 0.25; this.lastWisdomUpdate = Date.now(); localStorage.setItem('wisdomScore', this.wisdomScore.toString()); localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString()); } else if (verdict === 'TRUST') { this.wisdomScore += 0.1; this.lastWisdomUpdate = Date.now(); localStorage.setItem('wisdomScore', this.wisdomScore.toString()); localStorage.setItem('lastWisdomUpdate', this.lastWisdomUpdate.toString()); } } addToBlacklist(wallet) { if (!wallet || wallet === 'guest') return; if (!this.isValidWallet(wallet)) { console.warn(`⚠️ Invalid wallet format, skipping blacklist: ${wallet}`); return; } if (!this.blacklist.includes(wallet)) { this.blacklist.push(wallet); localStorage.setItem('walletBlacklist', JSON.stringify(this.blacklist)); } } awardAUS(amount = 1) { this.userAUS += amount; localStorage.setItem('mockAUS', this.userAUS.toString()); return this.userAUS; } getMockAUS() { return this.userAUS; } static cleanupStorage() { try { const posts = JSON.parse(localStorage.getItem('feedPosts')) || []; const postCount = parseInt(localStorage.getItem('postCountSinceCleanup')) || 0; if (postCount >= 50 || posts.length > 200) { const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000); const cleaned = posts.filter(p => p.timestamp > thirtyDaysAgo).slice(0, 200); if (cleaned.length !== posts.length) { localStorage.setItem('feedPosts', JSON.stringify(cleaned)); } localStorage.setItem('postCountSinceCleanup', '0'); } else { localStorage.setItem('postCountSinceCleanup', String(postCount + 1)); } } catch (e) { console.error('❌ Storage cleanup failed:', e); } } getWisdomScore() { return this.wisdomScore; } getJuryCount() { return this.juryCount; } getBlacklistCount() { return this.blacklist.length; } }
+const sentinel = new SentinelSwarm();
+function createPost() { const content = document.getElementById('postInput').value.trim(); if (!content) { showToast('Please enter some text first', 'error'); return; } if (content.length > 2000) { showToast('Post too long (max 2000 characters)', 'error'); return; } const wallet = localStorage.getItem('walletAddress') || 'guest'; const isNewUser = !localStorage.getItem('hasPostedBefore'); const riskAnalysis = sentinel.vote(content, wallet, isNewUser); if (riskAnalysis.action === 'BLOCK') { showSwarmModal(riskAnalysis, content, wallet); return; } if (riskAnalysis.action === 'REVIEW') { showToast('Post published with review flag 🟡', 'warning'); } const posts = safeGetItem('feedPosts', []); posts.unshift({ id: Date.now(), content, timestamp: Date.now(), likes: 0, username: '@cryptobros', comments: [], moderation: riskAnalysis, likedByMe: false, repostedByMe: false, reposts: 0 }); if (safeSetItem('feedPosts', posts)) { document.getElementById('postInput').value = ''; document.getElementById('charCount').textContent = '0 / 2000'; localStorage.setItem('hasPostedBefore', 'true'); if (riskAnalysis.action === 'PUBLISH') { sentinel.awardAUS(1); showToast(`Post published! +1 mock AUS 🛡️`); } SentinelSwarm.cleanupStorage(); loadPosts(); renderPinnedPosts(); } }
+const postInput = document.getElementById('postInput'); const charCount = document.getElementById('charCount'); if (postInput && charCount) { postInput.addEventListener('input', () => { const currentLength = postInput.value.length; charCount.textContent = `${currentLength} / 2000`; if (currentLength > 1800) { charCount.style.color = 'var(--error)'; } else if (currentLength > 1500) { charCount.style.color = 'var(--warning)'; } else { charCount.style.color = 'var(--text-secondary)'; } if (currentLength >= 2000) { postInput.disabled = true; showToast('Max length reached!', 'warning'); } else { postInput.disabled = false; } }); }
+function deletePost(postId) { if (confirm('Delete this post? This action cannot be undone.')) { let posts = safeGetItem('feedPosts', []); posts = posts.filter(p => p.id !== postId); safeSetItem('feedPosts', posts); SentinelSwarm.cleanupStorage(); loadPosts(); renderPinnedPosts(); showToast('Post deleted'); } }
+function loadPosts() { const container = document.getElementById('feedPosts'); if (!container) { console.warn('feedPosts container not found'); return; } const posts = safeGetItem('feedPosts', []); let html = ''; if (!posts.length) { html = '<div style="text-align:center;padding:3rem;color:var(--text-secondary)"><h3 style="margin-bottom:1rem">🚀 No posts yet</h3><p>Be the first degen to share alpha!</p><p style="margin-top:1rem;font-size:0.85rem;opacity:0.7">Mock mode: No backend connected yet</p></div>'; } else { html = posts.map(post => { const date = new Date(post.timestamp); const commentsHTML = post.comments?.length ? `<div class="comment-list">${post.comments.map(c=>`<div class="comment-item">💬 ${escapeHtml(c)}</div>`).join('')}</div>` : ''; return `<article class="post" data-id="${post.id}"><button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button><div class="post-header"><div class="post-avatar avatar-base">${post.username.charAt(1)}</div><div><div class="post-user">${escapeHtml(post.username)}</div><div class="post-time">${date.toLocaleString()}</div></div></div><div class="post-content">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div><div class="comment-section" id="comments-${post.id}"><textarea class="comment-input" placeholder="Write a comment..." id="comment-input-${post.id}" maxlength="500"></textarea><button class="comment-save-btn" onclick="saveComment(${post.id})">Post Comment</button>${commentsHTML}</div><div class="post-actions"><div class="action-btn ${post.likedByMe?'liked':''}" onclick="toggleLike(${post.id}, this)"><img src="logoAUS.png" alt="AUS" class="aus-icon" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<span style=\"font-size:1.2rem\">🔷</span>')"><span class="count">${post.likes || 0}</span></div><div class="action-btn" onclick="toggleComments(${post.id})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="count">${post.comments?.length || 0}</span></div><div class="action-btn ${post.repostedByMe?'reposted':''}" onclick="toggleRepost(${post.id}, this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${post.repostedByMe?'var(--accent-cyan)':'var(--text-secondary)'}" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>${post.reposts || 0}</span></div></div></article>`; }).join(''); } container.innerHTML = html; }
+function saveComment(postId) { const input = document.getElementById(`comment-input-${postId}`); const comment = input.value.trim(); if (!comment || comment.length > 500) { showToast(comment ? 'Max 500 chars' : 'Enter comment', 'error'); return; } const posts = safeGetItem('feedPosts', []); const idx = posts.findIndex(p => p.id === postId); if (idx !== -1) { if (!posts[idx].comments) posts[idx].comments = []; posts[idx].comments.unshift(comment); if (safeSetItem('feedPosts', posts)) { loadPosts(); renderPinnedPosts(); showToast('Comment saved!'); } } }
+function toggleComments(postId) { const commentSection = document.getElementById(`comments-${postId}`); if (commentSection) { commentSection.classList.toggle('visible'); } }
+function toggleLike(postId, btn) { const posts = safeGetItem('feedPosts', []); const post = posts.find(p => p.id === postId); if (!post) return; if (post.likedByMe) { post.likes--; post.likedByMe = false; btn.classList.remove('liked'); } else { post.likes++; post.likedByMe = true; btn.classList.add('liked'); } btn.querySelector('.count').textContent = post.likes; safeSetItem('feedPosts', posts); }
+function toggleRepost(postId, btn) { const posts = safeGetItem('feedPosts', []); const post = posts.find(p => p.id === postId); if (!post) return; post.repostedByMe = !post.repostedByMe; post.reposts = (post.reposts || 0) + (post.repostedByMe ? 1 : -1); btn.classList.toggle('reposted', post.repostedByMe); btn.querySelector('span').textContent = post.reposts; safeSetItem('feedPosts', posts); showToast(post.repostedByMe ? 'Reposted!' : 'Repost removed'); }
+function initMockUsers() { if (!localStorage.getItem('users')) { safeSetItem('users', [{id:'u1',username:'@cryptobros',bio:'Founder',wallet:'C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6'},{id:'u2',username:'@AuraSpace',bio:'AI Tribunal',wallet:'7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU'}]); } }
+function initTrends() { const trendData = { trend1: { value: 2100, prev: 2100 }, trend2: { value: 1800, prev: 1800 }, trend3: { value: 942, prev: 942 } }; setInterval(() => { Object.keys(trendData).forEach(id => { const el = document.getElementById(id); if (!el) return; const delta = Math.floor(Math.random() * 21) - 10; trendData[id].prev = trendData[id].value; trendData[id].value = Math.max(0, trendData[id].value + delta); const diff = trendData[id].value - trendData[id].prev; let indicator = '●'; let indicatorClass = 'trend-neutral'; if (diff > 0) { indicator = '↑ +' + diff; indicatorClass = 'trend-up'; } else if (diff < 0) { indicator = '↓ ' + diff; indicatorClass = 'trend-down'; } const formatted = trendData[id].value >= 1000 ? (trendData[id].value / 1000).toFixed(1) + 'k' : trendData[id].value; el.innerHTML = `${formatted} <span class="trend-indicator ${indicatorClass}">${indicator}</span>`; }); }, 30000); }
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initMockUsers();
+  initTrends();
+  loadPosts();
+  applyFeedBg();
+  renderPinnedPosts();
+  applyCustomColors();
+  const btn = document.getElementById('feedBgBtn');
+  const upload = document.getElementById('feedBgUpload');
+  if (btn) btn.addEventListener('click', openFeedBgModal);
+  if (upload) upload.addEventListener('change', (e) => handleBgUpload(e.target.files[0]));
+  const modal = document.getElementById('feedBgModal');
+  if (modal) {
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeFeedBgModal(); });
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFeedBgModal(); });
+  
+  // Embed Modal Listeners
+  const embedBtn = document.getElementById('embedBtn');
+  const embedModal = document.getElementById('embedModal');
+  const closeEmbed = document.getElementById('closeEmbed');
+  const copyEmbed = document.getElementById('copyEmbed');
+  
+  if (embedBtn) {
+    embedBtn.addEventListener('click', () => {
+      embedModal.style.display = 'flex';
+      setTimeout(() => embedModal.classList.add('active'), 10);
+    });
+  }
+  if (closeEmbed) {
+    closeEmbed.addEventListener('click', () => {
+      embedModal.classList.remove('active');
+      setTimeout(() => { embedModal.style.display = 'none'; }, 500);
+    });
+  }
+  if (embedModal) {
+    embedModal.addEventListener('click', (e) => {
+      if (e.target === embedModal) closeEmbed.click();
+    });
+  }
+  if (copyEmbed) {
+    copyEmbed.addEventListener('click', () => {
+      const code = document.getElementById('embedCode').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = copyEmbed.textContent;
+        copyEmbed.textContent = '✓ Copied!';
+        copyEmbed.style.background = 'var(--success)';
+        setTimeout(() => {
+          copyEmbed.textContent = originalText;
+          copyEmbed.style.background = '';
+        }, 2000);
+      });
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && embedModal && embedModal.style.display === 'flex') {
+      closeEmbed.click();
     }
-    const swingElements = document.querySelectorAll(
-        '.sidebar-user, .sidebar-menu a, .create-post, .pinned-auctions, ' +
-        '.trends-card, #feedPosts > *, .back-btn, .theme-toggle'
-    );
-    VanillaTilt.init(swingElements, {
-        max: 6, speed: 400, glare: true, 'max-glare': 0.2,
-        scale: 1.02, easing: "cubic-bezier(.03,.98,.52,.99)"
-    });
-}
-function setTextColor(color) {
-    const username = document.getElementById('sidebarUsername');
-    if (username) username.style.color = color;
-    const backBtn = document.querySelector('.back-btn');
-    if (backBtn) backBtn.style.color = color;
-    localStorage.setItem('feedTextColor', color);
-    closeFeedBgModal();
-}
-function resetCustomColors() {
-    const username = document.getElementById('sidebarUsername');
-    if (username) username.style.color = '';
-    const backBtn = document.querySelector('.back-btn');
-    if (backBtn) backBtn.style.color = '';
-    localStorage.removeItem('feedTextColor');
-    closeFeedBgModal();
-}
-function loadSavedColor() {
-    const savedColor = localStorage.getItem('feedTextColor');
-    if (savedColor) {
-        const username = document.getElementById('sidebarUsername');
-        if (username) username.style.color = savedColor;
-        const backBtn = document.querySelector('.back-btn');
-        if (backBtn) backBtn.style.color = savedColor;
-    }
-}
-function openFeedBgModal() {
-    document.getElementById('feedBgModal').style.display = 'flex';
-}
-function closeFeedBgModal() {
-    document.getElementById('feedBgModal').style.display = 'none';
-}
-window.addEventListener('DOMContentLoaded', () => {
-    initTilt();
-    loadSavedColor();
-    const modal = document.getElementById('feedBgModal');
-    const btn = document.getElementById('feedBgBtn');
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        modal.style.display = 'flex';
-    });
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.style.display = 'none';
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'flex') {
-            modal.style.display = 'none';
-        }
-    });
+  });
 });
+(function() { 'use strict'; const input = document.getElementById('globalSearchInput'); const results = document.getElementById('searchResultsBox'); const clearBtn = document.getElementById('searchClearBtn'); const container = document.getElementById('searchContainer'); if (!input || !results || !container) return; let timeout = null; const getUsers = () => safeGetItem('users', []); const getPosts = () => safeGetItem('feedPosts', []); const norm = s => (s||'').toLowerCase().trim(); const searchUsers = q => getUsers().filter(u => norm(u.username).includes(q)||norm(u.bio||'').includes(q)).slice(0,5); const searchPosts = q => getPosts().filter(p => norm(p.content||'').includes(q)||(q.startsWith('#')&&norm(p.content||'').includes(q))).slice(0,5); const searchTokens = q => [{symbol:'AUS',name:'AURASPACE',chain:'Solana'},{symbol:'SOL',name:'Solana',chain:'Solana'},{symbol:'WIF',name:'dogwifhat',chain:'Solana'}].filter(t=>norm(t.symbol).includes(q)||norm(t.name).includes(q)).slice(0,5); const searchHashtags = q => q.startsWith('#') ? [...new Set(getPosts().flatMap(p=>(p.content||'').match(/#\w+/g)||[]))].filter(h=>norm(h).includes(q)).slice(0,5).map(h=>({tag:h,count:Math.floor(Math.random()*100)+1})) : []; const createResult = (item,type) => { const el = document.createElement('div'); el.className = 'search-result-item'; const icons = {user:'👤',post:'📝',token:'🪙',hashtag:'🔖'}; let title,subtitle; switch(type) { case'user':title=escapeHtml(item.username);subtitle=escapeHtml(item.bio||'');el.onclick=()=>location.href=`profile.html?user=${item.id||''}`;break; case'post':title=escapeHtml(item.username);subtitle=escapeHtml((item.content||'').slice(0,50)+(item.content?.length>50?'...':''));break; case'token':title=`$${escapeHtml(item.symbol)}`;subtitle=escapeHtml(item.name||'');el.onclick=()=>window.open(`https://dexscreener.com/solana/${item.address||''}`,'_blank');break; case'hashtag':title=escapeHtml(item.tag);subtitle=`${item.count} posts`;el.onclick=()=>{input.value=item.tag;performSearch(norm(item.tag));};break; } el.innerHTML = `<span class="result-icon">${icons[type]||'📄'}</span><div class="result-content"><div class="result-title">${title}</div><div class="result-subtitle">${subtitle}</div></div><span class="result-type ${type}">${type}</span>`; return el; }; const performSearch = async query => { if (!query || query.length<2) { results.style.display='none'; results.innerHTML=''; return; } results.innerHTML = '<div class="search-loading">Searching...</div>'; results.style.display = 'block'; const [users,posts,tokens,hashtags] = await Promise.all([searchUsers(query),searchPosts(query),searchTokens(query),searchHashtags(query)]); results.innerHTML = ''; const sections = [{hashtags,type:'hashtag',title:'Hashtags',color:'#9D00FF'},{users,type:'user',title:'Users',color:'#9D00FF'},{tokens,type:'token',title:'Tokens',color:'#FFD700'},{posts,type:'post',title:'Posts',color:'#00F0FF'}]; let has = false; sections.forEach(sec => { if (sec.data?.length) { has = true; const h = document.createElement('div'); h.style.cssText = `padding:0.75rem 1rem;font-weight:600;color:${sec.color};border-bottom:1px solid var(--border-color);font-size:0.8rem;text-transform:uppercase;`; h.textContent = sec.title; results.appendChild(h); sec.data.forEach(item => results.appendChild(createResult(item, sec.type))); } }); if (!has) results.innerHTML = '<div class="search-empty">No results found.</div>'; }; input.addEventListener('input', e => { const q = e.target.value.trim(); if (clearBtn) clearBtn.style.display = q ? 'block' : 'none'; clearTimeout(timeout); timeout = setTimeout(() => performSearch(q), 400); }); input.addEventListener('focus', () => { if (input.value.trim()) performSearch(input.value); }); input.addEventListener('blur', () => { clearTimeout(timeout); setTimeout(()=>{ if(!input.value.trim()){results.style.display='none';results.innerHTML='';} },200); }); if (clearBtn) clearBtn.addEventListener('click', () => { input.value=''; results.style.display='none'; results.innerHTML=''; clearBtn.style.display='none'; input.focus(); }); document.addEventListener('click', e => { if (!e.target.closest('#searchContainer') && !e.target.closest('.search-result-item')) { results.style.display='none'; results.innerHTML=''; } }); input.addEventListener('keydown', e => { if(e.key==='Escape'){results.style.display='none';results.innerHTML='';input.blur();} }); console.log('✅ Search initialized'); })();
 </script>
-<script src="feed-config.js"></script>
-<script src="feed-utils.js"></script>
-<script src="feed-sentinel.js"></script>
-<script src="feed-background.js"></script>
-<script src="feed-trends.js"></script>
-<script src="feed-search.js"></script>
-<script src="feed-ui.js"></script>
-<script src="feed-main.js"></script>
 </body>
 </html>
