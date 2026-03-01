@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cryptobros News — Live Crypto Feed</title>
 
-  <!-- Fonts: NYT Style + Inter -->
+  <!-- Fonts: NYT Style + Inter + Orbitron -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Cormorant+Garamond:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Cormorant+Garamond:wght@700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -22,6 +22,7 @@
       --neon-blue: #0047FF;
       --neon-cyan: #00F0FF;
       --neon-gold: #FFD700;
+      --neon-purple: #9d00ff;
     }
 
     [data-theme="light"] {
@@ -101,14 +102,15 @@
       line-height: 1.1;
     }
 
+    /* ===== UPDATED SUBHEADER - BIGGER, BOLDER, DIFFERENT FONT ===== */
     .subheader {
-      font-family: 'Inter', Arial, sans-serif;
-      font-size: 1.1rem;
-      opacity: 0.8;
-      letter-spacing: 1px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 2px;
       margin-top: 0.25rem;
-      font-weight: 400;
       color: var(--text);
+      text-shadow: 0 0 10px var(--accent);
     }
 
     .top-controls {
@@ -121,6 +123,7 @@
       gap: 1rem;
     }
 
+    /* ===== BACK BUTTON - BLUE PULSE ===== */
     .back-btn {
       padding: 10px 20px;
       background: var(--card-bg);
@@ -131,6 +134,7 @@
       font-weight: 600;
       transition: all 0.3s;
       font-family: 'Inter', sans-serif;
+      animation: bluePulse 2s ease-in-out infinite;
     }
 
     .back-btn:hover {
@@ -138,7 +142,8 @@
       transform: translateX(-5px);
     }
 
-    .theme-toggle, .bg-toggle {
+    /* ===== THEME TOGGLE - PURPLE PULSE ===== */
+    .theme-toggle {
       padding: 10px 16px;
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -151,6 +156,24 @@
       gap: 0.5rem;
       transition: all 0.3s;
       font-family: 'Inter', sans-serif;
+      animation: purplePulse 2.5s ease-in-out infinite;
+    }
+
+    /* ===== BG TOGGLE - GOLD PULSE ===== */
+    .bg-toggle {
+      padding: 10px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+      animation: goldPulse 3s ease-in-out infinite;
     }
 
     .theme-toggle:hover, .bg-toggle:hover {
@@ -158,8 +181,42 @@
       transform: scale(1.05);
     }
 
+    /* Pulse Animations - Different colors, different timings */
+    @keyframes bluePulse {
+      0%, 100% { 
+        box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+        border-color: #00f0ff;
+      }
+      50% { 
+        box-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff, 0 0 60px #00f0ff;
+        border-color: #00f0ff;
+      }
+    }
+
+    @keyframes purplePulse {
+      0%, 100% { 
+        box-shadow: 0 0 10px #9d00ff, 0 0 20px #9d00ff;
+        border-color: #9d00ff;
+      }
+      50% { 
+        box-shadow: 0 0 20px #9d00ff, 0 0 40px #9d00ff, 0 0 60px #9d00ff;
+        border-color: #9d00ff;
+      }
+    }
+
+    @keyframes goldPulse {
+      0%, 100% { 
+        box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+        border-color: #ffd700;
+      }
+      50% { 
+        box-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700, 0 0 60px #ffd700;
+        border-color: #ffd700;
+      }
+    }
+
     .bg-toggle.spinning {
-      animation: gearSpin 1s linear infinite;
+      animation: gearSpin 1s linear infinite, goldPulse 3s ease-in-out infinite;
     }
     @keyframes gearSpin {
       from { transform: rotate(0deg); }
@@ -418,6 +475,7 @@
 
     @media (max-width: 768px) {
       h1 { font-size: 2.8rem; }
+      .subheader { font-size: 1.1rem; }
       .news-title { font-size: 1.3rem; }
       .modal-title { font-size: 1.8rem; }
       .modal-content {
