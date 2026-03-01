@@ -7,18 +7,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
   <style>
     :root {
       --neon-blue: #0047FF; --neon-cyan: #00F0FF; --neon-green: #00FF9D;
       --neon-gold: #FFD700; --neon-purple: #9D00FF; --neon-red: #FF4D4D;
-      --neon-orange: #FF9D00; --deep-bg: #0a0e27; --deep-purple: #1a0b2e;
-      --card-bg: rgba(10, 14, 39, 0.7); --glass-border: rgba(255, 255, 255, 0.1);
-      --text-primary: #e0e0ff; --text-secondary: #a0a0c0;
-      --agent-hunter: #ff4d4d; --agent-oracle: #9d00ff;
+      --deep-bg: #0a0e27; --card-bg: rgba(10, 14, 39, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1); --text-primary: #e0e0ff;
+      --text-secondary: #a0a0c0; --agent-hunter: #ff4d4d; --agent-oracle: #9d00ff;
       --agent-judge: #00f0ff; --agent-moderator: #ffd700;
       --border-width: 3px; --border-glow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
@@ -29,97 +27,54 @@
       --border-glow: 0 0 25px rgba(255, 215, 0, 0.7);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif; background: var(--deep-bg);
-      color: var(--text-primary); min-height: 100vh; overflow-x: hidden;
-      position: relative; contain: layout; transition: background 0.5s ease;
-      background-size: 400% 400%;
-    }
+    body { font-family: 'Inter', sans-serif; background: var(--deep-bg); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; background-size: 400% 400%; transition: background 0.5s ease; }
     .day-mode body { animation: goldSilk 8s ease infinite; }
-    @keyframes goldSilk { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes goldSilk { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     #particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
-    .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--deep-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; visibility: hidden; opacity: 0; }
-    .loading-screen.active { visibility: visible; opacity: 1; }
-    .loading-logo { font-family: 'Rajdhani', sans-serif; font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 2rem; text-align: center; }
-    .loading-progress { width: 300px; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; overflow: hidden; margin-top: 2rem; }
-    .loading-bar { height: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); width: 0%; transition: width 0.3s ease; }
-    .loading-text { font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text-secondary); margin-top: 1rem; text-align: center; }
-    .back-btn { position: absolute; top: 20px; left: 20px; padding: 0.8rem 1.6rem; background: rgba(10, 14, 39, 0.8); border: var(--border-width) solid var(--neon-cyan); border-radius: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--neon-cyan); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; backdrop-filter: blur(10px); box-shadow: var(--border-glow); }
-    .back-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.4s ease; }
+    
+    .back-btn { position: absolute; top: 20px; left: 20px; padding: 0.8rem 1.6rem; background: rgba(10, 14, 39, 0.8); border: var(--border-width) solid var(--neon-cyan); border-radius: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--neon-cyan); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; backdrop-filter: blur(10px); box-shadow: var(--border-glow); z-index: 1001; }
     .back-btn:hover { transform: translateX(-4px); box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); }
-    .back-btn:hover::before { left: 100%; }
-    .header { text-align: center; padding: 3rem 0; margin-bottom: 2rem; }
-    .main-title { font-family: 'Rajdhani', sans-serif; font-size: 3.5rem; font-weight: 700; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-blue)); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientFlow 5s ease infinite; margin-bottom: 0.5rem; text-shadow: 0 0 40px rgba(0, 240, 255, 0.5); letter-spacing: -1px; }
+    
+    .theme-toggle { position: absolute; top: 20px; left: 220px; width: 48px; height: 48px; background: rgba(10, 14, 39, 0.8); border: var(--border-width) solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s ease; z-index: 1001; box-shadow: var(--border-glow); }
+    .theme-toggle:hover { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.6); transform: scale(1.1); }
+    
+    .sound-toggle { position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px; background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s ease; z-index: 1000; box-shadow: var(--border-glow); }
+    .sound-toggle:hover { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.6); transform: scale(1.1); }
+    
+    .header { text-align: center; padding: 3rem 0; margin-bottom: 2rem; margin-top: 60px; }
+    .main-title { font-family: 'Rajdhani', sans-serif; font-size: 3.5rem; font-weight: 700; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-blue)); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientFlow 5s ease infinite; margin-bottom: 0.5rem; }
     @keyframes gradientFlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     .subtitle { font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--text-secondary); margin-bottom: 1.5rem; letter-spacing: 2px; }
-    .warning-text { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 800; background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-purple), var(--neon-green)); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: warningColor 4s ease-in-out infinite; text-shadow: 0 0 15px currentColor; letter-spacing: 1px; }
+    .warning-text { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 800; background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-purple), var(--neon-green)); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: warningColor 4s ease-in-out infinite; }
     @keyframes warningColor { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     .not-highlight { color: #ff4d4d !important; -webkit-text-fill-color: #ff4d4d !important; text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d, 0 0 40px rgba(255, 77, 77, 0.6) !important; font-weight: 900; animation: dangerPulse 0.8s ease-in-out infinite; display: inline-block; }
     @keyframes dangerPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.05); } }
-    .search-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); box-shadow: var(--border-glow); position: relative; overflow: hidden; }
-    .search-section::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent); animation: borderShimmer 3s linear infinite; }
-    @keyframes borderShimmer { 0% { left: -100%; } 100% { left: 100%; } }
+    
+    .search-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); box-shadow: var(--border-glow); }
     .search-input-wrapper { display: flex; gap: 1rem; margin-bottom: 1rem; }
-    .search-input { flex: 1; padding: 1rem 1.5rem; background: rgba(10, 14, 39, 0.5); border: 2px solid var(--glass-border); border-radius: 14px; font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--text-primary); transition: all 0.3s ease; }
+    .search-input { flex: 1; padding: 1rem 1.5rem; background: rgba(10, 14, 39, 0.5); border: 2px solid var(--glass-border); border-radius: 14px; font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--text-primary); }
     .search-input:focus { outline: none; border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
-    .analyze-btn {
-      padding: 1rem 3rem;
-      background: linear-gradient(135deg, #00F0FF, #0047FF, #9D00FF, #00F0FF);
-      background-size: 300% 300%;
-      border: none; border-radius: 14px;
-      font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 1.1rem;
-      color: #fff; cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: nowrap; letter-spacing: 2px; text-transform: uppercase;
-      position: relative; overflow: hidden;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.5), inset 0 0 20px rgba(255,255,255,0.1);
-      animation: gradientShift 4s ease infinite;
-    }
+    
+    .analyze-btn { padding: 1rem 3rem; background: linear-gradient(135deg, #00F0FF, #0047FF, #9D00FF); background-size: 300% 300%; border: none; border-radius: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 1.1rem; color: #fff; cursor: pointer; animation: gradientShift 4s ease infinite; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 0 30px rgba(0, 240, 255, 0.5); }
     @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-    .analyze-btn::before {
-      content: ''; position: absolute; top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
-      transform: scale(0); transition: transform 0.5s ease;
-      pointer-events: none;
-    }
-    .analyze-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 0 50px rgba(0, 240, 255, 0.8), 0 0 100px rgba(0, 240, 255, 0.4), inset 0 0 30px rgba(255,255,255,0.2); }
-    .analyze-btn:hover::before { transform: scale(1); }
-    .analyze-btn:active { transform: translateY(-2px) scale(1); }
+    .analyze-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 0 50px rgba(0, 240, 255, 0.8); }
     .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; animation: none; }
-    .analyze-btn .btn-text { position: relative; z-index: 1; }
-    .analyze-btn .btn-particles {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; overflow: hidden; border-radius: 14px;
-    }
-    .analyze-btn .particle {
-      position: absolute; width: 3px; height: 3px;
-      background: rgba(255,255,255,0.8); border-radius: 50%;
-      animation: particleFloat 2s linear infinite;
-    }
-    @keyframes particleFloat {
-      0% { transform: translateY(100%) scale(0); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateY(-100%) scale(1); opacity: 0; }
-    }
+    
     .quick-tokens { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
     .token-chip { padding: 0.5rem 1rem; background: rgba(0, 240, 255, 0.1); border: 2px solid var(--neon-cyan); border-radius: 20px; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--neon-cyan); cursor: pointer; transition: all 0.3s ease; font-weight: 600; }
     .token-chip:hover { background: rgba(0, 240, 255, 0.25); transform: scale(1.05); box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
-    .tribunal-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); box-shadow: var(--border-glow); position: relative; overflow: hidden; }
-    .tribunal-section::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--neon-purple), transparent); animation: borderShimmer 3s linear infinite; animation-delay: 0.5s; }
+    
+    .tribunal-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); box-shadow: var(--border-glow); }
     .section-title { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--neon-cyan); text-align: center; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 2px; }
     .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-    .agent-card { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 16px; padding: 1.5rem; position: relative; overflow: hidden; contain: layout style paint; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
-    .agent-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--agent-hunter), transparent); animation: borderShimmer 3s linear infinite; }
-    .agent-card[data-agent="oracle"]::before { background: linear-gradient(90deg, transparent, var(--agent-oracle), transparent); }
-    .agent-card[data-agent="judge"]::before { background: linear-gradient(90deg, transparent, var(--agent-judge), transparent); }
-    .agent-card[data-agent="moderator"]::before { background: linear-gradient(90deg, transparent, var(--agent-moderator), transparent); }
+    .agent-card { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 16px; padding: 1.5rem; position: relative; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
     .agent-card:hover { transform: translateY(-4px); }
     .agent-card[data-agent="hunter"]:hover { border-color: var(--agent-hunter); box-shadow: 0 0 30px rgba(255, 77, 77, 0.4); }
     .agent-card[data-agent="oracle"]:hover { border-color: var(--agent-oracle); box-shadow: 0 0 30px rgba(157, 0, 255, 0.4); }
     .agent-card[data-agent="judge"]:hover { border-color: var(--agent-judge); box-shadow: 0 0 30px rgba(0, 240, 255, 0.4); }
     .agent-card[data-agent="moderator"]:hover { border-color: var(--agent-moderator); box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+    
     .agent-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
     .agent-core { width: 64px; height: 64px; position: relative; flex-shrink: 0; filter: drop-shadow(0 0 15px currentColor); }
     .core-svg { width: 100%; height: 100%; }
@@ -129,10 +84,11 @@
     .agent-status { font-family: 'Inter', sans-serif; font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block; background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); font-weight: 600; }
     .agent-status.analyzing { background: rgba(255, 215, 0, 0.15); color: var(--neon-gold); border-color: var(--neon-gold); animation: statusPulse 1s ease-in-out infinite; }
     @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    
     .agent-output { font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; min-height: 80px; }
-    .agent-output li { list-style: none; margin-bottom: 0.4rem; padding-left: 1rem; position: relative; animation: fadeInLine 0.3s ease-out; }
-    @keyframes fadeInLine { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+    .agent-output li { list-style: none; margin-bottom: 0.4rem; padding-left: 1rem; position: relative; }
     .agent-output li::before { content: '→'; position: absolute; left: 0; color: var(--neon-cyan); font-weight: 700; }
+    
     .core-ring { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-opacity: 0.6; animation: corePulse 4s ease-in-out infinite; }
     .core-ring-outer { animation-delay: 0s; }
     .core-ring-inner { animation-delay: 0.5s; }
@@ -144,8 +100,8 @@
     .candlestick { fill: currentColor; stroke: currentColor; stroke-width: 1; opacity: 0.8; }
     .balance-line { fill: none; stroke: currentColor; stroke-width: 2; animation: balanceTilt 4s ease-in-out infinite; transform-origin: center; }
     @keyframes balanceTilt { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-    .verdict-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 3rem 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); text-align: center; position: relative; overflow: hidden; box-shadow: var(--border-glow); }
-    .verdict-section::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--neon-purple), transparent); animation: borderShimmer 3s linear infinite; animation-delay: 1s; }
+    
+    .verdict-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 3rem 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); text-align: center; box-shadow: var(--border-glow); display: none; }
     .verdict-section.high-risk { border-color: var(--neon-red); box-shadow: 0 0 60px rgba(255, 77, 77, 0.4); }
     .verdict-section.low-risk { border-color: var(--neon-green); box-shadow: 0 0 60px rgba(0, 255, 157, 0.4); }
     .verdict-title { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--neon-cyan); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 2px; }
@@ -159,19 +115,12 @@
     .scan-indicator { width: 8px; height: 8px; background: var(--neon-cyan); border-radius: 50%; animation: scanBlink 1s ease-in-out infinite; }
     @keyframes scanBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     .verdict-details { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--text-primary); margin: 1.5rem 0; text-align: left; background: rgba(0, 10, 50, 0.5); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--neon-cyan); }
-    .save-verdict-btn { padding: 1rem 3rem; background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan)); border: none; border-radius: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1rem; color: var(--deep-bg); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 30px rgba(157, 0, 255, 0.5); position: relative; overflow: hidden; letter-spacing: 1px; text-transform: uppercase; }
-    .save-verdict-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: left 0.4s ease; }
+    .save-verdict-btn { padding: 1rem 3rem; background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan)); border: none; border-radius: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1rem; color: var(--deep-bg); cursor: pointer; box-shadow: 0 0 30px rgba(157, 0, 255, 0.5); letter-spacing: 1px; text-transform: uppercase; }
     .save-verdict-btn:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(157, 0, 255, 0.7); }
-    .save-verdict-btn:hover::before { left: 100%; }
-    .shockwave { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%); pointer-events: none; z-index: 9999; opacity: 0; }
-    .shockwave.animate { animation: shockwaveExpand 1s ease-out forwards; }
-    @keyframes shockwaveExpand { 0% { width: 10px; height: 10px; opacity: 1; } 100% { width: 3000px; height: 3000px; opacity: 0; } }
-    .sound-toggle, .theme-toggle { position: fixed; bottom: 30px; width: 48px; height: 48px; background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s ease; z-index: 1000; box-shadow: var(--border-glow); }
-    .sound-toggle { right: 90px; }
-    .theme-toggle { right: 30px; }
-    .sound-toggle:hover, .theme-toggle:hover { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.6); transform: scale(1.1); }
+    
     .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(0, 240, 255, 0.3); border-top-color: var(--neon-cyan); border-radius: 50%; animation: spin 1s linear infinite; margin-right: 10px; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    
     @media (max-width: 768px) {
       .main-title { font-size: 2.2rem; }
       .search-input-wrapper { flex-direction: column; }
@@ -180,52 +129,42 @@
       .verdict-score { font-size: 2.5rem; }
       .verdict-label { font-size: 1.5rem; }
       .back-btn { position: relative; top: auto; left: auto; margin-bottom: 1rem; }
-      .header { padding: 2rem 0; }
-      .sound-toggle, .theme-toggle { bottom: 20px; width: 42px; height: 42px; }
-      .sound-toggle { right: 70px; }
-      .theme-toggle { right: 20px; }
+      .theme-toggle { position: relative; top: auto; left: auto; margin: 0 auto 1rem; display: flex; }
+      .header { padding: 2rem 0; margin-top: 0; }
+      .sound-toggle { bottom: 20px; right: 20px; width: 42px; height: 42px; }
       .warning-text { font-size: 1.1rem; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
 <body>
-  <div class="loading-screen" id="loadingScreen">
-    <div class="loading-logo">CRYPTOBROS TRIBUNAL</div>
-    <div class="loading-progress"><div class="loading-bar" id="loadingBar"></div></div>
-    <div class="loading-text" id="loadingText">Initializing AI agents...</div>
-  </div>
-  <div class="shockwave" id="shockwave"></div>
   <div id="particles-container"></div>
   <div class="container">
     <a href="index.html" class="back-btn">↩ Back to Home</a>
+    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</div>
+    
     <div class="header">
       <h1 class="main-title">CRYPTOBROS TRIBUNAL</h1>
       <p class="subtitle">AI Multi-Agent Risk Assessment System</p>
       <p class="warning-text">We do not recommend buying! We advise <span class="not-highlight">NOT</span> to buy!</p>
     </div>
+    
     <div class="search-section">
       <div class="search-input-wrapper">
-        <input type="text" class="search-input" id="tokenInput" placeholder="Enter token address or symbol (e.g., $WIF, $BONK)... Press Enter to analyze">
-        <button class="analyze-btn" id="analyzeBtn">
-          <span class="btn-text">🔍 ANALYZE</span>
-          <span class="btn-particles" id="btnParticles"></span>
-        </button>
+        <input type="text" class="search-input" id="tokenInput" placeholder="Enter token address or symbol (e.g., $WIF, $BONK)...">
+        <button class="analyze-btn" id="analyzeBtn" onclick="analyzeToken()">🔍 ANALYZE</button>
       </div>
       <div class="quick-tokens">
         <span class="token-chip" onclick="quickAnalyze('$WIF')">$WIF</span>
         <span class="token-chip" onclick="quickAnalyze('$BONK')">$BONK</span>
         <span class="token-chip" onclick="quickAnalyze('$SOL')">$SOL</span>
         <span class="token-chip" onclick="quickAnalyze('$AUS')">$AUS</span>
-        <span class="token-chip" onclick="quickAnalyze('$DOG (meme)')">$DOG (meme)</span>
       </div>
     </div>
+    
     <div class="tribunal-section">
       <h2 class="section-title">Tribunal Deliberation</h2>
       <div class="agent-grid">
-        <div class="agent-card" data-agent="hunter" data-status="idle">
+        <div class="agent-card" data-agent="hunter">
           <div class="agent-header">
             <div class="agent-core" style="color: var(--agent-hunter);">
               <svg viewBox="0 0 100 100" class="core-svg">
@@ -240,9 +179,10 @@
               <div class="agent-status" id="hunter-status">ONLINE</div>
             </div>
           </div>
-          <ul class="agent-output" id="hunter-output"><li>⏳ Ready to scan...</li></ul>
+          <ul class="agent-output" id="hunter-output"><li>Ready to scan...</li></ul>
         </div>
-        <div class="agent-card" data-agent="oracle" data-status="idle">
+        
+        <div class="agent-card" data-agent="oracle">
           <div class="agent-header">
             <div class="agent-core" style="color: var(--agent-oracle);">
               <svg viewBox="0 0 100 100" class="core-svg">
@@ -257,9 +197,10 @@
               <div class="agent-status" id="oracle-status">ONLINE</div>
             </div>
           </div>
-          <ul class="agent-output" id="oracle-output"><li>⏳ Ready to analyze...</li></ul>
+          <ul class="agent-output" id="oracle-output"><li>Ready to analyze...</li></ul>
         </div>
-        <div class="agent-card" data-agent="judge" data-status="idle">
+        
+        <div class="agent-card" data-agent="judge">
           <div class="agent-header">
             <div class="agent-core" style="color: var(--agent-judge);">
               <svg viewBox="0 0 100 100" class="core-svg">
@@ -278,9 +219,10 @@
               <div class="agent-status" id="judge-status">ONLINE</div>
             </div>
           </div>
-          <ul class="agent-output" id="judge-output"><li>⏳ Ready to judge...</li></ul>
+          <ul class="agent-output" id="judge-output"><li>Ready to judge...</li></ul>
         </div>
-        <div class="agent-card" data-agent="moderator" data-status="idle">
+        
+        <div class="agent-card" data-agent="moderator">
           <div class="agent-header">
             <div class="agent-core" style="color: var(--agent-moderator);">
               <svg viewBox="0 0 100 100" class="core-svg">
@@ -296,326 +238,462 @@
               <div class="agent-status" id="moderator-status">ONLINE</div>
             </div>
           </div>
-          <ul class="agent-output" id="moderator-output"><li>⏳ Ready to moderate...</li></ul>
+          <ul class="agent-output" id="moderator-output"><li>Ready to moderate...</li></ul>
         </div>
       </div>
     </div>
+    
     <div class="verdict-section" id="verdictSection">
       <h2 class="verdict-title">Final Verdict</h2>
-      <div class="verdict-score high-risk" id="verdictScore">0.90</div>
+      <div class="verdict-score high-risk" id="verdictScore">0.00</div>
       <div class="verdict-label high-risk" id="verdictLabel">HIGH RISK</div>
       <div class="quantum-scan"><div class="scan-indicator"></div><span>Initiating Quantum Contract Scan...</span></div>
       <div id="verdictDetails" class="verdict-details"></div>
       <button class="save-verdict-btn" onclick="saveVerdict()">💾 SAVE VERDICT</button>
     </div>
   </div>
-  <div class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Toggle Sound">🔇</div>
-  <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Day/Night Mode">🌙</div>
+  
+  <div class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇</div>
+
   <script>
-    // CONFIG
-    const CONFIG = { soundsEnabled: false, isDayMode: false, isMobile: window.innerWidth < 768 };
-    const SoundSystem = { ctx: null, async init() { if (!CONFIG.soundsEnabled) return; try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { console.warn('Web Audio API not supported'); } }, toggle() { CONFIG.soundsEnabled = !CONFIG.soundsEnabled; try { localStorage.setItem('tribunalSounds', CONFIG.soundsEnabled ? 'true' : 'false'); } catch(e) {} document.getElementById('soundToggle').textContent = CONFIG.soundsEnabled ? '🔊' : '🔇'; } };
-
-    function toggleTheme() {
-      CONFIG.isDayMode = !CONFIG.isDayMode;
-      document.body.classList.toggle('day-mode', CONFIG.isDayMode);
-      document.getElementById('themeToggle').textContent = CONFIG.isDayMode ? '☀️' : '🌙';
-      try { localStorage.setItem('tribunalTheme', CONFIG.isDayMode ? 'day' : 'night'); } catch(e) {}
-      const pc = document.getElementById('particles-container');
-      if (pc) pc.style.display = CONFIG.isDayMode ? 'none' : 'block';
-      if (!CONFIG.isDayMode) initParticles();
+    // === CONFIG ===
+    let isDayMode = localStorage.getItem('tribunalTheme') === 'day';
+    let soundsEnabled = localStorage.getItem('tribunalSounds') === 'true';
+    
+    // === ESCAPE HTML FOR XSS PROTECTION ===
+    function escapeHTML(str) {
+      if (!str) return str;
+      return String(str).replace(/[&<>"']/g, function(match) {
+        const escape = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return escape[match] || match;
+      });
     }
-
+    
+    // === THEME TOGGLE ===
+    function toggleTheme() {
+      isDayMode = !isDayMode;
+      document.body.classList.toggle('day-mode', isDayMode);
+      document.getElementById('themeToggle').textContent = isDayMode ? '☀️' : '🌙';
+      localStorage.setItem('tribunalTheme', isDayMode ? 'day' : 'night');
+      const pc = document.getElementById('particles-container');
+      if (pc) pc.style.display = isDayMode ? 'none' : 'block';
+      if (!isDayMode) initParticles();
+    }
+    
+    // === SOUND TOGGLE ===
+    function toggleSound() {
+      soundsEnabled = !soundsEnabled;
+      localStorage.setItem('tribunalSounds', soundsEnabled);
+      document.getElementById('soundToggle').textContent = soundsEnabled ? '🔊' : '🔇';
+    }
+    
+    // === PARTICLES ===
     async function initParticles() {
-      if (CONFIG.isMobile || CONFIG.isDayMode) return;
+      if (isDayMode || typeof tsParticles === 'undefined') return;
       try {
         await tsParticles.load("particles-container", {
-          particles: { number: { value: 60 }, color: { value: ["#0047FF", "#00F0FF", "#9D00FF"] }, shape: { type: "circle" }, opacity: { value: 0.3, random: true }, size: { value: 2, random: true }, move: { enable: true, speed: 0.5, direction: "none", random: true, out_mode: "out" }, links: { enable: true, distance: 150, color: "#0047FF", opacity: 0.2, width: 1 } },
-          interactivity: { detect_on: "canvas", events: { onhover: { enable: false }, onclick: { enable: false } } }, retina_detect: true
+          particles: { number: { value: 60 }, color: { value: ["#0047FF", "#00F0FF", "#9D00FF"] }, shape: { type: "circle" }, opacity: { value: 0.3, random: true }, size: { value: 2, random: true }, move: { enable: true, speed: 0.5, out_mode: "out" }, links: { enable: true, distance: 150, color: "#0047FF", opacity: 0.2, width: 1 } }
         });
-      } catch(e) { const pc = document.getElementById('particles-container'); if (pc) pc.style.display = 'none'; }
-    }
-
-    async function runLoadingSequence() {
-      const screen = document.getElementById('loadingScreen'), bar = document.getElementById('loadingBar'), text = document.getElementById('loadingText');
-      screen.classList.add('active');
-      const tl = gsap.timeline();
-      tl.to(screen, { opacity: 1, duration: 0.5 });
-      tl.to('.loading-logo', { textShadow: '2px 0 #ff4d4d, -2px 0 #00f0ff', duration: 0.3, repeat: 3, yoyo: true });
-      tl.to(bar, { width: '100%', duration: 4, ease: 'power2.inOut' }, '-=0.5');
-      const texts = ['Initializing AI agents...', 'Activating Phi-3-mini Hunter...', 'Activating Qwen1.5 Oracle...', 'Activating DeepSeek Judge...', 'Activating Phi-3-mini Moderator...', 'Neural network online...', 'Ready for Judgment'];
-      texts.forEach((txt, i) => { tl.to(text, { opacity: 0, duration: 0.2, onComplete: () => { text.textContent = txt; } }, i * 0.6); tl.to(text, { opacity: 1, duration: 0.2 }, i * 0.6 + 0.2); });
-      tl.to(screen, { opacity: 0, duration: 0.5, onComplete: () => { screen.classList.remove('active'); screen.style.display = 'none'; } }, '-=0.5');
-      tl.call(() => revealVerdict(), null, '-=0.3');
-    }
-
-    function revealVerdict() {
-      const shockwave = document.getElementById('shockwave');
-      const verdictSection = document.getElementById('verdictSection');
-      const scoreEl = document.getElementById('verdictScore');
-      shockwave.classList.add('animate');
-      setTimeout(() => shockwave.classList.remove('animate'), 1000);
-      const data = { val: 0 };
-      gsap.to(data, { val: 0.90, duration: 2, ease: 'power2.out', onUpdate: function() { scoreEl.textContent = data.val.toFixed(2); }});
-      gsap.fromTo(verdictSection, { boxShadow: '0 0 0 rgba(255, 77, 77, 0)' }, { boxShadow: '0 0 60px rgba(255, 77, 77, 0.3)', duration: 1 });
-    }
-
-    function safeGet(key, defaultVal) {
-      try {
-        const val = localStorage.getItem(key);
-        if (val === null) return defaultVal;
-        if (typeof defaultVal === 'boolean') return val === 'true';
-        if (typeof defaultVal === 'number') return parseFloat(val) || defaultVal;
-        if (typeof defaultVal === 'string') return val;
-        return JSON.parse(val);
-      } catch(e) { return defaultVal; }
-    }
-    function safeSet(key, val) { try { localStorage.setItem(key, typeof val === 'string' ? val : JSON.stringify(val)); } catch(e) {} }
-    function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-    const formatCache = new Map();
-    function formatNumber(num) {
-      const key = num.toString();
-      if (formatCache.has(key)) return formatCache.get(key);
-      let result;
-      if (num >= 1e9) result = (num/1e9).toFixed(2)+'B';
-      else if (num >= 1e6) result = (num/1e6).toFixed(2)+'M';
-      else if (num >= 1e3) result = (num/1e3).toFixed(2)+'K';
-      else result = num.toFixed(2);
-      formatCache.set(key, result);
-      return result;
-    }
-
-    function createBtnParticles() {
-      const container = document.getElementById('btnParticles');
-      if (!container) return;
-      container.innerHTML = '';
-      for (let i = 0; i < 8; i++) {
-        const p = document.createElement('span');
-        p.className = 'particle';
-        p.style.left = Math.random() * 100 + '%';
-        p.style.animationDelay = Math.random() * 2 + 's';
-        p.style.animationDuration = (1.5 + Math.random()) + 's';
-        container.appendChild(p);
+      } catch(e) { 
+        console.log('Particles failed'); 
+        const pc = document.getElementById('particles-container');
+        if (pc) pc.style.display = 'none';
       }
     }
-
+    
+    // === UTILS ===
+    function formatNumber(num) {
+      if (num >= 1e9) return (num/1e9).toFixed(2)+'B';
+      if (num >= 1e6) return (num/1e6).toFixed(2)+'M';
+      if (num >= 1e3) return (num/1e3).toFixed(2)+'K';
+      return num.toFixed(2);
+    }
+    
+    // === FETCH TOKEN DATA ===
     async function fetchTokenData(query) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
       try {
-        const response = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(query)}`, { signal: controller.signal });
-        clearTimeout(timeoutId);
+        const response = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(query)}`);
         if (!response.ok) return { offlineMode: true, tokenData: null };
         const data = await response.json();
         if (!data.pairs || data.pairs.length === 0) return { offlineMode: true, tokenData: null };
         const tokenData = data.pairs.reduce((best, current) => (current.liquidity?.usd || 0) > (best.liquidity?.usd || 0) ? current : best);
         return { offlineMode: false, tokenData };
       } catch(e) {
-        clearTimeout(timeoutId);
-        if (e.name === 'AbortError') console.log('Request timeout');
-        else console.log('DexScreener API error:', e);
+        console.log('API error:', e.message);
         return { offlineMode: true, tokenData: null };
       }
     }
-
-    // SIMPLE DYNAMIC MESSAGES - REPLACEMENT NOT ACCUMULATION
-    const agentMessages = {
-      hunter: ['🔌 Connecting...', '📡 Scanning contract...', '🔍 Analyzing liquidity...', '👥 Checking holders...', '⚠️ Detecting risks...', '✅ Analysis complete'],
-      oracle: ['📡 Fetching data...', '🐦 Twitter sentiment...', '💬 Telegram activity...', '🤖 Bot detection...', '📊 Hype score...', '✅ Analysis complete'],
-      judge: ['📈 Loading prices...', '📊 Volatility calc...', '💹 Volume patterns...', '🎯 Manipulation check...', '⚖️ Risk/reward...', '✅ Analysis complete'],
-      moderator: ['🔄 Collecting reports...', '⚖️ Comparing scores...', '🔍 Finding discrepancies...', '🧮 Calculating consensus...', '📋 Finalizing...', '✅ Verdict ready']
-    };
-
+    
+    // === ANALYSIS FUNCTIONS ===
     function analyzeOnChain(tokenQuery, tokenData, offlineMode) {
-      if (offlineMode || !tokenData) return { output: "→ Contract verification: FAILED\n→ No on-chain data available\n→ ⚠️ EXTREME RISK: Unknown contract", risk: 0.95, factors: ['No data', 'Unknown contract'] };
-      const baseToken = tokenData.baseToken || {}, liquidity = tokenData.liquidity || {}, fdv = tokenData.fdv || 0, pairCreatedAt = tokenData.pairCreatedAt || 0;
-      let output = "→ On-chain analysis complete\n", risk = 0.5, factors = [];
-      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ AURASPACE token detected\n→ Native to CRYPTOBROS ecosystem\n→ Contract verified and trusted\n→ LP locked permanently", risk: 0.05, factors: ['Verified', 'Ecosystem', 'LP locked'] };
-      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'];
-      if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Blue chip asset detected\n→ Established contract\n→ High liquidity pool\n→ Verified on-chain", risk: 0.15, factors: ['Blue chip', 'Established', 'High liquidity'] };
-      const ageHours = (Date.now() - (pairCreatedAt * 1000)) / (1000 * 60 * 60);
-      if (ageHours < 1) { output += "→ ⚠️ NEW CONTRACT (<1h old)\n"; risk += 0.3; factors.push('Brand new'); }
-      else if (ageHours < 24) { output += `→ Young contract (${ageHours.toFixed(1)}h)\n`; risk += 0.2; factors.push('New'); }
-      if (liquidity.usd && liquidity.usd < 50000) { output += `→ ⚠️ CRITICAL: Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.3; factors.push('Low liquidity < $50k'); }
-      else if (liquidity.usd && liquidity.usd < 200000) { output += `→ ⚠️ Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.2; factors.push('Low liquidity < $200k'); }
-      if (fdv > 0 && fdv < 100000) { output += `→ ⚠️ Micro-cap FDV: $${formatNumber(fdv)}\n`; risk += 0.15; factors.push('Micro-cap'); }
-      output += `→ Contract: ${baseToken.address?.substring(0, 12)}...\n→ DEX: ${tokenData.dexId || 'Unknown'}\n→ Chain: ${tokenData.chainId || 'Unknown'}\n`;
-      return { output, risk: Math.min(0.99, risk), factors };
-    }
-
-    function analyzeSentiment(tokenQuery, tokenData, offlineMode) {
-      if (offlineMode || !tokenData) return { output: "→ Social sentiment: UNKNOWN\n→ No market data available\n→ ⚠️ Cannot assess community trust", risk: 0.85, factors: ['No data', 'Unknown'] };
-      const volume = tokenData.volume || {}, priceChange = tokenData.priceChange || {}, txns = tokenData.txns || {};
-      let output = "→ Social sentiment analysis\n", risk = 0.5, factors = [];
-      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ Positive community sentiment\n→ Strong ecosystem support\n→ Growing adoption in CRYPTOBROS network\n→ Active developer engagement", risk: 0.1, factors: ['Strong community', 'Ecosystem'] };
-      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc'];
-      if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Strong community trust\n→ Established reputation\n→ Low social manipulation risk\n→ Organic growth", risk: 0.15, factors: ['Established', 'Strong trust'] };
-      if (volume.h24) { if (volume.h24 > 1e7) output += `→ 🔥 HIGH VOLUME: $${formatNumber(volume.h24)}\n`; else if (volume.h24 < 1e5) { output += `→ Low volume: $${formatNumber(volume.h24)}\n`; risk += 0.1; factors.push('Low engagement'); } }
-      if (txns.h24?.buys && txns.h24?.sells) { const ratio = txns.h24.buys / (txns.h24.buys + txns.h24.sells); if (ratio > 0.85) { risk += 0.2; factors.push('Extreme FOMO'); } }
-      if (priceChange.h24) { const change = parseFloat(priceChange.h24); if (change > 50) { output += `→ 🚀 Bullish +${change.toFixed(1)}%\n`; risk += 0.25; factors.push('Pump hype'); } else if (change < -30) { output += `→ 📉 Selling ${change.toFixed(1)}%\n`; risk += 0.2; factors.push('Panic'); } }
-      const memePatterns = ['wif','bonk','pepe','mog','turbo','dog','shib','floki'];
-      if (memePatterns.some(p => ticker.includes(p))) { output += "→ 🐸 Meme coin detected\n→ High social media hype\n→ Extreme volatility expected\n→ Pump & dump risk HIGH"; risk += 0.35; factors.push('Meme - high risk'); }
-      return { output, risk: Math.min(0.99, risk), factors };
-    }
-
-    function analyzePrice(tokenQuery, tokenData, offlineMode) {
-      if (offlineMode || !tokenData) return { output: "→ Price action: UNKNOWN\n→ No trading history available\n→ ⚠️ Cannot assess price stability", risk: 0.9, factors: ['No data', 'Unknown'] };
-      const liquidity = tokenData.liquidity || {}, volume = tokenData.volume || {}, priceChange = tokenData.priceChange || {}, fdv = tokenData.fdv || 0;
-      let output = "→ Price action analysis\n", risk = 0.5, factors = [];
-      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase(), blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'];
-      if (blueChips.some(chip => ticker.includes(chip))) return { output: "→ Blue chip asset\n→ High liquidity and volume\n→ Established market presence\n→ Low volatility profile\n→ Stable price action", risk: 0.1, factors: ['Blue chip', 'Low volatility', 'Stable'] };
-      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) return { output: "→ Stable price action\n→ Healthy trading volume\n→ Sustainable growth pattern\n→ Ecosystem-backed token\n→ Low manipulation risk", risk: 0.1, factors: ['Stable', 'Ecosystem-backed'] };
-      if (liquidity.usd && volume.h24) { const ratio = volume.h24 / liquidity.usd; if (ratio > 10) { output += `→ ⚠️ PUMP ALERT: V/L ratio ${ratio.toFixed(1)}x\n`; risk += 0.35; factors.push('Extreme pump V/L > 10x'); } else if (ratio > 5) { output += `→ High activity: V/L ${ratio.toFixed(1)}x\n`; risk += 0.25; factors.push('High pump risk V/L > 5x'); } }
-      if (fdv > 0 && liquidity.usd > 0) { const fdvLiqRatio = fdv / liquidity.usd; if (fdvLiqRatio > 100) { output += `→ ⚠️ CRITICAL: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; risk += 0.3; factors.push('High rug risk FDV/LP > 100x'); } }
-      if (priceChange.h6 && priceChange.h24) { const h6 = parseFloat(priceChange.h6), h24 = parseFloat(priceChange.h24); if (h6 > 30 && h24 < 10) { output += "→ ⚠️ SUSPICIOUS: Pump then dump\n"; risk += 0.3; factors.push('Pump & dump pattern'); } }
-      return { output, risk: Math.min(0.99, risk), factors };
-    }
-
-    function analyzeDiscrepancies(analyses) {
-      const { onChain, sentiment, price } = analyses;
-      let output = "⚠️ CONSENSUS VERDICT\n", riskFactors = [], contradictions = [];
-      if (onChain.risk === 0.05) return { output: "→ TOKEN VERIFIED AS TRUSTED\n→ Native to CRYPTOBROS ecosystem\n→ Maximum security and transparency\n→ All experts concur: LOW RISK\n→ Risk Score: 0.05/1.00", risk: 0.05, category: 'trusted', recommendation: 'TRUST', factors: ['Native CRYPTOBROS token'] };
-      if (Math.abs(onChain.risk - sentiment.risk) > 0.4) contradictions.push("⚠️ ON-CHAIN vs SENTIMENT");
-      if (Math.abs(sentiment.risk - price.risk) > 0.4) contradictions.push("⚠️ SENTIMENT vs PRICE");
-      if (Math.abs(onChain.risk - price.risk) > 0.4) contradictions.push("⚠️ ON-CHAIN vs PRICE");
-      let baseRisk = (onChain.risk + sentiment.risk + price.risk) / 3;
-      if (contradictions.length > 0) { baseRisk += 0.15 * contradictions.length; riskFactors.push('Expert disagreement'); }
-      let finalRisk = Math.min(0.99, Math.max(0.05, baseRisk)), category, recommendation;
-      if (finalRisk < 0.3) { category = 'low'; recommendation = 'TRUST'; output += "\n→ RECOMMENDATION: TRUST\n→ Suitable for investment\n→ Strong fundamentals"; }
-      else if (finalRisk < 0.7) { category = 'medium'; recommendation = 'WATCH'; output += "\n→ RECOMMENDATION: WATCH\n→ Moderate risk\n→ DYOR before investing"; }
-      else { category = 'high'; recommendation = 'AVOID'; output += "\n→ RECOMMENDATION: AVOID\n→ Multiple red flags\n→ Extreme caution"; }
-      [onChain.factors, sentiment.factors, price.factors].flat().forEach(f => { if (!riskFactors.includes(f)) riskFactors.push(f); });
-      output += `\n→ Risk Score: ${finalRisk.toFixed(2)}/1.00`;
-      return { output, risk: parseFloat(finalRisk.toFixed(2)), category, recommendation, factors: riskFactors };
-    }
-
-    // MAIN ANALYZE - SIMPLE & RELIABLE
-    async function analyzeToken() {
-      const input = document.getElementById('tokenInput'), btn = document.getElementById('analyzeBtn'), token = input.value.trim();
-      if (!token) { alert('Please enter a token'); return; }
-      btn.disabled = true;
-      const btnText = btn.querySelector('.btn-text');
-      btnText.innerHTML = '<span class="loading-spinner"></span>SCANNING...';
-      document.getElementById('verdictSection').style.display = 'none';
-      console.log('🔍 Starting analysis for:', token);
+      if (offlineMode || !tokenData) return { output: "→ Contract verification: FAILED\n→ No on-chain data available\n→ ⚠️ EXTREME RISK: Unknown contract", risk: 0.95 };
       
+      const baseToken = tokenData.baseToken || {};
+      const liquidity = tokenData.liquidity || {};
+      const fdv = tokenData.fdv || 0;
+      const pairCreatedAt = tokenData.pairCreatedAt || 0;
+      
+      let output = "→ On-chain analysis complete\n";
+      let risk = 0.5;
+      
+      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) {
+        return { output: "→ AURASPACE token detected\n→ Native to CRYPTOBROS ecosystem\n→ Contract verified and trusted\n→ LP locked permanently", risk: 0.05 };
+      }
+      
+      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase();
+      const blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'];
+      if (blueChips.some(chip => ticker.includes(chip))) {
+        return { output: "→ Blue chip asset detected\n→ Established contract\n→ High liquidity pool\n→ Verified on-chain", risk: 0.15 };
+      }
+      
+      const ageHours = (Date.now() - (pairCreatedAt * 1000)) / (1000 * 60 * 60);
+      if (ageHours < 1) { output += "→ ⚠️ NEW CONTRACT (<1h old)\n"; risk += 0.3; }
+      else if (ageHours < 24) { output += `→ Young contract (${ageHours.toFixed(1)}h)\n`; risk += 0.2; }
+      
+      if (liquidity.usd && liquidity.usd < 50000) { output += `→ ⚠️ CRITICAL: Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.3; }
+      else if (liquidity.usd && liquidity.usd < 200000) { output += `→ ⚠️ Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.2; }
+      
+      if (fdv > 0 && fdv < 100000) { output += `→ ⚠️ Micro-cap FDV: $${formatNumber(fdv)}\n`; risk += 0.15; }
+      
+      output += `→ Contract: ${baseToken.address?.substring(0, 12)}...\n→ DEX: ${tokenData.dexId || 'Unknown'}\n→ Chain: ${tokenData.chainId || 'Unknown'}\n`;
+      return { output, risk: Math.min(0.99, risk) };
+    }
+    
+    function analyzeSentiment(tokenQuery, tokenData, offlineMode) {
+      if (offlineMode || !tokenData) return { output: "→ Social sentiment: UNKNOWN\n→ No market data available\n→ ⚠️ Cannot assess community trust", risk: 0.85 };
+      
+      const volume = tokenData.volume || {};
+      const priceChange = tokenData.priceChange || {};
+      const txns = tokenData.txns || {};
+      
+      let output = "→ Social sentiment analysis\n";
+      let risk = 0.5;
+      
+      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) {
+        return { output: "→ Positive community sentiment\n→ Strong ecosystem support\n→ Growing adoption in CRYPTOBROS network\n→ Active developer engagement", risk: 0.1 };
+      }
+      
+      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase();
+      const blueChips = ['sol','eth','btc','usdt','usdc'];
+      if (blueChips.some(chip => ticker.includes(chip))) {
+        return { output: "→ Strong community trust\n→ Established reputation\n→ Low social manipulation risk\n→ Organic growth", risk: 0.15 };
+      }
+      
+      if (volume.h24) {
+        if (volume.h24 > 1e7) output += `→ 🔥 HIGH VOLUME: $${formatNumber(volume.h24)}\n`;
+        else if (volume.h24 < 1e5) { output += `→ Low volume: $${formatNumber(volume.h24)}\n`; risk += 0.1; }
+      }
+      
+      if (txns.h24?.buys && txns.h24?.sells) {
+        const ratio = txns.h24.buys / (txns.h24.buys + txns.h24.sells);
+        if (ratio > 0.85) { risk += 0.2; output += "→ ⚠️ Extreme FOMO detected\n"; }
+      }
+      
+      if (priceChange.h24) {
+        const change = parseFloat(priceChange.h24);
+        if (change > 50) { output += `→ 🚀 Bullish +${change.toFixed(1)}%\n`; risk += 0.25; }
+        else if (change < -30) { output += `→ 📉 Selling ${change.toFixed(1)}%\n`; risk += 0.2; }
+      }
+      
+      const memePatterns = ['wif','bonk','pepe','mog','turbo','dog','shib','floki'];
+      if (memePatterns.some(p => ticker.includes(p))) {
+        output += "→ 🐸 Meme coin detected\n→ High social media hype\n→ Extreme volatility expected\n→ Pump & dump risk HIGH";
+        risk += 0.35;
+      }
+      
+      return { output, risk: Math.min(0.99, risk) };
+    }
+    
+    function analyzePrice(tokenQuery, tokenData, offlineMode) {
+      if (offlineMode || !tokenData) return { output: "→ Price action: UNKNOWN\n→ No trading history available\n→ ⚠️ Cannot assess price stability", risk: 0.9 };
+      
+      const liquidity = tokenData.liquidity || {};
+      const volume = tokenData.volume || {};
+      const priceChange = tokenData.priceChange || {};
+      const fdv = tokenData.fdv || 0;
+      
+      let output = "→ Price action analysis\n";
+      let risk = 0.5;
+      
+      const ticker = (tokenData.baseToken?.symbol || '').toLowerCase();
+      const blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'];
+      if (blueChips.some(chip => ticker.includes(chip))) {
+        return { output: "→ Blue chip asset\n→ High liquidity and volume\n→ Established market presence\n→ Low volatility profile\n→ Stable price action", risk: 0.1 };
+      }
+      
+      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) {
+        return { output: "→ Stable price action\n→ Healthy trading volume\n→ Sustainable growth pattern\n→ Ecosystem-backed token\n→ Low manipulation risk", risk: 0.1 };
+      }
+      
+      if (liquidity.usd && volume.h24) {
+        const ratio = volume.h24 / liquidity.usd;
+        if (ratio > 10) { output += `→ ⚠️ PUMP ALERT: V/L ratio ${ratio.toFixed(1)}x\n`; risk += 0.35; }
+        else if (ratio > 5) { output += `→ High activity: V/L ${ratio.toFixed(1)}x\n`; risk += 0.25; }
+      }
+      
+      if (fdv > 0 && liquidity.usd > 0) {
+        const fdvLiqRatio = fdv / liquidity.usd;
+        if (fdvLiqRatio > 100) { output += `→ ⚠️ CRITICAL: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; risk += 0.3; }
+      }
+      
+      if (priceChange.h6 && priceChange.h24) {
+        const h6 = parseFloat(priceChange.h6), h24 = parseFloat(priceChange.h24);
+        if (h6 > 30 && h24 < 10) { output += "→ ⚠️ SUSPICIOUS: Pump then dump\n"; risk += 0.3; }
+      }
+      
+      return { output, risk: Math.min(0.99, risk) };
+    }
+    
+    // === FIXED: NOW ACCEPTS 3 PARAMETERS ===
+    function analyzeDiscrepancies(onChain, sentiment, price) {
+      let output = "⚠️ CONSENSUS VERDICT\n";
+      let contradictions = 0;
+      
+      if (onChain.risk === 0.05) {
+        return { output: "→ TOKEN VERIFIED AS TRUSTED\n→ Native to CRYPTOBROS ecosystem\n→ Maximum security and transparency\n→ All experts concur: LOW RISK\n→ Risk Score: 0.05/1.00", risk: 0.05, category: 'trusted', recommendation: 'TRUST' };
+      }
+      
+      if (Math.abs(onChain.risk - sentiment.risk) > 0.4) { output += "⚠️ ON-CHAIN vs SENTIMENT DISCREPANCY\n"; contradictions++; }
+      if (Math.abs(sentiment.risk - price.risk) > 0.4) { output += "⚠️ SENTIMENT vs PRICE DISCREPANCY\n"; contradictions++; }
+      if (Math.abs(onChain.risk - price.risk) > 0.4) { output += "⚠️ ON-CHAIN vs PRICE DISCREPANCY\n"; contradictions++; }
+      
+      let baseRisk = (onChain.risk + sentiment.risk + price.risk) / 3;
+      if (contradictions > 0) { baseRisk += 0.15 * contradictions; output += "⚠️ Expert disagreement - high uncertainty\n"; }
+      
+      let finalRisk = Math.min(0.99, Math.max(0.05, baseRisk));
+      let category, recommendation;
+      
+      if (finalRisk < 0.3) {
+        category = 'low'; recommendation = 'TRUST';
+        output += "\n→ RECOMMENDATION: TRUST\n→ Suitable for investment\n→ Strong fundamentals across all metrics";
+      } else if (finalRisk < 0.7) {
+        category = 'medium'; recommendation = 'WATCH';
+        output += "\n→ RECOMMENDATION: WATCH\n→ Moderate risk detected\n→ DYOR before investing";
+      } else {
+        category = 'high'; recommendation = 'AVOID';
+        output += "\n→ RECOMMENDATION: AVOID\n→ Multiple red flags detected\n→ Extreme caution advised";
+      }
+      
+      output += `\n→ Risk Score: ${finalRisk.toFixed(2)}/1.00`;
+      return { output, risk: parseFloat(finalRisk.toFixed(2)), category, recommendation };
+    }
+    
+    // === MAIN ANALYZE - WITH ERROR HANDLING ===
+    async function analyzeToken() {
       try {
+        console.log('🔍 analyzeToken STARTED');
+        
+        const input = document.getElementById('tokenInput');
+        const btn = document.getElementById('analyzeBtn');
+        const token = input.value.trim();
+        
+        if (!token) { alert('Please enter a token'); return; }
+        
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span>SCANNING...';
+        document.getElementById('verdictSection').style.display = 'none';
+        
+        // Set all agents to analyzing
+        ['hunter', 'oracle', 'judge', 'moderator'].forEach(id => {
+          const status = document.getElementById(`${id}-status`);
+          const output = document.getElementById(`${id}-output`);
+          if (status) { status.textContent = 'ANALYZING...'; status.classList.add('analyzing'); }
+          if (output) output.innerHTML = '<li>Working...</li>';
+        });
+        
+        console.log('📡 Fetching data...');
         const { offlineMode, tokenData } = await fetchTokenData(token);
-        console.log('📡 API response:', offlineMode ? 'OFFLINE MODE' : 'DATA RECEIVED');
+        console.log('📡 API response:', offlineMode ? 'OFFLINE' : 'DATA RECEIVED');
         
-        const agents = [
-          { id: 'hunter', name: 'Phi-3-mini On-Chain Hunter', fn: () => analyzeOnChain(token, tokenData, offlineMode) },
-          { id: 'oracle', name: 'Qwen1.5 Sentiment Oracle', fn: () => analyzeSentiment(token, tokenData, offlineMode) },
-          { id: 'judge', name: 'DeepSeek Price Action Judge', fn: () => analyzePrice(token, tokenData, offlineMode) }
-        ];
-        const results = {};
+        // Run all 3 analyses in parallel
+        console.log('🤖 Running agents...');
+        const [onChain, sentiment, price] = await Promise.all([
+          Promise.resolve(analyzeOnChain(token, tokenData, offlineMode)),
+          Promise.resolve(analyzeSentiment(token, tokenData, offlineMode)),
+          Promise.resolve(analyzePrice(token, tokenData, offlineMode))
+        ]);
         
-        for (const agent of agents) {
-          const statusEl = document.getElementById(`${agent.id}-status`), outputEl = document.getElementById(`${agent.id}-output`);
-          if (statusEl && outputEl) {
-            console.log(`🤖 Starting ${agent.id}`);
-            statusEl.textContent = 'ANALYZING...'; statusEl.classList.add('analyzing');
-            
-            // SIMPLE MESSAGE UPDATES - REPLACE NOT ACCUMULATE
-            const messages = agentMessages[agent.id];
-            for (let i = 0; i < messages.length; i++) {
-              outputEl.innerHTML = `<li>${messages[i]}</li>`;
-              await delay(400);
-              console.log(`  → ${messages[i]}`);
-            }
-            
-            const result = agent.fn();
-            results[agent.id] = result;
-            outputEl.innerHTML = result.output.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
-            statusEl.textContent = 'COMPLETE'; statusEl.classList.remove('analyzing');
-            console.log(`✅ ${agent.id} complete`);
-          }
+        console.log('✅ Agents complete:', { onChain: onChain.risk, sentiment: sentiment.risk, price: price.risk });
+        
+        // Update agent outputs
+        const hunterOutput = document.getElementById('hunter-output');
+        const oracleOutput = document.getElementById('oracle-output');
+        const judgeOutput = document.getElementById('judge-output');
+        
+        if (hunterOutput) hunterOutput.innerHTML = onChain.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
+        if (oracleOutput) oracleOutput.innerHTML = sentiment.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
+        if (judgeOutput) judgeOutput.innerHTML = price.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
+        
+        // Set agents to complete
+        ['hunter', 'oracle', 'judge'].forEach(id => {
+          const status = document.getElementById(`${id}-status`);
+          if (status) { status.textContent = 'COMPLETE'; status.classList.remove('analyzing'); }
+        });
+        
+        // Moderator - FIXED: passes 3 parameters
+        console.log('⚖️ Moderator calculating...');
+        const moderator = analyzeDiscrepancies(onChain, sentiment, price);
+        const modOutput = document.getElementById('moderator-output');
+        const modStatus = document.getElementById('moderator-status');
+        
+        if (modOutput) modOutput.innerHTML = moderator.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
+        if (modStatus) { modStatus.textContent = 'COMPLETE'; modStatus.classList.remove('analyzing'); }
+        
+        console.log('✅ Verdict:', moderator.risk, moderator.category);
+        
+        // Show verdict
+        showVerdict(moderator, token, tokenData);
+        
+      } catch(error) {
+        console.error('❌ Analysis failed:', error);
+        alert('Analysis failed. Please try again.');
+      } finally {
+        const btn = document.getElementById('analyzeBtn');
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '🔍 ANALYZE';
         }
-        
-        // MODERATOR
-        const modStatus = document.getElementById('moderator-status'), modOutput = document.getElementById('moderator-output');
-        if (modStatus && modOutput) {
-          modStatus.textContent = 'ANALYZING...'; modStatus.classList.add('analyzing');
-          const messages = agentMessages.moderator;
-          for (let i = 0; i < messages.length; i++) {
-            modOutput.innerHTML = `<li>${messages[i]}</li>`;
-            await delay(400);
-          }
-          const moderator = analyzeDiscrepancies(results);
-          modOutput.innerHTML = moderator.output.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
-          modStatus.textContent = 'COMPLETE'; modStatus.classList.remove('analyzing');
-          showVerdict(moderator, token, tokenData);
-        }
-      } catch (error) { 
-        console.error('❌ Analysis failed:', error); 
-        alert('Analysis failed. Check console (F12) for details.'); 
-      } finally { 
-        btn.disabled = false; 
-        btnText.innerHTML = '🔍 ANALYZE'; 
       }
     }
-
-    function quickAnalyze(token) { if (token) { document.getElementById('tokenInput').value = token; analyzeToken(); } }
-
+    
+    function quickAnalyze(token) {
+      document.getElementById('tokenInput').value = token;
+      analyzeToken();
+    }
+    
     function showVerdict(moderator, token, tokenData) {
-      const section = document.getElementById('verdictSection'), scoreEl = document.getElementById('verdictScore'), labelEl = document.getElementById('verdictLabel'), detailsEl = document.getElementById('verdictDetails');
-      const { risk, category, recommendation } = moderator;
+      const section = document.getElementById('verdictSection');
+      const scoreEl = document.getElementById('verdictScore');
+      const labelEl = document.getElementById('verdictLabel');
+      const detailsEl = document.getElementById('verdictDetails');
+      
+      if (!section || !scoreEl || !labelEl) return;
+      
       section.style.display = 'block';
+      const { risk, category, recommendation } = moderator;
+      
       section.className = `verdict-section ${category === 'high' ? 'high-risk' : 'low-risk'}`;
       scoreEl.className = `verdict-score ${category === 'high' ? 'high-risk' : 'low-risk'}`;
       labelEl.className = `verdict-label ${category === 'high' ? 'high-risk' : 'low-risk'}`;
-      const data = { val: 0 };
-      gsap.to(data, { val: risk, duration: 2, ease: 'power2.out', onUpdate: function() { scoreEl.textContent = data.val.toFixed(2); }});
+      
+      // Animate score
+      if (typeof gsap !== 'undefined') {
+        const data = { val: 0 };
+        gsap.to(data, { val: risk, duration: 2, ease: 'power2.out', onUpdate: function() { scoreEl.textContent = data.val.toFixed(2); }});
+      } else {
+        scoreEl.textContent = risk.toFixed(2);
+      }
+      
       labelEl.textContent = category === 'trusted' ? 'TRUSTED' : (category === 'high' ? 'HIGH RISK' : 'LOW RISK');
       
-      const isPremium = ['Premium','Pro'].includes(safeGet('selectedTier')), contract = tokenData?.baseToken?.address, chain = tokenData?.chainId || 'base';
-      if (isPremium && contract) {
-        document.querySelector('.quantum-scan span').textContent = 'Scanning...';
-        fetch('https://cryptobros-backend.onrender.com/api/goplus/token-security', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chain_id: chain, contract_addresses: contract }) })
-        .then(res => res.json()).then(data => {
-          const sec = data.result?.[contract];
-          if (sec) {
-            let scan = '\n🔍 QUANTUM SCAN\n';
-            scan += `→ Ownership: ${sec.is_open_source === '1' ? 'RENOUNCED' : 'ACTIVE'}\n`;
-            scan += `→ Taxes: Buy ${sec.buy_tax||0}% | Sell ${sec.sell_tax||0}%\n`;
-            scan += `→ Liquidity: ${sec.is_proxy === '0' ? 'LOCKED' : 'UNLOCKED'}\n`;
-            scan += `→ Honeypot: ${sec.is_honeypot === '1' ? 'DETECTED' : 'CLEAR'}`;
-            detailsEl.innerHTML = `<pre style="color:#00ff9d">${scan}</pre>`;
-          }
-        }).catch(() => { detailsEl.innerHTML = '<pre style="color:#ff4d4d">⚠️ Scan unavailable</pre>'; });
+      // Quantum scan for premium - FIXED: added null checks
+      const tier = localStorage.getItem('selectedTier') || '';
+      const isPremium = ['Premium', 'Pro'].includes(tier);
+      
+      if (isPremium && tokenData && tokenData.baseToken) {
+        const contract = tokenData.baseToken.address;
+        const chain = tokenData.chainId || 'base';
+        
+        if (contract && detailsEl) {
+          fetch('https://cryptobros-backend.onrender.com/api/goplus/token-security', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chain_id: chain, contract_addresses: contract })
+          })
+          .then(res => res.json())
+          .then(data => {
+            const sec = data.result?.[contract];
+            if (sec) {
+              let scan = '\n🔍 QUANTUM CONTRACT SCAN\n';
+              scan += `→ Ownership: ${sec.is_open_source === '1' ? 'RENOUNCED' : 'ACTIVE (CRITICAL RISK)'}\n`;
+              scan += `→ Taxes: Buy ${sec.buy_tax || '0'}% | Sell ${sec.sell_tax || '0'}%\n`;
+              scan += `→ Liquidity: ${sec.is_proxy === '0' ? 'LOCKED' : 'UNLOCKED (RUG RISK)'}\n`;
+              scan += `→ Honeypot: ${sec.is_honeypot === '1' ? 'DETECTED' : 'CLEAR'}\n`;
+              scan += `→ Ownership Recovery: ${sec.can_take_back_ownership === '1' ? 'ENABLED (DANGER)' : 'DISABLED'}\n`;
+              scan += `→ Anti-Whale: ${sec.is_anti_whale === '1' ? 'ACTIVE' : 'INACTIVE'}`;
+              detailsEl.innerHTML = `<pre style="color:#00ff9d">${escapeHTML(scan)}</pre>`;
+            }
+          })
+          .catch(() => { 
+            if (detailsEl) detailsEl.innerHTML = '<pre style="color:#ff4d4d">⚠️ Quantum scan unavailable</pre>'; 
+          });
+        }
       }
     }
-
+    
+    // === FIXED: localStorage error handling ===
     function saveVerdict() {
-      const token = document.getElementById('tokenInput').value.trim(), risk = document.getElementById('verdictScore').textContent, label = document.getElementById('verdictLabel').textContent;
-      const verdict = { token, risk, label, timestamp: Date.now() };
-      let history = safeGet('verdictHistory', []); history.unshift(verdict); safeSet('verdictHistory', history.slice(0, 50));
-      const btn = document.querySelector('.save-verdict-btn'); btn.textContent = '✓ SAVED';
-      setTimeout(() => { btn.textContent = '💾 SAVE VERDICT'; }, 2000);
+      try {
+        const token = document.getElementById('tokenInput').value.trim();
+        const risk = document.getElementById('verdictScore').textContent;
+        const label = document.getElementById('verdictLabel').textContent;
+        
+        const verdict = { token, risk, label, timestamp: Date.now() };
+        let history = [];
+        
+        try {
+          history = JSON.parse(localStorage.getItem('verdictHistory') || '[]');
+        } catch(e) {
+          history = [];
+          console.warn('Failed to read localStorage');
+        }
+        
+        history.unshift(verdict);
+        
+        try {
+          localStorage.setItem('verdictHistory', JSON.stringify(history.slice(0, 50)));
+        } catch(e) {
+          console.warn('Failed to save to localStorage');
+        }
+        
+        const btn = document.querySelector('.save-verdict-btn');
+        if (btn) {
+          btn.textContent = '✓ SAVED';
+          setTimeout(() => { btn.textContent = '💾 SAVE VERDICT'; }, 2000);
+        }
+      } catch(e) {
+        console.error('Save failed:', e);
+        alert('Failed to save verdict');
+      }
     }
-
-    function toggleSound() { SoundSystem.toggle(); }
-
-    function initTilt() {
-      if (CONFIG.isMobile || CONFIG.isDayMode) return;
-      if (typeof VanillaTilt === 'undefined') return;
-      try { VanillaTilt.init(document.querySelectorAll('.agent-card'), { max: 8, speed: 400, glare: true, 'max-glare': 0.3, scale: 1.02 }); }
-      catch(e) { console.warn('Tilt failed'); }
-    }
-    document.querySelector('.agent-card')?.addEventListener('mouseenter', () => { initTilt(); }, { once: true });
-
-    document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && e.target.id === 'tokenInput') { e.preventDefault(); analyzeToken(); } });
-
-    window.addEventListener('DOMContentLoaded', async () => {
-      if (safeGet('tribunalSounds', false) === true) { CONFIG.soundsEnabled = true; document.getElementById('soundToggle').textContent = '🔊'; }
-      if (safeGet('tribunalTheme', 'night') === 'day') { CONFIG.isDayMode = true; document.body.classList.add('day-mode'); document.getElementById('themeToggle').textContent = '☀️'; }
-      createBtnParticles();
-      await initParticles();
-      await SoundSystem.init();
-      await runLoadingSequence();
-      console.log('✅ Tribunal initialized');
+    
+    // === DEBOUNCE FOR RESIZE ===
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (typeof tsParticles !== 'undefined') {
+          tsParticles.domItem(0)?.refresh();
+        }
+      }, 250);
     });
-    window.addEventListener('resize', () => { CONFIG.isMobile = window.innerWidth < 768; });
+    
+    // === INIT ===
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('🚀 Tribunal initializing...');
+      
+      if (isDayMode) {
+        document.body.classList.add('day-mode');
+        document.getElementById('themeToggle').textContent = '☀️';
+      }
+      if (soundsEnabled) {
+        document.getElementById('soundToggle').textContent = '🔊';
+      }
+      
+      initParticles();
+      
+      // Enter key
+      document.getElementById('tokenInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') analyzeToken();
+      });
+      
+      // Tilt effect
+      if (typeof VanillaTilt !== 'undefined') {
+        VanillaTilt.init(document.querySelectorAll('.agent-card'), { max: 8, speed: 400, glare: true, 'max-glare': 0.3 });
+      }
+      
+      console.log('✅ Tribunal ready');
+    });
   </script>
 </body>
 </html>
