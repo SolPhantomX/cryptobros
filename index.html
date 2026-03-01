@@ -1,217 +1,834 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>CRYPTOBROS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cryptobros News — Live Crypto Feed</title>
+
+  <!-- Fonts: NYT Style + Inter + Orbitron -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Cormorant+Garamond:wght@700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- VanillaTilt for swinging panels -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
   <style>
+    :root {
+      --bg: #0a0e27;
+      --text: white;
+      --card-bg: rgba(10, 14, 39, 0.8);
+      --border: rgba(0, 71, 255, 0.3);
+      --accent: #00f0ff;
+      --title: #0047FF;
+      --gold: #FFD700;
+      --neon-blue: #0047FF;
+      --neon-cyan: #00F0FF;
+      --neon-gold: #FFD700;
+      --neon-purple: #9d00ff;
+      --border-width: 3px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f0f4f8;
+      --text: #0a0e27;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --border: rgba(0, 71, 255, 0.2);
+      --accent: #0047FF;
+      --title: #0047FF;
+      --gold: #b8860b;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      margin: 0;
-      padding: 0;
-      background: #000;
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      position: relative;
+      padding: 20px 15px;
+      transition: background 0.5s, color 0.5s;
+      background-size: 400% 400%;
     }
-    .bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: url('logo.jpg') center/cover no-repeat;
-      z-index: -1;
-      filter: brightness(0.9);
+
+    /* Background variants */
+    body[data-bg="default"] { background: var(--bg); }
+    body[data-bg="gradient"] {
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1a4e 50%, #0a0e27 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
     }
-    .btn {
-      background: linear-gradient(45deg, #003366, #005580);
-      color: #fff;
-      border: none;
-      padding: 1.4rem 3.6rem;
-      font-size: 1.45rem;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      font-family: 'Quicksand', sans-serif;
-      letter-spacing: 1px;
-      box-shadow: 0 0 25px rgba(0, 85, 128, 0.8);
-      margin-bottom: 80px;
+    body[data-bg="particles"] {
+      background: 
+        radial-gradient(circle at 15% 25%, rgba(0, 240, 255, 0.08), transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(157, 0, 255, 0.08), transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(0, 71, 255, 0.05), transparent 50%),
+        var(--bg);
     }
-    .btn:hover {
-      transform: scale(1.07);
-      box-shadow: 0 0 35px #0066cc;
+    body[data-bg="gold"] {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 25%, #FFF8DC 50%, #FFD700 75%, #FFA500 100%);
+      background-size: 400% 400%;
+      animation: goldSilk 8s ease infinite;
     }
-    footer {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      text-align: center;
-      font-family: 'Quicksand', sans-serif;
+    body[data-bg="cyber"] {
+      background: 
+        linear-gradient(rgba(10, 14, 39, 0.9), rgba(10, 14, 39, 0.9)),
+        repeating-linear-gradient(0deg, rgba(0, 240, 255, 0.03) 0px, rgba(0, 240, 255, 0.03) 1px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(0, 240, 255, 0.03) 0px, rgba(0, 240, 255, 0.03) 1px, transparent 1px, transparent 40px),
+        var(--bg);
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    @keyframes goldSilk {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    header { text-align: center; margin: 0 0 1.5rem; }
+
+    h1 {
+      font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+      font-size: 3.8rem;
       font-weight: 700;
-      animation: colorChange 15s infinite;
+      color: var(--title);
+      text-shadow: 0 0 15px var(--title);
+      animation: flicker 5s infinite alternate;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
+      line-height: 1.1;
     }
-    @keyframes colorChange {
-      0% { color: #00ff9d; }
-      16.67% { color: #ff00ff; }
-      33.33% { color: #00ffff; }
-      50% { color: #ff9d00; }
-      66.67% { color: #9d00ff; }
-      83.33% { color: #ffff00; }
-      100% { color: #00ff9d; }
+
+    /* Subheader - colorful flicker 25s */
+    .subheader {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-top: 0.25rem;
+      color: var(--text);
+      animation: colorfulFlicker 25s ease-in-out infinite;
     }
-    .language-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(45deg, #66ffff, #00ff9d);
-      color: #000;
-      border: none;
-      padding: 0.8rem 1.6rem;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 20px;
+
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* Back button - colorful flicker 25s */
+    .back-btn {
+      padding: 10px 20px;
+      background: var(--card-bg);
+      border: var(--border-width) solid var(--border);
+      border-radius: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+      animation: colorfulFlicker 25s ease-in-out infinite;
+    }
+
+    .back-btn:hover {
+      background: rgba(0,71,255,0.2);
+      transform: translateX(-5px);
+    }
+
+    /* Theme toggle - colorful flicker 25s */
+    .theme-toggle {
+      padding: 10px 16px;
+      background: var(--card-bg);
+      border: var(--border-width) solid var(--border);
+      border-radius: 12px;
+      color: var(--accent);
       cursor: pointer;
-      font-family: 'Quicksand', sans-serif;
-      box-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
-      z-index: 100;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+      animation: colorfulFlicker 25s ease-in-out infinite;
     }
-    .language-btn:hover {
+
+    /* BG toggle - keeps gold flicker */
+    .bg-toggle {
+      padding: 10px 16px;
+      background: var(--card-bg);
+      border: var(--border-width) solid var(--border);
+      border-radius: 12px;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+      animation: goldTextFlicker 3s ease-in-out infinite;
+    }
+
+    .theme-toggle:hover, .bg-toggle:hover {
+      background: rgba(0,71,255,0.2);
       transform: scale(1.05);
-      box-shadow: 0 0 20px #66ffff;
     }
-    .language-menu {
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.9);
-      border-radius: 10px;
-      padding: 10px 0;
-      display: none;
-      z-index: 101;
-      box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
-      min-width: 180px;
+
+    /* Colorful flicker animation - 25 seconds */
+    @keyframes colorfulFlicker {
+      0%, 100% { 
+        color: #00f0ff;
+        text-shadow: 0 0 8px #00f0ff, 0 0 16px #00f0ff, 0 0 24px rgba(0,240,255,0.5);
+        opacity: 1;
+      }
+      10% { 
+        color: #9d00ff;
+        text-shadow: 0 0 8px #9d00ff, 0 0 16px #9d00ff, 0 0 24px rgba(157,0,255,0.5);
+        opacity: 0.95;
+      }
+      20% { 
+        color: #ffd700;
+        text-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 24px rgba(255,215,0,0.5);
+        opacity: 1;
+      }
+      30% { 
+        color: #0047FF;
+        text-shadow: 0 0 8px #0047FF, 0 0 16px #0047FF, 0 0 24px rgba(0,71,255,0.5);
+        opacity: 0.9;
+      }
+      40% { 
+        color: #ff00ff;
+        text-shadow: 0 0 8px #ff00ff, 0 0 16px #ff00ff, 0 0 24px rgba(255,0,255,0.5);
+        opacity: 1;
+      }
+      50% { 
+        color: #00ff80;
+        text-shadow: 0 0 8px #00ff80, 0 0 16px #00ff80, 0 0 24px rgba(0,255,128,0.5);
+        opacity: 0.95;
+        transform: scale(1.02);
+      }
+      60% { 
+        color: #ff6600;
+        text-shadow: 0 0 8px #ff6600, 0 0 16px #ff6600, 0 0 24px rgba(255,102,0,0.5);
+        opacity: 1;
+        transform: scale(1);
+      }
+      70% { 
+        color: #00f0ff;
+        text-shadow: 0 0 12px #00f0ff, 0 0 24px #00f0ff, 0 0 36px rgba(0,240,255,0.7);
+        opacity: 1;
+      }
+      80% { 
+        color: #9d00ff;
+        text-shadow: 0 0 12px #9d00ff, 0 0 24px #9d00ff, 0 0 36px rgba(157,0,255,0.7);
+        opacity: 0.9;
+      }
+      90% { 
+        color: #ffd700;
+        text-shadow: 0 0 12px #ffd700, 0 0 24px #ffd700, 0 0 36px rgba(255,215,0,0.7);
+        opacity: 1;
+      }
     }
-    .language-menu.active {
-      display: block;
+
+    .bg-toggle.spinning {
+      animation: gearSpin 1s linear infinite, goldTextFlicker 3s ease-in-out infinite;
     }
-    .language-option {
-      padding: 12px 25px;
-      color: #00ff9d;
-      font-family: 'Quicksand', sans-serif;
+    @keyframes gearSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .search-container { flex: 1; min-width: 250px; }
+
+    #searchInput {
+      width: 100%;
+      padding: 12px 16px;
       font-size: 1rem;
+      background: var(--card-bg);
+      border: var(--border-width) solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      backdrop-filter: blur(10px);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ===== NEWS CARD - SWINGING PANELS ===== */
+    .news-card {
+      background: var(--card-bg);
+      border: var(--border-width) solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 280px;
+    }
+
+    /* Different border colors for each card */
+    .news-card[data-source="CoinDesk"] {
+      border-color: #0047FF;
+    }
+    .news-card[data-source="Cointelegraph"] {
+      border-color: #9d00ff;
+    }
+    .news-card[data-source="The Block"] {
+      border-color: #00f0ff;
+    }
+    .news-card[data-source="Decrypt"] {
+      border-color: #ffd700;
+    }
+    .news-card[data-source="CryptoSlate"] {
+      border-color: #ff4d4d;
+    }
+
+    .news-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,71,255,0.35);
+    }
+
+    .news-card[data-source="CoinDesk"]:hover {
+      border-color: #0047FF;
+      box-shadow: 0 0 30px rgba(0,71,255,0.4);
+    }
+    .news-card[data-source="Cointelegraph"]:hover {
+      border-color: #9d00ff;
+      box-shadow: 0 0 30px rgba(157,0,255,0.4);
+    }
+    .news-card[data-source="The Block"]:hover {
+      border-color: #00f0ff;
+      box-shadow: 0 0 30px rgba(0,240,255,0.4);
+    }
+    .news-card[data-source="Decrypt"]:hover {
+      border-color: #ffd700;
+      box-shadow: 0 0 30px rgba(255,215,0,0.4);
+    }
+    .news-card[data-source="CryptoSlate"]:hover {
+      border-color: #ff4d4d;
+      box-shadow: 0 0 30px rgba(255,77,77,0.4);
+    }
+
+    .news-title {
+      font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--accent);
+      animation: flicker 5s infinite alternate;
+      line-height: 1.3;
+    }
+
+    .news-desc {
+      font-size: 0.98rem;
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+      font-family: 'Inter', sans-serif;
+      flex: 1;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 8;
+      -webkit-box-orient: vertical;
+    }
+
+    .news-meta {
+      font-size: 0.88rem;
+      opacity: 0.65;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      margin-top: auto;
+    }
+
+    .news-source { 
+      color: var(--gold); 
+      font-weight: 600; 
+    }
+
+    /* Removed .news-link - now whole card is clickable */
+
+    #loading, #no-results {
+      text-align: center;
+      padding: 4rem 1rem;
+      font-size: 1.3rem;
+      opacity: 0.7;
+      font-family: 'Inter', sans-serif;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    /* Keep goldTextFlicker for bg-toggle */
+    @keyframes goldTextFlicker {
+      0%, 100% { 
+        color: #ffd700;
+        text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700;
+      }
+      25% { 
+        color: #ffffff;
+        text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700;
+      }
+      50% { 
+        color: #ffd700;
+        text-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700;
+      }
+      75% { 
+        color: #fff2b5;
+        text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700, 0 0 35px #ffd700;
+      }
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(15px);
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active { display: flex; opacity: 1; }
+
+    .modal-content {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      max-height: 85vh;
+      margin: auto;
+      background: var(--card-bg);
+      border: var(--border-width) solid var(--accent);
+      border-radius: 24px;
+      padding: 2rem 2rem 1.5rem;
+      box-shadow: 0 0 60px var(--accent), 0 0 120px rgba(0, 240, 255, 0.3);
+      overflow-y: auto;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .active .modal-content { transform: scale(1) translateY(0); }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--accent);
       cursor: pointer;
       transition: all 0.3s;
-      text-align: right;
+      background: none;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      z-index: 10;
+      font-family: 'Inter', sans-serif;
     }
-    .language-option:hover {
-      background: rgba(102, 255, 255, 0.2);
-      color: #fff;
+    .modal-close:hover {
+      color: #ff4757;
+      transform: rotate(90deg) scale(1.2);
+      text-shadow: 0 0 30px #ff4757;
     }
-    .language-option.active {
-      background: rgba(102, 255, 255, 0.3);
-      color: #fff;
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-shadow: 0 0 20px var(--accent);
+      padding-right: 3rem;
+      line-height: 1.3;
     }
-    body[dir="rtl"] .language-btn {
-      right: auto;
-      left: 20px;
+
+    .modal-meta {
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
     }
-    body[dir="rtl"] .language-menu {
-      right: auto;
-      left: 20px;
-      text-align: left;
+
+    .modal-body {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 2rem;
+      max-height: 50vh;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+      font-family: 'Inter', sans-serif;
     }
-    body[dir="rtl"] .language-option {
-      text-align: left;
+    .modal-body::-webkit-scrollbar { width: 6px; }
+    .modal-body::-webkit-scrollbar-track { background: rgba(0, 240, 255, 0.1); border-radius: 10px; }
+    .modal-body::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 2px solid var(--border);
+    }
+    .modal-source { color: var(--gold); font-size: 1rem; font-weight: 600; font-family: 'Inter', sans-serif; }
+    .modal-link {
+      color: var(--neon-cyan);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--neon-cyan);
+      border-radius: 30px;
+      transition: all 0.3s;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      font-family: 'Inter', sans-serif;
+    }
+    .modal-link:hover {
+      background: var(--neon-cyan);
+      color: var(--bg);
+      box-shadow: 0 0 30px var(--neon-cyan);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.8rem; }
+      .subheader { font-size: 1.1rem; }
+      .news-title { font-size: 1.3rem; }
+      .modal-title { font-size: 1.8rem; }
+      .modal-content { width: 95%; padding: 1.5rem; }
+      .modal-body { font-size: 1rem; max-height: 60vh; }
+      .modal-close { font-size: 2rem; top: 0.5rem; right: 1rem; }
+      .modal-link { padding: 0.5rem 1rem; font-size: 0.9rem; }
+      .news-grid { grid-template-columns: 1fr; }
+      .top-controls { flex-direction: column; }
     }
   </style>
 </head>
-<body>
-  <div class="bg"></div>
-  
-  <!-- Language Button and Menu -->
-  <button class="language-btn" id="languageBtn">LANGUAGE</button>
-  <div class="language-menu" id="languageMenu">
-    <div class="language-option active" data-lang="en">English</div>
-    <div class="language-option" data-lang="fr">Français</div>
-    <div class="language-option" data-lang="es">Español</div>
-    <div class="language-option" data-lang="pt">Português</div>
-    <div class="language-option" data-lang="zh">简体中文</div>
-    <div class="language-option" data-lang="ar">العربية</div>
-    <div class="language-option" data-lang="he">עברית</div>
-    <div class="language-option" data-lang="ru">Русский</div>
+<body data-theme="dark" data-bg="default">
+  <header>
+    <h1>Cryptobros News</h1>
+    <div class="subheader">Live crypto updates from top sources</div>
+  </header>
+
+  <div class="top-controls">
+    <a href="profile.html" class="back-btn">← Back to Profile</a>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search news...">
+    </div>
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <button class="theme-toggle" id="themeToggle">☀️ Day mode</button>
+      <button class="bg-toggle" id="bgToggle" title="Change background">⚙️</button>
+    </div>
   </div>
-  
-  <button class="btn" id="enterBtn" onclick="location.href='onboarding.html'">Enter the Club</button>
-  <footer id="footer">Cryptobros 2026 ©</footer>
+
+  <div id="loading">Loading news...</div>
+  <div id="no-results" style="display:none;">No news matches your search</div>
+  <div id="news-grid" class="news-grid"></div>
+
+  <!-- Modal Window -->
+  <div class="modal-overlay" id="newsModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <span class="modal-source" id="modalSource"></span>
+        <a href="#" target="_blank" class="modal-link" id="modalLink">Read original →</a>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // === 🌍 TRANSLATIONS ===
-    const translations = {
-      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
-      fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
-      es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
-      pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
-      zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
-      ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
-      he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
-      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
-    };
+    // Mock news as fallback (with longer descriptions)
+    const mockNews = [
+      {
+        title: "Bitcoin Hits New All-Time High",
+        desc: "BTC surged past $100k amid institutional adoption and ETF inflows. The cryptocurrency market cap has also seen a substantial increase, with altcoins following Bitcoin's lead. Analysts attribute the rally to growing mainstream acceptance and macroeconomic factors driving investors to seek alternative stores of value. Trading volume across major exchanges reached record levels, with institutional investors showing strong interest.",
+        fullDesc: "Bitcoin has reached a new all-time high, surpassing $100,000 for the first time in history. The surge comes amid increased institutional adoption and significant inflows into Bitcoin ETFs. Analysts attribute the rally to growing mainstream acceptance and macroeconomic factors driving investors to seek alternative stores of value. The cryptocurrency market cap has also seen a substantial increase, with altcoins following Bitcoin's lead. Trading volume reached unprecedented levels, with major financial institutions announcing new crypto services.",
+        link: "https://www.coindesk.com/markets/2026/03/01/bitcoin-hits-new-all-time-high/",
+        date: new Date(Date.now() - 3600000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        source: "CoinDesk"
+      },
+      {
+        title: "Ethereum Layer 2 Scaling Solution Launches",
+        desc: "New zk-rollup promises 100k TPS with lower gas fees. The technology aims to solve Ethereum's scalability challenges while maintaining security and decentralization. Early adopters report seamless integration with existing DeFi protocols and substantially reduced costs for users. Major DeFi protocols are already planning to integrate the solution, potentially bringing millions of new users to the ecosystem.",
+        fullDesc: "A new Ethereum Layer 2 scaling solution has launched, promising 100,000 transactions per second with significantly lower gas fees. The zk-rollup technology aims to solve Ethereum's scalability challenges while maintaining security and decentralization. Early adopters report seamless integration with existing DeFi protocols and substantially reduced costs for users. The solution uses advanced cryptographic proofs to bundle thousands of transactions off-chain before submitting them to the main chain.",
+        link: "https://cointelegraph.com/news/ethereum-layer-2-scaling-solution-launches",
+        date: new Date(Date.now() - 7200000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        source: "Cointelegraph"
+      },
+      {
+        title: "Solana Network Upgrade Complete",
+        desc: "Firedancer rollout boosts throughput by 50x. The upgrade enhances network stability and performance, addressing previous concerns about downtime. Developers report improved transaction speeds and the ability to scale applications further. The update introduces new features for DeFi applications and improves the overall user experience for Solana-based projects.",
+        fullDesc: "Solana has completed its major network upgrade, implementing the Firedancer validator client which boosts throughput by 50x. The upgrade enhances network stability and performance, addressing previous concerns about downtime. Developers report improved transaction speeds and the ability to scale applications further. The new client was developed over two years and represents a complete rewrite of the Solana validator software, focusing on efficiency and reliability.",
+        link: "https://www.theblock.co/post/123456/solana-network-upgrade-complete",
+        date: new Date(Date.now() - 14400000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        source: "The Block"
+      },
+      {
+        title: "AUS Token Gains 300% in 24h",
+        desc: "Community-driven surge on Cryptobros platform. The surge follows announcements of new partnerships and upcoming features. Trading volume has increased dramatically, with users citing confidence in the project's roadmap and team. The token's market cap has grown substantially, attracting attention from major crypto influencers and investors.",
+        fullDesc: "The AUS token has gained 300% in the last 24 hours, driven by strong community support on the Cryptobros platform. The surge follows announcements of new partnerships and upcoming features. Trading volume has increased dramatically, with users citing confidence in the project's roadmap and team. The project team announced a series of developments including cross-chain integration and new DeFi products scheduled for release in the coming months.",
+        link: "https://decrypt.co/123456/aus-token-gains-300",
+        date: new Date(Date.now() - 21600000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        source: "Decrypt"
+      },
+      {
+        title: "CryptoSlate Reports New DeFi Protocol",
+        desc: "Protocol raises $50M in seed round from major venture capital firms. The protocol aims to revolutionize decentralized lending with innovative risk management features. Investors include leading crypto funds and angel investors who see potential for significant growth in the DeFi sector. The platform plans to launch its mainnet within the next quarter.",
+        fullDesc: "A new DeFi protocol has raised $50 million in seed funding from major venture capital firms. The protocol aims to revolutionize decentralized lending with innovative risk management features. Investors include leading crypto funds and angel investors who see potential for significant growth in the DeFi sector. The protocol uses a novel approach to collateralization that could unlock liquidity for previously underserved assets.",
+        link: "https://cryptoslate.com/news/new-defi-protocol-raises-50m",
+        date: new Date(Date.now() - 28800000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        source: "CryptoSlate"
+      }
+    ];
 
-    // === 🌐 LANGUAGE PERSISTENCE (localStorage) ===
-    function applyLanguage(lang) {
-      // Save to localStorage (works across ALL pages on your domain)
-      localStorage.setItem('lang', lang);
+    const bgVariants = ['default', 'gradient', 'particles', 'gold', 'cyber'];
+    let currentBgIndex = 0;
+
+    function escapeHTML(str) {
+      if (!str) return str;
+      const escape = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+      return String(str).replace(/[&<>"']/g, m => escape[m]);
+    }
+
+    const modal = document.getElementById('newsModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMeta = document.getElementById('modalMeta');
+    const modalBody = document.getElementById('modalBody');
+    const modalSource = document.getElementById('modalSource');
+    const modalLink = document.getElementById('modalLink');
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+    });
+
+    function openNewsModal(newsItem) {
+      modalTitle.textContent = newsItem.title;
+      modalMeta.textContent = `${newsItem.source} • ${newsItem.date}`;
+      modalBody.textContent = newsItem.fullDesc || newsItem.desc;
+      modalSource.textContent = newsItem.source;
+      modalLink.href = newsItem.link;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    const RSS_CONVERTER = 'https://api.rss2json.com/v1/api.json?rss_url=';
+    const NEWS_SOURCES = [
+      { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+      { name: 'Cointelegraph', url: 'https://cointelegraph.com/rss' },
+      { name: 'The Block', url: 'https://www.theblock.co/feed' },
+      { name: 'Decrypt', url: 'https://decrypt.co/feed' },
+      { name: 'CryptoSlate', url: 'https://cryptoslate.com/feed/' }
+    ];
+
+    let allNews = [];
+
+    async function fetchRealNews() {
+      const loading = document.getElementById('loading');
+      const cache = JSON.parse(localStorage.getItem('newsCache') || '{}');
+      const now = Date.now();
       
-      // Apply translations
-      const t = translations[lang] || translations.en;
-      document.getElementById('enterBtn').textContent = t.btn;
-      document.getElementById('footer').textContent = t.footer;
+      if (cache.timestamp && (now - cache.timestamp) < 120000) {
+        allNews = cache.data;
+        renderFilteredNews(document.getElementById('searchInput').value);
+        loading.style.display = 'none';
+        return;
+      }
+
+      loading.style.display = 'block';
       
-      // Update active state in menu
-      document.querySelectorAll('.language-option').forEach(opt => {
-        opt.classList.toggle('active', opt.dataset.lang === lang);
-      });
-      
-      // Handle RTL for Arabic/Hebrew
-      if (lang === 'ar' || lang === 'he') {
-        document.body.setAttribute('dir', 'rtl');
-        document.documentElement.lang = lang;
-      } else {
-        document.body.removeAttribute('dir');
-        document.documentElement.lang = lang;
+      try {
+        const newsPromises = NEWS_SOURCES.map(async (source) => {
+          try {
+            const response = await fetch(RSS_CONVERTER + encodeURIComponent(source.url));
+            const data = await response.json();
+            if (data.items && data.items.length > 0) {
+              return data.items.map(item => {
+                const fullText = (item.description || item.content || '').replace(/<[^>]*>/g, '');
+                return {
+                  title: item.title || 'No title',
+                  desc: fullText.substring(0, 350) + '...',
+                  fullDesc: fullText,
+                  link: item.link || '#',
+                  date: new Date(item.pubDate || item.isoDate || now),
+                  source: source.name
+                };
+              });
+            }
+            return [];
+          } catch(e) {
+            console.warn(`Failed to fetch ${source.name}:`, e);
+            return [];
+          }
+        });
+
+        const results = await Promise.all(newsPromises);
+        allNews = results.flat().filter(item => item.title !== 'No title')
+          .sort((a, b) => b.date - a.date)
+          .map(item => ({
+            ...item,
+            date: item.date.toLocaleString('en-US', { 
+              month: 'short', day: 'numeric', year: 'numeric', 
+              hour: '2-digit', minute: '2-digit' 
+            })
+          }));
+
+        if (allNews.length === 0) allNews = mockNews;
+
+        localStorage.setItem('newsCache', JSON.stringify({ timestamp: now, data: allNews }));
+      } catch(error) {
+        console.error('News fetch failed:', error);
+        allNews = mockNews;
+      } finally {
+        loading.style.display = 'none';
+        renderFilteredNews(document.getElementById('searchInput').value);
       }
     }
 
-    // === INIT: Load saved language on page load ===
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedLang = localStorage.getItem('lang') || 'en';
-      applyLanguage(savedLang);
-    });
+    function renderFilteredNews(filter = '') {
+      const grid = document.getElementById('news-grid');
+      const noResults = document.getElementById('no-results');
+      if (!grid) return;
+      
+      const trimmed = filter.trim().toLowerCase();
+      const filtered = allNews.filter(n => 
+        n.title.toLowerCase().includes(trimmed) || n.desc.toLowerCase().includes(trimmed)
+      );
 
-    // === UI HANDLERS ===
-    const languageBtn = document.getElementById('languageBtn');
-    const languageMenu = document.getElementById('languageMenu');
-    const options = document.querySelectorAll('.language-option');
-
-    languageBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      languageMenu.classList.toggle('active');
-    });
-
-    options.forEach(opt => {
-      opt.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const lang = opt.dataset.lang;
-        applyLanguage(lang);
-        languageMenu.classList.remove('active');
-      });
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', e => {
-      if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
-        languageMenu.classList.remove('active');
+      if (filtered.length === 0 && trimmed) {
+        grid.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
       }
+      noResults.style.display = 'none';
+      grid.innerHTML = '';
+      
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        card.setAttribute('data-source', item.source);
+        
+        const title = document.createElement('div');
+        title.className = 'news-title';
+        title.textContent = item.title;
+        
+        const desc = document.createElement('div');
+        desc.className = 'news-desc';
+        desc.textContent = item.desc;
+        
+        const meta = document.createElement('div');
+        meta.className = 'news-meta';
+        meta.innerHTML = `<span class="news-source">${escapeHTML(item.source)}</span> • ${escapeHTML(item.date)}`;
+        
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(meta);
+        
+        // Click on whole card opens modal
+        card.addEventListener('click', () => openNewsModal(item));
+        
+        grid.appendChild(card);
+      });
+
+      // Initialize VanillaTilt for swinging effect
+      if (typeof VanillaTilt !== 'undefined') {
+        VanillaTilt.init(document.querySelectorAll('.news-card'), {
+          max: 8,
+          speed: 400,
+          glare: true,
+          'max-glare': 0.3,
+          scale: 1.02
+        });
+      }
+    }
+
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const body = document.body;
+      if (body.dataset.theme === 'dark') {
+        body.dataset.theme = 'light';
+        document.getElementById('themeToggle').textContent = '🌙 Night mode';
+      } else {
+        body.dataset.theme = 'dark';
+        document.getElementById('themeToggle').textContent = '☀️ Day mode';
+      }
+      try { localStorage.setItem('feedTheme', body.dataset.theme); } catch(e) {}
+    });
+
+    // Background toggle
+    document.getElementById('bgToggle').addEventListener('click', function() {
+      const body = document.body;
+      const btn = this;
+      btn.classList.add('spinning');
+      currentBgIndex = (currentBgIndex + 1) % bgVariants.length;
+      const newBg = bgVariants[currentBgIndex];
+      setTimeout(() => {
+        body.setAttribute('data-bg', newBg);
+        try { localStorage.setItem('feedBg', newBg); } catch(e) {}
+        setTimeout(() => { btn.classList.remove('spinning'); }, 300);
+      }, 200);
+    });
+
+    // Search
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      renderFilteredNews(e.target.value);
+    });
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('feedTheme');
+      if (savedTheme) {
+        document.body.dataset.theme = savedTheme;
+        document.getElementById('themeToggle').textContent = savedTheme === 'light' ? '🌙 Night mode' : '☀️ Day mode';
+      }
+      const savedBg = localStorage.getItem('feedBg');
+      if (savedBg && bgVariants.includes(savedBg)) {
+        document.body.setAttribute('data-bg', savedBg);
+        currentBgIndex = bgVariants.indexOf(savedBg);
+      }
+      fetchRealNews();
+      setInterval(fetchRealNews, 120000);
     });
   </script>
 </body>
