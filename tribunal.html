@@ -45,7 +45,24 @@
     .header { text-align: center; padding: 3rem 0; margin-bottom: 2rem; margin-top: 60px; }
     .main-title { font-family: 'Rajdhani', sans-serif; font-size: 3.5rem; font-weight: 700; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-blue)); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientFlow 5s ease infinite; margin-bottom: 0.5rem; }
     @keyframes gradientFlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-    .subtitle { font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--text-secondary); margin-bottom: 1.5rem; letter-spacing: 2px; }
+    
+    /* FIXED: THICKER FONT + SEPARATE FLICKER ANIMATION */
+    .subtitle {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700; /* THICKER */
+      color: var(--neon-cyan);
+      margin-bottom: 1.5rem;
+      letter-spacing: 2px;
+      animation: subtitleFlicker 2.5s ease-in-out infinite; /* SEPARATE FLICKER */
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    }
+    @keyframes subtitleFlicker {
+      0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+      45%, 55% { opacity: 0.85; text-shadow: 0 0 5px rgba(0, 240, 255, 0.3); }
+      50% { opacity: 1; text-shadow: 0 0 20px rgba(0, 240, 255, 0.8); }
+    }
+    
     .warning-text { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 800; background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-purple), var(--neon-green)); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: warningColor 4s ease-in-out infinite; }
     @keyframes warningColor { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     .not-highlight { color: #ff4d4d !important; -webkit-text-fill-color: #ff4d4d !important; text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d, 0 0 40px rgba(255, 77, 77, 0.6) !important; font-weight: 900; animation: dangerPulse 0.8s ease-in-out infinite; display: inline-block; }
@@ -89,17 +106,30 @@
     .agent-output li { list-style: none; margin-bottom: 0.4rem; padding-left: 1rem; position: relative; }
     .agent-output li::before { content: '→'; position: absolute; left: 0; color: var(--neon-cyan); font-weight: 700; }
     
+    /* CORE ANIMATIONS - WILL BE PAUSED ON VERDICT */
     .core-ring { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-opacity: 0.6; animation: corePulse 4s ease-in-out infinite; }
     .core-ring-outer { animation-delay: 0s; }
     .core-ring-inner { animation-delay: 0.5s; }
     @keyframes corePulse { 0%, 100% { stroke-opacity: 0.6; transform: scale(1); } 50% { stroke-opacity: 1; transform: scale(1.05); } }
+    
     .crosshair { fill: none; stroke: currentColor; stroke-width: 2; animation: crosshairScan 3s linear infinite; transform-origin: center; }
     @keyframes crosshairScan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
     .orbital-ring { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 10 5; animation: orbitalRotate 8s linear infinite; }
     @keyframes orbitalRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
     .candlestick { fill: currentColor; stroke: currentColor; stroke-width: 1; opacity: 0.8; }
+    
     .balance-line { fill: none; stroke: currentColor; stroke-width: 2; animation: balanceTilt 4s ease-in-out infinite; transform-origin: center; }
     @keyframes balanceTilt { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+    
+    /* STOP ANIMATIONS WHEN VERDICT IS REVEALED */
+    body.verdict-revealed .core-ring,
+    body.verdict-revealed .crosshair,
+    body.verdict-revealed .orbital-ring,
+    body.verdict-revealed .balance-line {
+      animation-play-state: paused !important;
+    }
     
     .verdict-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 3rem 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); text-align: center; box-shadow: var(--border-glow); display: none; }
     .verdict-section.high-risk { border-color: var(--neon-red); box-shadow: 0 0 60px rgba(255, 77, 77, 0.4); }
@@ -444,7 +474,6 @@
       return { output, risk: Math.min(0.99, risk) };
     }
     
-    // === FIXED: NOW ACCEPTS 3 PARAMETERS ===
     function analyzeDiscrepancies(onChain, sentiment, price) {
       let output = "⚠️ CONSENSUS VERDICT\n";
       let contradictions = 0;
@@ -478,7 +507,7 @@
       return { output, risk: parseFloat(finalRisk.toFixed(2)), category, recommendation };
     }
     
-    // === MAIN ANALYZE - WITH ERROR HANDLING ===
+    // === MAIN ANALYZE ===
     async function analyzeToken() {
       try {
         console.log('🔍 analyzeToken STARTED');
@@ -493,7 +522,6 @@
         btn.innerHTML = '<span class="loading-spinner"></span>SCANNING...';
         document.getElementById('verdictSection').style.display = 'none';
         
-        // Set all agents to analyzing
         ['hunter', 'oracle', 'judge', 'moderator'].forEach(id => {
           const status = document.getElementById(`${id}-status`);
           const output = document.getElementById(`${id}-output`);
@@ -505,7 +533,6 @@
         const { offlineMode, tokenData } = await fetchTokenData(token);
         console.log('📡 API response:', offlineMode ? 'OFFLINE' : 'DATA RECEIVED');
         
-        // Run all 3 analyses in parallel
         console.log('🤖 Running agents...');
         const [onChain, sentiment, price] = await Promise.all([
           Promise.resolve(analyzeOnChain(token, tokenData, offlineMode)),
@@ -515,7 +542,6 @@
         
         console.log('✅ Agents complete:', { onChain: onChain.risk, sentiment: sentiment.risk, price: price.risk });
         
-        // Update agent outputs
         const hunterOutput = document.getElementById('hunter-output');
         const oracleOutput = document.getElementById('oracle-output');
         const judgeOutput = document.getElementById('judge-output');
@@ -524,13 +550,11 @@
         if (oracleOutput) oracleOutput.innerHTML = sentiment.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
         if (judgeOutput) judgeOutput.innerHTML = price.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
         
-        // Set agents to complete
         ['hunter', 'oracle', 'judge'].forEach(id => {
           const status = document.getElementById(`${id}-status`);
           if (status) { status.textContent = 'COMPLETE'; status.classList.remove('analyzing'); }
         });
         
-        // Moderator - FIXED: passes 3 parameters
         console.log('⚖️ Moderator calculating...');
         const moderator = analyzeDiscrepancies(onChain, sentiment, price);
         const modOutput = document.getElementById('moderator-output');
@@ -541,7 +565,6 @@
         
         console.log('✅ Verdict:', moderator.risk, moderator.category);
         
-        // Show verdict
         showVerdict(moderator, token, tokenData);
         
       } catch(error) {
@@ -562,6 +585,9 @@
     }
     
     function showVerdict(moderator, token, tokenData) {
+      // FIXED: STOP WHEELS WHEN VERDICT IS REVEALED
+      document.body.classList.add('verdict-revealed');
+      
       const section = document.getElementById('verdictSection');
       const scoreEl = document.getElementById('verdictScore');
       const labelEl = document.getElementById('verdictLabel');
@@ -576,7 +602,6 @@
       scoreEl.className = `verdict-score ${category === 'high' ? 'high-risk' : 'low-risk'}`;
       labelEl.className = `verdict-label ${category === 'high' ? 'high-risk' : 'low-risk'}`;
       
-      // Animate score
       if (typeof gsap !== 'undefined') {
         const data = { val: 0 };
         gsap.to(data, { val: risk, duration: 2, ease: 'power2.out', onUpdate: function() { scoreEl.textContent = data.val.toFixed(2); }});
@@ -586,7 +611,6 @@
       
       labelEl.textContent = category === 'trusted' ? 'TRUSTED' : (category === 'high' ? 'HIGH RISK' : 'LOW RISK');
       
-      // Quantum scan for premium - FIXED: added null checks
       const tier = localStorage.getItem('selectedTier') || '';
       const isPremium = ['Premium', 'Pro'].includes(tier);
       
@@ -621,7 +645,6 @@
       }
     }
     
-    // === FIXED: localStorage error handling ===
     function saveVerdict() {
       try {
         const token = document.getElementById('tokenInput').value.trim();
@@ -657,7 +680,6 @@
       }
     }
     
-    // === DEBOUNCE FOR RESIZE ===
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
@@ -668,7 +690,6 @@
       }, 250);
     });
     
-    // === INIT ===
     window.addEventListener('DOMContentLoaded', () => {
       console.log('🚀 Tribunal initializing...');
       
@@ -682,12 +703,10 @@
       
       initParticles();
       
-      // Enter key
       document.getElementById('tokenInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') analyzeToken();
       });
       
-      // Tilt effect
       if (typeof VanillaTilt !== 'undefined') {
         VanillaTilt.init(document.querySelectorAll('.agent-card'), { max: 8, speed: 400, glare: true, 'max-glare': 0.3 });
       }
