@@ -498,3 +498,37 @@ h1, h2, h3, h4, .post-time, .comment-item, .menu-item, .user-info h3,
 @keyframes shimmerCycle { 0% { bac…ffcc) !important; background-size: 300% 100% !important; animation-duration: 22s !important; }
 #feedPosts p.shimmer-text:nth-of-type(2) { background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700, #ffb300) !important; background-size: 300% 100% !important; animation-duration: 30s !important; }
 #feedPosts p.shimmer-text:nth-of-type(3) { background: linear-gradient(90deg, #ff6ec7, #ff9ddb, #ff6ec7, #ff3fa3) !important; background-size: 300% 100% !important; animation-duration: 26s !important; }
+/* FIX: Remove underline and L from back button */
+.back-btn { text-decoration: none !important; border: none !important; }
+
+/* FIX: Gear button 36px (reduced by 3px) + larger detailed SVG */
+#feedBgBtn { width: 36px !important; height: 36px !important; font-size: 0 !important; color: transparent !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 0 !important; }
+#feedBgBtn svg { width: 24px !important; height: 24px !important; fill: #ffffff !important; stroke: #0a0a0f !important; stroke-width: 0.8 !important; filter: drop-shadow(0 0 3px rgba(0,0,0,0.6)) !important; }
+
+/* FIX: Independent shimmer - different colors, 20-30s, NOT synced */
+@keyframes shimmerCycle { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+.shimmer-text { background-clip: text !important; -webkit-background-clip: text !important; color: transparent !important; animation: shimmerCycle linear infinite !important; }
+
+/* Auction Winners title - Gold - 20s */
+.pinned-auctions h2.shimmer-text { background: linear-gradient(90deg, #FFD700, #FFA500, #FF6B00, #FFD700) !important; background-size: 300% 100% !important; animation-duration: 20s !important; }
+
+/* No auction winners yet - Cyan - 23s */
+#pinnedPostsContainer p.shimmer-text:nth-of-type(1) { background: linear-gradient(90deg, #00F0FF, #00BFFF, #0080FF, #00F0FF) !important; background-size: 300% 100% !important; animation-duration: 23s !important; }
+
+/* Be the first degen - Purple - 27s */
+#pinnedPostsContainer p.shimmer-text:nth-of-type(2) { background: linear-gradient(90deg, #9D00FF, #BD00FF, #DD00FF, #9D00FF) !important; background-size: 300% 100% !important; animation-duration: 27s !important; }
+
+/* Mock mode - Red - 30s */
+#pinnedPostsContainer p.shimmer-text:nth-of-type(3) { background: linear-gradient(90deg, #ff4d4d, #ff7a7a, #ff4d4d, #ff1a1a) !important; background-size: 300% 100% !important; animation-duration: 30s !important; }
+
+/* No posts yet - Green - 22s */
+#feedPosts p.shimmer-text:nth-of-type(1) { background: linear-gradient(90deg, #00ff9d, #00cc7a, #00ff9d, #00ffcc) !important; background-size: 300% 100% !important; animation-duration: 22s !important; }
+
+/* Be the first degen - Orange - 26s */
+#feedPosts p.shimmer-text:nth-of-type(2) { background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700, #ffb300) !important; background-size: 300% 100% !important; animation-duration: 26s !important; }
+
+/* Mock mode - Pink - 29s */
+#feedPosts p.shimmer-text:nth-of-type(3) { background: linear-gradient(90deg, #ff6ec7, #ff9ddb, #ff6ec7, #ff3fa3) !important; background-size: 300% 100% !important; animation-duration: 29s !important; }
+
+/* Remove border from pinned auctions */
+.pinned-auctions { border: none !important; box-shadow: none !important; }
