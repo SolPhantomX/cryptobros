@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Cormorant+Garamond:wght@700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- VanillaTilt for swinging panels (exactly like Tribunal) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 
   <style>
     :root {
@@ -23,6 +26,7 @@
       --neon-cyan: #00F0FF;
       --neon-gold: #FFD700;
       --neon-purple: #9d00ff;
+      --border-width: 3px;
     }
 
     [data-theme="light"] {
@@ -96,7 +100,7 @@
       line-height: 1.1;
     }
 
-    /* Subheader - colorful flicker 25s */
+    /* Live crypto updates - ONLY THIS flickers with colors */
     .subheader {
       font-family: 'Orbitron', sans-serif;
       font-size: 1.3rem;
@@ -104,7 +108,7 @@
       letter-spacing: 2px;
       margin-top: 0.25rem;
       color: var(--text);
-      animation: colorfulFlicker 25s ease-in-out infinite;
+      animation: liveFlicker 25s ease-in-out infinite;
     }
 
     .top-controls {
@@ -117,18 +121,18 @@
       gap: 1rem;
     }
 
-    /* Back button - colorful flicker 25s */
+    /* Back button - STEADY color (no flicker) */
     .back-btn {
       padding: 10px 20px;
       background: var(--card-bg);
-      border: 1px solid var(--border);
+      border: var(--border-width) solid var(--border);
       border-radius: 12px;
       color: var(--accent);
       text-decoration: none;
       font-weight: 600;
       transition: all 0.3s;
       font-family: 'Inter', sans-serif;
-      animation: colorfulFlicker 25s ease-in-out infinite;
+      /* NO ANIMATION */
     }
 
     .back-btn:hover {
@@ -136,11 +140,11 @@
       transform: translateX(-5px);
     }
 
-    /* Theme toggle - colorful flicker 25s */
+    /* Theme toggle - STEADY color (no flicker) */
     .theme-toggle {
       padding: 10px 16px;
       background: var(--card-bg);
-      border: 1px solid var(--border);
+      border: var(--border-width) solid var(--border);
       border-radius: 12px;
       color: var(--accent);
       cursor: pointer;
@@ -150,14 +154,14 @@
       gap: 0.5rem;
       transition: all 0.3s;
       font-family: 'Inter', sans-serif;
-      animation: colorfulFlicker 25s ease-in-out infinite;
+      /* NO ANIMATION */
     }
 
-    /* BG toggle - keeps gold flicker */
+    /* BG toggle - keeps gold flicker (special) */
     .bg-toggle {
       padding: 10px 16px;
       background: var(--card-bg);
-      border: 1px solid var(--border);
+      border: var(--border-width) solid var(--border);
       border-radius: 12px;
       color: var(--accent);
       cursor: pointer;
@@ -175,59 +179,47 @@
       transform: scale(1.05);
     }
 
-    /* Colorful flicker animation - 25 seconds */
-    @keyframes colorfulFlicker {
+    /* ONLY for "Live crypto updates" - colorful slow flicker */
+    @keyframes liveFlicker {
       0%, 100% { 
         color: #00f0ff;
-        text-shadow: 0 0 8px #00f0ff, 0 0 16px #00f0ff, 0 0 24px rgba(0,240,255,0.5);
-        opacity: 1;
+        text-shadow: 0 0 8px #00f0ff, 0 0 16px #00f0ff;
       }
       10% { 
         color: #9d00ff;
-        text-shadow: 0 0 8px #9d00ff, 0 0 16px #9d00ff, 0 0 24px rgba(157,0,255,0.5);
-        opacity: 0.95;
+        text-shadow: 0 0 8px #9d00ff, 0 0 16px #9d00ff;
       }
       20% { 
         color: #ffd700;
-        text-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 24px rgba(255,215,0,0.5);
-        opacity: 1;
+        text-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700;
       }
       30% { 
         color: #0047FF;
-        text-shadow: 0 0 8px #0047FF, 0 0 16px #0047FF, 0 0 24px rgba(0,71,255,0.5);
-        opacity: 0.9;
+        text-shadow: 0 0 8px #0047FF, 0 0 16px #0047FF;
       }
       40% { 
         color: #ff00ff;
-        text-shadow: 0 0 8px #ff00ff, 0 0 16px #ff00ff, 0 0 24px rgba(255,0,255,0.5);
-        opacity: 1;
+        text-shadow: 0 0 8px #ff00ff, 0 0 16px #ff00ff;
       }
       50% { 
         color: #00ff80;
-        text-shadow: 0 0 8px #00ff80, 0 0 16px #00ff80, 0 0 24px rgba(0,255,128,0.5);
-        opacity: 0.95;
-        transform: scale(1.02);
+        text-shadow: 0 0 8px #00ff80, 0 0 16px #00ff80;
       }
       60% { 
         color: #ff6600;
-        text-shadow: 0 0 8px #ff6600, 0 0 16px #ff6600, 0 0 24px rgba(255,102,0,0.5);
-        opacity: 1;
-        transform: scale(1);
+        text-shadow: 0 0 8px #ff6600, 0 0 16px #ff6600;
       }
       70% { 
         color: #00f0ff;
-        text-shadow: 0 0 12px #00f0ff, 0 0 24px #00f0ff, 0 0 36px rgba(0,240,255,0.7);
-        opacity: 1;
+        text-shadow: 0 0 12px #00f0ff, 0 0 24px #00f0ff;
       }
       80% { 
         color: #9d00ff;
-        text-shadow: 0 0 12px #9d00ff, 0 0 24px #9d00ff, 0 0 36px rgba(157,0,255,0.7);
-        opacity: 0.9;
+        text-shadow: 0 0 12px #9d00ff, 0 0 24px #9d00ff;
       }
       90% { 
         color: #ffd700;
-        text-shadow: 0 0 12px #ffd700, 0 0 24px #ffd700, 0 0 36px rgba(255,215,0,0.7);
-        opacity: 1;
+        text-shadow: 0 0 12px #ffd700, 0 0 24px #ffd700;
       }
     }
 
@@ -246,7 +238,7 @@
       padding: 12px 16px;
       font-size: 1rem;
       background: var(--card-bg);
-      border: 1px solid var(--border);
+      border: var(--border-width) solid var(--border);
       border-radius: 12px;
       color: var(--text);
       backdrop-filter: blur(10px);
@@ -261,19 +253,65 @@
       margin: 0 auto;
     }
 
+    /* ===== NEWS CARD - SWINGING LIKE TRIBUNAL ===== */
     .news-card {
       background: var(--card-bg);
-      border: 1px solid var(--border);
+      border: var(--border-width) solid var(--glass-border);
       border-radius: 16px;
-      padding: 1.4rem;
+      padding: 1.5rem;
       backdrop-filter: blur(12px);
       box-shadow: 0 8px 32px rgba(0,0,0,0.4);
       transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 280px;
+      transform: rotate(0deg); /* Base for swing */
     }
 
+    /* Different border colors for each card */
+    .news-card[data-source="CoinDesk"] {
+      border-color: #0047FF;
+    }
+    .news-card[data-source="Cointelegraph"] {
+      border-color: #9d00ff;
+    }
+    .news-card[data-source="The Block"] {
+      border-color: #00f0ff;
+    }
+    .news-card[data-source="Decrypt"] {
+      border-color: #ffd700;
+    }
+    .news-card[data-source="CryptoSlate"] {
+      border-color: #ff4d4d;
+    }
+
+    /* Hover effect - exactly like Tribunal */
     .news-card:hover {
-      transform: translateY(-8px);
+      transform: translateY(-2px) rotate(0deg); /* Tribunal style */
       box-shadow: 0 16px 48px rgba(0,71,255,0.35);
+    }
+
+    .news-card[data-source="CoinDesk"]:hover {
+      border-color: #0047FF;
+      box-shadow: 0 0 30px rgba(0,71,255,0.4);
+    }
+    .news-card[data-source="Cointelegraph"]:hover {
+      border-color: #9d00ff;
+      box-shadow: 0 0 30px rgba(157,0,255,0.4);
+    }
+    .news-card[data-source="The Block"]:hover {
+      border-color: #00f0ff;
+      box-shadow: 0 0 30px rgba(0,240,255,0.4);
+    }
+    .news-card[data-source="Decrypt"]:hover {
+      border-color: #ffd700;
+      box-shadow: 0 0 30px rgba(255,215,0,0.4);
+    }
+    .news-card[data-source="CryptoSlate"]:hover {
+      border-color: #ff4d4d;
+      box-shadow: 0 0 30px rgba(255,77,77,0.4);
     }
 
     .news-title {
@@ -289,35 +327,35 @@
 
     .news-desc {
       font-size: 0.98rem;
-      line-height: 1.5;
+      line-height: 1.6;
       opacity: 0.9;
       margin-bottom: 1rem;
       font-family: 'Inter', sans-serif;
+      flex: 1;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 8;
+      -webkit-box-orient: vertical;
     }
 
     .news-meta {
       font-size: 0.88rem;
       opacity: 0.65;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 0.5rem;
       font-family: 'Inter', sans-serif;
+      margin-top: auto;
     }
 
-    .news-source { color: var(--gold); font-weight: 600; }
-    .news-link {
-      color: var(--neon-blue);
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
+    .news-source { 
+      color: var(--gold); 
+      font-weight: 600; 
     }
-    .news-link:hover {
-      text-decoration: underline;
-      color: var(--neon-cyan);
-    }
+
+    /* NO Read more link - completely removed */
 
     #loading, #no-results {
       text-align: center;
@@ -375,7 +413,7 @@
       max-height: 85vh;
       margin: auto;
       background: var(--card-bg);
-      border: 3px solid var(--accent);
+      border: var(--border-width) solid var(--accent);
       border-radius: 24px;
       padding: 2rem 2rem 1.5rem;
       box-shadow: 0 0 60px var(--accent), 0 0 120px rgba(0, 240, 255, 0.3);
@@ -523,44 +561,44 @@
   </div>
 
   <script>
-    // Mock news as fallback
+    // Mock news as fallback (with longer descriptions)
     const mockNews = [
       {
         title: "Bitcoin Hits New All-Time High",
-        desc: "BTC surged past $100k amid institutional adoption and ETF inflows...",
-        fullDesc: "Bitcoin has reached a new all-time high, surpassing $100,000 for the first time in history. The surge comes amid increased institutional adoption and significant inflows into Bitcoin ETFs. Analysts attribute the rally to growing mainstream acceptance and macroeconomic factors driving investors to seek alternative stores of value. The cryptocurrency market cap has also seen a substantial increase, with altcoins following Bitcoin's lead.",
+        desc: "BTC surged past $100k amid institutional adoption and ETF inflows. The cryptocurrency market cap has also seen a substantial increase, with altcoins following Bitcoin's lead. Analysts attribute the rally to growing mainstream acceptance and macroeconomic factors driving investors to seek alternative stores of value. Trading volume across major exchanges reached record levels, with institutional investors showing strong interest.",
+        fullDesc: "Bitcoin has reached a new all-time high, surpassing $100,000 for the first time in history. The surge comes amid increased institutional adoption and significant inflows into Bitcoin ETFs. Analysts attribute the rally to growing mainstream acceptance and macroeconomic factors driving investors to seek alternative stores of value. The cryptocurrency market cap has also seen a substantial increase, with altcoins following Bitcoin's lead. Trading volume reached unprecedented levels, with major financial institutions announcing new crypto services.",
         link: "https://www.coindesk.com/markets/2026/03/01/bitcoin-hits-new-all-time-high/",
         date: new Date(Date.now() - 3600000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "CoinDesk"
       },
       {
         title: "Ethereum Layer 2 Scaling Solution Launches",
-        desc: "New zk-rollup promises 100k TPS with lower gas fees...",
-        fullDesc: "A new Ethereum Layer 2 scaling solution has launched, promising 100,000 transactions per second with significantly lower gas fees. The zk-rollup technology aims to solve Ethereum's scalability challenges while maintaining security and decentralization. Early adopters report seamless integration with existing DeFi protocols and substantially reduced costs for users.",
+        desc: "New zk-rollup promises 100k TPS with lower gas fees. The technology aims to solve Ethereum's scalability challenges while maintaining security and decentralization. Early adopters report seamless integration with existing DeFi protocols and substantially reduced costs for users. Major DeFi protocols are already planning to integrate the solution, potentially bringing millions of new users to the ecosystem.",
+        fullDesc: "A new Ethereum Layer 2 scaling solution has launched, promising 100,000 transactions per second with significantly lower gas fees. The zk-rollup technology aims to solve Ethereum's scalability challenges while maintaining security and decentralization. Early adopters report seamless integration with existing DeFi protocols and substantially reduced costs for users. The solution uses advanced cryptographic proofs to bundle thousands of transactions off-chain before submitting them to the main chain.",
         link: "https://cointelegraph.com/news/ethereum-layer-2-scaling-solution-launches",
         date: new Date(Date.now() - 7200000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "Cointelegraph"
       },
       {
         title: "Solana Network Upgrade Complete",
-        desc: "Firedancer rollout boosts throughput by 50x...",
-        fullDesc: "Solana has completed its major network upgrade, implementing the Firedancer validator client which boosts throughput by 50x. The upgrade enhances network stability and performance, addressing previous concerns about downtime. Developers report improved transaction speeds and the ability to scale applications further.",
+        desc: "Firedancer rollout boosts throughput by 50x. The upgrade enhances network stability and performance, addressing previous concerns about downtime. Developers report improved transaction speeds and the ability to scale applications further. The update introduces new features for DeFi applications and improves the overall user experience for Solana-based projects.",
+        fullDesc: "Solana has completed its major network upgrade, implementing the Firedancer validator client which boosts throughput by 50x. The upgrade enhances network stability and performance, addressing previous concerns about downtime. Developers report improved transaction speeds and the ability to scale applications further. The new client was developed over two years and represents a complete rewrite of the Solana validator software, focusing on efficiency and reliability.",
         link: "https://www.theblock.co/post/123456/solana-network-upgrade-complete",
         date: new Date(Date.now() - 14400000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "The Block"
       },
       {
         title: "AUS Token Gains 300% in 24h",
-        desc: "Community-driven surge on Cryptobros platform...",
-        fullDesc: "The AUS token has gained 300% in the last 24 hours, driven by strong community support on the Cryptobros platform. The surge follows announcements of new partnerships and upcoming features. Trading volume has increased dramatically, with users citing confidence in the project's roadmap and team.",
+        desc: "Community-driven surge on Cryptobros platform. The surge follows announcements of new partnerships and upcoming features. Trading volume has increased dramatically, with users citing confidence in the project's roadmap and team. The token's market cap has grown substantially, attracting attention from major crypto influencers and investors.",
+        fullDesc: "The AUS token has gained 300% in the last 24 hours, driven by strong community support on the Cryptobros platform. The surge follows announcements of new partnerships and upcoming features. Trading volume has increased dramatically, with users citing confidence in the project's roadmap and team. The project team announced a series of developments including cross-chain integration and new DeFi products scheduled for release in the coming months.",
         link: "https://decrypt.co/123456/aus-token-gains-300",
         date: new Date(Date.now() - 21600000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "Decrypt"
       },
       {
         title: "CryptoSlate Reports New DeFi Protocol",
-        desc: "Protocol raises $50M in seed round...",
-        fullDesc: "A new DeFi protocol has raised $50 million in seed funding from major venture capital firms. The protocol aims to revolutionize decentralized lending with innovative risk management features. Investors include leading crypto funds and angel investors who see potential for significant growth in the DeFi sector.",
+        desc: "Protocol raises $50M in seed round from major venture capital firms. The protocol aims to revolutionize decentralized lending with innovative risk management features. Investors include leading crypto funds and angel investors who see potential for significant growth in the DeFi sector. The platform plans to launch its mainnet within the next quarter.",
+        fullDesc: "A new DeFi protocol has raised $50 million in seed funding from major venture capital firms. The protocol aims to revolutionize decentralized lending with innovative risk management features. Investors include leading crypto funds and angel investors who see potential for significant growth in the DeFi sector. The protocol uses a novel approach to collateralization that could unlock liquidity for previously underserved assets.",
         link: "https://cryptoslate.com/news/new-defi-protocol-raises-50m",
         date: new Date(Date.now() - 28800000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "CryptoSlate"
@@ -640,7 +678,7 @@
                 const fullText = (item.description || item.content || '').replace(/<[^>]*>/g, '');
                 return {
                   title: item.title || 'No title',
-                  desc: fullText.substring(0, 200) + '...',
+                  desc: fullText.substring(0, 350) + '...',
                   fullDesc: fullText,
                   link: item.link || '#',
                   date: new Date(item.pubDate || item.isoDate || now),
@@ -699,6 +737,7 @@
       filtered.forEach(item => {
         const card = document.createElement('div');
         card.className = 'news-card';
+        card.setAttribute('data-source', item.source);
         
         const title = document.createElement('div');
         title.className = 'news-title';
@@ -712,18 +751,27 @@
         meta.className = 'news-meta';
         meta.innerHTML = `<span class="news-source">${escapeHTML(item.source)}</span> • ${escapeHTML(item.date)}`;
         
-        const link = document.createElement('a');
-        link.href = '#';
-        link.className = 'news-link';
-        link.textContent = 'Read more →';
-        link.onclick = (e) => { e.preventDefault(); openNewsModal(item); };
-        
         card.appendChild(title);
         card.appendChild(desc);
         card.appendChild(meta);
-        card.appendChild(link);
+        
+        // Click on whole card opens modal
+        card.addEventListener('click', () => openNewsModal(item));
+        
         grid.appendChild(card);
       });
+
+      // Initialize VanillaTilt for SWINGING effect (exactly like Tribunal)
+      if (typeof VanillaTilt !== 'undefined') {
+        VanillaTilt.init(document.querySelectorAll('.news-card'), {
+          max: 8,           // Max tilt rotation (degrees)
+          speed: 400,       // Speed of the transition
+          glare: true,      // Enable glare effect
+          'max-glare': 0.3, // Max glare opacity
+          scale: 1.02,      // Slight scale on hover
+          easing: "cubic-bezier(.03,.98,.52,.99)" // Smooth easing like Tribunal
+        });
+      }
     }
 
     // Theme toggle
