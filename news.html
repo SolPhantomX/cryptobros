@@ -1,187 +1,266 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>CRYPTOBROS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cryptobros News — Live Crypto Feed</title>
+  <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.13.0/dist/rss-parser.min.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --neon-blue: #0047FF;
+      --neon-cyan: #00F0FF;
+      --neon-gold: #FFD700;
+      --deep-bg: #0a0e27;
+      --glass: rgba(10, 14, 39, 0.75);
+      --glass-border: rgba(0, 71, 255, 0.25);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background-size: cover;
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--deep-bg);
+      color: white;
+      min-height: 100vh;
+      padding: 20px 15px;
       background-attachment: fixed;
-      background-color: #000;
-      color: #ffcc00;
-      transition: background 0.3s ease, color 0.3s ease;
     }
-    .top-section { position: relative; height: 300px; }
-    .header {
-      width: 100%; height: 100%; background: center/cover;
-      border: 2px dashed #555; border-radius: 8px; cursor: pointer;
+
+    header {
+      text-align: center;
+      margin: 0 0 2rem;
     }
-    .header.loaded { border: none; }
-    .avatar {
-      width: 200px; height: 200px; border-radius: 50%;
-      border: 4px solid white; background: center/cover;
-      position: absolute; bottom: -100px; left: 50%;
-      transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      cursor: pointer;
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      color: var(--neon-blue);
+      text-shadow: 0 0 15px var(--neon-blue);
+      animation: flicker 5s infinite alternate;
     }
-    .main-layout {
-      max-width: 1200px; margin: 220px auto 0;
-      display: flex; gap: 20px; padding: 0 20px;
+
+    .search-container {
+      max-width: 600px;
+      margin: 0 auto 2rem;
     }
-    .theme-switch {
-      position: absolute; top: 16px; left: 16px;
-      width: 32px; height: 32px; background: #333;
-      border: 1px solid #666; border-radius: 50%;
-      color: #ffcc00; display: flex; align-items: center;
-      justify-content: center; cursor: pointer; z-index: 100; font-size: 16px;
-    }
-    .edit-btn {
-      position: absolute; top: 16px; right: 16px;
-      width: 32px; height: 32px; background: #333;
-      border: 1px solid #666; border-radius: 50%;
-      color: #ffcc00; display: flex; align-items: center;
-      justify-content: center; cursor: pointer; z-index: 100;
-    }
-    .edit-menu {
-      position: absolute; top: 50px; right: 16px;
-      background: #000; border: 1px solid #ffcc00;
-      border-radius: 6px; padding: 10px; display: none;
-      z-index: 100; min-width: 180px; max-width: 250px;
-      max-height: 400px; overflow-y: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    .edit-menu button {
-      background: #222; color: #ffcc00; border: 1px solid #555;
-      border-radius: 4px; padding: 6px 10px; margin: 3px 0;
-      cursor: pointer; font-size: 12px; display: inline-block;
-      width: 100%; text-align: left;
-    }
-    .sidebar { width: 200px; }
-    .nav-item {
-      padding: 10px 0; color: #ffcc00; font-weight: bold;
-      cursor: pointer; font-size: 18px; animation: flicker 3s infinite alternate;
-      text-decoration: none; display: block;
-    }
-    .nav-item:hover { opacity: 0.8; text-shadow: 0 0 8px #ffcc00; }
-    .main { flex: 1; }
-    .name { font-size: 28px; font-weight: bold; margin-bottom: 8px; animation: flicker 3s infinite alternate; }
-    .rank { margin-bottom: 20px; font-weight: bold; animation: flicker 3s infinite alternate; }
-    .field-label { color: #aaa; margin: 10px 0 4px; font-weight: bold; }
-    .field-value { color: #ffcc00; margin-bottom: 15px; animation: flicker 3s infinite alternate; }
-    input, textarea {
-      width: 100%; padding: 10px; margin: 5px 0 15px;
-      background: rgba(0,0,0,0.3); color: #ffcc00;
-      border: 1px solid #555; border-radius: 4px;
-    }
-    .btn {
-      background: #4267B2; color: white; border: none;
-      padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 10px;
-    }
-    #header-upload, #avatar-upload, #bg-upload { display: none; }
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
-      20%,24%,55%,81%,85% { opacity:0.8; }
-    }
-    /* Toast notifications */
-    .toast {
-      position: fixed; bottom: 20px; right: 20px;
-      padding: 1rem 1.5rem; border-radius: 12px; z-index: 9999;
-      font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      animation: toastIn 0.3s ease-out;
-    }
-    .toast.success { background: #00ff9d; color: #0a0a0f; }
-    .toast.error { background: #ff4d4d; color: #fff; }
-    .toast.warning { background: #ffd700; color: #0a0a0f; }
-    @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
-    
-    /* WALLET STATUS BADGE */
-    .wallet-badge {
-      position: absolute;
-      bottom: -120px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0, 0, 0, 0.85);
-      border: 1px solid #333;
-      border-radius: 20px;
-      padding: 6px 14px;
-      cursor: pointer;
+
+    #searchInput {
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 1.1rem;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      color: white;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 15px rgba(0,71,255,0.2);
       transition: all 0.3s;
-      z-index: 100;
-      white-space: nowrap;
     }
-    .wallet-badge:hover {
-      border-color: #00ff9d;
-      box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
-      transform: translateX(-50%) scale(1.05);
+
+    #searchInput:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 25px rgba(0,240,255,0.4);
     }
-    .badge-indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #666;
-      animation: pulse 2s infinite;
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
     }
-    .badge-indicator.connected { background: #00ff9d; }
-    .badge-indicator.locked { background: #ffd700; }
-    .badge-text {
-      color: #ffcc00;
-      font-size: 0.8rem;
+
+    .news-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.4rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      transition: all 0.3s ease;
+      animation: cardFadeIn 0.6s ease-out;
+    }
+
+    .news-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(0,71,255,0.35);
+    }
+
+    .news-title {
+      font-size: 1.35rem;
+      margin-bottom: 0.7rem;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 10px var(--neon-cyan);
+      animation: flicker 5s infinite alternate;
+    }
+
+    .news-desc {
+      font-size: 0.98rem;
+      line-height: 1.5;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+    }
+
+    .news-meta {
+      font-size: 0.88rem;
+      opacity: 0.65;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .news-source {
+      color: var(--neon-gold);
       font-weight: 600;
-      font-family: Arial, sans-serif;
     }
-    .badge-text.locked { color: #ffd700; }
-    @keyframes pulse {
+
+    .news-link {
+      color: var(--neon-blue);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .news-link:hover {
+      text-decoration: underline;
+      color: var(--neon-cyan);
+    }
+
+    #loading, #no-results {
+      text-align: center;
+      padding: 4rem 1rem;
+      font-size: 1.3rem;
+      opacity: 0.7;
+    }
+
+    @keyframes flicker {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+      50% { opacity: 0.85; }
+    }
+
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .news-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="top-section">
-    <div class="header" id="header"></div>
-    <div class="avatar" id="avatar"></div>
-    
-    <!-- WALLET STATUS BADGE -->
-    <div class="wallet-badge" id="walletBadge" onclick="handleWalletClick()">
-      <div class="badge-indicator" id="badgeIndicator"></div>
-      <div class="badge-text" id="badgeText">Connect Wallet</div>
-    </div>
-    
-    <div class="theme-switch" id="themeSwitch">🌙</div>
-    <div class="edit-btn" id="editBtn">⚙️</div>
-    <div class="edit-menu" id="editMenu"></div>
-  </div>
-  
-  <div class="main-layout">
-    <div class="sidebar">
-      <a href="feed.html" class="nav-item">📰 News Feed</a>
-      <a href="messages.html" class="nav-item">💬 Messages</a>
-      <a href="groups.html" class="nav-item">👥 My Groups</a>
-      <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
-      <a href="friends.html" class="nav-item">👫 My Friends</a>
-      <a href="help.html" class="nav-item">❓ Help Desk</a>
+  <header>
+    <h1>Cryptobros News</h1>
+    <p style="opacity:0.7; text-align:center;">Live feed from top crypto sources • Updates every 2 minutes</p>
+  </header>
 
-      <!-- Кнопка CryptoNews — вставлена точно в столбец, в том же стиле, что и остальные пункты -->
-      <a href="news.html" class="nav-item">
-        📰 CryptoNews
-      </a>
-    </div>
-    <div class="main" id="profileContent"></div>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search news...">
   </div>
 
-  <input type="file" id="header-upload" accept="image/*">
-  <input type="file" id="avatar-upload" accept="image/*">
-  <input type="file" id="bg-upload" accept="image/*">
+  <div id="loading">Loading latest news...</div>
+  <div id="no-results" style="display:none;">No news matches your search</div>
+  <div id="news-grid" class="news-grid"></div>
 
   <script>
-    // ... весь твой скрипт остаётся без изменений ...
-    // (я его не трогал, только добавил кнопку в HTML выше)
+    const parser = new RSSParser();
+    const sources = [
+      'https://www.coindesk.com/arc/outboundfeeds/rss/',
+      'https://cointelegraph.com/rss',
+      'https://www.theblock.co/feed',
+      'https://decrypt.co/feed',
+      'https://cryptoslate.com/feed/'
+    ];
+
+    let allArticles = [];
+    let displayedCount = 0;
+    const batchSize = 10;
+
+    async function fetchNews() {
+      const grid = document.getElementById('news-grid');
+      const loading = document.getElementById('loading');
+      loading.textContent = 'Fetching fresh news...';
+
+      let newArticles = [];
+
+      for (const url of sources) {
+        try {
+          const feed = await parser.parseURL(url);
+          feed.items.forEach(item => {
+            const exists = allArticles.some(a => a.link === item.link);
+            if (!exists) {
+              newArticles.push({
+                title: item.title || 'No title',
+                desc: item.contentSnippet || item.description || '',
+                link: item.link,
+                date: item.pubDate ? new Date(item.pubDate) : new Date(),
+                source: new URL(url).hostname.replace('www.', '')
+              });
+            }
+          });
+        } catch (err) {
+          console.log('RSS error:', url);
+        }
+      }
+
+      allArticles = [...newArticles, ...allArticles];
+      allArticles.sort((a,b) => b.date - a.date);
+
+      renderArticles();
+      loading.style.display = 'none';
+    }
+
+    function renderArticles(filter = '') {
+      const grid = document.getElementById('news-grid');
+      const noResults = document.getElementById('no-results');
+      grid.innerHTML = '';
+
+      const filtered = allArticles.filter(a => 
+        a.title.toLowerCase().includes(filter.toLowerCase()) || 
+        a.desc.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      if (filtered.length === 0 && filter) {
+        noResults.style.display = 'block';
+        return;
+      }
+
+      noResults.style.display = 'none';
+
+      const toShow = filtered.slice(0, displayedCount + batchSize);
+
+      toShow.forEach(a => {
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        card.innerHTML = `
+          <div class="news-title">${a.title}</div>
+          <div class="news-desc">${a.desc.slice(0, 140)}${a.desc.length > 140 ? '...' : ''}</div>
+          <div class="news-meta">
+            <span class="news-source">${a.source}</span> • ${a.date.toLocaleString()}
+          </div>
+          <a href="${a.link}" target="_blank" class="news-link">Read on ${a.source} →</a>
+        `;
+        grid.appendChild(card);
+      });
+
+      displayedCount += batchSize;
+    }
+
+    window.addEventListener('scroll', () => {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
+        renderArticles(document.getElementById('searchInput').value);
+      }
+    });
+
+    document.getElementById('searchInput').addEventListener('input', e => {
+      displayedCount = 0;
+      renderArticles(e.target.value);
+    });
+
+    fetchNews();
+    setInterval(fetchNews, 120000); // каждые 2 минуты
   </script>
 </body>
 </html>
