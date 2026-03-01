@@ -222,6 +222,7 @@
       color: var(--neon-blue);
       font-weight: 600;
       text-decoration: none;
+      cursor: pointer;
     }
 
     .news-link:hover {
@@ -239,6 +240,176 @@
     @keyframes flicker {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.85; }
+    }
+
+    /* MODAL STYLES */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(15px);
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-content {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      max-height: 85vh;
+      margin: auto;
+      background: var(--card-bg);
+      border: 3px solid var(--accent);
+      border-radius: 24px;
+      padding: 2rem 2rem 1.5rem;
+      box-shadow: 0 0 60px var(--accent), 0 0 120px rgba(0, 240, 255, 0.3);
+      overflow-y: auto;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--accent);
+      cursor: pointer;
+      transition: all 0.3s;
+      background: none;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      z-index: 10;
+    }
+
+    .modal-close:hover {
+      color: var(--neon-red);
+      transform: rotate(90deg) scale(1.2);
+      text-shadow: 0 0 30px var(--neon-red);
+    }
+
+    .modal-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-shadow: 0 0 20px var(--accent);
+      padding-right: 3rem;
+      font-family: 'Orbitron', sans-serif;
+      line-height: 1.3;
+    }
+
+    .modal-meta {
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .modal-body {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 2rem;
+      max-height: 50vh;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .modal-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+      background: rgba(0, 240, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 10px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 2px solid var(--border);
+    }
+
+    .modal-source {
+      color: var(--gold);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .modal-link {
+      color: var(--neon-cyan);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--neon-cyan);
+      border-radius: 30px;
+      transition: all 0.3s;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-link:hover {
+      background: var(--neon-cyan);
+      color: var(--deep-bg);
+      box-shadow: 0 0 30px var(--neon-cyan);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+      }
+      
+      .modal-title {
+        font-size: 1.6rem;
+      }
+      
+      .modal-body {
+        font-size: 1rem;
+        max-height: 60vh;
+      }
+      
+      .modal-close {
+        font-size: 2rem;
+        top: 0.5rem;
+        right: 1rem;
+      }
+      
+      .modal-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
     }
 
     @media (max-width: 768px) {
@@ -269,6 +440,20 @@
   <div id="no-results" style="display:none;">No news matches your search</div>
   <div id="news-grid" class="news-grid"></div>
 
+  <!-- MODAL WINDOW -->
+  <div class="modal-overlay" id="newsModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <span class="modal-source" id="modalSource"></span>
+        <a href="#" target="_blank" class="modal-link" id="modalLink">Read original →</a>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==================== ORIGINAL CODE ====================
     
@@ -277,6 +462,7 @@
       {
         title: "Bitcoin Hits New All-Time High",
         desc: "BTC surged past $100k amid institutional adoption and ETF inflows...",
+        fullDesc: "Bitcoin has reached a new all-time high, surpassing $100,000 for the first time in history. The surge comes amid increased institutional adoption and significant inflows into Bitcoin ETFs. Analysts attribute the rally to growing mainstream acceptance and macroeconomic factors driving investors to seek alternative stores of value. The cryptocurrency market cap has also seen a substantial increase, with altcoins following Bitcoin's lead.",
         link: "https://www.coindesk.com/markets/2026/03/01/bitcoin-hits-new-all-time-high/",
         date: new Date(Date.now() - 3600000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "CoinDesk"
@@ -284,6 +470,7 @@
       {
         title: "Ethereum Layer 2 Scaling Solution Launches",
         desc: "New zk-rollup promises 100k TPS with lower gas fees...",
+        fullDesc: "A new Ethereum Layer 2 scaling solution has launched, promising 100,000 transactions per second with significantly lower gas fees. The zk-rollup technology aims to solve Ethereum's scalability challenges while maintaining security and decentralization. Early adopters report seamless integration with existing DeFi protocols and substantially reduced costs for users.",
         link: "https://cointelegraph.com/news/ethereum-layer-2-scaling-solution-launches",
         date: new Date(Date.now() - 7200000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "Cointelegraph"
@@ -291,6 +478,7 @@
       {
         title: "Solana Network Upgrade Complete",
         desc: "Firedancer rollout boosts throughput by 50x...",
+        fullDesc: "Solana has completed its major network upgrade, implementing the Firedancer validator client which boosts throughput by 50x. The upgrade enhances network stability and performance, addressing previous concerns about downtime. Developers report improved transaction speeds and the ability to scale applications further.",
         link: "https://www.theblock.co/post/123456/solana-network-upgrade-complete",
         date: new Date(Date.now() - 14400000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "The Block"
@@ -298,6 +486,7 @@
       {
         title: "AUS Token Gains 300% in 24h",
         desc: "Community-driven surge on Cryptobros platform...",
+        fullDesc: "The AUS token has gained 300% in the last 24 hours, driven by strong community support on the Cryptobros platform. The surge follows announcements of new partnerships and upcoming features. Trading volume has increased dramatically, with users citing confidence in the project's roadmap and team.",
         link: "https://decrypt.co/123456/aus-token-gains-300",
         date: new Date(Date.now() - 21600000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "Decrypt"
@@ -305,6 +494,7 @@
       {
         title: "CryptoSlate Reports New DeFi Protocol",
         desc: "Protocol raises $50M in seed round...",
+        fullDesc: "A new DeFi protocol has raised $50 million in seed funding from major venture capital firms. The protocol aims to revolutionize decentralized lending with innovative risk management features. Investors include leading crypto funds and angel investors who see potential for significant growth in the DeFi sector.",
         link: "https://cryptoslate.com/news/new-defi-protocol-raises-50m",
         date: new Date(Date.now() - 28800000).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         source: "CryptoSlate"
@@ -321,12 +511,48 @@
       return String(str).replace(/[&<>"']/g, m => escape[m]);
     }
 
+    // ==================== MODAL CODE ====================
+    
+    const modal = document.getElementById('newsModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMeta = document.getElementById('modalMeta');
+    const modalBody = document.getElementById('modalBody');
+    const modalSource = document.getElementById('modalSource');
+    const modalLink = document.getElementById('modalLink');
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    function openNewsModal(newsItem) {
+      modalTitle.textContent = newsItem.title;
+      modalMeta.textContent = `${newsItem.source} • ${newsItem.date}`;
+      modalBody.textContent = newsItem.fullDesc || newsItem.desc;
+      modalSource.textContent = newsItem.source;
+      modalLink.href = newsItem.link;
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
     // ==================== REAL NEWS CODE ====================
     
-    // RSS to JSON converter
     const RSS_CONVERTER = 'https://api.rss2json.com/v1/api.json?rss_url=';
     
-    // News sources
     const NEWS_SOURCES = [
       { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
       { name: 'Cointelegraph', url: 'https://cointelegraph.com/rss' },
@@ -335,18 +561,14 @@
       { name: 'CryptoSlate', url: 'https://cryptoslate.com/feed/' }
     ];
 
-    // News storage
     let allNews = [];
 
-    // Fetch real news function
     async function fetchRealNews() {
       const loading = document.getElementById('loading');
       
-      // Check cache
       const cache = JSON.parse(localStorage.getItem('newsCache') || '{}');
       const now = Date.now();
       
-      // Use cache if fresh (less than 2 minutes)
       if (cache.timestamp && (now - cache.timestamp) < 120000) {
         allNews = cache.data;
         renderFilteredNews(document.getElementById('searchInput').value);
@@ -363,15 +585,19 @@
             const data = await response.json();
             
             if (data.items && data.items.length > 0) {
-              return data.items.map(item => ({
-                title: item.title || 'No title',
-                desc: (item.description || item.content || '')
-                  .replace(/<[^>]*>/g, '')
-                  .substring(0, 200) + '...',
-                link: item.link || '#',
-                date: new Date(item.pubDate || item.isoDate || now),
-                source: source.name
-              }));
+              return data.items.map(item => {
+                const fullText = (item.description || item.content || '')
+                  .replace(/<[^>]*>/g, '');
+                
+                return {
+                  title: item.title || 'No title',
+                  desc: fullText.substring(0, 200) + '...',
+                  fullDesc: fullText,
+                  link: item.link || '#',
+                  date: new Date(item.pubDate || item.isoDate || now),
+                  source: source.name
+                };
+              });
             }
             return [];
           } catch(e) {
@@ -382,7 +608,6 @@
 
         const results = await Promise.all(newsPromises);
         
-        // Combine all news
         allNews = results
           .flat()
           .filter(item => item.title !== 'No title')
@@ -395,12 +620,10 @@
             })
           }));
 
-        // If no news, use mock
         if (allNews.length === 0) {
           allNews = mockNews;
         }
 
-        // Save to cache
         localStorage.setItem('newsCache', JSON.stringify({
           timestamp: now,
           data: allNews
@@ -415,7 +638,6 @@
       }
     }
 
-    // Render with filter
     function renderFilteredNews(filter = '') {
       const grid = document.getElementById('news-grid');
       const noResults = document.getElementById('no-results');
@@ -436,21 +658,45 @@
 
       noResults.style.display = 'none';
 
-      grid.innerHTML = filtered.map(n => `
-        <div class="news-card">
-          <div class="news-title">${escapeHTML(n.title)}</div>
-          <div class="news-desc">${escapeHTML(n.desc)}</div>
-          <div class="news-meta">
-            <span class="news-source">${escapeHTML(n.source)}</span> • ${escapeHTML(n.date)}
-          </div>
-          <a href="${n.link}" target="_blank" class="news-link">Read more →</a>
-        </div>
-      `).join('');
+      // Build cards with proper event handlers
+      grid.innerHTML = '';
+      
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        
+        const title = document.createElement('div');
+        title.className = 'news-title';
+        title.textContent = item.title;
+        
+        const desc = document.createElement('div');
+        desc.className = 'news-desc';
+        desc.textContent = item.desc;
+        
+        const meta = document.createElement('div');
+        meta.className = 'news-meta';
+        meta.innerHTML = `<span class="news-source">${escapeHTML(item.source)}</span> • ${escapeHTML(item.date)}`;
+        
+        const link = document.createElement('a');
+        link.href = '#';
+        link.className = 'news-link';
+        link.textContent = 'Read more →';
+        link.onclick = (e) => {
+          e.preventDefault();
+          openNewsModal(item);
+        };
+        
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(meta);
+        card.appendChild(link);
+        
+        grid.appendChild(card);
+      });
     }
 
     // ==================== ORIGINAL CODE CONTINUED ====================
 
-    // Day/Night toggle
     document.getElementById('themeToggle').addEventListener('click', () => {
       const body = document.body;
       if (body.dataset.theme === 'dark') {
@@ -463,7 +709,6 @@
       try { localStorage.setItem('feedTheme', body.dataset.theme); } catch(e) {}
     });
 
-    // Background toggle
     document.getElementById('bgToggle').addEventListener('click', function() {
       const body = document.body;
       const btn = this;
@@ -483,31 +728,25 @@
       }, 200);
     });
 
-    // Search input
     document.getElementById('searchInput').addEventListener('input', (e) => {
       renderFilteredNews(e.target.value);
     });
 
-    // Initial load
     window.addEventListener('DOMContentLoaded', () => {
-      // Load theme
       const savedTheme = localStorage.getItem('feedTheme');
       if (savedTheme) {
         document.body.dataset.theme = savedTheme;
         document.getElementById('themeToggle').textContent = savedTheme === 'light' ? '🌙 Night mode' : '☀️ Day mode';
       }
       
-      // Load background
       const savedBg = localStorage.getItem('feedBg');
       if (savedBg && bgVariants.includes(savedBg)) {
         document.body.setAttribute('data-bg', savedBg);
         currentBgIndex = bgVariants.indexOf(savedBg);
       }
       
-      // Load real news
       fetchRealNews();
       
-      // Update every 2 minutes
       setInterval(fetchRealNews, 120000);
     });
   </script>
