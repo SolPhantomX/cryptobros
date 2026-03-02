@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS • Choose Your Tier</title>
+  <title>CRYPTOBROS • CHOOSE YOUR TIER</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -14,169 +14,222 @@
     
     body {
       font-family: 'Inter', sans-serif;
-      background: #0a0b0e;
-      color: #fff;
-      line-height: 1.6;
-      padding: 40px 20px;
+      background: #0a0c0f;
+      color: #ffffff;
+      line-height: 1.5;
+      padding: 30px 20px;
     }
     
     .container {
-      max-width: 800px;
+      max-width: 1100px;
       margin: 0 auto;
     }
     
     h1 {
-      font-size: 2.5rem;
+      font-size: 32px;
       font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #fff;
+      margin: 0 0 5px 0;
+      letter-spacing: -0.5px;
     }
     
     .subtitle {
       color: #9ca3af;
-      font-size: 1.1rem;
-      margin-bottom: 3rem;
-      border-bottom: 1px solid #2a2a2a;
-      padding-bottom: 1rem;
+      font-size: 16px;
+      margin: 0 0 30px 0;
     }
     
-    .tier {
-      margin-bottom: 2.5rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid #2a2a2a;
+    /* Current tier status */
+    .tier-status {
+      background: #111316;
+      border: 1px solid #2a2a2a;
+      padding: 15px 20px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-radius: 4px;
     }
     
-    .tier:last-of-type {
-      border-bottom: none;
+    .tier-status-label {
+      color: #9ca3af;
+      font-size: 14px;
+    }
+    
+    .tier-status-value {
+      font-weight: 700;
+      font-size: 18px;
+    }
+    
+    .tier-status-value.free { color: #00ff9d; }
+    .tier-status-value.master { color: #d700ff; }
+    .tier-status-value.pro { color: #00d4ff; }
+    .tier-status-value.premium { color: #ffd700; }
+    
+    .tier-status-expiry {
+      color: #ffaa00;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    /* TOP ROW - 4 PANELS HORIZONTAL */
+    .top-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .tier-card {
+      flex: 1;
+      background: #111316;
+      border: 1px solid #2a2a2a;
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+    
+    .tier-card:hover {
+      border-color: #444;
     }
     
     .tier-header {
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 1rem;
+      flex-direction: column;
+      margin-bottom: 15px;
     }
     
     .tier-name {
-      font-size: 2rem;
+      font-size: 24px;
       font-weight: 700;
+      margin-bottom: 5px;
     }
-    
-    .free .tier-name { color: #00ff9d; }
-    .master .tier-name { color: #d700ff; }
-    .pro .tier-name { color: #00d4ff; }
-    .premium .tier-name { color: #ffd700; }
     
     .tier-price {
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-size: 22px;
+      font-weight: 600;
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
     }
     
-    .free .tier-price { color: #00ff9d; }
-    .master .tier-price { color: #d700ff; }
-    .pro .tier-price { color: #00d4ff; }
-    .premium .tier-price { color: #ffd700; }
-    
-    .tier-duration {
-      font-size: 1rem;
+    .tier-weeks {
+      font-size: 13px;
       color: #9ca3af;
-      margin-left: 0.5rem;
+      font-weight: 400;
+      margin-left: 5px;
     }
     
-    .features {
+    /* Colors */
+    .free .tier-name, .free .tier-price { color: #00ff9d; }
+    .master .tier-name, .master .tier-price { color: #d700ff; }
+    .pro .tier-name, .pro .tier-price { color: #00d4ff; }
+    .premium .tier-name, .premium .tier-price { color: #ffd700; }
+    
+    ul {
       list-style: none;
-      margin: 1.5rem 0 2rem 0;
+      margin: 0 0 20px 0;
+      padding: 0;
     }
     
-    .features li {
+    li {
       color: #d1d5db;
-      margin-bottom: 0.5rem;
-      padding-left: 1.5rem;
+      font-size: 13px;
+      margin-bottom: 8px;
+      padding-left: 16px;
       position: relative;
     }
     
-    .features li::before {
+    li::before {
       content: "•";
       position: absolute;
       left: 0;
-      color: #00ff9d;
+      font-size: 16px;
     }
+    .free li::before { color: #00ff9d; }
+    .master li::before { color: #d700ff; }
+    .pro li::before { color: #00d4ff; }
+    .premium li::before { color: #ffd700; }
     
     .select-btn {
-      background: none;
+      background: transparent;
       border: 2px solid;
-      padding: 0.8rem 2.5rem;
-      font-size: 1rem;
+      padding: 8px 0;
+      width: 100%;
+      font-size: 14px;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    
+    .select-btn:hover {
+      background: currentColor;
+      color: #0a0c0f;
     }
     
     .free .select-btn {
       border-color: #00ff9d;
       color: #00ff9d;
     }
-    .free .select-btn:hover {
-      background: #00ff9d;
-      color: #000;
-    }
-    
     .master .select-btn {
       border-color: #d700ff;
       color: #d700ff;
     }
-    .master .select-btn:hover {
-      background: #d700ff;
-      color: #000;
-    }
-    
     .pro .select-btn {
       border-color: #00d4ff;
       color: #00d4ff;
     }
-    .pro .select-btn:hover {
-      background: #00d4ff;
-      color: #000;
-    }
-    
     .premium .select-btn {
       border-color: #ffd700;
       color: #ffd700;
     }
-    .premium .select-btn:hover {
-      background: #ffd700;
-      color: #000;
+    
+    .select-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     
+    .select-btn:disabled:hover {
+      background: transparent;
+      color: inherit;
+    }
+    
+    /* SECTION DIVIDERS */
+    .section-divider {
+      border: none;
+      border-top: 2px solid #2a2a2a;
+      margin: 30px 0;
+    }
+    
+    /* INVITE SECTION */
     .invite-section {
-      margin: 3rem 0;
-      padding: 2rem 0;
+      margin: 30px 0;
+      padding: 25px 0;
       border-top: 2px solid #2a2a2a;
       border-bottom: 2px solid #2a2a2a;
     }
     
     .invite-title {
-      font-size: 1.2rem;
       color: #00ff9d;
-      margin-bottom: 1rem;
+      font-size: 16px;
+      margin-bottom: 15px;
     }
     
-    .invite-input-group {
+    .invite-row {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      gap: 10px;
+      margin-bottom: 8px;
     }
     
     .invite-input {
       flex: 1;
-      background: #1a1a1a;
+      background: #111316;
       border: 1px solid #2a2a2a;
-      padding: 1rem;
-      color: #fff;
-      font-size: 1rem;
-      border-radius: 4px;
+      padding: 12px 15px;
+      color: #ffffff;
+      font-size: 14px;
     }
     
     .invite-input:focus {
@@ -185,192 +238,246 @@
     }
     
     .invite-btn {
-      background: none;
+      background: transparent;
       border: 2px solid #00ff9d;
       color: #00ff9d;
-      padding: 0 2rem;
+      padding: 10px 25px;
       font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
-      transition: all 0.3s;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      transition: all 0.2s;
+      white-space: nowrap;
     }
     
     .invite-btn:hover {
       background: #00ff9d;
-      color: #000;
+      color: #0a0c0f;
     }
     
-    .invite-examples {
+    .invite-note {
       color: #6b7280;
-      font-size: 0.9rem;
+      font-size: 13px;
     }
     
-    .features-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-top: 2rem;
+    /* BOTTOM FEATURES - TWO COLUMNS */
+    .features-row {
+      display: flex;
+      gap: 50px;
+      margin: 30px 0 40px 0;
     }
     
-    .feature-block {
-      background: #111;
-      padding: 1.5rem;
-      border: 1px solid #2a2a2a;
+    .feature-col {
+      flex: 1;
     }
     
-    .feature-title {
-      font-size: 1.3rem;
+    .feature-col h3 {
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 1rem;
+      margin: 0 0 15px 0;
     }
     
-    .feature-title.quantum { color: #00d4ff; }
-    .feature-title.risk { color: #ffd700; }
-    
-    .feature-list {
-      list-style: none;
+    .quantum-title {
+      color: #00d4ff;
     }
     
-    .feature-list li {
+    .risk-title {
+      color: #ffd700;
+    }
+    
+    .feature-col ul {
+      margin: 0;
+    }
+    
+    .feature-col li {
       color: #9ca3af;
-      margin-bottom: 0.5rem;
-      padding-left: 1.2rem;
-      position: relative;
+      font-size: 13px;
+      margin-bottom: 6px;
+      padding-left: 15px;
     }
     
-    .feature-list li::before {
-      content: "-";
-      position: absolute;
-      left: 0;
-      color: #4b5563;
+    .feature-col li::before {
+      content: "–";
+      color: #6b7280;
+      font-size: 13px;
     }
     
     .back-link {
       display: inline-block;
-      margin-top: 3rem;
+      margin-top: 20px;
       color: #6b7280;
       text-decoration: none;
-      transition: color 0.3s;
+      font-size: 14px;
+      transition: color 0.2s;
     }
     
     .back-link:hover {
       color: #00ff9d;
     }
     
-    hr {
-      border: none;
-      border-top: 1px solid #2a2a2a;
-      margin: 2rem 0;
+    /* MESSAGE */
+    .message {
+      background: #111316;
+      border-left: 4px solid #00ff9d;
+      padding: 12px 16px;
+      margin: 20px 0;
+      font-size: 14px;
     }
     
-    @media (max-width: 640px) {
-      .tier-header {
-        flex-direction: column;
-        gap: 0.5rem;
+    .message.error {
+      border-left-color: #ff4d4d;
+      color: #ff4d4d;
+    }
+    
+    .message.warning {
+      border-left-color: #ffaa00;
+      color: #ffaa00;
+    }
+    
+    @media (max-width: 900px) {
+      .top-row {
+        flex-wrap: wrap;
       }
-      
-      .invite-input-group {
+      .tier-card {
+        min-width: calc(50% - 10px);
+      }
+    }
+    
+    @media (max-width: 600px) {
+      .tier-card {
+        min-width: 100%;
+      }
+      .features-row {
+        flex-direction: column;
+        gap: 25px;
+      }
+      .invite-row {
         flex-direction: column;
       }
-      
-      .features-grid {
-        grid-template-columns: 1fr;
+      .tier-status {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    
+    @media (max-width: 380px) {
+      .select-btn {
+        font-size: 12px;
+      }
+      .tier-name {
+        font-size: 20px;
+      }
+      .tier-price {
+        font-size: 18px;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- HEADER -->
     <h1>CHOOSE YOUR TIER</h1>
     <div class="subtitle">Select access level and unlock powerful features</div>
 
-    <!-- FREE TIER -->
-    <div class="tier free">
-      <div class="tier-header">
-        <span class="tier-name">FREE</span>
-        <span class="tier-price">0 AUS <span class="tier-duration">(2 weeks)</span></span>
-      </div>
-      <ul class="features">
-        <li>2-week limited access</li>
-        <li>Basic token analysis</li>
-        <li>Standard verdict only</li>
-        <li>No premium features</li>
-      </ul>
-      <button class="select-btn" onclick="selectTier('Free', 0)">SELECT</button>
+    <!-- CURRENT TIER STATUS -->
+    <div class="tier-status" id="tierStatus">
+      <span class="tier-status-label">Your current tier:</span>
+      <span class="tier-status-value" id="currentTierDisplay">Loading...</span>
+      <span class="tier-status-expiry" id="tierExpiryDisplay"></span>
     </div>
 
-    <!-- MASTER TIER -->
-    <div class="tier master">
-      <div class="tier-header">
-        <span class="tier-name">MASTER</span>
-        <span class="tier-price">500 AUS <span class="tier-duration">(2 weeks)</span></span>
+    <!-- TOP ROW - 4 PANELS HORIZONTAL -->
+    <div class="top-row">
+      <!-- FREE -->
+      <div class="tier-card free">
+        <div class="tier-header">
+          <span class="tier-name">FREE</span>
+          <span class="tier-price">0 AUS <span class="tier-weeks">(2 weeks)</span></span>
+        </div>
+        <ul>
+          <li>2-week limited access</li>
+          <li>Basic token analysis</li>
+          <li>Standard verdict only</li>
+          <li>No premium features</li>
+        </ul>
+        <button class="select-btn" id="freeBtn" onclick="selectTier('FREE', 0)">SELECT</button>
       </div>
-      <ul class="features">
-        <li>Unlimited access</li>
-        <li>Full token analysis</li>
-        <li>Standard verdict + details</li>
-        <li>Save verdicts to history</li>
-      </ul>
-      <button class="select-btn" onclick="selectTier('Master', 500)">SELECT</button>
+
+      <!-- MASTER -->
+      <div class="tier-card master">
+        <div class="tier-header">
+          <span class="tier-name">MASTER</span>
+          <span class="tier-price">500 AUS <span class="tier-weeks">(2 weeks)</span></span>
+        </div>
+        <ul>
+          <li>Unlimited access</li>
+          <li>Full token analysis</li>
+          <li>Standard verdict + details</li>
+          <li>Save verdicts to history</li>
+        </ul>
+        <button class="select-btn" onclick="selectTier('MASTER', 500)">SELECT</button>
+      </div>
+
+      <!-- PRO -->
+      <div class="tier-card pro">
+        <div class="tier-header">
+          <span class="tier-name">PRO</span>
+          <span class="tier-price">2,000 AUS <span class="tier-weeks">(2 weeks)</span></span>
+        </div>
+        <ul>
+          <li>Unlimited access</li>
+          <li>Advanced analytics</li>
+          <li>Advanced metrics</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="select-btn" onclick="selectTier('PRO', 2000)">SELECT</button>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="tier-card premium">
+        <div class="tier-header">
+          <span class="tier-name">PREMIUM</span>
+          <span class="tier-price">10,000 AUS <span class="tier-weeks">(2 weeks)</span></span>
+        </div>
+        <ul>
+          <li>Full access + governance rights</li>
+          <li>All features unlocked</li>
+          <li>Quantum Contract Scan</li>
+          <li>Advanced Risk Forecast</li>
+        </ul>
+        <button class="select-btn" onclick="selectTier('PREMIUM', 10000)">SELECT</button>
+      </div>
     </div>
 
-    <!-- PRO TIER -->
-    <div class="tier pro">
-      <div class="tier-header">
-        <span class="tier-name">PRO</span>
-        <span class="tier-price">2,000 AUS <span class="tier-duration">(2 weeks)</span></span>
-      </div>
-      <ul class="features">
-        <li>Unlimited access</li>
-        <li>Advanced analytics</li>
-        <li>Advanced metrics (Pro)</li>
-        <li>Priority support</li>
-      </ul>
-      <button class="select-btn" onclick="selectTier('Pro', 2000)">SELECT</button>
-    </div>
+    <!-- DIVIDER -->
+    <hr class="section-divider">
 
-    <!-- PREMIUM TIER -->
-    <div class="tier premium">
-      <div class="tier-header">
-        <span class="tier-name">PREMIUM</span>
-        <span class="tier-price">10,000 AUS <span class="tier-duration">(2 weeks)</span></span>
-      </div>
-      <ul class="features">
-        <li>Full access + governance rights</li>
-        <li>All features unlocked</li>
-        <li>Quantum Contract Scan</li>
-        <li>Advanced Risk Forecast</li>
-      </ul>
-      <button class="select-btn" onclick="selectTier('Premium', 10000)">SELECT</button>
-    </div>
-
-    <!-- INVITE CODE SECTION -->
+    <!-- INVITE SECTION -->
     <div class="invite-section">
       <div class="invite-title">1. Have an invite Code?</div>
-      <div class="invite-input-group">
+      <div class="invite-row">
         <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
         <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
       </div>
-      <div class="invite-examples">Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)</div>
+      <div class="invite-note">Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)</div>
+      <div id="inviteMessage" class="message" style="display: none;"></div>
     </div>
 
-    <!-- FEATURES GRID -->
-    <div class="features-grid">
-      <!-- Quantum Contract Scan -->
-      <div class="feature-block">
-        <div class="feature-title quantum">Quantum Contract Scan</div>
-        <ul class="feature-list">
+    <!-- DIVIDER -->
+    <hr class="section-divider">
+
+    <!-- BOTTOM FEATURES - TWO COLUMNS -->
+    <div class="features-row">
+      <div class="feature-col">
+        <h3 class="quantum-title">Quantum Contract Scan</h3>
+        <ul>
           <li>Detailed analysis of your crypto assets</li>
           <li>Tax analysis - Ownership verification</li>
           <li>Liquidity lock check</li>
         </ul>
       </div>
-
-      <!-- Advanced Risk Forecast -->
-      <div class="feature-block">
-        <div class="feature-title risk">Advanced Risk Forecast</div>
-        <ul class="feature-list">
+      <div class="feature-col">
+        <h3 class="risk-title">Advanced Risk Forecast</h3>
+        <ul>
           <li>24h volatility prediction</li>
           <li>Whales movement alerts</li>
           <li>Pump/dump pattern detection</li>
@@ -379,66 +486,173 @@
       </div>
     </div>
 
+    <!-- BACK LINK -->
     <a href="index.html" class="back-link">← Back to Home</a>
   </div>
 
-  <!-- Simple Modal for Tier Selection -->
-  <div id="tierModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center;">
-    <div style="background:#111; padding:40px; max-width:400px; border:1px solid #00ff9d; text-align:center;">
-      <div style="font-size:2rem; margin-bottom:20px;">🔒</div>
-      <div style="font-size:1.5rem; margin-bottom:20px;" id="modalTierName"></div>
-      <div style="color:#9ca3af; margin-bottom:30px;" id="modalTierPrice"></div>
-      <div style="color:#00ff9d; margin-bottom:20px;">Wallet connection required</div>
-      <button onclick="connectWallet()" style="background:#00ff9d; color:#000; border:none; padding:15px 30px; width:100%; margin-bottom:10px; font-weight:600; cursor:pointer;">CONNECT WALLET</button>
-      <button onclick="closeModal()" style="background:none; border:1px solid #333; color:#fff; padding:15px 30px; width:100%; cursor:pointer;">CANCEL</button>
+  <!-- MESSAGE MODAL (SIMPLE) -->
+  <div id="messageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 1000;">
+    <div style="background: #111316; border: 1px solid #2a2a2a; padding: 30px; max-width: 400px; text-align: center;">
+      <div id="modalIcon" style="font-size: 48px; margin-bottom: 20px;">💰</div>
+      <div id="modalTitle" style="font-size: 20px; font-weight: 700; margin-bottom: 15px;">Payment Required</div>
+      <div id="modalText" style="color: #9ca3af; margin-bottom: 25px;"></div>
+      <div id="paymentDetails" style="background: #0a0c0f; padding: 15px; margin-bottom: 20px; text-align: left; font-size: 13px; border: 1px solid #2a2a2a;">
+        <p style="color: #9ca3af; margin-bottom: 5px;">Treasury Address:</p>
+        <p id="treasuryAddr" style="color: #00ff9d; font-family: monospace; word-break: break-all; margin-bottom: 15px;">C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6</p>
+        <p style="color: #9ca3af; margin-bottom: 5px;">Amount:</p>
+        <p id="modalAmount" style="color: #ffd700; font-size: 18px; font-weight: 700;"></p>
+      </div>
+      <button onclick="window.open('https://phantom.app/', '_blank')" style="background: #00ff9d; color: #0a0c0f; border: none; padding: 12px 0; width: 100%; margin-bottom: 10px; font-weight: 600; cursor: pointer;">👻 OPEN PHANTOM</button>
+      <button onclick="closeModal()" style="background: transparent; border: 1px solid #2a2a2a; color: #fff; padding: 12px 0; width: 100%; cursor: pointer;">CANCEL</button>
     </div>
   </div>
 
   <script>
-    // Tier selection
+    // === CONFIG ===
+    const TREASURY_ADDRESS = 'C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6';
+    const TIER_DURATION_HOURS = 336; // 2 weeks
+    
+    // Valid invite codes (in production, this should be on backend)
+    const VALID_INVITES = {
+      'PRE-5421': 'PREMIUM',
+      'PRE-1234': 'PREMIUM',
+      'MST-9012': 'MASTER',
+      'MST-5678': 'MASTER',
+      'PRO-3456': 'PRO',
+      'PRO-7890': 'PRO'
+    };
+
+    // === CHECK TIER EXPIRATION ===
+    function checkTierExpiration() {
+      const tier = localStorage.getItem('userTier');
+      const activated = localStorage.getItem('tierActivatedAt');
+      
+      if (!tier || !activated) return 'FREE';
+      
+      const elapsed = (Date.now() - parseInt(activated)) / (1000 * 60 * 60);
+      
+      if (elapsed > TIER_DURATION_HOURS) {
+        localStorage.removeItem('userTier');
+        localStorage.removeItem('tierActivatedAt');
+        return 'FREE';
+      }
+      
+      return tier;
+    }
+
+    // === UPDATE UI WITH CURRENT TIER ===
+    function updateTierDisplay() {
+      const currentTier = checkTierExpiration();
+      const displayEl = document.getElementById('currentTierDisplay');
+      const expiryEl = document.getElementById('tierExpiryDisplay');
+      const freeBtn = document.getElementById('freeBtn');
+      
+      // Update tier display
+      displayEl.textContent = currentTier;
+      displayEl.className = 'tier-status-value ' + currentTier.toLowerCase();
+      
+      // Update expiry info
+      const activated = localStorage.getItem('tierActivatedAt');
+      if (activated && currentTier !== 'FREE') {
+        const expiryDate = new Date(parseInt(activated) + TIER_DURATION_HOURS * 60 * 60 * 1000);
+        const daysLeft = Math.round((expiryDate - Date.now()) / (1000 * 60 * 60 * 24));
+        expiryEl.textContent = `expires in ${daysLeft} days`;
+      } else {
+        expiryEl.textContent = '';
+      }
+      
+      // Disable FREE button if already FREE
+      if (currentTier === 'FREE') {
+        freeBtn.disabled = true;
+        freeBtn.textContent = 'CURRENT';
+      } else {
+        freeBtn.disabled = false;
+        freeBtn.textContent = 'SELECT';
+      }
+    }
+
+    // === SELECT TIER ===
     window.selectTier = function(tier, price) {
-      const modal = document.getElementById('tierModal');
-      document.getElementById('modalTierName').textContent = tier + ' TIER';
-      document.getElementById('modalTierPrice').textContent = price + ' AUS (2 weeks)';
-      modal.style.display = 'flex';
-    };
-
-    // Close modal
-    window.closeModal = function() {
-      document.getElementById('tierModal').style.display = 'none';
-    };
-
-    // Connect wallet (placeholder)
-    window.connectWallet = function() {
-      window.location.href = 'connect-wallet.html?returnTo=payment.html';
-    };
-
-    // Invite code activation
-    window.activateInvite = function() {
-      const code = document.getElementById('inviteCode').value.trim();
-      if (!code) {
-        alert('Please enter an invite code');
+      if (price === 0) {
+        activateTier(tier);
         return;
       }
       
-      // Simple invite code validation
-      const validPrefixes = ['PRE-', 'MST-', 'PRO-'];
-      const isValid = validPrefixes.some(prefix => code.startsWith(prefix));
-      
-      if (isValid && code.length > 8) {
-        alert('✅ Invite activated! Redirecting to tier selection...');
-        // Here you would redirect to the appropriate tier
-      } else {
-        alert('❌ Invalid invite code. Format should be: PRE-5421, MST-1234, PRO-9012');
-      }
+      // Show payment modal
+      document.getElementById('modalAmount').textContent = price + ' AUS';
+      document.getElementById('modalText').textContent = `Send exactly ${price} AUS to the treasury address below.`;
+      document.getElementById('messageModal').style.display = 'flex';
     };
 
-    // Check for wallet connection on load
-    window.addEventListener('load', function() {
-      const wallet = localStorage.getItem('walletAddress');
-      if (wallet) {
-        console.log('Wallet connected:', wallet.slice(0,6) + '...');
+    // === ACTIVATE TIER ===
+    function activateTier(tier) {
+      localStorage.setItem('userTier', tier);
+      localStorage.setItem('tierActivatedAt', Date.now().toString());
+      updateTierDisplay();
+      alert(`✅ ${tier} tier activated! You have 2 weeks of access.`);
+    }
+
+    // === CLOSE MODAL ===
+    window.closeModal = function() {
+      document.getElementById('messageModal').style.display = 'none';
+    };
+
+    // === ACTIVATE INVITE ===
+    window.activateInvite = function() {
+      const code = document.getElementById('inviteCode').value.trim();
+      const messageEl = document.getElementById('inviteMessage');
+      
+      // Clear previous message
+      messageEl.style.display = 'none';
+      
+      if (!code) {
+        showMessage('Please enter an invite code', 'error');
+        return;
       }
+      
+      // Validate format
+      if (!/^(PRE|MST|PRO)-\d{4}$/.test(code)) {
+        showMessage('Invalid format. Use: PRE-5421, MST-1234, PRO-9012', 'error');
+        return;
+      }
+      
+      // Check if valid
+      const tier = VALID_INVITES[code];
+      if (!tier) {
+        showMessage('Invalid invite code', 'error');
+        return;
+      }
+      
+      // Check if already used (in production, check with backend)
+      const usedInvites = JSON.parse(localStorage.getItem('usedInvites') || '[]');
+      if (usedInvites.includes(code)) {
+        showMessage('This invite code has already been used', 'error');
+        return;
+      }
+      
+      // Mark as used
+      usedInvites.push(code);
+      localStorage.setItem('usedInvites', JSON.stringify(usedInvites));
+      
+      // Activate tier
+      activateTier(tier);
+      showMessage(`✅ ${tier} invite activated!`, 'success');
+    };
+
+    // === SHOW MESSAGE ===
+    function showMessage(text, type) {
+      const messageEl = document.getElementById('inviteMessage');
+      messageEl.textContent = text;
+      messageEl.className = 'message ' + type;
+      messageEl.style.display = 'block';
+    }
+
+    // === INIT ON LOAD ===
+    window.addEventListener('load', function() {
+      updateTierDisplay();
+      
+      // Check every minute for expiration
+      setInterval(updateTierDisplay, 60000);
     });
   </script>
 </body>
