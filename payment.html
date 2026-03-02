@@ -31,166 +31,160 @@
       margin-bottom:50px;
       opacity:0.9;
     }
+
+    /* 4 карточки строго в ряд */
     .tiers-grid {
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:28px;
+      grid-template-columns:repeat(4, 1fr);          /* 4 колонки */
+      gap:24px;
       margin-bottom:70px;
     }
+    @media (max-width: 1100px) {
+      .tiers-grid {
+        grid-template-columns:repeat(2, 1fr);        /* на узких — 2×2 */
+      }
+    }
+    @media (max-width: 600px) {
+      .tiers-grid {
+        grid-template-columns:1fr;                   /* мобильные — столбик */
+      }
+    }
+
     .tier-card {
       background:rgba(12,18,45,0.75);
       border:2px solid transparent;
-      border-radius:24px;
-      padding:32px 24px;
-      backdrop-filter:blur(10px);
+      border-radius:20px;
+      padding:28px 20px;
+      backdrop-filter:blur(8px);
       transition:all 0.35s ease;
-      position:relative;
     }
     .tier-card:hover {
-      transform:translateY(-12px);
-      box-shadow:0 25px 50px rgba(0,0,0,0.6);
+      transform:translateY(-10px);
+      box-shadow:0 20px 45px rgba(0,0,0,0.55);
     }
-    /* Glow + градиентные бордеры */
-    .free    { border-image:linear-gradient(180deg,#00ff9d,#00cc88) 1; box-shadow:0 0 35px rgba(0,255,157,0.3); }
-    .master  { border-image:linear-gradient(180deg,#d700ff,#a500cc) 1; box-shadow:0 0 35px rgba(215,0,255,0.3); }
-    .pro     { border-image:linear-gradient(180deg,#00d4ff,#0099cc) 1; box-shadow:0 0 35px rgba(0,212,255,0.3); }
-    .premium { border-image:linear-gradient(180deg,#ffd700,#ccaa00) 1; box-shadow:0 0 45px rgba(255,215,0,0.4); }
-    
-    .tier-name {
-      font-size:2.4rem;
-      font-weight:900;
-      margin-bottom:12px;
-    }
-    .tier-price {
-      font-size:2.8rem;
-      font-weight:900;
-      margin-bottom:28px;
-    }
+    .free    { border-image:linear-gradient(180deg,#00ff9d,#00cc88) 1; box-shadow:0 0 30px rgba(0,255,157,0.25); }
+    .master  { border-image:linear-gradient(180deg,#d700ff,#a500cc) 1; box-shadow:0 0 30px rgba(215,0,255,0.25); }
+    .pro     { border-image:linear-gradient(180deg,#00d4ff,#0099cc) 1; box-shadow:0 0 30px rgba(0,212,255,0.25); }
+    .premium { border-image:linear-gradient(180deg,#ffd700,#ccaa00) 1; box-shadow:0 0 40px rgba(255,215,0,0.35); }
+
+    .tier-name { font-size:2.1rem; font-weight:900; margin-bottom:8px; }
+    .tier-price { font-size:2.4rem; font-weight:900; margin-bottom:24px; }
     .free    .tier-name,.free    .tier-price { color:#00ff9d; }
     .master  .tier-name,.master  .tier-price { color:#d700ff; }
     .pro     .tier-name,.pro     .tier-price { color:#00d4ff; }
     .premium .tier-name,.premium .tier-price { color:#ffd700; }
-    
-    ul {
-      text-align:left;
-      margin-bottom:32px;
-    }
+
+    ul { text-align:left; margin-bottom:28px; }
     li {
-      font-size:1.05rem;
+      font-size:0.98rem;
       color:#d0e8ff;
-      margin:14px 0;
-      padding-left:32px;
+      margin:12px 0;
+      padding-left:28px;
       position:relative;
     }
     li::before {
       content:"✔";
       position:absolute;
       left:4px;
-      font-size:1.3rem;
+      font-size:1.2rem;
       font-weight:bold;
     }
     .free    li::before { color:#00ff9d; }
     .master  li::before { color:#d700ff; }
     .pro     li::before { color:#00d4ff; }
     .premium li::before { color:#ffd700; }
-    
+
     .select-btn {
       width:100%;
-      padding:16px;
+      padding:14px;
       background:transparent;
       border:2px solid;
-      border-radius:14px;
-      font-size:1.05rem;
+      border-radius:12px;
+      font-size:1rem;
       font-weight:700;
       text-transform:uppercase;
       cursor:pointer;
       transition:all 0.3s ease;
-      letter-spacing:1px;
     }
     .select-btn:hover {
       transform:translateY(-4px);
-      box-shadow:0 12px 30px rgba(255,255,255,0.18);
+      box-shadow:0 10px 25px rgba(255,255,255,0.15);
     }
-    .free    .select-btn { border-color:#00ff9d; color:#00ff9d; background:rgba(0,255,157,0.1); }
-    .master  .select-btn { border-color:#d700ff; color:#d700ff; background:rgba(215,0,255,0.1); }
-    .pro     .select-btn { border-color:#00d4ff; color:#00d4ff; background:rgba(0,212,255,0.1); }
-    .premium .select-btn { border-color:#ffd700; color:#ffd700; background:rgba(255,215,0,0.12); }
-    
-    /* Invite блок — почти точная копия со скрина */
-    .invite-wrapper {
-      max-width:900px;
-      margin:0 auto 60px;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:30px;
-    }
+    .free    .select-btn { border-color:#00ff9d; color:#00ff9d; background:rgba(0,255,157,0.09); }
+    .master  .select-btn { border-color:#d700ff; color:#d700ff; background:rgba(215,0,255,0.09); }
+    .pro     .select-btn { border-color:#00d4ff; color:#00d4ff; background:rgba(0,212,255,0.09); }
+    .premium .select-btn { border-color:#ffd700; color:#ffd700; background:rgba(255,215,0,0.11); }
+
+    /* Уменьшенная панель Invite */
     .invite-section {
-      background:linear-gradient(135deg,rgba(80,40,180,0.35),rgba(0,80,180,0.25));
+      background:linear-gradient(135deg,rgba(80,40,180,0.3),rgba(0,80,180,0.2));
       border:2px solid #7755ff;
-      border-radius:24px;
-      padding:36px;
+      border-radius:18px;
+      padding:24px 28px;                    /* меньше padding */
+      max-width:500px;
+      margin:0 auto 60px;
     }
     .invite-title {
-      font-size:1.8rem;
+      font-size:1.4rem;                     /* меньше шрифт */
       color:#bb99ff;
-      margin-bottom:24px;
+      margin-bottom:16px;
       font-weight:700;
     }
     .invite-row {
       display:flex;
-      gap:16px;
-      margin-bottom:16px;
+      gap:12px;
+      margin-bottom:12px;
     }
     .invite-input {
       flex:1;
       background:#111122;
       border:1px solid #444466;
-      border-radius:12px;
-      padding:16px 20px;
+      border-radius:10px;
+      padding:12px 16px;
       color:#fff;
-      font-size:1rem;
+      font-size:0.95rem;
     }
     .invite-btn {
       background:linear-gradient(90deg,#6644ff,#4488ff);
       border:none;
       color:#fff;
-      padding:0 32px;
-      border-radius:12px;
+      padding:0 24px;
+      border-radius:10px;
       font-weight:700;
-      font-size:1rem;
+      font-size:0.95rem;
       cursor:pointer;
       transition:all 0.3s;
     }
     .invite-btn:hover {
       transform:scale(1.04);
-      box-shadow:0 0 30px rgba(100,80,255,0.7);
+      box-shadow:0 0 25px rgba(100,80,255,0.6);
     }
     .invite-note {
       color:#aaccff;
-      font-size:0.95rem;
-      opacity:0.85;
+      font-size:0.85rem;
+      opacity:0.8;
     }
-    
-    /* Features справа-слева */
+
+    /* Features */
     .features-row {
       display:grid;
       grid-template-columns:repeat(2,1fr);
-      gap:50px;
+      gap:40px;
       max-width:1000px;
       margin:0 auto 60px;
     }
     .feature-col h3 {
-      font-size:1.9rem;
+      font-size:1.7rem;
       font-weight:700;
-      margin-bottom:24px;
+      margin-bottom:20px;
     }
-    .quantum-title { color:#00d4ff; text-shadow:0 0 18px rgba(0,212,255,0.6); }
-    .risk-title    { color:#ffd700; text-shadow:0 0 18px rgba(255,215,0,0.6); }
+    .quantum-title { color:#00d4ff; text-shadow:0 0 15px rgba(0,212,255,0.5); }
+    .risk-title    { color:#ffd700; text-shadow:0 0 15px rgba(255,215,0,0.5); }
     .feature-col li {
-      font-size:1.05rem;
+      font-size:1rem;
       color:#b8d0ff;
-      margin:12px 0;
-      padding-left:24px;
+      margin:10px 0;
+      padding-left:22px;
       position:relative;
     }
     .feature-col li::before {
@@ -198,24 +192,21 @@
       position:absolute;
       left:0;
       color:#88aaff;
-      font-weight:bold;
     }
-    
+
     .back-link {
       color:#88aaff;
       text-decoration:none;
-      font-size:1.2rem;
-      font-weight:500;
+      font-size:1.1rem;
     }
     .back-link:hover { color:#00ff9d; }
-    
+
     @media (max-width:1000px) {
-      .invite-wrapper { grid-template-columns:1fr; }
       .features-row { grid-template-columns:1fr; gap:40px; }
     }
     @media (max-width:600px) {
       .invite-row { flex-direction:column; }
-      .invite-btn { width:100%; padding:16px; }
+      .invite-btn { width:100%; padding:14px; }
     }
   </style>
 </head>
@@ -271,35 +262,32 @@
       </div>
     </div>
 
-    <div class="invite-wrapper">
-      <div class="invite-section">
-        <div class="invite-title">Have an Invite Code?</div>
-        <div class="invite-row">
-          <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
-          <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
-        </div>
-        <div class="invite-note">e.g. PRE-5421, MST-1234, PRO-9012</div>
+    <div class="invite-section">
+      <div class="invite-title">Have an Invite Code?</div>
+      <div class="invite-row">
+        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code">
+        <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
       </div>
+      <div class="invite-note">Enter your invite code</div>
+    </div>
 
-      <!-- Фичи справа (на скрине они справа от invite) -->
-      <div class="features-row">
-        <div class="feature-col">
-          <h3 class="quantum-title">Quantum Contract Scan</h3>
-          <ul>
-            <li>Detailed analysis of your crypto assets</li>
-            <li>Tax analysis - Ownership verification</li>
-            <li>Liquidity lock check</li>
-          </ul>
-        </div>
-        <div class="feature-col">
-          <h3 class="risk-title">Advanced Risk Forecast</h3>
-          <ul>
-            <li>24h volatility prediction</li>
-            <li>Whales movement alerts</li>
-            <li>Pump/dump pattern detection</li>
-            <li>Market sentiment analysis</li>
-          </ul>
-        </div>
+    <div class="features-row">
+      <div class="feature-col">
+        <h3 class="quantum-title">Quantum Contract Scan</h3>
+        <ul>
+          <li>Detailed analysis of your crypto assets</li>
+          <li>Tax analysis - Ownership verification</li>
+          <li>Liquidity lock check</li>
+        </ul>
+      </div>
+      <div class="feature-col">
+        <h3 class="risk-title">Advanced Risk Forecast</h3>
+        <ul>
+          <li>24h volatility prediction</li>
+          <li>Whales movement alerts</li>
+          <li>Pump/dump pattern detection</li>
+          <li>Market sentiment analysis</li>
+        </ul>
       </div>
     </div>
 
@@ -311,7 +299,7 @@
       localStorage.setItem('userTier', tier);
       localStorage.setItem('tierActivatedAt', Date.now().toString());
       alert(`✅ ${tier} activated!`);
-      window.location.href = 'profile.html'; // или на payment.html для платных
+      window.location.href = 'profile.html';
     }
 
     function activateInvite() {
