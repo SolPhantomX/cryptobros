@@ -1,398 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CRYPTOBROS TRIBUNAL</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- FIXED: removed extra colon in Orbitron font weight -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>CRYPTOBROS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* CSS variables for themes */
+    :root {
+      --bg-color: #000;
+      --text-color: #fff;
+      --btn-gradient: linear-gradient(45deg, #003366, #005580);
+      --btn-shadow: rgba(0, 85, 128, 0.8);
+      --modal-bg: rgba(0, 0, 0, 0.95);
+      --embed-btn-bg: rgba(0, 20, 40, 0.8);
+      --footer-color: #fff;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f0f8ff;
+      --text-color: #003366;
+      --btn-gradient: linear-gradient(45deg, #66ccff, #3399ff);
+      --btn-shadow: rgba(51, 153, 255, 0.8);
+      --modal-bg: rgba(255, 255, 255, 0.95);
+      --embed-btn-bg: rgba(255, 255, 255, 0.9);
+      --footer-color: #0066cc;
+    }
+
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: #000814;
-      color: #e0f7ff;
+      margin: 0;
+      padding: 0;
+      background: var(--bg-color);
       min-height: 100vh;
-      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
       position: relative;
+      font-family: 'Quicksand', sans-serif;
+      transition: background-color 0.5s ease;
     }
-    .background-svg {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0; pointer-events: none;
+    .bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('logo.jpg') center/cover no-repeat;
+      z-index: -1;
+      filter: brightness(0.9) contrast(1.1);
+      transition: filter 0.5s ease;
     }
-    .background-svg svg { width: 100%; height: 100%; object-fit: cover; }
-    .content {
-      position: relative; z-index: 1; width: 100%; min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      align-items: center; padding: 20px;
-      background: rgba(0, 8, 20, 0.65); backdrop-filter: blur(2px);
-    }
-    .logo-fullscreen {
-      font-family: 'Orbitron', sans-serif;
-      font-size: clamp(3rem, 15vw, 8rem);
-      font-weight: 900; text-align: center; color: #00ffea;
-      text-shadow: 0 0 30px #00ffea, 0 0 60px #00aaff, 0 0 90px #0066ff;
-      margin-bottom: 2rem; letter-spacing: 4px;
-      animation: glowPulse 3s ease-in-out infinite alternate;
-      line-height: 1.1; max-width: 1200px; word-break: break-word;
-    }
-    @keyframes glowPulse {
-      0% { text-shadow: 0 0 30px #00ffea, 0 0 60px #00aaff, 0 0 90px #0066ff; opacity: 0.9; }
-      100% { text-shadow: 0 0 50px #00ffea, 0 0 100px #00aaff, 0 0 150px #0066ff, 0 0 200px #0044ff; opacity: 1; }
-    }
-    .enter-btn {
-      font-family: 'Orbitron', sans-serif;
-      font-size: clamp(1.5rem, 5vw, 2.5rem);
-      font-weight: 700; padding: 20px 60px;
-      background: linear-gradient(135deg, #00ff9d, #00aaff);
-      border: none; border-radius: 60px; color: #000814;
-      cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      text-transform: uppercase; letter-spacing: 4px;
-      box-shadow: 0 0 30px rgba(0, 255, 157, 0.5), 0 0 60px rgba(0, 170, 255, 0.3);
-      border: 2px solid rgba(255, 255, 255, 0.2); margin-top: 2rem;
-      animation: buttonPulse 2s ease-in-out infinite;
-    }
-    .enter-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 50px #00ff9d, 0 0 100px #00aaff;
-      background: linear-gradient(135deg, #00ffb3, #00ccff);
-    }
-    @keyframes buttonPulse {
-      0% { opacity: 0.9; }
-      50% { opacity: 1; transform: scale(1.02); }
-      100% { opacity: 0.9; }
-    }
-    .hint {
-      margin-top: 2rem; font-size: 0.9rem; opacity: 0.5;
-      letter-spacing: 2px; color: #88aaff;
+    [data-theme="light"] .bg {
+      filter: brightness(1.1) contrast(1) sepia(0.2);
     }
     
-    /* EMBED BUTTON (TOP LEFT) */
+    .btn {
+      background: var(--btn-gradient);
+      color: #fff;
+      border: none;
+      padding: 1.4rem 3.6rem;
+      font-size: 1.45rem;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      letter-spacing: 1px;
+      box-shadow: 0 0 25px var(--btn-shadow);
+      margin-bottom: 80px;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 35px #0066cc;
+    }
+    
+    footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      animation: colorChange 15s infinite;
+      color: var(--footer-color);
+    }
+    
+    @keyframes colorChange {
+      0% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
+      16.67% { color: #ff00ff; text-shadow: 0 0 10px #ff00ff; }
+      33.33% { color: #00ffff; text-shadow: 0 0 10px #00ffff; }
+      50% { color: #ff9d00; text-shadow: 0 0 10px #ff9d00; }
+      66.67% { color: #9d00ff; text-shadow: 0 0 10px #9d00ff; }
+      83.33% { color: #ffff00; text-shadow: 0 0 10px #ffff00; }
+      100% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
+    }
+
+    /* Top buttons container */
+    .top-buttons {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+    
+    .top-buttons > * {
+      pointer-events: auto;
+    }
+    
+    .left-group, .right-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Embed button */
     .embed-btn {
-      position: fixed; top: 20px; left: 20px; z-index: 1001;
-      padding: 10px 20px; background: rgba(0, 8, 20, 0.8);
-      border: 2px solid #00ffea; border-radius: 12px;
-      color: #00ffea; font-weight: 600; cursor: pointer;
-      transition: all 0.3s; font-family: 'Inter', sans-serif;
-      animation: embedPulse 25s ease-in-out infinite;
+      background: var(--embed-btn-bg);
+      border: 2px solid #00ffea;
+      border-radius: 12px;
+      padding: 0.8rem 1.6rem;
+      color: #00ffea;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Quicksand', sans-serif;
+      box-shadow: 0 0 15px rgba(0, 255, 234, 0.3);
+      backdrop-filter: blur(5px);
     }
     .embed-btn:hover:not(:disabled) {
       background: rgba(0, 255, 234, 0.15);
       transform: translateX(-5px);
-      box-shadow: 0 0 20px rgba(0, 255, 234, 0.4);
+      box-shadow: 0 0 20px rgba(0, 255, 234, 0.6);
     }
     .embed-btn:disabled {
-      opacity: 0.6; cursor: not-allowed; transform: none !important;
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: #888;
+      color: #888;
     }
-    @keyframes embedPulse {
-      0%,100% { color: #00ffea; text-shadow: 0 0 8px #00ffea, 0 0 16px #00ffea; opacity: 1; }
-      50% { color: #ffd700; text-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700; opacity: 0.95; }
+
+    /* Theme toggle button */
+    .theme-btn {
+      background: var(--embed-btn-bg);
+      border: 2px solid #ffd700;
+      border-radius: 12px;
+      padding: 0.8rem 1.6rem;
+      color: #ffd700;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Quicksand', sans-serif;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+      backdrop-filter: blur(5px);
+    }
+    .theme-btn:hover {
+      background: rgba(255, 215, 0, 0.15);
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+
+    /* Language button */
+    .language-btn {
+      background: linear-gradient(45deg, #66ffff, #00ff9d);
+      color: #000;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      box-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
+    }
+    .language-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #66ffff;
     }
     
-    /* EMBED MODAL */
+    .language-menu {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: rgba(0, 0, 0, 0.9);
+      border-radius: 10px;
+      padding: 10px 0;
+      display: none;
+      z-index: 101;
+      box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
+      min-width: 180px;
+    }
+    .language-menu.active { display: block; }
+    .language-option {
+      padding: 12px 25px;
+      color: #00ff9d;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: right;
+    }
+    .language-option:hover {
+      background: rgba(102, 255, 255, 0.2);
+      color: #fff;
+    }
+    .language-option.active {
+      background: rgba(102, 255, 255, 0.3);
+      color: #fff;
+    }
+    body[dir="rtl"] .language-menu {
+      right: auto;
+      left: 0;
+      text-align: left;
+    }
+    body[dir="rtl"] .language-option {
+      text-align: left;
+    }
+
+    /* Modal styles */
     .embed-modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0, 8, 20, 0.95); backdrop-filter: blur(12px);
-      z-index: 10000; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.4s ease;
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--modal-bg);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
     }
-    .embed-modal-overlay.active { display: flex; opacity: 1; }
+    .embed-modal-overlay.active {
+      display: flex;
+    }
     .embed-modal-content {
-      position: relative; width: 90%; max-width: 680px;
-      background: rgba(10, 14, 39, 0.95);
-      border: 2px solid #00ffea; border-radius: 24px;
-      padding: 3rem 2.5rem 2.5rem;
-      box-shadow: 0 0 80px rgba(0, 255, 234, 0.5), inset 0 0 40px rgba(0, 255, 234, 0.1);
-      transform: scale(0.7) translateY(80px); opacity: 0;
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      color: #e0f7ff;
+      background: var(--embed-btn-bg);
+      border: 2px solid #00ffea;
+      border-radius: 24px;
+      padding: 3rem;
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 0 60px rgba(0, 255, 234, 0.5);
+      text-align: center;
+      animation: modalGlow 2s ease-in-out infinite alternate;
+      color: var(--text-color);
     }
-    .embed-modal-overlay.active .embed-modal-content {
-      transform: scale(1) translateY(0); opacity: 1;
+    @keyframes modalGlow {
+      0% { box-shadow: 0 0 40px rgba(0, 255, 234, 0.4); }
+      100% { box-shadow: 0 0 80px rgba(0, 255, 234, 0.8); }
     }
     .embed-modal-close {
-      position: absolute; top: 1.2rem; right: 1.8rem;
-      background: none; border: none; color: #00ffea;
-      font-size: 3rem; line-height: 1; cursor: pointer;
-      transition: all 0.4s;
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: #00ffea;
+      font-size: 2.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
     }
     .embed-modal-close:hover {
-      color: #ff4d4d; transform: rotate(90deg) scale(1.15);
-      text-shadow: 0 0 20px #ff4d4d;
+      color: #ff4d4d;
+      transform: rotate(90deg);
     }
     .embed-modal-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.8rem; font-weight: 700;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2.5rem;
       color: #00ffea;
-      text-shadow: 0 0 30px #00ffea, 0 0 60px rgba(0, 255, 234, 0.5);
-      text-align: center; margin-bottom: 1.2rem;
-      animation: titleGlow 3s ease-in-out infinite alternate;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 20px #00ffea;
     }
-    @keyframes titleGlow {
-      0% { text-shadow: 0 0 20px #00ffea, 0 0 40px rgba(0, 255, 234, 0.4); }
-      100% { text-shadow: 0 0 40px #00ffea, 0 0 80px rgba(0, 255, 234, 0.7); }
+    .embed-modal-text {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
     }
-    .embed-modal-subtitle {
-      font-size: 1.15rem; line-height: 1.6; text-align: center;
-      margin-bottom: 2rem; opacity: 0.9;
+    .embed-modal-link {
+      display: inline-block;
+      background: linear-gradient(45deg, #00ffea, #00aaff);
+      color: #000;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin: 1rem 0;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
     }
-    .embed-code-box {
-      background: rgba(0, 255, 234, 0.1);
-      border: 1px solid rgba(0, 255, 234, 0.4);
-      border-radius: 16px; padding: 1.5rem; margin: 1.5rem 0;
-      overflow-x: auto; font-family: monospace; font-size: 0.95rem;
-      white-space: pre-wrap; color: #e0f7ff;
-    }
-    .embed-copy-btn {
-      padding: 14px 40px;
-      background: linear-gradient(135deg, #00ffea, #ffd700);
-      color: #000814; border: none; border-radius: 12px;
-      font-size: 1.2rem; font-weight: 700; cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0, 255, 234, 0.4);
-      transition: all 0.3s; display: block; margin: 1.5rem auto;
-    }
-    .embed-copy-btn:hover {
+    .embed-modal-link:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 30px rgba(0, 255, 234, 0.6);
+      box-shadow: 0 0 30px #00ffea;
     }
-    /* FIXED: added copied state class instead of inline style */
-    .embed-copy-btn.copied {
-      background: #00ff9d !important;
-      color: #000814;
-      box-shadow: 0 0 30px #00ff9d;
+    .payment-waiting {
+      color: #ffaa00;
+      font-size: 1.1rem;
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 1px dashed #ffaa00;
+      border-radius: 8px;
     }
     .embed-modal-note {
-      font-size: 0.95rem; text-align: center; opacity: 0.7;
+      color: #888;
+      font-size: 0.9rem;
+      margin-top: 1rem;
     }
     .embed-modal-note code {
-      background: rgba(255, 215, 0, 0.15);
-      padding: 0.2rem 0.4rem; border-radius: 4px;
+      background: rgba(0, 255, 234, 0.1);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
       color: #ffd700;
-    }
-    @media (max-width: 768px) {
-      .embed-modal-content { padding: 2rem 1.5rem; }
-      .embed-modal-title { font-size: 2.2rem; }
-      .embed-btn { padding: 8px 16px; font-size: 0.9rem; }
     }
   </style>
 </head>
-<body>
-  <!-- EMBED BUTTON (TOP LEFT) -->
-  <button id="embedLinkBtn" class="embed-btn" title="Get embed link after payment">🔗 Get Embed Link</button>
+<body data-theme="dark">
+  <div class="bg"></div>
 
-  <!-- Full screen SVG background -->
-  <div class="background-svg">
-    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <radialGradient id="g1" cx="20%" cy="30%">
-          <stop offset="0%" stop-color="#003388"/>
-          <stop offset="70%" stop-color="#000033"/>
-        </radialGradient>
-        <radialGradient id="g2" cx="80%" cy="70%">
-          <stop offset="0%" stop-color="#880044"/>
-          <stop offset="70%" stop-color="#000033"/>
-        </radialGradient>
-      </defs>
-      <rect width="100%" height="100%" fill="#000814"/>
-      <g opacity="0.18">
-        <circle cx="300" cy="400" r="700" fill="url(#g1)"/>
-        <circle cx="1400" cy="700" r="900" fill="url(#g2)"/>
-      </g>
-      <g stroke="#00ff9d" stroke-width="0.8" opacity="0.5" fill="none">
-        <path d="M0,300 Q480,200 960,450 T1920,300"/>
-        <path d="M0,500 Q480,600 960,350 T1920,500"/>
-        <path d="M0,700 Q480,600 960,800 T1920,700"/>
-      </g>
-      <g stroke="#66ffff" stroke-width="0.6" opacity="0.4" fill="none">
-        <circle cx="960" cy="540" r="450"/>
-        <circle cx="960" cy="540" r="700"/>
-      </g>
-      <g fill="#00ff9d" opacity="0.8">
-        <circle cx="400" cy="300" r="5"/>
-        <circle cx="1500" cy="750" r="7"/>
-        <circle cx="800" cy="850" r="4"/>
-      </g>
-    </svg>
+  <!-- Top buttons container -->
+  <div class="top-buttons">
+    <div class="left-group">
+      <button id="embedBtn" class="embed-btn" title="Get embed link after payment">🔗 Get Embed Link</button>
+    </div>
+    <div class="right-group">
+      <button id="themeToggle" class="theme-btn">🌙 Night mode</button>
+      <div style="position: relative;">
+        <button class="language-btn" id="languageBtn">LANGUAGE</button>
+        <div class="language-menu" id="languageMenu">
+          <div class="language-option active" data-lang="en">English</div>
+          <div class="language-option" data-lang="fr">Français</div>
+          <div class="language-option" data-lang="es">Español</div>
+          <div class="language-option" data-lang="pt">Português</div>
+          <div class="language-option" data-lang="zh">简体中文</div>
+          <div class="language-option" data-lang="ar">العربية</div>
+          <div class="language-option" data-lang="he">עברית</div>
+          <div class="language-option" data-lang="ru">Русский</div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Main button -->
+  <button class="btn" onclick="location.href='payment.html'">Enter the Club</button>
   
-  <!-- Content overlay -->
-  <div class="content">
-    <div class="logo-fullscreen">CRYPTOBROS<br>TRIBUNAL</div>
-    <button class="enter-btn" onclick="enterClub()">ENTER THE CLUB</button>
-    <div class="hint">⚡ DECENTRALIZED · 0% FEES · COMMUNITY ⚡</div>
-  </div>
+  <footer>Cryptobros 2026 ©</footer>
 
-  <!-- EMBED MODAL -->
+  <!-- Embed Modal -->
   <div id="embedModal" class="embed-modal-overlay">
     <div class="embed-modal-content">
       <button class="embed-modal-close" id="closeEmbed">&times;</button>
-      <div class="embed-modal-title">This is your path to truth!</div>
-      <p class="embed-modal-subtitle">
+      <div class="embed-modal-title">🚀 This is your path to truth!</div>
+      <div class="embed-modal-text">
         Embed the Cryptobros Tribunal widget on your site.<br>
         Users get instant AI-powered risk analysis — no setup required.
-      </p>
-      <div class="embed-code-box">
-        <pre id="embedCode">&lt;iframe 
-  src="https://www.cryptobros.pro/tribunal-widget.html?token=WIF&amp;verified=true" 
-  width="100%" 
-  height="680" 
-  frameborder="0" 
-  style="border-radius:16px; border:2px solid #00ffea;"&gt;&lt;/iframe&gt;</pre>
       </div>
-      <button id="copyEmbed" class="embed-copy-btn">Copy Embed Code</button>
-      <p class="embed-modal-note">
-        Replace <code>?token=WIF</code> with any token (SOL, BONK, PEPE, etc.).<br>
+      
+      <div id="paymentWaiting" class="payment-waiting" style="display: none;">
+        ⏳ Waiting for payment confirmation...<br>
+        <small>Complete payment to unlock embed link</small>
+      </div>
+
+      <div id="embedLinkContainer" style="display: none;">
+        <a href="https://www.cryptobros.pro/tribunal-widget.html?token=WIF&verified=true" 
+           target="_blank" 
+           class="embed-modal-link">
+           🔗 Get Your Embed Code
+        </a>
+        <div class="embed-modal-note">
+          Replace <code>?token=WIF</code> with any token (SOL, BONK, PEPE, etc.)
+        </div>
+      </div>
+
+      <div class="embed-modal-note">
         <strong>Verified links require AUS payment</strong> — no free access.
-      </p>
+      </div>
     </div>
   </div>
 
   <script>
-    (function() {
-      // Safe localStorage wrapper
-      const storage = {
-        get: function(key, defaultValue = null) {
-          try {
-            const item = localStorage.getItem(key);
-            return item ? JSON.parse(item) : defaultValue;
-          } catch(e) {
-            console.warn('localStorage not available:', e);
-            return defaultValue;
-          }
-        },
-        set: function(key, value) {
-          try {
-            localStorage.setItem(key, JSON.stringify(value));
-            return true;
-          } catch(e) {
-            console.warn('localStorage not available:', e);
-            return false;
-          }
-        }
-      };
-
-      // DOM elements
-      const embedBtn = document.getElementById('embedLinkBtn');
-      const embedModal = document.getElementById('embedModal');
-      const closeEmbed = document.getElementById('closeEmbed');
-      const copyEmbed = document.getElementById('copyEmbed');
-
-      // Close modal function
-      function closeEmbedModal() {
-        if (embedModal) {
-          embedModal.classList.remove('active');
-          setTimeout(() => { embedModal.style.display = 'none'; }, 500);
-        }
-      }
-
-      // Update embed button state (with localStorage fallback)
-      function updateEmbedButton() {
-        if (!embedBtn) return;
-        
+    // Safe localStorage wrapper
+    const storage = {
+      get: function(key, defaultValue = null) {
         try {
-          const isPaid = storage.get('ausPaymentVerified', false);
-          
-          if (isPaid) {
-            embedBtn.textContent = '✨ Get Embed Code';
-            embedBtn.disabled = false;
-            embedBtn.onclick = () => {
-              if (embedModal) {
-                embedModal.style.display = 'flex';
-                setTimeout(() => embedModal.classList.add('active'), 10);
-              }
-            };
-            embedBtn.title = 'Get embed code';
-          } else {
-            embedBtn.textContent = '⏳ Waiting for payment';
-            embedBtn.disabled = true;
-            embedBtn.onclick = null;
-            embedBtn.title = 'Complete payment to unlock embed link';
-          }
+          const item = localStorage.getItem(key);
+          return item ? JSON.parse(item) : defaultValue;
         } catch(e) {
-          console.warn('localStorage error, enabling button by default');
-          // Fallback - enable button even without payment check
-          embedBtn.textContent = '✨ Get Embed Code';
-          embedBtn.disabled = false;
-          embedBtn.onclick = () => {
-            if (embedModal) {
-              embedModal.style.display = 'flex';
-              setTimeout(() => embedModal.classList.add('active'), 10);
-            }
-          };
+          console.warn('localStorage error:', e);
+          return defaultValue;
         }
-      }
-
-      // Event listeners
-      if (closeEmbed) {
-        closeEmbed.addEventListener('click', closeEmbedModal);
-      }
-
-      if (embedModal) {
-        embedModal.addEventListener('click', (e) => {
-          if (e.target === embedModal) closeEmbedModal();
-        });
-      }
-
-      // FIXED: copy button with class instead of inline style
-      if (copyEmbed) {
-        copyEmbed.addEventListener('click', () => {
-          const codeEl = document.getElementById('embedCode');
-          if (!codeEl) return;
-          
-          const code = codeEl.textContent;
-          
-          // Try modern clipboard API first
-          navigator.clipboard.writeText(code).then(() => {
-            copyEmbed.classList.add('copied');
-            copyEmbed.textContent = '✓ Copied!';
-            setTimeout(() => {
-              copyEmbed.classList.remove('copied');
-              copyEmbed.textContent = 'Copy Embed Code';
-            }, 2000);
-          }).catch(() => {
-            // Fallback for older browsers
-            const textarea = document.createElement('textarea');
-            textarea.value = code;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            
-            copyEmbed.classList.add('copied');
-            copyEmbed.textContent = '✓ Copied!';
-            setTimeout(() => {
-              copyEmbed.classList.remove('copied');
-              copyEmbed.textContent = 'Copy Embed Code';
-            }, 2000);
-          });
-        });
-      }
-
-      // Global escape key handler
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && embedModal && embedModal.style.display === 'flex') {
-          closeEmbedModal();
-        }
-      });
-
-      // FIXED: enterClub with fallback URL
-      window.enterClub = function() {
+      },
+      set: function(key, value) {
         try {
-          window.location.href = 'payment.html';
+          localStorage.setItem(key, JSON.stringify(value));
+          return true;
         } catch(e) {
-          window.location.href = 'https://cryptobros.pro/payment';
+          console.warn('localStorage error:', e);
+          return false;
         }
-      };
+      }
+    };
 
-      // Initialize on DOM ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', updateEmbedButton);
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.setAttribute('data-theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '🌙 Night mode' : '☀️ Day mode';
+      storage.set('theme', theme);
+    }
+
+    // Load saved theme
+    const savedTheme = storage.get('theme', 'dark');
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+
+    // Embed button logic
+    const embedBtn = document.getElementById('embedBtn');
+    const embedModal = document.getElementById('embedModal');
+    const closeEmbed = document.getElementById('closeEmbed');
+    const paymentWaiting = document.getElementById('paymentWaiting');
+    const embedLinkContainer = document.getElementById('embedLinkContainer');
+
+    function updateEmbedButton() {
+      const isPaid = storage.get('ausPaymentVerified', false);
+      
+      if (isPaid) {
+        embedBtn.textContent = '✨ Get Embed Code';
+        embedBtn.disabled = false;
+        embedBtn.title = 'Get embed code';
       } else {
-        updateEmbedButton();
+        embedBtn.textContent = '⏳ Waiting for payment';
+        embedBtn.disabled = true;
+        embedBtn.title = 'Complete payment to unlock embed link';
       }
-    })();
+    }
+
+    function openEmbedModal() {
+      const isPaid = storage.get('ausPaymentVerified', false);
+      
+      if (isPaid) {
+        paymentWaiting.style.display = 'none';
+        embedLinkContainer.style.display = 'block';
+      } else {
+        paymentWaiting.style.display = 'block';
+        embedLinkContainer.style.display = 'none';
+      }
+      
+      embedModal.classList.add('active');
+    }
+
+    function closeEmbedModal() {
+      embedModal.classList.remove('active');
+    }
+
+    embedBtn.addEventListener('click', openEmbedModal);
+    closeEmbed.addEventListener('click', closeEmbedModal);
+    
+    embedModal.addEventListener('click', (e) => {
+      if (e.target === embedModal) closeEmbedModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && embedModal.classList.contains('active')) {
+        closeEmbedModal();
+      }
+    });
+
+    // Language menu
+    const languageBtn = document.getElementById('languageBtn');
+    const languageMenu = document.getElementById('languageMenu');
+    const options = document.querySelectorAll('.language-option');
+    const enterBtn = document.querySelector('.btn');
+    const footer = document.querySelector('footer');
+
+    const translations = {
+      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
+      fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
+      es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
+      pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
+      zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
+      ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
+      he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
+      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
+    };
+
+    languageBtn.addEventListener('click', () => {
+      languageMenu.classList.toggle('active');
+    });
+
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const lang = opt.dataset.lang;
+        document.documentElement.lang = lang;
+
+        if (lang === 'ar' || lang === 'he') {
+          document.body.setAttribute('dir', 'rtl');
+        } else {
+          document.body.removeAttribute('dir');
+        }
+        
+        options.forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+
+        enterBtn.textContent = translations[lang].btn;
+        footer.textContent = translations[lang].footer;
+
+        languageMenu.classList.remove('active');
+      });
+    });
+
+    document.addEventListener('click', e => {
+      if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
+        languageMenu.classList.remove('active');
+      }
+    });
+
+    // Initialize
+    updateEmbedButton();
   </script>
 </body>
 </html>
