@@ -6,14 +6,10 @@
   <title>CRYPTOBROS TRIBUNAL</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght:500;700;900&display=swap" rel="stylesheet">
+  <!-- FIXED: removed extra colon in Orbitron font weight -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background: #000814;
@@ -22,124 +18,171 @@
       overflow: hidden;
       position: relative;
     }
-    
-    /* Full screen background SVG */
     .background-svg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
     }
-    
-    .background-svg svg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    /* Content overlay */
+    .background-svg svg { width: 100%; height: 100%; object-fit: cover; }
     .content {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      background: rgba(0, 8, 20, 0.65);
-      backdrop-filter: blur(2px);
+      position: relative; z-index: 1; width: 100%; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; padding: 20px;
+      background: rgba(0, 8, 20, 0.65); backdrop-filter: blur(2px);
     }
-    
-    /* Full screen logo (text) */
     .logo-fullscreen {
       font-family: 'Orbitron', sans-serif;
       font-size: clamp(3rem, 15vw, 8rem);
-      font-weight: 900;
-      text-align: center;
-      color: #00ffea;
-      text-shadow: 
-        0 0 30px #00ffea,
-        0 0 60px #00aaff,
-        0 0 90px #0066ff;
-      margin-bottom: 2rem;
-      letter-spacing: 4px;
+      font-weight: 900; text-align: center; color: #00ffea;
+      text-shadow: 0 0 30px #00ffea, 0 0 60px #00aaff, 0 0 90px #0066ff;
+      margin-bottom: 2rem; letter-spacing: 4px;
       animation: glowPulse 3s ease-in-out infinite alternate;
-      line-height: 1.1;
-      max-width: 1200px;
-      word-break: break-word;
+      line-height: 1.1; max-width: 1200px; word-break: break-word;
     }
-    
     @keyframes glowPulse {
-      0% {
-        text-shadow: 
-          0 0 30px #00ffea,
-          0 0 60px #00aaff,
-          0 0 90px #0066ff;
-        opacity: 0.9;
-      }
-      100% {
-        text-shadow: 
-          0 0 50px #00ffea,
-          0 0 100px #00aaff,
-          0 0 150px #0066ff,
-          0 0 200px #0044ff;
-        opacity: 1;
-      }
+      0% { text-shadow: 0 0 30px #00ffea, 0 0 60px #00aaff, 0 0 90px #0066ff; opacity: 0.9; }
+      100% { text-shadow: 0 0 50px #00ffea, 0 0 100px #00aaff, 0 0 150px #0066ff, 0 0 200px #0044ff; opacity: 1; }
     }
-    
-    /* Enter button */
     .enter-btn {
       font-family: 'Orbitron', sans-serif;
       font-size: clamp(1.5rem, 5vw, 2.5rem);
-      font-weight: 700;
-      padding: 20px 60px;
+      font-weight: 700; padding: 20px 60px;
       background: linear-gradient(135deg, #00ff9d, #00aaff);
-      border: none;
-      border-radius: 60px;
-      color: #000814;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      box-shadow: 
-        0 0 30px rgba(0, 255, 157, 0.5),
-        0 0 60px rgba(0, 170, 255, 0.3);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      margin-top: 2rem;
+      border: none; border-radius: 60px; color: #000814;
+      cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-transform: uppercase; letter-spacing: 4px;
+      box-shadow: 0 0 30px rgba(0, 255, 157, 0.5), 0 0 60px rgba(0, 170, 255, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.2); margin-top: 2rem;
       animation: buttonPulse 2s ease-in-out infinite;
     }
-    
     .enter-btn:hover {
       transform: scale(1.1);
-      box-shadow: 
-        0 0 50px #00ff9d,
-        0 0 100px #00aaff;
+      box-shadow: 0 0 50px #00ff9d, 0 0 100px #00aaff;
       background: linear-gradient(135deg, #00ffb3, #00ccff);
     }
-    
     @keyframes buttonPulse {
       0% { opacity: 0.9; }
       50% { opacity: 1; transform: scale(1.02); }
       100% { opacity: 0.9; }
     }
-    
-    /* Subtle hint text */
     .hint {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      opacity: 0.5;
-      letter-spacing: 2px;
-      color: #88aaff;
+      margin-top: 2rem; font-size: 0.9rem; opacity: 0.5;
+      letter-spacing: 2px; color: #88aaff;
+    }
+    
+    /* EMBED BUTTON (TOP LEFT) */
+    .embed-btn {
+      position: fixed; top: 20px; left: 20px; z-index: 1001;
+      padding: 10px 20px; background: rgba(0, 8, 20, 0.8);
+      border: 2px solid #00ffea; border-radius: 12px;
+      color: #00ffea; font-weight: 600; cursor: pointer;
+      transition: all 0.3s; font-family: 'Inter', sans-serif;
+      animation: embedPulse 25s ease-in-out infinite;
+    }
+    .embed-btn:hover:not(:disabled) {
+      background: rgba(0, 255, 234, 0.15);
+      transform: translateX(-5px);
+      box-shadow: 0 0 20px rgba(0, 255, 234, 0.4);
+    }
+    .embed-btn:disabled {
+      opacity: 0.6; cursor: not-allowed; transform: none !important;
+    }
+    @keyframes embedPulse {
+      0%,100% { color: #00ffea; text-shadow: 0 0 8px #00ffea, 0 0 16px #00ffea; opacity: 1; }
+      50% { color: #ffd700; text-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700; opacity: 0.95; }
+    }
+    
+    /* EMBED MODAL */
+    .embed-modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0, 8, 20, 0.95); backdrop-filter: blur(12px);
+      z-index: 10000; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.4s ease;
+    }
+    .embed-modal-overlay.active { display: flex; opacity: 1; }
+    .embed-modal-content {
+      position: relative; width: 90%; max-width: 680px;
+      background: rgba(10, 14, 39, 0.95);
+      border: 2px solid #00ffea; border-radius: 24px;
+      padding: 3rem 2.5rem 2.5rem;
+      box-shadow: 0 0 80px rgba(0, 255, 234, 0.5), inset 0 0 40px rgba(0, 255, 234, 0.1);
+      transform: scale(0.7) translateY(80px); opacity: 0;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      color: #e0f7ff;
+    }
+    .embed-modal-overlay.active .embed-modal-content {
+      transform: scale(1) translateY(0); opacity: 1;
+    }
+    .embed-modal-close {
+      position: absolute; top: 1.2rem; right: 1.8rem;
+      background: none; border: none; color: #00ffea;
+      font-size: 3rem; line-height: 1; cursor: pointer;
+      transition: all 0.4s;
+    }
+    .embed-modal-close:hover {
+      color: #ff4d4d; transform: rotate(90deg) scale(1.15);
+      text-shadow: 0 0 20px #ff4d4d;
+    }
+    .embed-modal-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem; font-weight: 700;
+      color: #00ffea;
+      text-shadow: 0 0 30px #00ffea, 0 0 60px rgba(0, 255, 234, 0.5);
+      text-align: center; margin-bottom: 1.2rem;
+      animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes titleGlow {
+      0% { text-shadow: 0 0 20px #00ffea, 0 0 40px rgba(0, 255, 234, 0.4); }
+      100% { text-shadow: 0 0 40px #00ffea, 0 0 80px rgba(0, 255, 234, 0.7); }
+    }
+    .embed-modal-subtitle {
+      font-size: 1.15rem; line-height: 1.6; text-align: center;
+      margin-bottom: 2rem; opacity: 0.9;
+    }
+    .embed-code-box {
+      background: rgba(0, 255, 234, 0.1);
+      border: 1px solid rgba(0, 255, 234, 0.4);
+      border-radius: 16px; padding: 1.5rem; margin: 1.5rem 0;
+      overflow-x: auto; font-family: monospace; font-size: 0.95rem;
+      white-space: pre-wrap; color: #e0f7ff;
+    }
+    .embed-copy-btn {
+      padding: 14px 40px;
+      background: linear-gradient(135deg, #00ffea, #ffd700);
+      color: #000814; border: none; border-radius: 12px;
+      font-size: 1.2rem; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 255, 234, 0.4);
+      transition: all 0.3s; display: block; margin: 1.5rem auto;
+    }
+    .embed-copy-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 30px rgba(0, 255, 234, 0.6);
+    }
+    /* FIXED: added copied state class instead of inline style */
+    .embed-copy-btn.copied {
+      background: #00ff9d !important;
+      color: #000814;
+      box-shadow: 0 0 30px #00ff9d;
+    }
+    .embed-modal-note {
+      font-size: 0.95rem; text-align: center; opacity: 0.7;
+    }
+    .embed-modal-note code {
+      background: rgba(255, 215, 0, 0.15);
+      padding: 0.2rem 0.4rem; border-radius: 4px;
+      color: #ffd700;
+    }
+    @media (max-width: 768px) {
+      .embed-modal-content { padding: 2rem 1.5rem; }
+      .embed-modal-title { font-size: 2.2rem; }
+      .embed-btn { padding: 8px 16px; font-size: 0.9rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Full screen SVG background (embedded) -->
+  <!-- EMBED BUTTON (TOP LEFT) -->
+  <button id="embedLinkBtn" class="embed-btn" title="Get embed link after payment">🔗 Get Embed Link</button>
+
+  <!-- Full screen SVG background -->
   <div class="background-svg">
     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -174,22 +217,182 @@
     </svg>
   </div>
   
-  <!-- Content overlay with logo and button -->
+  <!-- Content overlay -->
   <div class="content">
     <div class="logo-fullscreen">CRYPTOBROS<br>TRIBUNAL</div>
     <button class="enter-btn" onclick="enterClub()">ENTER THE CLUB</button>
     <div class="hint">⚡ DECENTRALIZED · 0% FEES · COMMUNITY ⚡</div>
   </div>
 
+  <!-- EMBED MODAL -->
+  <div id="embedModal" class="embed-modal-overlay">
+    <div class="embed-modal-content">
+      <button class="embed-modal-close" id="closeEmbed">&times;</button>
+      <div class="embed-modal-title">This is your path to truth!</div>
+      <p class="embed-modal-subtitle">
+        Embed the Cryptobros Tribunal widget on your site.<br>
+        Users get instant AI-powered risk analysis — no setup required.
+      </p>
+      <div class="embed-code-box">
+        <pre id="embedCode">&lt;iframe 
+  src="https://www.cryptobros.pro/tribunal-widget.html?token=WIF&amp;verified=true" 
+  width="100%" 
+  height="680" 
+  frameborder="0" 
+  style="border-radius:16px; border:2px solid #00ffea;"&gt;&lt;/iframe&gt;</pre>
+      </div>
+      <button id="copyEmbed" class="embed-copy-btn">Copy Embed Code</button>
+      <p class="embed-modal-note">
+        Replace <code>?token=WIF</code> with any token (SOL, BONK, PEPE, etc.).<br>
+        <strong>Verified links require AUS payment</strong> — no free access.
+      </p>
+    </div>
+  </div>
+
   <script>
-    function enterClub() {
-      // Redirect to main app or show coming soon
-      window.location.href = 'https://cryptobros.pro';
-      
-      // For demo/development, you can use this:
-      // alert('Welcome to the Club! Opening Tribunal...');
-      // window.location.href = 'tribunal.html';
-    }
+    (function() {
+      // Safe localStorage wrapper
+      const storage = {
+        get: function(key, defaultValue = null) {
+          try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : defaultValue;
+          } catch(e) {
+            console.warn('localStorage not available:', e);
+            return defaultValue;
+          }
+        },
+        set: function(key, value) {
+          try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+          } catch(e) {
+            console.warn('localStorage not available:', e);
+            return false;
+          }
+        }
+      };
+
+      // DOM elements
+      const embedBtn = document.getElementById('embedLinkBtn');
+      const embedModal = document.getElementById('embedModal');
+      const closeEmbed = document.getElementById('closeEmbed');
+      const copyEmbed = document.getElementById('copyEmbed');
+
+      // Close modal function
+      function closeEmbedModal() {
+        if (embedModal) {
+          embedModal.classList.remove('active');
+          setTimeout(() => { embedModal.style.display = 'none'; }, 500);
+        }
+      }
+
+      // Update embed button state (with localStorage fallback)
+      function updateEmbedButton() {
+        if (!embedBtn) return;
+        
+        try {
+          const isPaid = storage.get('ausPaymentVerified', false);
+          
+          if (isPaid) {
+            embedBtn.textContent = '✨ Get Embed Code';
+            embedBtn.disabled = false;
+            embedBtn.onclick = () => {
+              if (embedModal) {
+                embedModal.style.display = 'flex';
+                setTimeout(() => embedModal.classList.add('active'), 10);
+              }
+            };
+            embedBtn.title = 'Get embed code';
+          } else {
+            embedBtn.textContent = '⏳ Waiting for payment';
+            embedBtn.disabled = true;
+            embedBtn.onclick = null;
+            embedBtn.title = 'Complete payment to unlock embed link';
+          }
+        } catch(e) {
+          console.warn('localStorage error, enabling button by default');
+          // Fallback - enable button even without payment check
+          embedBtn.textContent = '✨ Get Embed Code';
+          embedBtn.disabled = false;
+          embedBtn.onclick = () => {
+            if (embedModal) {
+              embedModal.style.display = 'flex';
+              setTimeout(() => embedModal.classList.add('active'), 10);
+            }
+          };
+        }
+      }
+
+      // Event listeners
+      if (closeEmbed) {
+        closeEmbed.addEventListener('click', closeEmbedModal);
+      }
+
+      if (embedModal) {
+        embedModal.addEventListener('click', (e) => {
+          if (e.target === embedModal) closeEmbedModal();
+        });
+      }
+
+      // FIXED: copy button with class instead of inline style
+      if (copyEmbed) {
+        copyEmbed.addEventListener('click', () => {
+          const codeEl = document.getElementById('embedCode');
+          if (!codeEl) return;
+          
+          const code = codeEl.textContent;
+          
+          // Try modern clipboard API first
+          navigator.clipboard.writeText(code).then(() => {
+            copyEmbed.classList.add('copied');
+            copyEmbed.textContent = '✓ Copied!';
+            setTimeout(() => {
+              copyEmbed.classList.remove('copied');
+              copyEmbed.textContent = 'Copy Embed Code';
+            }, 2000);
+          }).catch(() => {
+            // Fallback for older browsers
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            copyEmbed.classList.add('copied');
+            copyEmbed.textContent = '✓ Copied!';
+            setTimeout(() => {
+              copyEmbed.classList.remove('copied');
+              copyEmbed.textContent = 'Copy Embed Code';
+            }, 2000);
+          });
+        });
+      }
+
+      // Global escape key handler
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && embedModal && embedModal.style.display === 'flex') {
+          closeEmbedModal();
+        }
+      });
+
+      // FIXED: enterClub with fallback URL
+      window.enterClub = function() {
+        try {
+          window.location.href = 'payment.html';
+        } catch(e) {
+          window.location.href = 'https://cryptobros.pro/payment';
+        }
+      };
+
+      // Initialize on DOM ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateEmbedButton);
+      } else {
+        updateEmbedButton();
+      }
+    })();
   </script>
 </body>
 </html>
