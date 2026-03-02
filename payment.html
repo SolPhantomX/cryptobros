@@ -5,220 +5,402 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS • CHOOSE YOUR TIER</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background:#0a0c1f;
-      color:#e0f7ff;
-      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-      min-height:100vh;
-      padding:40px 20px;
-    }
-    .container {
-      max-width:1200px;
-      margin:0 auto;
-      text-align:center;
-    }
-    h1 {
-      font-size:clamp(2.5rem,5vw,3.5rem);
-      font-weight:800;
-      color:#00ff9d;
-      margin-bottom:10px;
-      text-shadow:0 0 25px rgba(0,255,157,0.6);
-    }
-    .subtitle {
-      color:#88aaff;
-      font-size:1.15rem;
-      margin-bottom:50px;
-      opacity:0.9;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* 4 карточки строго в ряд */
-    .tiers-grid {
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);          /* 4 колонки */
-      gap:24px;
-      margin-bottom:70px;
+    body {
+      background: #0a0c0f;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 60px 30px;
+      perspective: 1200px;
     }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Back button - larger */
+    .back-button {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      background: transparent;
+      border: 3px solid #2a2a2a;
+      color: #9ca3af;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      z-index: 100;
+    }
+
+    .back-button:hover {
+      border-color: #00ff9d;
+      color: #00ff9d;
+    }
+
+    h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 15px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    /* Flickering subtitle - larger */
+    .flicker-subtitle {
+      font-size: 1.8rem;
+      margin-bottom: 70px;
+      animation: flicker 3s infinite;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    @keyframes flicker {
+      0% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
+      14% { color: #d700ff; text-shadow: 0 0 10px #d700ff; }
+      28% { color: #00d4ff; text-shadow: 0 0 10px #00d4ff; }
+      42% { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
+      57% { color: #ff4d9d; text-shadow: 0 0 10px #ff4d9d; }
+      71% { color: #ffaa00; text-shadow: 0 0 10px #ffaa00; }
+      85% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
+      100% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
+    }
+
+    /* 3D Cards Grid - larger */
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 35px;
+      margin-bottom: 90px;
+      transform-style: preserve-3d;
+    }
+
     @media (max-width: 1100px) {
-      .tiers-grid {
-        grid-template-columns:repeat(2, 1fr);        /* на узких — 2×2 */
-      }
+      .tiers-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 600px) {
-      .tiers-grid {
-        grid-template-columns:1fr;                   /* мобильные — столбик */
-      }
+      .tiers-grid { grid-template-columns: 1fr; }
     }
 
+    /* 3D Card Styles - enlarged */
     .tier-card {
-      background:rgba(12,18,45,0.75);
-      border:2px solid transparent;
-      border-radius:20px;
-      padding:28px 20px;
-      backdrop-filter:blur(8px);
-      transition:all 0.35s ease;
+      background: #111316;
+      border: 3px solid #2a2a2a;
+      padding: 35px 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: float 6s ease-in-out infinite;
+      border-radius: 0;
     }
+
+    .tier-card:nth-child(1) { animation-delay: 0s; }
+    .tier-card:nth-child(2) { animation-delay: 0.5s; }
+    .tier-card:nth-child(3) { animation-delay: 1s; }
+    .tier-card:nth-child(4) { animation-delay: 1.5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+      25% { transform: translateY(-12px) rotateX(3deg) rotateY(-3deg); }
+      75% { transform: translateY(12px) rotateX(-3deg) rotateY(3deg); }
+    }
+
     .tier-card:hover {
-      transform:translateY(-10px);
-      box-shadow:0 20px 45px rgba(0,0,0,0.55);
+      transform: translateY(-20px) rotateX(6deg) rotateY(6deg) scale(1.05);
+      border-color: currentColor;
+      box-shadow: 0 30px 40px rgba(0, 0, 0, 0.6);
     }
-    .free    { border-image:linear-gradient(180deg,#00ff9d,#00cc88) 1; box-shadow:0 0 30px rgba(0,255,157,0.25); }
-    .master  { border-image:linear-gradient(180deg,#d700ff,#a500cc) 1; box-shadow:0 0 30px rgba(215,0,255,0.25); }
-    .pro     { border-image:linear-gradient(180deg,#00d4ff,#0099cc) 1; box-shadow:0 0 30px rgba(0,212,255,0.25); }
-    .premium { border-image:linear-gradient(180deg,#ffd700,#ccaa00) 1; box-shadow:0 0 40px rgba(255,215,0,0.35); }
 
-    .tier-name { font-size:2.1rem; font-weight:900; margin-bottom:8px; }
-    .tier-price { font-size:2.4rem; font-weight:900; margin-bottom:24px; }
-    .free    .tier-name,.free    .tier-price { color:#00ff9d; }
-    .master  .tier-name,.master  .tier-price { color:#d700ff; }
-    .pro     .tier-name,.pro     .tier-price { color:#00d4ff; }
-    .premium .tier-name,.premium .tier-price { color:#ffd700; }
+    .tier-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 25px;
+    }
 
-    ul { text-align:left; margin-bottom:28px; }
+    .tier-name {
+      font-size: 2.4rem;
+      font-weight: 700;
+    }
+
+    .tier-price {
+      font-size: 2.2rem;
+      font-weight: 600;
+    }
+
+    .tier-weeks {
+      font-size: 1.1rem;
+      color: #9ca3af;
+      font-weight: 400;
+      margin-left: 5px;
+    }
+
+    /* Colors */
+    .free .tier-name,
+    .free .tier-price {
+      color: #00ff9d;
+    }
+    .free .tier-card:hover {
+      border-color: #00ff9d;
+    }
+
+    .master .tier-name,
+    .master .tier-price {
+      color: #d700ff;
+    }
+    .master .tier-card:hover {
+      border-color: #d700ff;
+    }
+
+    .pro .tier-name,
+    .pro .tier-price {
+      color: #00d4ff;
+    }
+    .pro .tier-card:hover {
+      border-color: #00d4ff;
+    }
+
+    .premium .tier-name,
+    .premium .tier-price {
+      color: #ffd700;
+    }
+    .premium .tier-card:hover {
+      border-color: #ffd700;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0 0 30px 0;
+      padding: 0;
+    }
+
     li {
-      font-size:0.98rem;
-      color:#d0e8ff;
-      margin:12px 0;
-      padding-left:28px;
-      position:relative;
+      color: #d1d5db;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      padding-left: 22px;
+      position: relative;
     }
+
     li::before {
-      content:"✔";
-      position:absolute;
-      left:4px;
-      font-size:1.2rem;
-      font-weight:bold;
+      content: "•";
+      position: absolute;
+      left: 0;
+      font-size: 1.3rem;
     }
-    .free    li::before { color:#00ff9d; }
-    .master  li::before { color:#d700ff; }
-    .pro     li::before { color:#00d4ff; }
-    .premium li::before { color:#ffd700; }
+
+    .free li::before { color: #00ff9d; }
+    .master li::before { color: #d700ff; }
+    .pro li::before { color: #00d4ff; }
+    .premium li::before { color: #ffd700; }
 
     .select-btn {
-      width:100%;
-      padding:14px;
-      background:transparent;
-      border:2px solid;
-      border-radius:12px;
-      font-size:1rem;
-      font-weight:700;
-      text-transform:uppercase;
-      cursor:pointer;
-      transition:all 0.3s ease;
+      width: 100%;
+      background: transparent;
+      border: 3px solid;
+      padding: 14px 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
     }
-    .select-btn:hover {
-      transform:translateY(-4px);
-      box-shadow:0 10px 25px rgba(255,255,255,0.15);
-    }
-    .free    .select-btn { border-color:#00ff9d; color:#00ff9d; background:rgba(0,255,157,0.09); }
-    .master  .select-btn { border-color:#d700ff; color:#d700ff; background:rgba(215,0,255,0.09); }
-    .pro     .select-btn { border-color:#00d4ff; color:#00d4ff; background:rgba(0,212,255,0.09); }
-    .premium .select-btn { border-color:#ffd700; color:#ffd700; background:rgba(255,215,0,0.11); }
 
-    /* Уменьшенная панель Invite */
+    .free .select-btn {
+      border-color: #00ff9d;
+      color: #00ff9d;
+    }
+    .free .select-btn:hover {
+      background: #00ff9d;
+      color: #0a0c0f;
+    }
+
+    .master .select-btn {
+      border-color: #d700ff;
+      color: #d700ff;
+    }
+    .master .select-btn:hover {
+      background: #d700ff;
+      color: #0a0c0f;
+    }
+
+    .pro .select-btn {
+      border-color: #00d4ff;
+      color: #00d4ff;
+    }
+    .pro .select-btn:hover {
+      background: #00d4ff;
+      color: #0a0c0f;
+    }
+
+    .premium .select-btn {
+      border-color: #ffd700;
+      color: #ffd700;
+    }
+    .premium .select-btn:hover {
+      background: #ffd700;
+      color: #0a0c0f;
+    }
+
+    /* Invite section - larger */
     .invite-section {
-      background:linear-gradient(135deg,rgba(80,40,180,0.3),rgba(0,80,180,0.2));
-      border:2px solid #7755ff;
-      border-radius:18px;
-      padding:24px 28px;                    /* меньше padding */
-      max-width:500px;
-      margin:0 auto 60px;
-    }
-    .invite-title {
-      font-size:1.4rem;                     /* меньше шрифт */
-      color:#bb99ff;
-      margin-bottom:16px;
-      font-weight:700;
-    }
-    .invite-row {
-      display:flex;
-      gap:12px;
-      margin-bottom:12px;
-    }
-    .invite-input {
-      flex:1;
-      background:#111122;
-      border:1px solid #444466;
-      border-radius:10px;
-      padding:12px 16px;
-      color:#fff;
-      font-size:0.95rem;
-    }
-    .invite-btn {
-      background:linear-gradient(90deg,#6644ff,#4488ff);
-      border:none;
-      color:#fff;
-      padding:0 24px;
-      border-radius:10px;
-      font-weight:700;
-      font-size:0.95rem;
-      cursor:pointer;
-      transition:all 0.3s;
-    }
-    .invite-btn:hover {
-      transform:scale(1.04);
-      box-shadow:0 0 25px rgba(100,80,255,0.6);
-    }
-    .invite-note {
-      color:#aaccff;
-      font-size:0.85rem;
-      opacity:0.8;
+      margin: 50px 0 60px 0;
+      padding: 30px 0;
+      border-top: 3px solid #2a2a2a;
+      border-bottom: 3px solid #2a2a2a;
     }
 
-    /* Features */
+    .invite-title {
+      color: #00ff9d;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
+
+    .invite-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .invite-input {
+      flex: 1;
+      background: #111111;
+      border: 2px solid #2a2a2a;
+      padding: 16px 20px;
+      color: white;
+      font-size: 1.1rem;
+      max-width: 500px;
+    }
+
+    .invite-input:focus {
+      outline: none;
+      border-color: #00ff9d;
+    }
+
+    .invite-btn {
+      background: transparent;
+      border: 3px solid #00ff9d;
+      color: #00ff9d;
+      padding: 14px 30px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .invite-btn:hover {
+      background: #00ff9d;
+      color: #0a0c0f;
+    }
+
+    /* Features row - larger */
     .features-row {
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:40px;
-      max-width:1000px;
-      margin:0 auto 60px;
+      display: flex;
+      gap: 70px;
+      margin-top: 30px;
+      margin-bottom: 50px;
     }
+
+    .feature-col {
+      flex: 1;
+    }
+
     .feature-col h3 {
-      font-size:1.7rem;
-      font-weight:700;
-      margin-bottom:20px;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 0 0 20px 0;
     }
-    .quantum-title { color:#00d4ff; text-shadow:0 0 15px rgba(0,212,255,0.5); }
-    .risk-title    { color:#ffd700; text-shadow:0 0 15px rgba(255,215,0,0.5); }
+
+    .quantum-title { color: #00d4ff; }
+    .risk-title { color: #ffd700; }
+
+    .feature-col ul {
+      list-style: none;
+    }
+
     .feature-col li {
-      font-size:1rem;
-      color:#b8d0ff;
-      margin:10px 0;
-      padding-left:22px;
-      position:relative;
+      color: #9ca3af;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      padding-left: 20px;
+      position: relative;
     }
+
     .feature-col li::before {
-      content:"→";
-      position:absolute;
-      left:0;
-      color:#88aaff;
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: #6b7280;
+      font-size: 1.1rem;
     }
 
     .back-link {
-      color:#88aaff;
-      text-decoration:none;
-      font-size:1.1rem;
+      display: inline-block;
+      margin-top: 40px;
+      color: #6b7280;
+      text-decoration: none;
+      font-size: 1.2rem;
+      transition: color 0.2s;
     }
-    .back-link:hover { color:#00ff9d; }
 
-    @media (max-width:1000px) {
-      .features-row { grid-template-columns:1fr; gap:40px; }
+    .back-link:hover {
+      color: #00ff9d;
     }
-    @media (max-width:600px) {
-      .invite-row { flex-direction:column; }
-      .invite-btn { width:100%; padding:14px; }
+
+    @media (max-width: 800px) {
+      .features-row {
+        flex-direction: column;
+        gap: 40px;
+      }
+      .invite-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .invite-input {
+        max-width: 100%;
+      }
+      .back-button {
+        position: static;
+        margin-bottom: 30px;
+        display: inline-block;
+      }
+      h1 { font-size: 3rem; }
+      .flicker-subtitle { font-size: 1.4rem; }
+      .tier-name { font-size: 2rem; }
+      .tier-price { font-size: 1.8rem; }
     }
   </style>
 </head>
 <body>
+  <!-- Back button -->
+  <a href="index.html" class="back-button">← Back</a>
+
   <div class="container">
     <h1>CHOOSE YOUR TIER</h1>
-    <div class="subtitle">Select access level and unlock powerful features</div>
+    <div class="flicker-subtitle">Select access level and unlock powerful features</div>
 
+    <!-- 3D Cards Grid -->
     <div class="tiers-grid">
+      <!-- FREE -->
       <div class="tier-card free">
-        <div class="tier-name">FREE</div>
-        <div class="tier-price">0 AUS</div>
+        <div class="tier-header">
+          <span class="tier-name">FREE</span>
+          <span class="tier-price">0 AUS</span>
+        </div>
         <ul>
           <li>2-week limited access</li>
           <li>Basic token analysis</li>
@@ -227,9 +409,13 @@
         </ul>
         <button class="select-btn" onclick="selectTier('FREE')">SELECT</button>
       </div>
+
+      <!-- MASTER -->
       <div class="tier-card master">
-        <div class="tier-name">MASTER</div>
-        <div class="tier-price">500 AUS</div>
+        <div class="tier-header">
+          <span class="tier-name">MASTER</span>
+          <span class="tier-price">500 AUS</span>
+        </div>
         <ul>
           <li>Unlimited access</li>
           <li>Full token analysis</li>
@@ -238,9 +424,13 @@
         </ul>
         <button class="select-btn" onclick="selectTier('MASTER')">SELECT</button>
       </div>
+
+      <!-- PRO -->
       <div class="tier-card pro">
-        <div class="tier-name">PRO</div>
-        <div class="tier-price">2,000 AUS</div>
+        <div class="tier-header">
+          <span class="tier-name">PRO</span>
+          <span class="tier-price">2,000 AUS</span>
+        </div>
         <ul>
           <li>Unlimited access</li>
           <li>Advanced analytics</li>
@@ -249,9 +439,13 @@
         </ul>
         <button class="select-btn" onclick="selectTier('PRO')">SELECT</button>
       </div>
+
+      <!-- PREMIUM -->
       <div class="tier-card premium">
-        <div class="tier-name">PREMIUM</div>
-        <div class="tier-price">10,000 AUS</div>
+        <div class="tier-header">
+          <span class="tier-name">PREMIUM</span>
+          <span class="tier-price">10,000 AUS</span>
+        </div>
         <ul>
           <li>Full access + governance rights</li>
           <li>All features unlocked</li>
@@ -262,15 +456,16 @@
       </div>
     </div>
 
+    <!-- Invite Section -->
     <div class="invite-section">
       <div class="invite-title">Have an Invite Code?</div>
       <div class="invite-row">
-        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code">
+        <input type="text" class="invite-input" id="inviteCode" placeholder="e.g. PRE-5421, MST-1234, PRO-9012">
         <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
       </div>
-      <div class="invite-note">Enter your invite code</div>
     </div>
 
+    <!-- Features Row -->
     <div class="features-row">
       <div class="feature-col">
         <h3 class="quantum-title">Quantum Contract Scan</h3>
@@ -296,19 +491,32 @@
 
   <script>
     function selectTier(tier) {
-      localStorage.setItem('userTier', tier);
-      localStorage.setItem('tierActivatedAt', Date.now().toString());
-      alert(`✅ ${tier} activated!`);
-      window.location.href = 'profile.html';
+      if (tier === 'FREE') {
+        alert('FREE tier selected - 2-week access activated!');
+        return;
+      }
+      alert(tier + ' tier selected - ' + (tier === 'MASTER' ? '500' : tier === 'PRO' ? '2,000' : '10,000') + ' AUS payment required');
     }
 
     function activateInvite() {
-      const code = document.getElementById('inviteCode').value.trim().toUpperCase();
-      if (!code) return alert('Введите код');
-      if (code.startsWith('PRE-')) return selectTier('PREMIUM');
-      if (code.startsWith('MST-')) return selectTier('MASTER');
-      if (code.startsWith('PRO-')) return selectTier('PRO');
-      alert('Invalid invite code');
+      const code = document.getElementById('inviteCode').value.trim();
+      if (!code) {
+        alert('Please enter an invite code');
+        return;
+      }
+      
+      if (code.startsWith('PRE-')) {
+        alert('PREMIUM invite activated!');
+        selectTier('PREMIUM');
+      } else if (code.startsWith('MST-')) {
+        alert('MASTER invite activated!');
+        selectTier('MASTER');
+      } else if (code.startsWith('PRO-')) {
+        alert('PRO invite activated!');
+        selectTier('PRO');
+      } else {
+        alert('Invalid invite code - use PRE-5421, MST-1234, or PRO-9012');
+      }
     }
   </script>
 </body>
