@@ -1,531 +1,475 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>CRYPTOBROS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRYPTOBROS • Choose Your Tier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* CSS variables for themes */
-    :root {
-      --bg-color: #000;
-      --text-color: #fff;
-      --btn-gradient: linear-gradient(45deg, #003366, #005580);
-      --btn-shadow: rgba(0, 85, 128, 0.8);
-      --modal-bg: rgba(0, 0, 0, 0.95);
-      --embed-btn-bg: rgba(0, 20, 40, 0.8);
-      --footer-color: #fff;
-    }
-
-    [data-theme="light"] {
-      --bg-color: #f0f8ff;
-      --text-color: #003366;
-      --btn-gradient: linear-gradient(45deg, #66ccff, #3399ff);
-      --btn-shadow: rgba(51, 153, 255, 0.8);
-      --modal-bg: rgba(255, 255, 255, 0.95);
-      --embed-btn-bg: rgba(255, 255, 255, 0.9);
-      --footer-color: #0066cc;
-    }
-
-    body {
+    * {
       margin: 0;
       padding: 0;
-      background: var(--bg-color);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      position: relative;
-      font-family: 'Quicksand', sans-serif;
-      transition: background-color 0.5s ease;
-    }
-    .bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: url('logo.jpg') center/cover no-repeat;
-      z-index: -1;
-      filter: brightness(0.9) contrast(1.1);
-      transition: filter 0.5s ease;
-    }
-    [data-theme="light"] .bg {
-      filter: brightness(1.1) contrast(1) sepia(0.2);
+      box-sizing: border-box;
     }
     
-    .btn {
-      background: var(--btn-gradient);
-      color: #fff;
-      border: none;
-      padding: 1.4rem 3.6rem;
-      font-size: 1.45rem;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      font-family: 'Quicksand', sans-serif;
-      letter-spacing: 1px;
-      box-shadow: 0 0 25px var(--btn-shadow);
-      margin-bottom: 80px;
-      transition: all 0.3s ease;
-    }
-    .btn:hover {
-      transform: scale(1.07);
-      box-shadow: 0 0 35px #0066cc;
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000000;
+      color: #ffffff;
+      line-height: 1.5;
+      padding: 30px 20px;
     }
     
-    footer {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      text-align: center;
-      font-family: 'Quicksand', sans-serif;
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 32px;
       font-weight: 700;
-      animation: colorChange 15s infinite;
-      color: var(--footer-color);
+      color: white;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
     }
     
-    @keyframes colorChange {
-      0% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
-      16.67% { color: #ff00ff; text-shadow: 0 0 10px #ff00ff; }
-      33.33% { color: #00ffff; text-shadow: 0 0 10px #00ffff; }
-      50% { color: #ff9d00; text-shadow: 0 0 10px #ff9d00; }
-      66.67% { color: #9d00ff; text-shadow: 0 0 10px #9d00ff; }
-      83.33% { color: #ffff00; text-shadow: 0 0 10px #ffff00; }
-      100% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
+    .subtitle {
+      color: #a0a0a0;
+      font-size: 16px;
+      margin-bottom: 40px;
+      font-weight: 400;
     }
-
-    /* Top buttons container */
-    .top-buttons {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      right: 20px;
+    
+    .tier {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    
+    .tier:last-of-type {
+      border-bottom: 1px solid #2a2a2a;
+      margin-bottom: 32px;
+    }
+    
+    .tier-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      pointer-events: none;
+      align-items: baseline;
+      margin-bottom: 16px;
     }
     
-    .top-buttons > * {
-      pointer-events: auto;
+    .tier-name {
+      font-size: 28px;
+      font-weight: 700;
     }
     
-    .left-group, .right-group {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    /* Embed button */
-    .embed-btn {
-      background: var(--embed-btn-bg);
-      border: 2px solid #00ffea;
-      border-radius: 12px;
-      padding: 0.8rem 1.6rem;
-      color: #00ffea;
+    .tier-price {
+      font-size: 24px;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-family: 'Quicksand', sans-serif;
-      box-shadow: 0 0 15px rgba(0, 255, 234, 0.3);
-      backdrop-filter: blur(5px);
-    }
-    .embed-btn:hover:not(:disabled) {
-      background: rgba(0, 255, 234, 0.15);
-      transform: translateX(-5px);
-      box-shadow: 0 0 20px rgba(0, 255, 234, 0.6);
-    }
-    .embed-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      border-color: #888;
-      color: #888;
-    }
-
-    /* Theme toggle button */
-    .theme-btn {
-      background: var(--embed-btn-bg);
-      border: 2px solid #ffd700;
-      border-radius: 12px;
-      padding: 0.8rem 1.6rem;
-      color: #ffd700;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-family: 'Quicksand', sans-serif;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-      backdrop-filter: blur(5px);
-    }
-    .theme-btn:hover {
-      background: rgba(255, 215, 0, 0.15);
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-    }
-
-    /* Language button */
-    .language-btn {
-      background: linear-gradient(45deg, #66ffff, #00ff9d);
-      color: #000;
-      border: none;
-      padding: 0.8rem 1.6rem;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 20px;
-      cursor: pointer;
-      font-family: 'Quicksand', sans-serif;
-      box-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
-    }
-    .language-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #66ffff;
     }
     
-    .language-menu {
-      position: absolute;
-      top: 60px;
-      right: 0;
-      background: rgba(0, 0, 0, 0.9);
-      border-radius: 10px;
-      padding: 10px 0;
-      display: none;
-      z-index: 101;
-      box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
-      min-width: 180px;
+    .tier-duration {
+      font-size: 16px;
+      font-weight: 400;
+      color: #a0a0a0;
+      margin-left: 5px;
     }
-    .language-menu.active { display: block; }
-    .language-option {
-      padding: 12px 25px;
-      color: #00ff9d;
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-align: right;
+    
+    .features {
+      list-style: none;
+      margin-bottom: 20px;
     }
-    .language-option:hover {
-      background: rgba(102, 255, 255, 0.2);
-      color: #fff;
-    }
-    .language-option.active {
-      background: rgba(102, 255, 255, 0.3);
-      color: #fff;
-    }
-    body[dir="rtl"] .language-menu {
-      right: auto;
-      left: 0;
-      text-align: left;
-    }
-    body[dir="rtl"] .language-option {
-      text-align: left;
-    }
-
-    /* Modal styles */
-    .embed-modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--modal-bg);
-      backdrop-filter: blur(10px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    .embed-modal-overlay.active {
-      display: flex;
-    }
-    .embed-modal-content {
-      background: var(--embed-btn-bg);
-      border: 2px solid #00ffea;
-      border-radius: 24px;
-      padding: 3rem;
-      max-width: 600px;
-      width: 90%;
+    
+    .features li {
+      color: #d0d0d0;
+      font-size: 16px;
+      margin-bottom: 6px;
+      padding-left: 18px;
       position: relative;
-      box-shadow: 0 0 60px rgba(0, 255, 234, 0.5);
-      text-align: center;
-      animation: modalGlow 2s ease-in-out infinite alternate;
-      color: var(--text-color);
     }
-    @keyframes modalGlow {
-      0% { box-shadow: 0 0 40px rgba(0, 255, 234, 0.4); }
-      100% { box-shadow: 0 0 80px rgba(0, 255, 234, 0.8); }
-    }
-    .embed-modal-close {
+    
+    .features li::before {
+      content: "•";
       position: absolute;
-      top: 1rem;
-      right: 1.5rem;
-      background: none;
-      border: none;
-      color: #00ffea;
-      font-size: 2.5rem;
+      left: 0;
+      color: #00ff9d;
+      font-size: 18px;
+    }
+    
+    .select-btn {
+      background: transparent;
+      border: 2px solid;
+      padding: 8px 32px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
     }
-    .embed-modal-close:hover {
-      color: #ff4d4d;
-      transform: rotate(90deg);
+    
+    .select-btn:hover {
+      background: currentColor;
+      color: black;
     }
-    .embed-modal-title {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 2.5rem;
-      color: #00ffea;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 20px #00ffea;
+    
+    /* Colors exactly as on screenshot */
+    .free .tier-name,
+    .free .tier-price,
+    .free .select-btn {
+      color: #00ff9d;
     }
-    .embed-modal-text {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      line-height: 1.6;
+    .free .select-btn {
+      border-color: #00ff9d;
     }
-    .embed-modal-link {
-      display: inline-block;
-      background: linear-gradient(45deg, #00ffea, #00aaff);
-      color: #000;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1.1rem;
-      margin: 1rem 0;
-      transition: all 0.3s;
-      border: none;
-      cursor: pointer;
+    .free .select-btn:hover {
+      background: #00ff9d;
     }
-    .embed-modal-link:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 30px #00ffea;
+    
+    .master .tier-name,
+    .master .tier-price,
+    .master .select-btn {
+      color: #d700ff;
     }
-    .payment-waiting {
-      color: #ffaa00;
-      font-size: 1.1rem;
-      margin: 1rem 0;
-      padding: 1rem;
-      border: 1px dashed #ffaa00;
-      border-radius: 8px;
+    .master .select-btn {
+      border-color: #d700ff;
     }
-    .embed-modal-note {
-      color: #888;
-      font-size: 0.9rem;
-      margin-top: 1rem;
+    .master .select-btn:hover {
+      background: #d700ff;
     }
-    .embed-modal-note code {
-      background: rgba(0, 255, 234, 0.1);
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
+    
+    .pro .tier-name,
+    .pro .tier-price,
+    .pro .select-btn {
+      color: #00d4ff;
+    }
+    .pro .select-btn {
+      border-color: #00d4ff;
+    }
+    .pro .select-btn:hover {
+      background: #00d4ff;
+    }
+    
+    .premium .tier-name,
+    .premium .tier-price,
+    .premium .select-btn {
       color: #ffd700;
+    }
+    .premium .select-btn {
+      border-color: #ffd700;
+    }
+    .premium .select-btn:hover {
+      background: #ffd700;
+    }
+    
+    .invite-section {
+      margin: 32px 0 32px 0;
+      padding: 24px 0 24px 0;
+      border-top: 2px solid #2a2a2a;
+      border-bottom: 2px solid #2a2a2a;
+    }
+    
+    .invite-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #00ff9d;
+      margin-bottom: 16px;
+    }
+    
+    .invite-input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    
+    .invite-input {
+      flex: 1;
+      background: #111111;
+      border: 1px solid #333333;
+      padding: 12px 16px;
+      color: white;
+      font-size: 14px;
+    }
+    
+    .invite-input:focus {
+      outline: none;
+      border-color: #00ff9d;
+    }
+    
+    .invite-btn {
+      background: transparent;
+      border: 2px solid #00ff9d;
+      color: #00ff9d;
+      padding: 10px 28px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    
+    .invite-btn:hover {
+      background: #00ff9d;
+      color: black;
+    }
+    
+    .invite-examples {
+      color: #666666;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    
+    .features-row {
+      display: flex;
+      gap: 40px;
+      margin-top: 32px;
+      padding-bottom: 20px;
+    }
+    
+    .feature-col {
+      flex: 1;
+    }
+    
+    .feature-col h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .feature-col ul {
+      list-style: none;
+    }
+    
+    .feature-col li {
+      color: #a0a0a0;
+      font-size: 14px;
+      margin-bottom: 8px;
+      padding-left: 15px;
+      position: relative;
+    }
+    
+    .feature-col li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: #666666;
+    }
+    
+    .quantum-title {
+      color: #00d4ff;
+    }
+    
+    .risk-title {
+      color: #ffd700;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-top: 40px;
+      color: #666666;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    
+    .back-link:hover {
+      color: #00ff9d;
+    }
+    
+    hr {
+      border: none;
+      border-top: 1px solid #2a2a2a;
+      margin: 20px 0;
+    }
+    
+    @media (max-width: 600px) {
+      .tier-header {
+        flex-direction: column;
+        gap: 4px;
+      }
+      
+      .invite-input-group {
+        flex-direction: column;
+      }
+      
+      .features-row {
+        flex-direction: column;
+        gap: 24px;
+      }
     }
   </style>
 </head>
-<body data-theme="dark">
-  <div class="bg"></div>
+<body>
+  <div class="container">
+    <!-- Header exactly as on screenshot -->
+    <h1>CHOOSE YOUR TIER</h1>
+    <div class="subtitle">Select access level and unlock powerful features</div>
 
-  <!-- Top buttons container -->
-  <div class="top-buttons">
-    <div class="left-group">
-      <button id="embedBtn" class="embed-btn" title="Get embed link after payment">🔗 Get Embed Link</button>
+    <!-- FREE TIER -->
+    <div class="tier free">
+      <div class="tier-header">
+        <span class="tier-name">FREE</span>
+        <span class="tier-price">0 AUS <span class="tier-duration">(2 weeks)</span></span>
+      </div>
+      <ul class="features">
+        <li>2-week limited access</li>
+        <li>Basic token analysis</li>
+        <li>Standard verdict only</li>
+        <li>No premium features</li>
+      </ul>
+      <button class="select-btn" onclick="selectTier('FREE', 0)">SELECT</button>
     </div>
-    <div class="right-group">
-      <button id="themeToggle" class="theme-btn">🌙 Night mode</button>
-      <div style="position: relative;">
-        <button class="language-btn" id="languageBtn">LANGUAGE</button>
-        <div class="language-menu" id="languageMenu">
-          <div class="language-option active" data-lang="en">English</div>
-          <div class="language-option" data-lang="fr">Français</div>
-          <div class="language-option" data-lang="es">Español</div>
-          <div class="language-option" data-lang="pt">Português</div>
-          <div class="language-option" data-lang="zh">简体中文</div>
-          <div class="language-option" data-lang="ar">العربية</div>
-          <div class="language-option" data-lang="he">עברית</div>
-          <div class="language-option" data-lang="ru">Русский</div>
-        </div>
+
+    <!-- MASTER TIER -->
+    <div class="tier master">
+      <div class="tier-header">
+        <span class="tier-name">MASTER</span>
+        <span class="tier-price">500 AUS <span class="tier-duration">(2 weeks)</span></span>
+      </div>
+      <ul class="features">
+        <li>Unlimited access</li>
+        <li>Full token analysis</li>
+        <li>Standard verdict + details</li>
+        <li>Save verdicts to history</li>
+      </ul>
+      <button class="select-btn" onclick="selectTier('MASTER', 500)">SELECT</button>
+    </div>
+
+    <!-- PRO TIER -->
+    <div class="tier pro">
+      <div class="tier-header">
+        <span class="tier-name">PRO</span>
+        <span class="tier-price">2,000 AUS <span class="tier-duration">(2 weeks)</span></span>
+      </div>
+      <ul class="features">
+        <li>Unlimited access</li>
+        <li>Advanced analytics</li>
+        <li>Advanced metrics (Pro)</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="select-btn" onclick="selectTier('PRO', 2000)">SELECT</button>
+    </div>
+
+    <!-- PREMIUM TIER -->
+    <div class="tier premium">
+      <div class="tier-header">
+        <span class="tier-name">PREMIUM</span>
+        <span class="tier-price">10,000 AUS <span class="tier-duration">(2 weeks)</span></span>
+      </div>
+      <ul class="features">
+        <li>Full access + governance rights</li>
+        <li>All features unlocked</li>
+        <li>Quantum Contract Scan</li>
+        <li>Advanced Risk Forecast</li>
+      </ul>
+      <button class="select-btn" onclick="selectTier('PREMIUM', 10000)">SELECT</button>
+    </div>
+
+    <!-- INVITE SECTION - exactly as on screenshot -->
+    <div class="invite-section">
+      <div class="invite-title">1. Have an invite Code?</div>
+      <div class="invite-input-group">
+        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
+        <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
+      </div>
+      <div class="invite-examples">Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)</div>
+    </div>
+
+    <!-- FEATURES SECTION - exactly as on screenshot -->
+    <div class="features-row">
+      <!-- Quantum Contract Scan -->
+      <div class="feature-col">
+        <h3 class="quantum-title">Quantum Contract Scan</h3>
+        <ul>
+          <li>Detailed analysis of your crypto assets</li>
+          <li>Tax analysis - Ownership verification</li>
+          <li>Liquidity lock check</li>
+        </ul>
+      </div>
+
+      <!-- Advanced Risk Forecast -->
+      <div class="feature-col">
+        <h3 class="risk-title">Advanced Risk Forecast</h3>
+        <ul>
+          <li>24h volatility prediction</li>
+          <li>Whales movement alerts</li>
+          <li>Pump/dump pattern detection</li>
+          <li>Market sentiment analysis</li>
+        </ul>
       </div>
     </div>
-  </div>
 
-  <!-- Main button -->
-  <button class="btn" onclick="location.href='payment.html'">Enter the Club</button>
-  
-  <footer>Cryptobros 2026 ©</footer>
-
-  <!-- Embed Modal -->
-  <div id="embedModal" class="embed-modal-overlay">
-    <div class="embed-modal-content">
-      <button class="embed-modal-close" id="closeEmbed">&times;</button>
-      <div class="embed-modal-title">🚀 This is your path to truth!</div>
-      <div class="embed-modal-text">
-        Embed the Cryptobros Tribunal widget on your site.<br>
-        Users get instant AI-powered risk analysis — no setup required.
-      </div>
-      
-      <div id="paymentWaiting" class="payment-waiting" style="display: none;">
-        ⏳ Waiting for payment confirmation...<br>
-        <small>Complete payment to unlock embed link</small>
-      </div>
-
-      <div id="embedLinkContainer" style="display: none;">
-        <a href="https://www.cryptobros.pro/tribunal-widget.html?token=WIF&verified=true" 
-           target="_blank" 
-           class="embed-modal-link">
-           🔗 Get Your Embed Code
-        </a>
-        <div class="embed-modal-note">
-          Replace <code>?token=WIF</code> with any token (SOL, BONK, PEPE, etc.)
-        </div>
-      </div>
-
-      <div class="embed-modal-note">
-        <strong>Verified links require AUS payment</strong> — no free access.
-      </div>
-    </div>
+    <!-- Back link -->
+    <a href="index.html" class="back-link">← Back to Home</a>
   </div>
 
   <script>
-    // Safe localStorage wrapper
-    const storage = {
-      get: function(key, defaultValue = null) {
-        try {
-          const item = localStorage.getItem(key);
-          return item ? JSON.parse(item) : defaultValue;
-        } catch(e) {
-          console.warn('localStorage error:', e);
-          return defaultValue;
-        }
-      },
-      set: function(key, value) {
-        try {
-          localStorage.setItem(key, JSON.stringify(value));
-          return true;
-        } catch(e) {
-          console.warn('localStorage error:', e);
-          return false;
-        }
+    // Tier selection function
+    window.selectTier = function(tier, price) {
+      if (price === 0) {
+        activateTier(tier);
+        return;
       }
+      
+      // Check if wallet is connected
+      const wallet = localStorage.getItem('walletAddress');
+      if (!wallet) {
+        window.location.href = 'connect-wallet.html?returnTo=payment.html';
+        return;
+      }
+      
+      // Here you would process payment
+      alert(`Selected ${tier} tier for ${price} AUS. Proceeding to payment...`);
+      // window.location.href = `payment-process.html?tier=${tier}&amount=${price}`;
     };
 
-    // Theme toggle functionality
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-
-    function setTheme(theme) {
-      body.setAttribute('data-theme', theme);
-      themeToggle.textContent = theme === 'dark' ? '🌙 Night mode' : '☀️ Day mode';
-      storage.set('theme', theme);
+    // Activate free tier
+    function activateTier(tier) {
+      localStorage.setItem('userTier', tier);
+      localStorage.setItem('tierActivatedAt', Date.now().toString());
+      alert(`✅ ${tier} tier activated!`);
+      window.location.href = 'profile.html';
     }
 
-    // Load saved theme
-    const savedTheme = storage.get('theme', 'dark');
-    setTheme(savedTheme);
-
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = body.getAttribute('data-theme');
-      setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-    });
-
-    // Embed button logic
-    const embedBtn = document.getElementById('embedBtn');
-    const embedModal = document.getElementById('embedModal');
-    const closeEmbed = document.getElementById('closeEmbed');
-    const paymentWaiting = document.getElementById('paymentWaiting');
-    const embedLinkContainer = document.getElementById('embedLinkContainer');
-
-    function updateEmbedButton() {
-      const isPaid = storage.get('ausPaymentVerified', false);
-      
-      if (isPaid) {
-        embedBtn.textContent = '✨ Get Embed Code';
-        embedBtn.disabled = false;
-        embedBtn.title = 'Get embed code';
-      } else {
-        embedBtn.textContent = '⏳ Waiting for payment';
-        embedBtn.disabled = true;
-        embedBtn.title = 'Complete payment to unlock embed link';
-      }
-    }
-
-    function openEmbedModal() {
-      const isPaid = storage.get('ausPaymentVerified', false);
-      
-      if (isPaid) {
-        paymentWaiting.style.display = 'none';
-        embedLinkContainer.style.display = 'block';
-      } else {
-        paymentWaiting.style.display = 'block';
-        embedLinkContainer.style.display = 'none';
+    // Invite code activation
+    window.activateInvite = function() {
+      const code = document.getElementById('inviteCode').value.trim();
+      if (!code) {
+        alert('Please enter an invite code');
+        return;
       }
       
-      embedModal.classList.add('active');
-    }
-
-    function closeEmbedModal() {
-      embedModal.classList.remove('active');
-    }
-
-    embedBtn.addEventListener('click', openEmbedModal);
-    closeEmbed.addEventListener('click', closeEmbedModal);
-    
-    embedModal.addEventListener('click', (e) => {
-      if (e.target === embedModal) closeEmbedModal();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && embedModal.classList.contains('active')) {
-        closeEmbedModal();
-      }
-    });
-
-    // Language menu
-    const languageBtn = document.getElementById('languageBtn');
-    const languageMenu = document.getElementById('languageMenu');
-    const options = document.querySelectorAll('.language-option');
-    const enterBtn = document.querySelector('.btn');
-    const footer = document.querySelector('footer');
-
-    const translations = {
-      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
-      fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
-      es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
-      pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
-      zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
-      ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
-      he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
-      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
-    };
-
-    languageBtn.addEventListener('click', () => {
-      languageMenu.classList.toggle('active');
-    });
-
-    options.forEach(opt => {
-      opt.addEventListener('click', () => {
-        const lang = opt.dataset.lang;
-        document.documentElement.lang = lang;
-
-        if (lang === 'ar' || lang === 'he') {
-          document.body.setAttribute('dir', 'rtl');
-        } else {
-          document.body.removeAttribute('dir');
-        }
+      // Validate invite code format
+      const validPrefixes = ['PRE-', 'MST-', 'PRO-'];
+      const isValid = validPrefixes.some(prefix => code.startsWith(prefix));
+      
+      if (isValid && code.length >= 8) {
+        // Extract tier from prefix
+        const prefix = code.substring(0, 4);
+        let tier = 'MASTER';
+        if (prefix === 'PRE-') tier = 'PREMIUM';
+        else if (prefix === 'PRO-') tier = 'PRO';
         
-        options.forEach(o => o.classList.remove('active'));
-        opt.classList.add('active');
+        activateTier(tier);
+      } else {
+        alert('❌ Invalid invite code. Format should be: PRE-5421, MST-1234, PRO-9012');
+      }
+    };
 
-        enterBtn.textContent = translations[lang].btn;
-        footer.textContent = translations[lang].footer;
-
-        languageMenu.classList.remove('active');
-      });
-    });
-
-    document.addEventListener('click', e => {
-      if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
-        languageMenu.classList.remove('active');
+    // Auto-check wallet on load
+    window.addEventListener('load', function() {
+      const wallet = localStorage.getItem('walletAddress');
+      const tier = localStorage.getItem('userTier');
+      
+      if (wallet) {
+        console.log('Wallet connected:', wallet.slice(0,6) + '...');
+      }
+      
+      if (tier) {
+        console.log('Current tier:', tier);
       }
     });
-
-    // Initialize
-    updateEmbedButton();
   </script>
 </body>
 </html>
