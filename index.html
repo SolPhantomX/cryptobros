@@ -9,93 +9,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg-color: #000;
-      --gradient-start: #00052a;
-      --gradient-end: #001133;
-      --text-color: #e0f7ff;
-      --accent: #00ff9d;
-      --accent-glow: rgba(0,255,157,0.7);
-      --btn-gradient: linear-gradient(45deg, #003366, #005580);
-      --btn-hover: #0066cc;
-      --btn-shadow: rgba(0, 85, 128, 0.8);
-    }
-
-    [data-theme="light"] {
-      --bg-color: #f0f4ff;
-      --gradient-start: #e0eaff;
-      --gradient-end: #d0e0ff;
-      --text-color: #0a0c1f;
-      --accent: #0066cc;
-      --accent-glow: rgba(0,102,204,0.5);
-      --btn-gradient: linear-gradient(45deg, #66aaff, #88ccff);
-      --btn-hover: #0055aa;
-      --btn-shadow: rgba(102,170,255,0.6);
-    }
-
     body {
       margin: 0;
       padding: 0;
-      background: var(--bg-color);
+      background: #000;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       position: relative;
-      color: var(--text-color);
       font-family: 'Quicksand', sans-serif;
-      transition: background 0.4s ease, color 0.4s ease;
     }
 
     .bg {
       position: fixed;
-      inset: 0;
-      background: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end)),
-                  url('./logo.jpg') center/cover no-repeat;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('logo.jpg') center/cover no-repeat;
       z-index: -1;
       filter: brightness(0.9);
-      transition: filter 0.4s ease;
-    }
-
-    [data-theme="light"] .bg {
-      filter: brightness(1.05);
     }
 
     h1 {
-      color: var(--accent);
-      font-size: clamp(4rem, 12vw, 8rem);
+      color: #00ff9d;
+      font-size: clamp(4.5rem, 12vw, 8rem);
+      font-weight: 700;
       margin: 0 0 4rem;
-      text-shadow: 0 0 40px var(--accent-glow);
-      letter-spacing: 2px;
-    }
-
-    .btn-container {
-      margin-top: auto;
-      padding-bottom: 100px;
-      display: flex;
-      justify-content: center;
-      width: 100%;
+      text-shadow: 0 0 40px rgba(0,255,157,0.8);
+      letter-spacing: 3px;
+      text-align: center;
     }
 
     .btn {
-      background: var(--btn-gradient);
-      color: white;
+      background: linear-gradient(45deg, #003366, #005580);
+      color: #fff;
       border: none;
-      padding: 1.6rem 4.5rem;
-      font-size: 1.8rem;
+      padding: 1.4rem 4rem;
+      font-size: 1.6rem;
       font-weight: bold;
-      border-radius: 16px;
+      border-radius: 12px;
       cursor: pointer;
       letter-spacing: 1.5px;
-      box-shadow: 0 0 30px var(--btn-shadow);
-      text-decoration: none;
+      box-shadow: 0 0 30px rgba(0, 85, 128, 0.9);
+      margin-bottom: 120px; /* большой отступ снизу */
       transition: all 0.3s ease;
     }
 
     .btn:hover {
       transform: scale(1.08);
-      box-shadow: 0 0 45px var(--btn-hover);
+      box-shadow: 0 0 45px #0066cc;
     }
 
     footer {
@@ -104,40 +67,19 @@
       width: 100%;
       text-align: center;
       font-weight: 700;
-      animation: colorChange 45s infinite;
+      animation: colorChange 15s infinite;
     }
 
     @keyframes colorChange {
-      0%, 15% { color: var(--accent); }
-      20%, 35% { color: #ff00ff; }
-      40%, 55% { color: #00ffff; }
-      60%, 75% { color: #ff9d00; }
-      80%, 95% { color: #9d00ff; }
-      100% { color: var(--accent); }
+      0% { color: #00ff9d; }
+      16.67% { color: #ff00ff; }
+      33.33% { color: #00ffff; }
+      50% { color: #ff9d00; }
+      66.67% { color: #9d00ff; }
+      83.33% { color: #ffff00; }
+      100% { color: #00ff9d; }
     }
 
-    /* Theme toggle */
-    .theme-toggle {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 30px;
-      cursor: pointer;
-      z-index: 100;
-      transition: all 0.3s ease;
-    }
-    .theme-toggle:hover {
-      background: var(--accent);
-      color: #000;
-      box-shadow: 0 0 15px var(--accent-glow);
-    }
-
-    /* Language (оставил минимум, можно расширить) */
     .language-btn {
       position: absolute;
       top: 20px;
@@ -154,85 +96,153 @@
       z-index: 100;
       transition: all 0.3s ease;
     }
+
     .language-btn:hover {
       transform: scale(1.05);
       box-shadow: 0 0 20px #66ffff;
     }
 
+    .language-menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      border-radius: 10px;
+      padding: 10px 0;
+      display: none;
+      z-index: 101;
+      box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
+      min-width: 180px;
+    }
+
+    .language-menu.active {
+      display: block;
+    }
+
+    .language-option {
+      padding: 12px 25px;
+      color: #00ff9d;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: right;
+    }
+
+    .language-option:hover {
+      background: rgba(102, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .language-option.active {
+      background: rgba(102, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    body[dir="rtl"] .language-btn { right: auto; left: 20px; }
+    body[dir="rtl"] .language-menu { right: auto; left: 20px; text-align: left; }
+    body[dir="rtl"] .language-option { text-align: left; }
+
     @media (max-width: 600px) {
-      h1 { font-size: clamp(3rem, 15vw, 5rem); margin-bottom: 3rem; }
-      .btn { padding: 1.2rem 3rem; font-size: 1.4rem; }
-      .theme-toggle, .language-btn { top: 12px; padding: 0.6rem 1rem; font-size: 0.9rem; }
+      h1 { font-size: clamp(3.5rem, 15vw, 6rem); margin-bottom: 3rem; }
+      .btn { padding: 1.2rem 3rem; font-size: 1.4rem; margin-bottom: 100px; }
+      .language-btn { top: 15px; right: 15px; padding: 0.7rem 1.4rem; font-size: 0.95rem; }
     }
   </style>
 </head>
 <body>
-
   <div class="bg"></div>
 
-  <!-- Theme Toggle -->
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">🌙</button>
-
-  <!-- Language Button -->
+  <!-- Language Button and Menu -->
   <button class="language-btn" id="languageBtn" aria-label="Select language" aria-expanded="false">LANGUAGE</button>
-
-  <div class="content">
-    <h1>CRYPTOBROS</h1>
-    <div class="btn-container">
-      <a href="payment.html" class="btn" id="enterBtn">Enter the Club</a>
-    </div>
+  <div class="language-menu" id="languageMenu">
+    <div class="language-option active" data-lang="en">English</div>
+    <div class="language-option" data-lang="fr">Français</div>
+    <div class="language-option" data-lang="es">Español</div>
+    <div class="language-option" data-lang="pt">Português</div>
+    <div class="language-option" data-lang="zh">简体中文</div>
+    <div class="language-option" data-lang="ar">العربية</div>
+    <div class="language-option" data-lang="he">עברית</div>
+    <div class="language-option" data-lang="ru">Русский</div>
   </div>
+
+  <!-- Большой заголовок CRYPTOBROS -->
+  <h1>CRYPTOBROS</h1>
+
+  <!-- Кнопка Enter the Club внизу по центру -->
+  <a href="onboarding.html" class="btn" id="enterBtn">Enter the Club</a>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
-    // === THEME HANDLING (влияет на все страницы) ===
-    const htmlEl = document.documentElement;
-    const themeBtn = document.getElementById('themeToggle');
-
-    function setTheme(theme) {
-      htmlEl.setAttribute('data-theme', theme);
-      themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
-      localStorage.setItem('theme', theme);
-    }
-
-    const savedTheme = localStorage.getItem('theme') ||
-                       (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    setTheme(savedTheme);
-
-    themeBtn.addEventListener('click', () => {
-      const newTheme = htmlEl.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      setTheme(newTheme);
-    });
-
-    // === LANGUAGE (минимум, можно расширить) ===
+    // TRANSLATIONS
     const translations = {
       en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
+      fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
+      es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
+      pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
+      zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
+      ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
+      he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
       ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
     };
 
+    // LANGUAGE PERSISTENCE
     function applyLanguage(lang) {
-      try { localStorage.setItem('lang', lang); } catch (e) {}
+      localStorage.setItem('lang', lang);
       const t = translations[lang] || translations.en;
 
       document.getElementById('enterBtn').textContent = t.btn;
       document.getElementById('footer').textContent = t.footer;
 
-      document.querySelector('#languageBtn').setAttribute('aria-expanded', 'false');
+      document.querySelectorAll('.language-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+      });
+
+      if (lang === 'ar' || lang === 'he') {
+        document.body.setAttribute('dir', 'rtl');
+        document.documentElement.lang = lang;
+      } else {
+        document.body.removeAttribute('dir');
+        document.documentElement.lang = lang;
+      }
     }
 
+    // INIT LANGUAGE
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('lang') || 'en';
       applyLanguage(savedLang);
     });
 
-    // Language toggle (упрощённый)
+    // LANGUAGE TOGGLE
     const languageBtn = document.getElementById('languageBtn');
-    languageBtn.addEventListener('click', () => {
-      const current = localStorage.getItem('lang') || 'en';
-      const next = current === 'en' ? 'ru' : 'en';
-      applyLanguage(next);
+    const languageMenu = document.getElementById('languageMenu');
+
+    languageBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      languageMenu.classList.toggle('active');
     });
+
+    document.querySelectorAll('.language-option').forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyLanguage(opt.dataset.lang);
+        languageMenu.classList.remove('active');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
+        languageMenu.classList.remove('active');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        languageMenu.classList.remove('active');
+      }
+    });
+
+    languageMenu.addEventListener('click', e => e.stopPropagation());
   </script>
 </body>
 </html>
