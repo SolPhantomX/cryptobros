@@ -62,31 +62,40 @@
       filter: brightness(1.05);
     }
 
-    .content {
-      text-align: center;
-      z-index: 1;
-      padding: 0 20px;
+    h1 {
+      color: var(--accent);
+      font-size: clamp(4rem, 12vw, 8rem);
+      margin: 0 0 4rem;
+      text-shadow: 0 0 40px var(--accent-glow);
+      letter-spacing: 2px;
+    }
+
+    .btn-container {
+      margin-top: auto;
+      padding-bottom: 100px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
     }
 
     .btn {
       background: var(--btn-gradient);
       color: white;
       border: none;
-      padding: 1.4rem 3.6rem;
-      font-size: 1.45rem;
+      padding: 1.6rem 4.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
-      border-radius: 12px;
+      border-radius: 16px;
       cursor: pointer;
-      letter-spacing: 1px;
-      box-shadow: 0 0 25px var(--btn-shadow);
+      letter-spacing: 1.5px;
+      box-shadow: 0 0 30px var(--btn-shadow);
       text-decoration: none;
-      display: inline-block;
       transition: all 0.3s ease;
     }
 
     .btn:hover {
-      transform: scale(1.07);
-      box-shadow: 0 0 35px var(--btn-hover);
+      transform: scale(1.08);
+      box-shadow: 0 0 45px var(--btn-hover);
     }
 
     footer {
@@ -107,7 +116,7 @@
       100% { color: var(--accent); }
     }
 
-    /* Theme toggle button */
+    /* Theme toggle */
     .theme-toggle {
       position: absolute;
       top: 20px;
@@ -122,14 +131,13 @@
       z-index: 100;
       transition: all 0.3s ease;
     }
-
     .theme-toggle:hover {
       background: var(--accent);
       color: #000;
       box-shadow: 0 0 15px var(--accent-glow);
     }
 
-    /* Language switcher (оставил как было, но без лишнего) */
+    /* Language (оставил минимум, можно расширить) */
     .language-btn {
       position: absolute;
       top: 20px;
@@ -150,42 +158,11 @@
       transform: scale(1.05);
       box-shadow: 0 0 20px #66ffff;
     }
-    .language-menu {
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background: rgba(0,0,0,0.92);
-      border-radius: 10px;
-      padding: 10px 0;
-      display: none;
-      z-index: 101;
-      box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
-      min-width: 180px;
-    }
-    .language-menu.active { display: block; }
-    .language-option {
-      padding: 12px 25px;
-      color: #00ff9d;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .language-option:hover {
-      background: rgba(102, 255, 255, 0.2);
-      color: white;
-    }
-    .language-option.active {
-      background: rgba(102, 255, 255, 0.3);
-      color: white;
-    }
-
-    body[dir="rtl"] .language-btn { right: auto; left: 20px; }
-    body[dir="rtl"] .language-menu { right: auto; left: 20px; }
-    body[dir="rtl"] .language-option { text-align: left; }
 
     @media (max-width: 600px) {
-      .language-btn, .theme-toggle { top: 12px; padding: 0.6rem 1.2rem; font-size: 0.9rem; }
-      .btn { padding: 1rem 2.8rem; font-size: 1.3rem; margin-bottom: 60px; }
+      h1 { font-size: clamp(3rem, 15vw, 5rem); margin-bottom: 3rem; }
+      .btn { padding: 1.2rem 3rem; font-size: 1.4rem; }
+      .theme-toggle, .language-btn { top: 12px; padding: 0.6rem 1rem; font-size: 0.9rem; }
     }
   </style>
 </head>
@@ -196,28 +173,20 @@
   <!-- Theme Toggle -->
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">🌙</button>
 
-  <!-- Language Button and Menu -->
+  <!-- Language Button -->
   <button class="language-btn" id="languageBtn" aria-label="Select language" aria-expanded="false">LANGUAGE</button>
-  <div class="language-menu" id="languageMenu">
-    <div class="language-option active" data-lang="en">English</div>
-    <div class="language-option" data-lang="ru">Русский</div>
-    <!-- Добавь остальные языки по желанию -->
-  </div>
 
-  <!-- Main Button -->
-  <a href="payment.html" class="btn" id="enterBtn">Enter the Club</a>
+  <div class="content">
+    <h1>CRYPTOBROS</h1>
+    <div class="btn-container">
+      <a href="payment.html" class="btn" id="enterBtn">Enter the Club</a>
+    </div>
+  </div>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
-    // === TRANSLATIONS ===
-    const translations = {
-      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
-      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
-      // добавь другие языки, если нужно
-    };
-
-    // === THEME HANDLING ===
+    // === THEME HANDLING (влияет на все страницы) ===
     const htmlEl = document.documentElement;
     const themeBtn = document.getElementById('themeToggle');
 
@@ -227,7 +196,6 @@
       localStorage.setItem('theme', theme);
     }
 
-    // Load saved theme or system preference
     const savedTheme = localStorage.getItem('theme') ||
                        (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
     setTheme(savedTheme);
@@ -237,67 +205,34 @@
       setTheme(newTheme);
     });
 
-    // === LANGUAGE HANDLING ===
-    function applyLanguage(lang) {
-      try {
-        localStorage.setItem('lang', lang);
-      } catch (e) {}
+    // === LANGUAGE (минимум, можно расширить) ===
+    const translations = {
+      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
+      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
+    };
 
+    function applyLanguage(lang) {
+      try { localStorage.setItem('lang', lang); } catch (e) {}
       const t = translations[lang] || translations.en;
 
       document.getElementById('enterBtn').textContent = t.btn;
       document.getElementById('footer').textContent = t.footer;
 
-      document.querySelectorAll('.language-option').forEach(opt => {
-        opt.classList.toggle('active', opt.dataset.lang === lang);
-      });
-
       document.querySelector('#languageBtn').setAttribute('aria-expanded', 'false');
-
-      document.body.setAttribute('dir', (lang === 'ar' || lang === 'he') ? 'rtl' : '');
-      document.documentElement.lang = lang;
     }
 
-    // INIT LANGUAGE
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('lang') || 'en';
       applyLanguage(savedLang);
     });
 
-    // Language Events
+    // Language toggle (упрощённый)
     const languageBtn = document.getElementById('languageBtn');
-    const languageMenu = document.getElementById('languageMenu');
-
-    languageBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = languageMenu.classList.toggle('active');
-      languageBtn.setAttribute('aria-expanded', isOpen);
+    languageBtn.addEventListener('click', () => {
+      const current = localStorage.getItem('lang') || 'en';
+      const next = current === 'en' ? 'ru' : 'en';
+      applyLanguage(next);
     });
-
-    document.querySelectorAll('.language-option').forEach(opt => {
-      opt.addEventListener('click', (e) => {
-        e.stopPropagation();
-        applyLanguage(opt.dataset.lang);
-        languageMenu.classList.remove('active');
-        languageBtn.setAttribute('aria-expanded', 'false');
-      });
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
-        languageMenu.classList.remove('active');
-        languageBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && languageMenu.classList.contains('active')) {
-        languageMenu.classList.remove('active');
-        languageBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    languageMenu.addEventListener('click', e => e.stopPropagation());
   </script>
 </body>
 </html>
