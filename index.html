@@ -1,475 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS • Choose Your Tier</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>CRYPTOBROS</title>
+
+  <!-- Preload -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" as="style">
+  <link rel="preload" href="./logo.jpg" as="image">
+
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+
   <style>
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      background: #000;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      font-family: 'Quicksand', 'Segoe UI', sans-serif;
     }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #000000;
-      color: #ffffff;
-      line-height: 1.5;
-      padding: 30px 20px;
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(to bottom, #00052a, #001133), url('./logo.jpg') center/cover no-repeat;
+      z-index: -1;
+      filter: brightness(0.9);
     }
-    
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
+    .content {
+      text-align: center;
+      z-index: 1;
+      padding: 0 20px;
     }
-    
     h1 {
-      font-size: 32px;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
+      color: #00ff9d;
+      font-size: clamp(3.5rem, 10vw, 6rem);
+      margin: 0 0 1rem;
+      text-shadow: 0 0 30px rgba(0,255,157,0.7);
     }
-    
     .subtitle {
-      color: #a0a0a0;
-      font-size: 16px;
-      margin-bottom: 40px;
-      font-weight: 400;
+      color: #88aaff;
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      margin: 0 0 3rem;
+      opacity: 0.9;
     }
-    
-    .tier {
-      margin-bottom: 32px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid #2a2a2a;
-    }
-    
-    .tier:last-of-type {
-      border-bottom: 1px solid #2a2a2a;
-      margin-bottom: 32px;
-    }
-    
-    .tier-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 16px;
-    }
-    
-    .tier-name {
-      font-size: 28px;
-      font-weight: 700;
-    }
-    
-    .tier-price {
-      font-size: 24px;
-      font-weight: 600;
-    }
-    
-    .tier-duration {
-      font-size: 16px;
-      font-weight: 400;
-      color: #a0a0a0;
-      margin-left: 5px;
-    }
-    
-    .features {
-      list-style: none;
-      margin-bottom: 20px;
-    }
-    
-    .features li {
-      color: #d0d0d0;
-      font-size: 16px;
-      margin-bottom: 6px;
-      padding-left: 18px;
-      position: relative;
-    }
-    
-    .features li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: #00ff9d;
-      font-size: 18px;
-    }
-    
-    .select-btn {
-      background: transparent;
-      border: 2px solid;
-      padding: 8px 32px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-    }
-    
-    .select-btn:hover {
-      background: currentColor;
-      color: black;
-    }
-    
-    /* Colors exactly as on screenshot */
-    .free .tier-name,
-    .free .tier-price,
-    .free .select-btn {
-      color: #00ff9d;
-    }
-    .free .select-btn {
-      border-color: #00ff9d;
-    }
-    .free .select-btn:hover {
-      background: #00ff9d;
-    }
-    
-    .master .tier-name,
-    .master .tier-price,
-    .master .select-btn {
-      color: #d700ff;
-    }
-    .master .select-btn {
-      border-color: #d700ff;
-    }
-    .master .select-btn:hover {
-      background: #d700ff;
-    }
-    
-    .pro .tier-name,
-    .pro .tier-price,
-    .pro .select-btn {
-      color: #00d4ff;
-    }
-    .pro .select-btn {
-      border-color: #00d4ff;
-    }
-    .pro .select-btn:hover {
-      background: #00d4ff;
-    }
-    
-    .premium .tier-name,
-    .premium .tier-price,
-    .premium .select-btn {
-      color: #ffd700;
-    }
-    .premium .select-btn {
-      border-color: #ffd700;
-    }
-    .premium .select-btn:hover {
-      background: #ffd700;
-    }
-    
-    .invite-section {
-      margin: 32px 0 32px 0;
-      padding: 24px 0 24px 0;
-      border-top: 2px solid #2a2a2a;
-      border-bottom: 2px solid #2a2a2a;
-    }
-    
-    .invite-title {
-      font-size: 16px;
-      font-weight: 500;
-      color: #00ff9d;
-      margin-bottom: 16px;
-    }
-    
-    .invite-input-group {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    
-    .invite-input {
-      flex: 1;
-      background: #111111;
-      border: 1px solid #333333;
-      padding: 12px 16px;
+    .btn {
+      background: linear-gradient(45deg, #003366, #005580);
       color: white;
-      font-size: 14px;
-    }
-    
-    .invite-input:focus {
-      outline: none;
-      border-color: #00ff9d;
-    }
-    
-    .invite-btn {
-      background: transparent;
-      border: 2px solid #00ff9d;
-      color: #00ff9d;
-      padding: 10px 28px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-    }
-    
-    .invite-btn:hover {
-      background: #00ff9d;
-      color: black;
-    }
-    
-    .invite-examples {
-      color: #666666;
-      font-size: 13px;
-      margin-top: 8px;
-    }
-    
-    .features-row {
-      display: flex;
-      gap: 40px;
-      margin-top: 32px;
-      padding-bottom: 20px;
-    }
-    
-    .feature-col {
-      flex: 1;
-    }
-    
-    .feature-col h3 {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-    
-    .feature-col ul {
-      list-style: none;
-    }
-    
-    .feature-col li {
-      color: #a0a0a0;
-      font-size: 14px;
-      margin-bottom: 8px;
-      padding-left: 15px;
-      position: relative;
-    }
-    
-    .feature-col li::before {
-      content: "–";
-      position: absolute;
-      left: 0;
-      color: #666666;
-    }
-    
-    .quantum-title {
-      color: #00d4ff;
-    }
-    
-    .risk-title {
-      color: #ffd700;
-    }
-    
-    .back-link {
-      display: inline-block;
-      margin-top: 40px;
-      color: #666666;
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-    }
-    
-    .back-link:hover {
-      color: #00ff9d;
-    }
-    
-    hr {
       border: none;
-      border-top: 1px solid #2a2a2a;
-      margin: 20px 0;
+      padding: 1.4rem 3.6rem;
+      font-size: 1.45rem;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      box-shadow: 0 0 25px rgba(0, 85, 128, 0.8);
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
     }
-    
+    .btn:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 35px #0066cc;
+    }
+    footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-weight: 700;
+      animation: colorChange 45s infinite;
+    }
+    @keyframes colorChange {
+      0%, 15% { color: #00ff9d; }
+      20%, 35% { color: #ff00ff; }
+      40%, 55% { color: #00ffff; }
+      60%, 75% { color: #ff9d00; }
+      80%, 95% { color: #9d00ff; }
+      100% { color: #00ff9d; }
+    }
+
+    /* Language switcher */
+    .language-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, #66ffff, #00ff9d);
+      color: #000;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+    .language-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #66ffff;
+    }
+    .language-menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: rgba(0,0,0,0.92);
+      border-radius: 10px;
+      padding: 10px 0;
+      display: none;
+      z-index: 101;
+      box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
+      min-width: 180px;
+    }
+    .language-menu.active { display: block; }
+    .language-option {
+      padding: 12px 25px;
+      color: #00ff9d;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .language-option:hover {
+      background: rgba(102, 255, 255, 0.2);
+      color: white;
+    }
+    .language-option.active {
+      background: rgba(102, 255, 255, 0.3);
+      color: white;
+    }
+
+    /* RTL */
+    body[dir="rtl"] .language-btn { right: auto; left: 20px; }
+    body[dir="rtl"] .language-menu { right: auto; left: 20px; }
+    body[dir="rtl"] .language-option { text-align: left; }
+    body[dir="rtl"] .btn { direction: rtl; text-align: right; }
+
     @media (max-width: 600px) {
-      .tier-header {
-        flex-direction: column;
-        gap: 4px;
-      }
-      
-      .invite-input-group {
-        flex-direction: column;
-      }
-      
-      .features-row {
-        flex-direction: column;
-        gap: 24px;
-      }
+      .language-btn { top: 12px; right: 12px; padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+      .btn { padding: 1rem 2.8rem; font-size: 1.3rem; margin-bottom: 60px; }
+      h1 { font-size: clamp(2.8rem, 12vw, 4.5rem); }
+      .subtitle { font-size: clamp(1.1rem, 5vw, 1.4rem); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header exactly as on screenshot -->
-    <h1>CHOOSE YOUR TIER</h1>
-    <div class="subtitle">Select access level and unlock powerful features</div>
+  <div class="bg"></div>
 
-    <!-- FREE TIER -->
-    <div class="tier free">
-      <div class="tier-header">
-        <span class="tier-name">FREE</span>
-        <span class="tier-price">0 AUS <span class="tier-duration">(2 weeks)</span></span>
-      </div>
-      <ul class="features">
-        <li>2-week limited access</li>
-        <li>Basic token analysis</li>
-        <li>Standard verdict only</li>
-        <li>No premium features</li>
-      </ul>
-      <button class="select-btn" onclick="selectTier('FREE', 0)">SELECT</button>
-    </div>
+  <div class="content">
+    <h1 id="pageTitle">CRYPTOBROS</h1>
+    <p class="subtitle" id="pageSubtitle">Choose your tier</p>
+    <a href="payment.html" class="btn" id="enterBtn" type="button">Enter the Club</a>
+  </div>
 
-    <!-- MASTER TIER -->
-    <div class="tier master">
-      <div class="tier-header">
-        <span class="tier-name">MASTER</span>
-        <span class="tier-price">500 AUS <span class="tier-duration">(2 weeks)</span></span>
-      </div>
-      <ul class="features">
-        <li>Unlimited access</li>
-        <li>Full token analysis</li>
-        <li>Standard verdict + details</li>
-        <li>Save verdicts to history</li>
-      </ul>
-      <button class="select-btn" onclick="selectTier('MASTER', 500)">SELECT</button>
-    </div>
+  <footer id="footer">Cryptobros 2026 ©</footer>
 
-    <!-- PRO TIER -->
-    <div class="tier pro">
-      <div class="tier-header">
-        <span class="tier-name">PRO</span>
-        <span class="tier-price">2,000 AUS <span class="tier-duration">(2 weeks)</span></span>
-      </div>
-      <ul class="features">
-        <li>Unlimited access</li>
-        <li>Advanced analytics</li>
-        <li>Advanced metrics (Pro)</li>
-        <li>Priority support</li>
-      </ul>
-      <button class="select-btn" onclick="selectTier('PRO', 2000)">SELECT</button>
-    </div>
-
-    <!-- PREMIUM TIER -->
-    <div class="tier premium">
-      <div class="tier-header">
-        <span class="tier-name">PREMIUM</span>
-        <span class="tier-price">10,000 AUS <span class="tier-duration">(2 weeks)</span></span>
-      </div>
-      <ul class="features">
-        <li>Full access + governance rights</li>
-        <li>All features unlocked</li>
-        <li>Quantum Contract Scan</li>
-        <li>Advanced Risk Forecast</li>
-      </ul>
-      <button class="select-btn" onclick="selectTier('PREMIUM', 10000)">SELECT</button>
-    </div>
-
-    <!-- INVITE SECTION - exactly as on screenshot -->
-    <div class="invite-section">
-      <div class="invite-title">1. Have an invite Code?</div>
-      <div class="invite-input-group">
-        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)">
-        <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
-      </div>
-      <div class="invite-examples">Enter invite code (e.g., PRE-5421, MST-1234, PRO-9012)</div>
-    </div>
-
-    <!-- FEATURES SECTION - exactly as on screenshot -->
-    <div class="features-row">
-      <!-- Quantum Contract Scan -->
-      <div class="feature-col">
-        <h3 class="quantum-title">Quantum Contract Scan</h3>
-        <ul>
-          <li>Detailed analysis of your crypto assets</li>
-          <li>Tax analysis - Ownership verification</li>
-          <li>Liquidity lock check</li>
-        </ul>
-      </div>
-
-      <!-- Advanced Risk Forecast -->
-      <div class="feature-col">
-        <h3 class="risk-title">Advanced Risk Forecast</h3>
-        <ul>
-          <li>24h volatility prediction</li>
-          <li>Whales movement alerts</li>
-          <li>Pump/dump pattern detection</li>
-          <li>Market sentiment analysis</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Back link -->
-    <a href="index.html" class="back-link">← Back to Home</a>
+  <!-- Language switcher -->
+  <button class="language-btn" id="languageBtn" aria-label="Select language" aria-expanded="false">LANGUAGE</button>
+  <div class="language-menu" id="languageMenu">
+    <div class="language-option active" data-lang="en">English</div>
+    <div class="language-option" data-lang="fr">Français</div>
+    <div class="language-option" data-lang="es">Español</div>
+    <div class="language-option" data-lang="pt">Português</div>
+    <div class="language-option" data-lang="zh">简体中文</div>
+    <div class="language-option" data-lang="ar">العربية</div>
+    <div class="language-option" data-lang="he">עברית</div>
+    <div class="language-option" data-lang="ru">Русский</div>
   </div>
 
   <script>
-    // Tier selection function
-    window.selectTier = function(tier, price) {
-      if (price === 0) {
-        activateTier(tier);
-        return;
-      }
-      
-      // Check if wallet is connected
-      const wallet = localStorage.getItem('walletAddress');
-      if (!wallet) {
-        window.location.href = 'connect-wallet.html?returnTo=payment.html';
-        return;
-      }
-      
-      // Here you would process payment
-      alert(`Selected ${tier} tier for ${price} AUS. Proceeding to payment...`);
-      // window.location.href = `payment-process.html?tier=${tier}&amount=${price}`;
+    // Translations
+    const translations = {
+      en: { title: "CRYPTOBROS", subtitle: "Choose your tier", btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
+      fr: { title: "CRYPTOBROS", subtitle: "Choisissez votre niveau", btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
+      es: { title: "CRYPTOBROS", subtitle: "Elige tu nivel", btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
+      pt: { title: "CRYPTOBROS", subtitle: "Escolha seu nível", btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
+      zh: { title: "CRYPTOBROS", subtitle: "选择您的等级", btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
+      ar: { title: "CRYPTOBROS", subtitle: "اختر مستواك", btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
+      he: { title: "CRYPTOBROS", subtitle: "בחר את הדרגה שלך", btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
+      ru: { title: "CRYPTOBROS", subtitle: "Выбери свой уровень", btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
     };
 
-    // Activate free tier
-    function activateTier(tier) {
-      localStorage.setItem('userTier', tier);
-      localStorage.setItem('tierActivatedAt', Date.now().toString());
-      alert(`✅ ${tier} tier activated!`);
-      window.location.href = 'profile.html';
+    function applyLanguage(lang) {
+      try {
+        localStorage.setItem('lang', lang);
+      } catch (e) {
+        console.warn('localStorage blocked:', e);
+      }
+
+      const t = translations[lang] || translations.en;
+
+      const titleEl = document.getElementById('pageTitle');
+      if (titleEl) titleEl.textContent = t.title;
+
+      const subtitleEl = document.getElementById('pageSubtitle');
+      if (subtitleEl) subtitleEl.textContent = t.subtitle;
+
+      const btnEl = document.getElementById('enterBtn');
+      if (btnEl) btnEl.textContent = t.btn;
+
+      const footerEl = document.getElementById('footer');
+      if (footerEl) footerEl.textContent = t.footer;
+
+      document.querySelectorAll('.language-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+      });
+
+      document.getElementById('languageBtn')?.setAttribute('aria-expanded', 'false');
+
+      document.body.setAttribute('dir', (lang === 'ar' || lang === 'he') ? 'rtl' : '');
+      document.documentElement.lang = lang;
     }
 
-    // Invite code activation
-    window.activateInvite = function() {
-      const code = document.getElementById('inviteCode').value.trim();
-      if (!code) {
-        alert('Please enter an invite code');
-        return;
-      }
-      
-      // Validate invite code format
-      const validPrefixes = ['PRE-', 'MST-', 'PRO-'];
-      const isValid = validPrefixes.some(prefix => code.startsWith(prefix));
-      
-      if (isValid && code.length >= 8) {
-        // Extract tier from prefix
-        const prefix = code.substring(0, 4);
-        let tier = 'MASTER';
-        if (prefix === 'PRE-') tier = 'PREMIUM';
-        else if (prefix === 'PRO-') tier = 'PRO';
-        
-        activateTier(tier);
-      } else {
-        alert('❌ Invalid invite code. Format should be: PRE-5421, MST-1234, PRO-9012');
-      }
-    };
+    // INIT
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('lang') || 'en';
+      applyLanguage(savedLang);
+    });
 
-    // Auto-check wallet on load
-    window.addEventListener('load', function() {
-      const wallet = localStorage.getItem('walletAddress');
-      const tier = localStorage.getItem('userTier');
-      
-      if (wallet) {
-        console.log('Wallet connected:', wallet.slice(0,6) + '...');
-      }
-      
-      if (tier) {
-        console.log('Current tier:', tier);
+    // Events
+    const languageBtn = document.getElementById('languageBtn');
+    const languageMenu = document.getElementById('languageMenu');
+
+    languageBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = languageMenu.classList.toggle('active');
+      languageBtn.setAttribute('aria-expanded', isOpen);
+    });
+
+    document.querySelectorAll('.language-option').forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyLanguage(opt.dataset.lang);
+        languageMenu.classList.remove('active');
+        languageBtn?.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!languageBtn?.contains(e.target) && !languageMenu?.contains(e.target)) {
+        languageMenu?.classList.remove('active');
+        languageBtn?.setAttribute('aria-expanded', 'false');
       }
     });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && languageMenu?.classList.contains('active')) {
+        languageMenu.classList.remove('active');
+        languageBtn?.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    languageMenu?.addEventListener('click', e => e.stopPropagation());
   </script>
 </body>
 </html>
