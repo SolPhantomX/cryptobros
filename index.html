@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
+  <!-- FIXED: Removed spaces in font URL -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -26,9 +27,10 @@
     }
     
     .btn {
-      background: linear-gradient(45deg, #003366, #005580);
-      color: #fff;
-      border: none;
+      /* FIXED: Голубой фон + синяя надпись */
+      background: linear-gradient(45deg, #66ffff, #00ccff);
+      color: #003366; /* Синяя надпись */
+      border: 2px solid #0066cc; /* Синяя обводка для контраста */
       padding: 1.4rem 4rem;
       font-size: 1.6rem;
       font-weight: bold;
@@ -36,16 +38,17 @@
       cursor: pointer;
       font-family: 'Quicksand', Arial, sans-serif;
       letter-spacing: 1.5px;
-      box-shadow: 0 0 30px rgba(0, 85, 128, 0.9);
+      box-shadow: 0 0 30px rgba(102, 255, 255, 0.9);
       margin-top: auto;
-      margin-bottom: 20px; /* ЧУТЬ-ЧУТЬ над футером */
+      margin-bottom: 35px; /* ЧУТЬ ВЫШЕ футера (было 20px) */
       transition: all 0.3s ease;
       text-decoration: none;
       display: inline-block;
     }
     .btn:hover {
       transform: scale(1.07);
-      box-shadow: 0 0 45px #0066cc;
+      box-shadow: 0 0 45px #66ffff;
+      background: linear-gradient(45deg, #00ccff, #66ffff);
     }
     
     footer {
@@ -140,20 +143,21 @@
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
   
-  <a href="rules.html" class="btn" id="enterBtn" aria-label="Enter the Cryptobros Club">Enter the Club</a>
+  <!-- FIXED: Текст кнопки "Enter..." -->
+  <a href="rules.html" class="btn" id="enterBtn" aria-label="Enter the Cryptobros Club">Enter...</a>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
     const translations = {
-      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
-      fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
-      es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
-      pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
-      zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
-      ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
-      he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
-      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
+      en: { btn: "Enter...", footer: "Cryptobros 2026 ©" },
+      fr: { btn: "Entrer...", footer: "Cryptobros 2026 ©" },
+      es: { btn: "Entrar...", footer: "Cryptobros 2026 ©" },
+      pt: { btn: "Entrar...", footer: "Cryptobros 2026 ©" },
+      zh: { btn: "进入...", footer: "Cryptobros 2026 ©" },
+      ar: { btn: "دخول...", footer: "Cryptobros 2026 ©" },
+      he: { btn: "כניסה...", footer: "Cryptobros 2026 ©" },
+      ru: { btn: "Войти...", footer: "Cryptobros 2026 ©" }
     };
 
     function applyLanguage(lang) {
