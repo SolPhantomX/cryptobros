@@ -2,12 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS</title>
-
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
-
   <style>
     body {
       margin: 0;
@@ -19,9 +15,7 @@
       justify-content: center;
       align-items: center;
       position: relative;
-      font-family: 'Quicksand', sans-serif;
     }
-
     .bg {
       position: fixed;
       top: 0; left: 0;
@@ -30,17 +24,14 @@
       z-index: -1;
       filter: brightness(0.9);
     }
-
     h1 {
       color: #00ff9d;
-      font-size: clamp(4.5rem, 12vw, 8rem);
+      font-size: clamp(5rem, 15vw, 10rem);
       font-weight: 700;
-      margin: 0 0 4rem;
-      text-shadow: 0 0 40px rgba(0,255,157,0.8);
-      letter-spacing: 3px;
-      text-align: center;
+      margin: 0 0 5rem;
+      text-shadow: 0 0 50px rgba(0,255,157,0.8);
+      letter-spacing: 4px;
     }
-
     .btn {
       background: linear-gradient(45deg, #003366, #005580);
       color: #fff;
@@ -50,26 +41,25 @@
       font-weight: bold;
       border-radius: 12px;
       cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
       letter-spacing: 1.5px;
       box-shadow: 0 0 30px rgba(0, 85, 128, 0.9);
-      margin-bottom: 120px; /* большой отступ снизу */
+      margin-bottom: 100px; /* ровно 100px над футером */
       transition: all 0.3s ease;
     }
-
     .btn:hover {
-      transform: scale(1.08);
+      transform: scale(1.07);
       box-shadow: 0 0 45px #0066cc;
     }
-
     footer {
       position: absolute;
       bottom: 20px;
       width: 100%;
       text-align: center;
+      font-family: 'Quicksand', sans-serif;
       font-weight: 700;
       animation: colorChange 15s infinite;
     }
-
     @keyframes colorChange {
       0% { color: #00ff9d; }
       16.67% { color: #ff00ff; }
@@ -92,16 +82,14 @@
       font-weight: bold;
       border-radius: 20px;
       cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
       box-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
       z-index: 100;
-      transition: all 0.3s ease;
     }
-
     .language-btn:hover {
       transform: scale(1.05);
       box-shadow: 0 0 20px #66ffff;
     }
-
     .language-menu {
       position: absolute;
       top: 60px;
@@ -114,46 +102,34 @@
       box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
       min-width: 180px;
     }
-
-    .language-menu.active {
-      display: block;
-    }
-
+    .language-menu.active { display: block; }
     .language-option {
       padding: 12px 25px;
       color: #00ff9d;
+      font-family: 'Quicksand', sans-serif;
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s;
       text-align: right;
     }
-
     .language-option:hover {
       background: rgba(102, 255, 255, 0.2);
       color: #fff;
     }
-
     .language-option.active {
       background: rgba(102, 255, 255, 0.3);
       color: #fff;
     }
-
     body[dir="rtl"] .language-btn { right: auto; left: 20px; }
     body[dir="rtl"] .language-menu { right: auto; left: 20px; text-align: left; }
     body[dir="rtl"] .language-option { text-align: left; }
-
-    @media (max-width: 600px) {
-      h1 { font-size: clamp(3.5rem, 15vw, 6rem); margin-bottom: 3rem; }
-      .btn { padding: 1.2rem 3rem; font-size: 1.4rem; margin-bottom: 100px; }
-      .language-btn { top: 15px; right: 15px; padding: 0.7rem 1.4rem; font-size: 0.95rem; }
-    }
   </style>
 </head>
 <body>
   <div class="bg"></div>
 
   <!-- Language Button and Menu -->
-  <button class="language-btn" id="languageBtn" aria-label="Select language" aria-expanded="false">LANGUAGE</button>
+  <button class="language-btn" id="languageBtn">LANGUAGE</button>
   <div class="language-menu" id="languageMenu">
     <div class="language-option active" data-lang="en">English</div>
     <div class="language-option" data-lang="fr">Français</div>
@@ -165,16 +141,15 @@
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
 
-  <!-- Большой заголовок CRYPTOBROS -->
+  <!-- Большой старый заголовок -->
   <h1>CRYPTOBROS</h1>
 
-  <!-- Кнопка Enter the Club внизу по центру -->
-  <a href="onboarding.html" class="btn" id="enterBtn">Enter the Club</a>
+  <!-- Кнопка Enter the Club внизу по центру, 100px над футером -->
+  <button class="btn" onclick="location.href='onboarding.html'" id="enterBtn">Enter the Club</button>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
-    // TRANSLATIONS
     const translations = {
       en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
       fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
@@ -186,11 +161,9 @@
       ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
     };
 
-    // LANGUAGE PERSISTENCE
     function applyLanguage(lang) {
       localStorage.setItem('lang', lang);
       const t = translations[lang] || translations.en;
-
       document.getElementById('enterBtn').textContent = t.btn;
       document.getElementById('footer').textContent = t.footer;
 
@@ -207,13 +180,11 @@
       }
     }
 
-    // INIT LANGUAGE
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('lang') || 'en';
       applyLanguage(savedLang);
     });
 
-    // LANGUAGE TOGGLE
     const languageBtn = document.getElementById('languageBtn');
     const languageMenu = document.getElementById('languageMenu');
 
