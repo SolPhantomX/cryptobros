@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
-  <!-- FIXED: Removed spaces in font URL -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -26,29 +25,50 @@
       filter: brightness(0.9);
     }
     
+    /* === ENTER BUTTON - LIGHT BLUE WITH BLUE TEXT === */
     .btn {
-      /* FIXED: Голубой фон + синяя надпись */
-      background: linear-gradient(45deg, #66ffff, #00ccff);
-      color: #003366; /* Синяя надпись */
-      border: 2px solid #0066cc; /* Синяя обводка для контраста */
-      padding: 1.4rem 4rem;
-      font-size: 1.6rem;
-      font-weight: bold;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #66ffff, #00ccff, #0099ff);
+      color: #003366;
+      border: 3px solid #0066cc;
+      padding: 1.3rem 4.5rem;
+      font-size: 1.7rem;
+      font-weight: 800;
+      border-radius: 16px;
       cursor: pointer;
       font-family: 'Quicksand', Arial, sans-serif;
-      letter-spacing: 1.5px;
-      box-shadow: 0 0 30px rgba(102, 255, 255, 0.9);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      box-shadow: 
+        0 0 25px rgba(102, 255, 255, 0.7),
+        0 0 50px rgba(0, 153, 255, 0.4);
       margin-top: auto;
-      margin-bottom: 35px; /* ЧУТЬ ВЫШЕ футера (было 20px) */
-      transition: all 0.3s ease;
+      margin-bottom: 40px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
       display: inline-block;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
+    }
+    .btn:hover::before { left: 100%; }
+    
     .btn:hover {
-      transform: scale(1.07);
-      box-shadow: 0 0 45px #66ffff;
-      background: linear-gradient(45deg, #00ccff, #66ffff);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 
+        0 0 35px rgba(102, 255, 255, 0.9),
+        0 0 70px rgba(0, 153, 255, 0.6);
+      background: linear-gradient(135deg, #00ccff, #66ffff, #00ccff);
+    }
+    .btn:active {
+      transform: translateY(1px) scale(0.98);
     }
     
     footer {
@@ -143,21 +163,20 @@
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
   
-  <!-- FIXED: Текст кнопки "Enter..." -->
-  <a href="rules.html" class="btn" id="enterBtn" aria-label="Enter the Cryptobros Club">Enter...</a>
+  <a href="rules.html" class="btn" id="enterBtn" aria-label="Enter the Cryptobros Club">Enter the Club</a>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
     const translations = {
-      en: { btn: "Enter...", footer: "Cryptobros 2026 ©" },
-      fr: { btn: "Entrer...", footer: "Cryptobros 2026 ©" },
-      es: { btn: "Entrar...", footer: "Cryptobros 2026 ©" },
-      pt: { btn: "Entrar...", footer: "Cryptobros 2026 ©" },
-      zh: { btn: "进入...", footer: "Cryptobros 2026 ©" },
-      ar: { btn: "دخول...", footer: "Cryptobros 2026 ©" },
-      he: { btn: "כניסה...", footer: "Cryptobros 2026 ©" },
-      ru: { btn: "Войти...", footer: "Cryptobros 2026 ©" }
+      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
+      fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
+      es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
+      pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
+      zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
+      ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
+      he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
+      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
     };
 
     function applyLanguage(lang) {
