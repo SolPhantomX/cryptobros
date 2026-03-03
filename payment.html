@@ -1,523 +1,918 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS • CHOOSE YOUR TIER</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRYPTOBROS • CHOOSE YOUR TIER</title>
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.98.0/solana-web3.min.js" as="script">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+background:#0a0c1f;
+color:#e0f7ff;
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+min-height:100vh;
+padding:40px 20px;
+}
+.container {
+max-width:1200px;
+margin:0 auto;
+text-align:center;
+}
+h1 {
+font-size:clamp(2.5rem,5vw,3.5rem);
+font-weight:800;
+color:#00ff9d;
+margin-bottom:10px;
+text-shadow:0 0 25px rgba(0,255,157,0.6);
+}
+.subtitle {
+color:#88aaff;
+font-size:1.15rem;
+margin-bottom:30px;
+opacity:0.9;
+}
+.demo-indicator {
+position:fixed;
+top:10px;
+right:10px;
+background:#ffaa00;
+color:#0a0c1f;
+padding:5px 12px;
+border-radius:20px;
+font-size:0.8rem;
+font-weight:700;
+z-index:1000;
+box-shadow:0 0 15px #ffaa00;
+}
+.tier-status {
+background:rgba(12,18,45,0.9);
+border:2px solid #4455aa;
+border-radius:16px;
+padding:16px 24px;
+max-width:600px;
+margin:0 auto 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:15px;
+}
+.tier-status-label {
+color:#88aaff;
+font-size:1rem;
+}
+.tier-status-value {
+font-size:1.4rem;
+font-weight:700;
+}
+.tier-status-value.free { color:#00ff9d; }
+.tier-status-value.master { color:#d700ff; }
+.tier-status-value.pro { color:#00d4ff; }
+.tier-status-value.premium { color:#ffd700; }
+.tier-status-expiry {
+color:#ffaa00;
+font-size:0.95rem;
+}
+.tiers-grid {
+display:grid;
+grid-template-columns:repeat(4, 1fr);
+gap:24px;
+margin-bottom:40px;
+}
+@media (max-width: 1100px) {
+.tiers-grid { grid-template-columns:repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+.tiers-grid { grid-template-columns:1fr; }
+}
+.tier-card {
+background:rgba(12,18,45,0.85);
+border-radius:20px;
+padding:28px 20px;
+backdrop-filter:blur(8px);
+-webkit-backdrop-filter:blur(8px);
+transition:all 0.35s ease;
+border:2px solid transparent;
+background-clip:padding-box;
+}
+@supports not (backdrop-filter: blur(1px)) {
+.tier-card { background:rgba(17,17,34,0.9); }
+}
+.free { border-image:linear-gradient(180deg,#00ff9d,#00cc88) 1; box-shadow:0 0 30px rgba(0,255,157,0.25); }
+.master { border-image:linear-gradient(180deg,#d700ff,#a500cc) 1; box-shadow:0 0 30px rgba(215,0,255,0.25); }
+.pro { border-image:linear-gradient(180deg,#00d4ff,#0099cc) 1; box-shadow:0 0 30px rgba(0,212,255,0.25); }
+.premium { border-image:linear-gradient(180deg,#ffd700,#ccaa00) 1; box-shadow:0 0 40px rgba(255,215,0,0.35); }
+.tier-card:hover {
+transform:translateY(-10px);
+box-shadow:0 20px 45px rgba(0,0,0,0.55);
+}
+.tier-name { font-size:2.1rem; font-weight:900; margin-bottom:8px; }
+.tier-price { font-size:2.4rem; font-weight:900; margin-bottom:24px; }
+.free    .tier-name,.free    .tier-price { color:#00ff9d; text-shadow:0 0 15px #00ff9d; }
+.master  .tier-name,.master  .tier-price { color:#d700ff; text-shadow:0 0 15px #d700ff; }
+.pro     .tier-name,.pro     .tier-price { color:#00d4ff; text-shadow:0 0 15px #00d4ff; }
+.premium .tier-name,.premium .tier-price { color:#ffd700; text-shadow:0 0 15px #ffd700; }
+ul { text-align:left; margin-bottom:28px; }
+li {
+font-size:0.98rem;
+color:#d0e8ff;
+margin:12px 0;
+padding-left:28px;
+position:relative;
+}
+li::before {
+content:"✔";
+position:absolute;
+left:4px;
+font-size:1.2rem;
+font-weight:bold;
+}
+.free    li::before { color:#00ff9d; }
+.master  li::before { color:#d700ff; }
+.pro     li::before { color:#00d4ff; }
+.premium li::before { color:#ffd700; }
+.select-btn {
+width:100%;
+padding:14px;
+background:transparent;
+border:2px solid;
+border-radius:12px;
+font-size:1rem;
+font-weight:700;
+text-transform:uppercase;
+cursor:pointer;
+transition:all 0.3s ease;
+}
+.select-btn:hover:not(:disabled) {
+transform:translateY(-4px);
+box-shadow:0 10px 25px rgba(255,255,255,0.15);
+}
+.select-btn:disabled {
+opacity:0.5;
+cursor:not-allowed;
+}
+.select-btn:focus-visible {
+outline:2px solid currentColor;
+outline-offset:2px;
+}
+.free    .select-btn { border-color:#00ff9d; color:#00ff9d; background:rgba(0,255,157,0.09); }
+.master  .select-btn { border-color:#d700ff; color:#d700ff; background:rgba(215,0,255,0.09); }
+.pro     .select-btn { border-color:#00d4ff; color:#00d4ff; background:rgba(0,212,255,0.09); }
+.premium .select-btn { border-color:#ffd700; color:#ffd700; background:rgba(255,215,0,0.11); }
 
-    body {
-      background: #0a0c0f;
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      min-height: 100vh;
-      padding: 60px 30px;
-      perspective: 1200px;
-    }
+.bottom-section {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 40px;
+max-width: 1200px;
+margin: 0 auto 60px;
+}
 
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+.feature-col-left {
+background: rgba(12,18,45,0.7);
+border-radius: 18px;
+padding: 28px;
+border: 2px solid #00d4ff;
+box-shadow: 0 0 30px rgba(0,212,255,0.2);
+}
 
-    /* Back button - larger */
-    .back-button {
-      position: fixed;
-      top: 30px;
-      left: 30px;
-      background: transparent;
-      border: 3px solid #2a2a2a;
-      color: #9ca3af;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 1.2rem;
-      font-weight: 500;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      z-index: 100;
-    }
+.feature-col-left h3 {
+font-size: 1.7rem;
+font-weight: 700;
+margin-bottom: 20px;
+color: #00d4ff;
+text-shadow: 0 0 15px rgba(0,212,255,0.5);
+}
 
-    .back-button:hover {
-      border-color: #00ff9d;
-      color: #00ff9d;
-    }
+.feature-col-left li {
+font-size: 1rem;
+color: #b8d0ff;
+margin: 15px 0;
+padding-left: 22px;
+position: relative;
+}
 
-    h1 {
-      font-size: 4rem;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 15px;
-      text-align: center;
-      letter-spacing: 1px;
-    }
+.feature-col-left li::before {
+content: "→";
+position: absolute;
+left: 0;
+color: #00d4ff;
+}
 
-    /* Flickering subtitle - larger */
-    .flicker-subtitle {
-      font-size: 1.8rem;
-      margin-bottom: 70px;
-      animation: flicker 3s infinite;
-      font-weight: 500;
-      text-align: center;
-    }
+.feature-col-right {
+background: rgba(12,18,45,0.7);
+border-radius: 18px;
+padding: 28px;
+border: 2px solid #ffd700;
+box-shadow: 0 0 30px rgba(255,215,0,0.2);
+}
 
-    @keyframes flicker {
-      0% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
-      14% { color: #d700ff; text-shadow: 0 0 10px #d700ff; }
-      28% { color: #00d4ff; text-shadow: 0 0 10px #00d4ff; }
-      42% { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
-      57% { color: #ff4d9d; text-shadow: 0 0 10px #ff4d9d; }
-      71% { color: #ffaa00; text-shadow: 0 0 10px #ffaa00; }
-      85% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
-      100% { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; }
-    }
+.feature-col-right h3 {
+font-size: 1.7rem;
+font-weight: 700;
+margin-bottom: 20px;
+color: #ffd700;
+text-shadow: 0 0 15px rgba(255,215,0,0.5);
+}
 
-    /* 3D Cards Grid - larger */
-    .tiers-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 35px;
-      margin-bottom: 90px;
-      transform-style: preserve-3d;
-    }
+.feature-col-right li {
+font-size: 1rem;
+color: #b8d0ff;
+margin: 15px 0;
+padding-left: 22px;
+position: relative;
+}
 
-    @media (max-width: 1100px) {
-      .tiers-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .tiers-grid { grid-template-columns: 1fr; }
-    }
+.feature-col-right li::before {
+content: "→";
+position: absolute;
+left: 0;
+color: #ffd700;
+}
 
-    /* 3D Card Styles - enlarged */
-    .tier-card {
-      background: #111316;
-      border: 3px solid #2a2a2a;
-      padding: 35px 25px;
-      transition: all 0.3s ease;
-      position: relative;
-      transform-style: preserve-3d;
-      animation: float 6s ease-in-out infinite;
-      border-radius: 0;
-    }
+.invite-section {
+grid-column: 1 / 2;
+background: linear-gradient(135deg,rgba(80,40,180,0.3),rgba(0,80,180,0.2));
+border: 2px solid #7755ff;
+border-radius: 18px;
+padding: 24px 28px;
+margin-top: 30px;
+}
 
-    .tier-card:nth-child(1) { animation-delay: 0s; }
-    .tier-card:nth-child(2) { animation-delay: 0.5s; }
-    .tier-card:nth-child(3) { animation-delay: 1s; }
-    .tier-card:nth-child(4) { animation-delay: 1.5s; }
+.invite-title {
+font-size: 1.4rem;
+color: #bb99ff;
+margin-bottom: 16px;
+font-weight: 700;
+}
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-      25% { transform: translateY(-12px) rotateX(3deg) rotateY(-3deg); }
-      75% { transform: translateY(12px) rotateX(-3deg) rotateY(3deg); }
-    }
+.invite-row {
+display: flex;
+gap: 12px;
+margin-bottom: 8px;
+}
 
-    .tier-card:hover {
-      transform: translateY(-20px) rotateX(6deg) rotateY(6deg) scale(1.05);
-      border-color: currentColor;
-      box-shadow: 0 30px 40px rgba(0, 0, 0, 0.6);
-    }
+.invite-input {
+flex: 1;
+background: #111122;
+border: 1px solid #444466;
+border-radius: 10px;
+padding: 12px 16px;
+color: #fff;
+font-size: 0.95rem;
+}
 
-    .tier-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 25px;
-    }
+.invite-input::placeholder {
+color: #556688;
+}
 
-    .tier-name {
-      font-size: 2.4rem;
-      font-weight: 700;
-    }
+.invite-btn {
+background: linear-gradient(90deg,#6644ff,#4488ff);
+border: none;
+color: #fff;
+padding: 0 24px;
+border-radius: 10px;
+font-weight: 700;
+font-size: 0.95rem;
+cursor: pointer;
+transition: all 0.3s;
+white-space: nowrap;
+}
 
-    .tier-price {
-      font-size: 2.2rem;
-      font-weight: 600;
-    }
+.invite-btn:hover {
+transform: scale(1.04);
+box-shadow: 0 0 25px rgba(100,80,255,0.6);
+}
 
-    .tier-weeks {
-      font-size: 1.1rem;
-      color: #9ca3af;
-      font-weight: 400;
-      margin-left: 5px;
-    }
+.invite-examples {
+color: #aaccff;
+font-size: 0.9rem;
+margin-top: 5px;
+}
 
-    /* Colors */
-    .free .tier-name,
-    .free .tier-price {
-      color: #00ff9d;
-    }
-    .free .tier-card:hover {
-      border-color: #00ff9d;
-    }
+#inviteMessage {
+margin-top: 15px;
+padding: 10px;
+border-radius: 8px;
+font-size: 0.9rem;
+display: none;
+}
 
-    .master .tier-name,
-    .master .tier-price {
-      color: #d700ff;
-    }
-    .master .tier-card:hover {
-      border-color: #d700ff;
-    }
+#inviteMessage.success { background: rgba(0,255,157,0.1); color:#00ff9d; border:1px solid #00ff9d; }
+#inviteMessage.error { background: rgba(255,77,77,0.1); color:#ff4d4d; border:1px solid #ff4d4d; }
 
-    .pro .tier-name,
-    .pro .tier-price {
-      color: #00d4ff;
-    }
-    .pro .tier-card:hover {
-      border-color: #00d4ff;
-    }
+.back-link {
+color: #88aaff;
+text-decoration: none;
+font-size: 1.1rem;
+display: inline-block;
+margin-top: 30px;
+}
 
-    .premium .tier-name,
-    .premium .tier-price {
-      color: #ffd700;
-    }
-    .premium .tier-card:hover {
-      border-color: #ffd700;
-    }
+.back-link:hover { color:#00ff9d; }
 
-    ul {
-      list-style: none;
-      margin: 0 0 30px 0;
-      padding: 0;
-    }
-
-    li {
-      color: #d1d5db;
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-      padding-left: 22px;
-      position: relative;
-    }
-
-    li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      font-size: 1.3rem;
-    }
-
-    .free li::before { color: #00ff9d; }
-    .master li::before { color: #d700ff; }
-    .pro li::before { color: #00d4ff; }
-    .premium li::before { color: #ffd700; }
-
-    .select-btn {
-      width: 100%;
-      background: transparent;
-      border: 3px solid;
-      padding: 14px 0;
-      font-size: 1.2rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 0.5px;
-    }
-
-    .free .select-btn {
-      border-color: #00ff9d;
-      color: #00ff9d;
-    }
-    .free .select-btn:hover {
-      background: #00ff9d;
-      color: #0a0c0f;
-    }
-
-    .master .select-btn {
-      border-color: #d700ff;
-      color: #d700ff;
-    }
-    .master .select-btn:hover {
-      background: #d700ff;
-      color: #0a0c0f;
-    }
-
-    .pro .select-btn {
-      border-color: #00d4ff;
-      color: #00d4ff;
-    }
-    .pro .select-btn:hover {
-      background: #00d4ff;
-      color: #0a0c0f;
-    }
-
-    .premium .select-btn {
-      border-color: #ffd700;
-      color: #ffd700;
-    }
-    .premium .select-btn:hover {
-      background: #ffd700;
-      color: #0a0c0f;
-    }
-
-    /* Invite section - larger */
-    .invite-section {
-      margin: 50px 0 60px 0;
-      padding: 30px 0;
-      border-top: 3px solid #2a2a2a;
-      border-bottom: 3px solid #2a2a2a;
-    }
-
-    .invite-title {
-      color: #00ff9d;
-      font-size: 1.6rem;
-      margin-bottom: 20px;
-    }
-
-    .invite-row {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 10px;
-      align-items: center;
-    }
-
-    .invite-input {
-      flex: 1;
-      background: #111111;
-      border: 2px solid #2a2a2a;
-      padding: 16px 20px;
-      color: white;
-      font-size: 1.1rem;
-      max-width: 500px;
-    }
-
-    .invite-input:focus {
-      outline: none;
-      border-color: #00ff9d;
-    }
-
-    .invite-btn {
-      background: transparent;
-      border: 3px solid #00ff9d;
-      color: #00ff9d;
-      padding: 14px 30px;
-      font-weight: 600;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-
-    .invite-btn:hover {
-      background: #00ff9d;
-      color: #0a0c0f;
-    }
-
-    /* Features row - larger */
-    .features-row {
-      display: flex;
-      gap: 70px;
-      margin-top: 30px;
-      margin-bottom: 50px;
-    }
-
-    .feature-col {
-      flex: 1;
-    }
-
-    .feature-col h3 {
-      font-size: 1.8rem;
-      font-weight: 600;
-      margin: 0 0 20px 0;
-    }
-
-    .quantum-title { color: #00d4ff; }
-    .risk-title { color: #ffd700; }
-
-    .feature-col ul {
-      list-style: none;
-    }
-
-    .feature-col li {
-      color: #9ca3af;
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-      padding-left: 20px;
-      position: relative;
-    }
-
-    .feature-col li::before {
-      content: "–";
-      position: absolute;
-      left: 0;
-      color: #6b7280;
-      font-size: 1.1rem;
-    }
-
-    .back-link {
-      display: inline-block;
-      margin-top: 40px;
-      color: #6b7280;
-      text-decoration: none;
-      font-size: 1.2rem;
-      transition: color 0.2s;
-    }
-
-    .back-link:hover {
-      color: #00ff9d;
-    }
-
-    @media (max-width: 800px) {
-      .features-row {
-        flex-direction: column;
-        gap: 40px;
-      }
-      .invite-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .invite-input {
-        max-width: 100%;
-      }
-      .back-button {
-        position: static;
-        margin-bottom: 30px;
-        display: inline-block;
-      }
-      h1 { font-size: 3rem; }
-      .flicker-subtitle { font-size: 1.4rem; }
-      .tier-name { font-size: 2rem; }
-      .tier-price { font-size: 1.8rem; }
-    }
-  </style>
+.modal-overlay {
+display:none;
+position:fixed;
+top:0; left:0; right:0; bottom:0;
+background:rgba(0,0,0,0.95);
+backdrop-filter:blur(10px);
+-webkit-backdrop-filter:blur(10px);
+align-items:center;
+justify-content:center;
+z-index:1000;
+}
+@supports not (backdrop-filter: blur(1px)) {
+.modal-overlay { background:rgba(10,10,20,0.98); }
+}
+.modal-overlay.active { display:flex; }
+.modal-content {
+background:#111122;
+border:2px solid #00ff9d;
+border-radius:24px;
+padding:30px;
+max-width:500px;
+width:90%;
+text-align:center;
+position:relative;
+}
+.modal-title {
+font-size:1.8rem;
+font-weight:700;
+color:#00ff9d;
+margin-bottom:20px;
+}
+.modal-text {
+color:#88aaff;
+margin-bottom:20px;
+line-height:1.5;
+}
+.demo-warning {
+color:#ffaa00;
+font-size:0.85rem;
+margin-top:5px;
+padding:8px;
+background:rgba(255,170,0,0.1);
+border-radius:6px;
+}
+.payment-details {
+background:#0a0c1f;
+border:1px solid #334466;
+border-radius:12px;
+padding:15px;
+margin:20px 0;
+text-align:left;
+}
+.payment-details p {
+color:#88aaff;
+font-size:0.9rem;
+margin-bottom:5px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.payment-details .value {
+color:#00ff9d;
+font-family:monospace;
+word-break:break-all;
+margin-bottom:15px;
+font-size:0.9rem;
+cursor:pointer;
+padding:8px;
+background:rgba(0,0,0,0.3);
+border-radius:4px;
+transition:all 0.2s;
+}
+.payment-details .value:hover {
+background:rgba(0,255,157,0.15);
+}
+.copy-icon {
+cursor:pointer;
+opacity:0.7;
+padding:4px 8px;
+border-radius:4px;
+}
+.copy-icon:hover {
+opacity:1;
+background:rgba(255,255,255,0.1);
+}
+.memo-box {
+background:rgba(0,255,157,0.1);
+border:2px dashed #00ff9d;
+border-radius:12px;
+padding:15px;
+margin:20px 0;
+word-break:break-all;
+font-family:monospace;
+font-size:0.9rem;
+}
+.memo-label {
+color:#88aaff;
+font-size:0.85rem;
+margin-bottom:5px;
+}
+.memo-warning {
+color:#ff4444;
+font-size:1.1rem;
+font-weight:bold;
+margin:15px 0;
+padding:10px;
+background:rgba(255,68,68,0.1);
+border-radius:8px;
+}
+.modal-btn {
+width:100%;
+padding:14px;
+background:linear-gradient(90deg,#00ff9d,#00cc88);
+border:none;
+border-radius:12px;
+color:#0a0c1f;
+font-weight:700;
+font-size:1rem;
+cursor:pointer;
+margin-bottom:10px;
+transition:all 0.3s;
+}
+.modal-btn:hover:not(:disabled) {
+transform:translateY(-2px);
+box-shadow:0 5px 20px rgba(0,255,157,0.4);
+}
+.modal-btn:disabled {
+opacity:0.5;
+cursor:not-allowed;
+}
+.modal-btn.secondary {
+background:transparent;
+border:1px solid #445588;
+color:#88aaff;
+}
+.modal-btn.secondary:hover:not(:disabled) {
+border-color:#00ff9d;
+color:#00ff9d;
+}
+.payment-status {
+margin-top:15px;
+padding:10px;
+border-radius:8px;
+font-size:0.9rem;
+display:none;
+}
+.payment-status.info { background:rgba(0,212,255,0.1); color:#00d4ff; border:1px solid #00d4ff; }
+.payment-status.success { background:rgba(0,255,157,0.1); color:#00ff9d; border:1px solid #00ff9d; }
+.payment-status.error { background:rgba(255,77,77,0.1); color:#ff4d4d; border:1px solid #ff4d4d; }
+.spinner {
+display:inline-block;
+width:16px;
+height:16px;
+border:2px solid rgba(0,255,157,0.3);
+border-top-color:#00ff9d;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin-right:8px;
+vertical-align:middle;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.close-modal {
+position:absolute;
+top:15px;
+right:20px;
+font-size:24px;
+color:#88aaff;
+cursor:pointer;
+background:none;
+border:none;
+padding:5px;
+line-height:1;
+}
+.close-modal:hover { color:#ff4d4d; }
+.loading {
+display:inline-block;
+width:30px;
+height:30px;
+border:3px solid rgba(0,255,157,0.3);
+border-top-color:#00ff9d;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:20px auto;
+}
+.solana-loading {
+background:rgba(0,0,0,0.7);
+padding:20px;
+border-radius:12px;
+margin:20px 0;
+text-align:center;
+}
+@media (max-width:1000px) {
+.bottom-section { grid-template-columns:1fr; }
+}
+@media (max-width:600px) {
+.invite-row { flex-direction:column; }
+.invite-btn { width:100%; padding:14px; }
+.tier-status { flex-direction:column; text-align:center; }
+}
+</style>
 </head>
 <body>
-  <!-- Back button -->
-  <a href="index.html" class="back-button">← Back</a>
+<div class="demo-indicator">🧪 DEMO MODE</div>
+<div class="container">
+<h1>CHOOSE YOUR TIER</h1>
+<div class="subtitle">Select access level and unlock powerful features</div>
+<div class="tier-status" id="tierStatus">
+<span class="tier-status-label">Your current tier:</span>
+<span class="tier-status-value" id="currentTierDisplay">FREE</span>
+<span class="tier-status-expiry" id="tierExpiryDisplay"></span>
+</div>
+<div id="solanaLoading" class="solana-loading" style="display:none;">
+<div class="loading"></div>
+<p>Connecting to Solana network...</p>
+</div>
+<div class="tiers-grid">
+<div class="tier-card free">
+<div class="tier-name">FREE</div>
+<div class="tier-price">0 AUS</div>
+<ul>
+<li>2-week limited access</li>
+<li>Basic token analysis</li>
+<li>Standard verdict only</li>
+<li>No premium features</li>
+</ul>
+<button class="select-btn" id="freeBtn" aria-label="Select FREE tier">SELECT</button>
+</div>
+<div class="tier-card master">
+<div class="tier-name">MASTER</div>
+<div class="tier-price">500 AUS</div>
+<ul>
+<li>Unlimited access</li>
+<li>Full token analysis</li>
+<li>Standard verdict + details</li>
+<li>Save verdicts to history</li>
+</ul>
+<button class="select-btn" id="masterBtn" aria-label="Select MASTER tier">SELECT</button>
+</div>
+<div class="tier-card pro">
+<div class="tier-name">PRO</div>
+<div class="tier-price">2,000 AUS</div>
+<ul>
+<li>Unlimited access</li>
+<li>Advanced analytics</li>
+<li>Advanced metrics (Pro)</li>
+<li>Priority support</li>
+</ul>
+<button class="select-btn" id="proBtn" aria-label="Select PRO tier">SELECT</button>
+</div>
+<div class="tier-card premium">
+<div class="tier-name">PREMIUM</div>
+<div class="tier-price">10,000 AUS</div>
+<ul>
+<li>Full access + governance rights</li>
+<li>All features unlocked</li>
+<li>Quantum Contract Scan</li>
+<li>Advanced Risk Forecast</li>
+</ul>
+<button class="select-btn" id="premiumBtn" aria-label="Select PREMIUM tier">SELECT</button>
+</div>
+</div>
 
-  <div class="container">
-    <h1>CHOOSE YOUR TIER</h1>
-    <div class="flicker-subtitle">Select access level and unlock powerful features</div>
-
-    <!-- 3D Cards Grid -->
-    <div class="tiers-grid">
-      <!-- FREE -->
-      <div class="tier-card free">
-        <div class="tier-header">
-          <span class="tier-name">FREE</span>
-          <span class="tier-price">0 AUS</span>
-        </div>
-        <ul>
-          <li>2-week limited access</li>
-          <li>Basic token analysis</li>
-          <li>Standard verdict only</li>
-          <li>No premium features</li>
-        </ul>
-        <button class="select-btn" onclick="selectTier('FREE')">SELECT</button>
-      </div>
-
-      <!-- MASTER -->
-      <div class="tier-card master">
-        <div class="tier-header">
-          <span class="tier-name">MASTER</span>
-          <span class="tier-price">500 AUS</span>
-        </div>
-        <ul>
-          <li>Unlimited access</li>
-          <li>Full token analysis</li>
-          <li>Standard verdict + details</li>
-          <li>Save verdicts to history</li>
-        </ul>
-        <button class="select-btn" onclick="selectTier('MASTER')">SELECT</button>
-      </div>
-
-      <!-- PRO -->
-      <div class="tier-card pro">
-        <div class="tier-header">
-          <span class="tier-name">PRO</span>
-          <span class="tier-price">2,000 AUS</span>
-        </div>
-        <ul>
-          <li>Unlimited access</li>
-          <li>Advanced analytics</li>
-          <li>Advanced metrics (Pro)</li>
-          <li>Priority support</li>
-        </ul>
-        <button class="select-btn" onclick="selectTier('PRO')">SELECT</button>
-      </div>
-
-      <!-- PREMIUM -->
-      <div class="tier-card premium">
-        <div class="tier-header">
-          <span class="tier-name">PREMIUM</span>
-          <span class="tier-price">10,000 AUS</span>
-        </div>
-        <ul>
-          <li>Full access + governance rights</li>
-          <li>All features unlocked</li>
-          <li>Quantum Contract Scan</li>
-          <li>Advanced Risk Forecast</li>
-        </ul>
-        <button class="select-btn" onclick="selectTier('PREMIUM')">SELECT</button>
-      </div>
-    </div>
-
-    <!-- Invite Section -->
+<div class="bottom-section">
+  <div class="feature-col-left">
+    <h3>Quantum Contract Scan</h3>
+    <ul>
+      <li>Detailed analysis of your crypto assets</li>
+      <li>Tax analysis - Ownership verification</li>
+      <li>Liquidity lock check</li>
+    </ul>
+    
     <div class="invite-section">
       <div class="invite-title">Have an Invite Code?</div>
       <div class="invite-row">
-        <input type="text" class="invite-input" id="inviteCode" placeholder="e.g. PRE-5421, MST-1234, PRO-9012">
-        <button class="invite-btn" onclick="activateInvite()">ACTIVATE INVITE</button>
+        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code" aria-label="Invite code input">
+        <button class="invite-btn" id="inviteBtn" aria-label="Activate invite code">ACTIVATE INVITE</button>
       </div>
+      <div class="invite-examples">PRE-5421, MST-1234, PRO-9012</div>
+      <div id="inviteMessage" role="alert"></div>
     </div>
-
-    <!-- Features Row -->
-    <div class="features-row">
-      <div class="feature-col">
-        <h3 class="quantum-title">Quantum Contract Scan</h3>
-        <ul>
-          <li>Detailed analysis of your crypto assets</li>
-          <li>Tax analysis - Ownership verification</li>
-          <li>Liquidity lock check</li>
-        </ul>
-      </div>
-      <div class="feature-col">
-        <h3 class="risk-title">Advanced Risk Forecast</h3>
-        <ul>
-          <li>24h volatility prediction</li>
-          <li>Whales movement alerts</li>
-          <li>Pump/dump pattern detection</li>
-          <li>Market sentiment analysis</li>
-        </ul>
-      </div>
-    </div>
-
-    <a href="index.html" class="back-link">← Back to Home</a>
   </div>
 
-  <script>
-    function selectTier(tier) {
-      if (tier === 'FREE') {
-        alert('FREE tier selected - 2-week access activated!');
-        return;
-      }
-      alert(tier + ' tier selected - ' + (tier === 'MASTER' ? '500' : tier === 'PRO' ? '2,000' : '10,000') + ' AUS payment required');
-    }
+  <div class="feature-col-right">
+    <h3>Advanced Risk Forecast</h3>
+    <ul>
+      <li>24h volatility prediction</li>
+      <li>Whales movement alerts</li>
+      <li>Pump/dump pattern detection</li>
+      <li>Market sentiment analysis</li>
+    </ul>
+  </div>
+</div>
 
-    function activateInvite() {
-      const code = document.getElementById('inviteCode').value.trim();
-      if (!code) {
-        alert('Please enter an invite code');
-        return;
-      }
-      
-      if (code.startsWith('PRE-')) {
-        alert('PREMIUM invite activated!');
-        selectTier('PREMIUM');
-      } else if (code.startsWith('MST-')) {
-        alert('MASTER invite activated!');
-        selectTier('MASTER');
-      } else if (code.startsWith('PRO-')) {
-        alert('PRO invite activated!');
-        selectTier('PRO');
-      } else {
-        alert('Invalid invite code - use PRE-5421, MST-1234, or PRO-9012');
-      }
-    }
-  </script>
+<a href="index.html" class="back-link">← Back to Home</a>
+</div>
+
+<div class="modal-overlay" id="paymentModal" aria-hidden="true">
+<div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<button class="close-modal" id="closeModalBtn" aria-label="Close payment modal">&times;</button>
+<div class="modal-title" id="modalTitle">💳 Payment Required</div>
+<div class="modal-text" id="modalText"></div>
+<div class="demo-warning" id="demoWarning">⚠️ Demo mode: AUS = SOL for testing</div>
+<div class="memo-box">
+<div class="memo-label">📋 YOUR MEMO (COPY THIS EXACTLY):</div>
+<div id="paymentMemoDisplay" style="color:#00ff9d; font-weight:bold; word-break:break-all; font-size:1rem;"></div>
+<button class="copy-btn" id="copyMemoBtn" style="margin-top:10px; background:transparent; border:1px solid #00ff9d; color:#00ff9d; padding:8px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">📋 Copy Memo</button>
+</div>
+<div class="memo-warning">
+⚠️ CRITICAL: You MUST paste this memo in Phantom manually!
+<br>
+<span style="color:#00ff9d; font-size:0.9rem;">Transaction without memo will NOT be detected</span>
+</div>
+<div class="payment-details">
+<p>
+Treasury Address:
+<span class="copy-icon" id="copyTreasuryBtn" role="button" tabindex="0" aria-label="Copy treasury address">📋</span>
+</p>
+<div class="value" id="treasuryAddr" role="button" tabindex="0" aria-label="Click to copy treasury address">C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6</div>
+<p>
+Amount:
+<span class="copy-icon" id="copyAmountBtn" role="button" tabindex="0" aria-label="Copy amount">📋</span>
+</p>
+<div class="value" id="modalAmount" role="button" tabindex="0" aria-label="Click to copy amount"></div>
+</div>
+<button class="modal-btn" id="phantomPayBtn" aria-label="Open Phantom wallet">👻 Open Phantom Wallet</button>
+<button class="modal-btn secondary" id="verifyPaymentBtn" aria-label="Verify payment" disabled>✅ Wait 30s...</button>
+<button class="modal-btn secondary" id="cancelModalBtn" aria-label="Cancel payment">Cancel</button>
+<div id="paymentStatus" class="payment-status" role="status"></div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.98.0/solana-web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tweetnacl@1.0.3/nacl.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/buffer@6.0.3/index.min.js"></script>
+<script>
+(function() {
+const IS_DEMO_MODE = true;
+const TREASURY = 'C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6';
+const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000;
+const PAYMENT_TIMEOUT = 15 * 60 * 1000;
+const TIER_PRICES = { 'MASTER': 500, 'PRO': 2000, 'PREMIUM': 10000 };
+const VALID_INVITES = Object.freeze({
+'PRE-5421': Object.freeze({ tier: 'PREMIUM', used: false }),
+'PRE-1234': Object.freeze({ tier: 'PREMIUM', used: false }),
+'MST-9012': Object.freeze({ tier: 'MASTER', used: false }),
+'MST-5678': Object.freeze({ tier: 'MASTER', used: false }),
+'PRO-3456': Object.freeze({ tier: 'PRO', used: false }),
+'PRO-7890': Object.freeze({ tier: 'PRO', used: false })
+});
+
+function toBase64(bytes) { let binary=''; bytes.forEach(b=>binary+=String.fromCharCode(b)); return btoa(binary); }
+function fromBase64(base64) { const binary=atob(base64); const bytes=new Uint8Array(binary.length); for(let i=0;i<binary.length;i++){bytes[i]=binary.charCodeAt(i);} return bytes; }
+
+function generateNonce() {
+if(typeof crypto!=='undefined'&&crypto.randomUUID){return crypto.randomUUID();}
+const arr=new Uint8Array(16);
+if(crypto&&crypto.getRandomValues){crypto.getRandomValues(arr);}else{for(let i=0;i<16;i++){arr[i]=Math.floor(Math.random()*256);}}
+arr[6]=(arr[6]&0x0f)|0x40; arr[8]=(arr[8]&0x3f)|0x80;
+return Array.from(arr,b=>b.toString(16).padStart(2,'0')).join('').replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/,'$1-$2-$3-$4-$5');
+}
+
+let selectedTier=null, paymentStartTime=null, pollingTimeout=null, isPollingActive=false, connection=null, updateTimeout=null, paymentMemo=null, lastCheckedSig=null, verifyTimer=null;
+
+const storage={
+get:(key,def=null)=>{try{const item=localStorage.getItem(key);return item?JSON.parse(item):def;}catch{return def;}},
+set:(key,val)=>{try{localStorage.setItem(key,JSON.stringify(val));return true;}catch{return false;}}
+};
+
+function showSolanaLoading(){document.getElementById('solanaLoading').style.display='block';}
+function hideSolanaLoading(){document.getElementById('solanaLoading').style.display='none';}
+
+showSolanaLoading();
+try{
+connection=new solanaWeb3.Connection(solanaWeb3.clusterApiUrl(IS_DEMO_MODE?'devnet':'mainnet-beta'),'confirmed');
+hideSolanaLoading();
+}catch(e){
+hideSolanaLoading();
+console.error('Solana connection failed:',e);
+}
+
+function hasPhantom(){return window.solana&&window.solana.isPhantom;}
+
+async function createSignedCertificate(tier){
+if(!hasPhantom()){throw new Error('Phantom required');}
+try{
+const{publicKey,signMessage}=window.solana;
+const payload={wallet:publicKey.toString(),tier,activatedAt:Date.now(),nonce:generateNonce()};
+const message=new TextEncoder().encode(JSON.stringify(payload));
+const signature=await signMessage(message);
+return{...payload,signature:toBase64(signature)};
+}catch(e){console.error('Signing failed:',e);return null;}
+}
+
+function verifyCertificate(cert){
+if(IS_DEMO_MODE){
+const validTiers=['FREE','MASTER','PRO','PREMIUM'];
+const now=Date.now();
+return cert&&validTiers.includes(cert.tier)&&typeof cert.activatedAt==='number'&&cert.activatedAt<=now&&cert.activatedAt>now-TWO_WEEKS_MS*2&&cert.nonce&&cert.nonce.length>20;
+}
+try{
+const payload={wallet:cert.wallet,tier:cert.tier,activatedAt:cert.activatedAt,nonce:cert.nonce};
+const message=new TextEncoder().encode(JSON.stringify(payload));
+const signature=fromBase64(cert.signature);
+const pubkey=new solanaWeb3.PublicKey(cert.wallet);
+return nacl.sign.detached.verify(message,signature,pubkey.toBytes());
+}catch(e){console.warn('Verification failed:',e);return false;}
+}
+
+function getCurrentTier(){
+const cert=storage.get('tierCertificate');
+if(cert&&verifyCertificate(cert)){const elapsed=Date.now()-cert.activatedAt;if(elapsed<=TWO_WEEKS_MS){return cert.tier;}}
+const tier=storage.get('userTier'),activated=storage.get('tierActivatedAt');
+if(tier==='FREE'&&activated){const elapsed=Date.now()-activated;if(elapsed<=TWO_WEEKS_MS){return'FREE';}}
+storage.set('userTier',null);storage.set('tierActivatedAt',null);storage.set('tierCertificate',null);
+return'FREE';
+}
+
+function getTierStatus(){
+const currentTier=getCurrentTier();
+if(currentTier==='FREE'){
+const activated=storage.get('tierActivatedAt');
+if(activated){const expires=activated+TWO_WEEKS_MS;const daysLeft=Math.max(0,Math.ceil((expires-Date.now())/(1000*60*60*24)));return{tier:'FREE',active:true,daysLeft};}
+return{tier:'FREE',active:false};
+}
+const cert=storage.get('tierCertificate');
+if(cert){const expires=cert.activatedAt+TWO_WEEKS_MS;const daysLeft=Math.max(0,Math.ceil((expires-Date.now())/(1000*60*60*24)));return{tier:cert.tier,active:true,daysLeft};}
+return{tier:'FREE',active:false};
+}
+
+function updateUI(){
+const status=getTierStatus();
+const displayEl=document.getElementById('currentTierDisplay'),expiryEl=document.getElementById('tierExpiryDisplay');
+displayEl.textContent=status.tier;displayEl.className='tier-status-value '+status.tier.toLowerCase();
+if(status.active&&status.tier!=='FREE'){expiryEl.textContent=`expires in ${status.daysLeft} days`;}
+else if(status.tier==='FREE'&&status.active){expiryEl.textContent=`expires in ${status.daysLeft} days`;}
+else{expiryEl.textContent='';}
+}
+
+async function activateTier(tier){
+if(tier!=='FREE'){
+const cert=await createSignedCertificate(tier);
+if(cert){storage.set('tierCertificate',cert);showMessage('inviteMessage',`✅ ${tier} activated!`,'success');}
+else{showMessage('inviteMessage','❌ Failed to activate tier','error');return;}
+}else{storage.set('userTier',tier);storage.set('tierActivatedAt',Date.now());showMessage('inviteMessage',`✅ ${tier} activated!`,'success');}
+updateUI();setTimeout(()=>window.location.href='profile.html',1500);
+}
+
+function selectTier(tier){
+const status=getTierStatus();
+if(tier==='FREE'){if(status.tier==='FREE'&&status.active){showMessage('inviteMessage','You already have FREE tier','error');return;}activateTier('FREE');return;}
+selectedTier=tier;paymentStartTime=Date.now();
+paymentMemo=`CRYPTOBROS:${tier}:${Date.now()}:${generateNonce().substring(0,8)}`;
+lastCheckedSig=null;
+document.getElementById('modalText').textContent=`Send exactly ${TIER_PRICES[tier]} AUS to activate ${tier}`;
+document.getElementById('modalAmount').textContent=`${TIER_PRICES[tier]} AUS`;
+document.getElementById('paymentMemoDisplay').textContent=paymentMemo;
+document.getElementById('paymentModal').classList.add('active');
+document.getElementById('paymentModal').setAttribute('aria-hidden','false');
+const verifyBtn=document.getElementById('verifyPaymentBtn');
+verifyBtn.disabled=true;verifyBtn.textContent='✅ Wait 30s...';
+if(verifyTimer)clearTimeout(verifyTimer);
+verifyTimer=setTimeout(()=>{verifyBtn.disabled=false;verifyBtn.textContent='✅ I\'ve Sent Payment';},30000);
+setTimeout(()=>document.getElementById('copyTreasuryBtn')?.focus(),100);
+}
+
+function copyToClipboard(text){
+if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(()=>{showPaymentStatus('success','✓ Copied!');setTimeout(()=>hidePaymentStatus(),2000);}).catch(()=>fallbackCopy(text));}
+else{fallbackCopy(text);}
+}
+function fallbackCopy(text){
+const textarea=document.createElement('textarea');textarea.value=text;textarea.style.position='fixed';textarea.style.opacity='0';document.body.appendChild(textarea);textarea.select();
+try{document.execCommand('copy');showPaymentStatus('success','✓ Copied!');setTimeout(()=>hidePaymentStatus(),2000);}
+catch(err){showPaymentStatus('error','❌ Failed to copy');setTimeout(()=>hidePaymentStatus(),2000);}
+document.body.removeChild(textarea);
+}
+
+function showPaymentStatus(type,message){
+const statusEl=document.getElementById('paymentStatus');statusEl.className='payment-status '+type;statusEl.innerHTML='';
+if(message.includes('spinner')){const spinner=document.createElement('span');spinner.className='spinner';statusEl.appendChild(spinner);const textNode=document.createTextNode(message.replace(/<[^>]*>/g,''));statusEl.appendChild(textNode);}
+else{statusEl.textContent=message;}
+statusEl.style.display='block';
+}
+function hidePaymentStatus(){document.getElementById('paymentStatus').style.display='none';}
+
+function openPhantomPayment(){
+if(!selectedTier)return;
+if(!hasPhantom()){showPaymentStatus('error','🦊 Phantom not detected.');setTimeout(()=>window.open('https://phantom.app/','_blank'),2000);return;}
+const amount=TIER_PRICES[selectedTier],lamports=IS_DEMO_MODE?amount*1e9:amount;
+const url=`https://phantom.app/ul/transfer?to=${TREASURY}&amount=${lamports}`;
+try{window.open(url,'_blank');showPaymentStatus('info','<span class="spinner"></span> Complete payment in Phantom with the memo');startPaymentPolling();}
+catch(e){showPaymentStatus('error','❌ Failed to open Phantom');}
+}
+
+function startPaymentPolling(){
+if(isPollingActive)return;isPollingActive=true;let attempts=0;const maxAttempts=60;
+async function poll(){
+if(!selectedTier||!isPollingActive)return;attempts++;
+const received=await checkPaymentReceived();
+if(received){handlePaymentSuccess();return;}
+if(Date.now()-paymentStartTime>PAYMENT_TIMEOUT||attempts>=maxAttempts){showPaymentStatus('error','⏰ Payment timeout.');stopPolling();return;}
+pollingTimeout=setTimeout(poll,5000);
+}
+if(pollingTimeout)clearTimeout(pollingTimeout);poll();
+}
+function stopPolling(){isPollingActive=false;if(pollingTimeout){clearTimeout(pollingTimeout);pollingTimeout=null;}}
+
+async function checkPaymentReceived(){
+if(!connection||!selectedTier)return false;
+let retries=0;const maxRetries=3;
+while(retries<maxRetries){
+try{
+const treasuryPubkey=new solanaWeb3.PublicKey(TREASURY);
+const options={limit:100};
+if(lastCheckedSig){options.until=lastCheckedSig;}
+const signatures=await connection.getSignaturesForAddress(treasuryPubkey,options);
+if(signatures.length>0){lastCheckedSig=signatures[signatures.length-1].signature;}
+for(const sig of signatures){
+if(sig.blockTime*1000<paymentStartTime-5000)continue;
+const tx=await connection.getParsedTransaction(sig.signature,{maxSupportedTransactionVersion:0});
+if(!tx||!tx.meta)continue;
+let hasCorrectMemo=false;
+if(tx.transaction.message.instructions){
+for(const ix of tx.transaction.message.instructions){
+if(ix.programId&&ix.programId.toString()==='MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr'){
+if(ix.data&&new TextDecoder().decode(ix.data).includes(paymentMemo)){hasCorrectMemo=true;break;}
+}
+}
+}
+if(!hasCorrectMemo)continue;
+const expectedAmount=TIER_PRICES[selectedTier]*1e9;let amountSent=0;
+const treasuryIndex=tx.transaction.message.accountKeys.findIndex(key=>key.equals(treasuryPubkey));
+if(treasuryIndex!==-1&&tx.meta.postBalances&&tx.meta.preBalances){amountSent=tx.meta.postBalances[treasuryIndex]-tx.meta.preBalances[treasuryIndex];}
+if(!IS_DEMO_MODE&&tx.meta.innerInstructions){
+for(const inner of tx.meta.innerInstructions){
+for(const ix of inner.instructions){
+if(ix.parsed?.type==='transfer'&&ix.parsed.info.destination===TREASURY){
+if(ix.parsed.info.amount>=expectedAmount*0.99){return true;}
+}
+}
+}
+}
+if(amountSent>=expectedAmount*0.99){return true;}
+}
+return false;
+}catch(err){
+if(err.message?.includes('429')&&retries<maxRetries-1){retries++;await new Promise(r=>setTimeout(r,5000*retries));continue;}
+console.error('Payment check error:',err);return false;
+}
+}
+return false;
+}
+
+function handlePaymentSuccess(){stopPolling();showPaymentStatus('success','✅ Payment detected! Activating tier...');setTimeout(()=>{activateTier(selectedTier);closeModal();},2000);}
+async function verifyPayment(){showPaymentStatus('info','<span class="spinner"></span> Verifying...');const received=await checkPaymentReceived();if(received){handlePaymentSuccess();}else{showPaymentStatus('error','⏳ Payment not detected. Check memo and amount.');}}
+function closeModal(){
+document.getElementById('paymentModal').classList.remove('active');
+document.getElementById('paymentModal').setAttribute('aria-hidden','true');
+stopPolling();selectedTier=null;hidePaymentStatus();
+if(verifyTimer)clearTimeout(verifyTimer);
+}
+function showMessage(elementId,text,type){const msgEl=document.getElementById(elementId);msgEl.textContent=text;msgEl.className=type;msgEl.style.display='block';setTimeout(()=>{msgEl.style.display='none';},3000);}
+
+function activateInvite(){
+const code=document.getElementById('inviteCode').value.trim();
+if(!code){showMessage('inviteMessage','Please enter an invite code','error');return;}
+if(!/^(PRE|MST|PRO)-\d{4}$/.test(code)){showMessage('inviteMessage','Invalid format. Use: PRE-1234, MST-5678, PRO-9012','error');return;}
+const invite=VALID_INVITES[code];if(!invite){showMessage('inviteMessage','Invalid invite code','error');return;}
+const usedInvites=storage.get('usedInvites',[]);if(usedInvites.includes(code)){showMessage('inviteMessage','Already used on this device','error');return;}
+usedInvites.push(code);storage.set('usedInvites',usedInvites);
+showMessage('inviteMessage',`✅ ${invite.tier} invite activated!`,'success');activateTier(invite.tier);
+}
+
+window.addEventListener('beforeunload',()=>{if(updateTimeout)clearTimeout(updateTimeout);stopPolling();if(verifyTimer)clearTimeout(verifyTimer);});
+
+function startUIUpdates(){
+const scheduleUpdate=()=>{if(document.visibilityState==='visible'){updateUI();}updateTimeout=setTimeout(scheduleUpdate,60000);};
+scheduleUpdate();
+}
+
+function init(){
+startUIUpdates();
+document.getElementById('freeBtn').addEventListener('click',()=>selectTier('FREE'));
+document.getElementById('masterBtn').addEventListener('click',()=>selectTier('MASTER'));
+document.getElementById('proBtn').addEventListener('click',()=>selectTier('PRO'));
+document.getElementById('premiumBtn').addEventListener('click',()=>selectTier('PREMIUM'));
+document.getElementById('inviteBtn').addEventListener('click',activateInvite);
+document.getElementById('closeModalBtn').addEventListener('click',closeModal);
+document.getElementById('cancelModalBtn').addEventListener('click',closeModal);
+document.getElementById('paymentModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('paymentModal'))closeModal();});
+const copyTreasury=()=>copyToClipboard(TREASURY),copyAmount=()=>copyToClipboard(document.getElementById('modalAmount').textContent),copyMemo=()=>copyToClipboard(paymentMemo);
+['copyTreasuryBtn','treasuryAddr'].forEach(id=>{document.getElementById(id).addEventListener('click',copyTreasury);document.getElementById(id).addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();copyTreasury();}});});
+['copyAmountBtn','modalAmount'].forEach(id=>{document.getElementById(id).addEventListener('click',copyAmount);document.getElementById(id).addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();copyAmount();}});});
+document.getElementById('copyMemoBtn').addEventListener('click',copyMemo);
+document.getElementById('copyMemoBtn').addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();copyMemo();}});
+document.getElementById('phantomPayBtn').addEventListener('click',openPhantomPayment);
+document.getElementById('verifyPaymentBtn').addEventListener('click',verifyPayment);
+document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeModal();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stopPolling();}else if(selectedTier&&document.getElementById('paymentModal').classList.contains('active')){startPaymentPolling();}});
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+})();
+</script>
 </body>
 </html>
