@@ -12,7 +12,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end; /* Прижимаем контент к низу */
       align-items: center;
       position: relative;
       font-family: 'Quicksand', Arial, sans-serif;
@@ -25,7 +25,6 @@
       z-index: -1;
       filter: brightness(0.9);
     }
-    /* H1 REMOVED - as requested */
     
     .btn {
       background: linear-gradient(45deg, #003366, #005580);
@@ -39,7 +38,7 @@
       font-family: 'Quicksand', Arial, sans-serif;
       letter-spacing: 1.5px;
       box-shadow: 0 0 30px rgba(0, 85, 128, 0.9);
-      margin-bottom: 100px;
+      margin-bottom: 100px; /* 100px над футером */
       transition: all 0.3s ease;
       text-decoration: none;
       display: inline-block;
@@ -50,14 +49,15 @@
     }
     
     footer {
-      position: absolute;
-      bottom: 20px;
       width: 100%;
       text-align: center;
       font-family: 'Quicksand', Arial, sans-serif;
       font-weight: 700;
+      padding: 20px 0;
       animation: colorChange 15s infinite;
+      background: transparent;
     }
+    
     @keyframes colorChange {
       0% { color: #00ff9d; }
       16.67% { color: #ff00ff; }
@@ -139,8 +139,6 @@
     <div class="language-option" data-lang="he">עברית</div>
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
-
-  <!-- H1 REMOVED - as requested -->
   
   <a href="rules.html" class="btn" id="enterBtn" aria-label="Enter the Cryptobros Club">Enter the Club</a>
 
