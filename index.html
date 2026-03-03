@@ -5,51 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS</title>
 
-  <!-- Preload -->
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" as="style">
-  <link rel="preload" href="./logo.jpg" as="image">
-
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --bg-color: #000;
+      --gradient-start: #00052a;
+      --gradient-end: #001133;
+      --text-color: #e0f7ff;
+      --accent: #00ff9d;
+      --accent-glow: rgba(0,255,157,0.7);
+      --btn-gradient: linear-gradient(45deg, #003366, #005580);
+      --btn-hover: #0066cc;
+      --btn-shadow: rgba(0, 85, 128, 0.8);
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f0f4ff;
+      --gradient-start: #e0eaff;
+      --gradient-end: #d0e0ff;
+      --text-color: #0a0c1f;
+      --accent: #0066cc;
+      --accent-glow: rgba(0,102,204,0.5);
+      --btn-gradient: linear-gradient(45deg, #66aaff, #88ccff);
+      --btn-hover: #0055aa;
+      --btn-shadow: rgba(102,170,255,0.6);
+    }
+
     body {
       margin: 0;
       padding: 0;
-      background: #000;
+      background: var(--bg-color);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       position: relative;
-      font-family: 'Quicksand', 'Segoe UI', sans-serif;
+      color: var(--text-color);
+      font-family: 'Quicksand', sans-serif;
+      transition: background 0.4s ease, color 0.4s ease;
     }
+
     .bg {
       position: fixed;
       inset: 0;
-      background: linear-gradient(to bottom, #00052a, #001133), url('./logo.jpg') center/cover no-repeat;
+      background: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end)),
+                  url('./logo.jpg') center/cover no-repeat;
       z-index: -1;
       filter: brightness(0.9);
+      transition: filter 0.4s ease;
     }
+
+    [data-theme="light"] .bg {
+      filter: brightness(1.05);
+    }
+
     .content {
       text-align: center;
       z-index: 1;
       padding: 0 20px;
     }
-    h1 {
-      color: #00ff9d;
-      font-size: clamp(3.5rem, 10vw, 6rem);
-      margin: 0 0 1rem;
-      text-shadow: 0 0 30px rgba(0,255,157,0.7);
-    }
-    .subtitle {
-      color: #88aaff;
-      font-size: clamp(1.3rem, 5vw, 1.8rem);
-      margin: 0 0 3rem;
-      opacity: 0.9;
-    }
+
     .btn {
-      background: linear-gradient(45deg, #003366, #005580);
+      background: var(--btn-gradient);
       color: white;
       border: none;
       padding: 1.4rem 3.6rem;
@@ -58,15 +78,17 @@
       border-radius: 12px;
       cursor: pointer;
       letter-spacing: 1px;
-      box-shadow: 0 0 25px rgba(0, 85, 128, 0.8);
+      box-shadow: 0 0 25px var(--btn-shadow);
       text-decoration: none;
       display: inline-block;
       transition: all 0.3s ease;
     }
+
     .btn:hover {
       transform: scale(1.07);
-      box-shadow: 0 0 35px #0066cc;
+      box-shadow: 0 0 35px var(--btn-hover);
     }
+
     footer {
       position: absolute;
       bottom: 20px;
@@ -75,16 +97,39 @@
       font-weight: 700;
       animation: colorChange 45s infinite;
     }
+
     @keyframes colorChange {
-      0%, 15% { color: #00ff9d; }
+      0%, 15% { color: var(--accent); }
       20%, 35% { color: #ff00ff; }
       40%, 55% { color: #00ffff; }
       60%, 75% { color: #ff9d00; }
       80%, 95% { color: #9d00ff; }
-      100% { color: #00ff9d; }
+      100% { color: var(--accent); }
     }
 
-    /* Language switcher */
+    /* Theme toggle button */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* Language switcher (оставил как было, но без лишнего) */
     .language-btn {
       position: absolute;
       top: 20px;
@@ -134,99 +179,96 @@
       color: white;
     }
 
-    /* RTL */
     body[dir="rtl"] .language-btn { right: auto; left: 20px; }
     body[dir="rtl"] .language-menu { right: auto; left: 20px; }
     body[dir="rtl"] .language-option { text-align: left; }
-    body[dir="rtl"] .btn { direction: rtl; text-align: right; }
 
     @media (max-width: 600px) {
-      .language-btn { top: 12px; right: 12px; padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+      .language-btn, .theme-toggle { top: 12px; padding: 0.6rem 1.2rem; font-size: 0.9rem; }
       .btn { padding: 1rem 2.8rem; font-size: 1.3rem; margin-bottom: 60px; }
-      h1 { font-size: clamp(2.8rem, 12vw, 4.5rem); }
-      .subtitle { font-size: clamp(1.1rem, 5vw, 1.4rem); }
     }
   </style>
 </head>
 <body>
+
   <div class="bg"></div>
 
-  <div class="content">
-    <h1 id="pageTitle">CRYPTOBROS</h1>
-    <p class="subtitle" id="pageSubtitle">Choose your tier</p>
-    <a href="payment.html" class="btn" id="enterBtn" type="button">Enter the Club</a>
-  </div>
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">🌙</button>
 
-  <footer id="footer">Cryptobros 2026 ©</footer>
-
-  <!-- Language switcher -->
+  <!-- Language Button and Menu -->
   <button class="language-btn" id="languageBtn" aria-label="Select language" aria-expanded="false">LANGUAGE</button>
   <div class="language-menu" id="languageMenu">
     <div class="language-option active" data-lang="en">English</div>
-    <div class="language-option" data-lang="fr">Français</div>
-    <div class="language-option" data-lang="es">Español</div>
-    <div class="language-option" data-lang="pt">Português</div>
-    <div class="language-option" data-lang="zh">简体中文</div>
-    <div class="language-option" data-lang="ar">العربية</div>
-    <div class="language-option" data-lang="he">עברית</div>
     <div class="language-option" data-lang="ru">Русский</div>
+    <!-- Добавь остальные языки по желанию -->
   </div>
 
+  <!-- Main Button -->
+  <a href="payment.html" class="btn" id="enterBtn">Enter the Club</a>
+
+  <footer id="footer">Cryptobros 2026 ©</footer>
+
   <script>
-    // Translations
+    // === TRANSLATIONS ===
     const translations = {
-      en: { title: "CRYPTOBROS", subtitle: "Choose your tier", btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
-      fr: { title: "CRYPTOBROS", subtitle: "Choisissez votre niveau", btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
-      es: { title: "CRYPTOBROS", subtitle: "Elige tu nivel", btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
-      pt: { title: "CRYPTOBROS", subtitle: "Escolha seu nível", btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
-      zh: { title: "CRYPTOBROS", subtitle: "选择您的等级", btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
-      ar: { title: "CRYPTOBROS", subtitle: "اختر مستواك", btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
-      he: { title: "CRYPTOBROS", subtitle: "בחר את הדרגה שלך", btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
-      ru: { title: "CRYPTOBROS", subtitle: "Выбери свой уровень", btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
+      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
+      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
+      // добавь другие языки, если нужно
     };
 
+    // === THEME HANDLING ===
+    const htmlEl = document.documentElement;
+    const themeBtn = document.getElementById('themeToggle');
+
+    function setTheme(theme) {
+      htmlEl.setAttribute('data-theme', theme);
+      themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+      localStorage.setItem('theme', theme);
+    }
+
+    // Load saved theme or system preference
+    const savedTheme = localStorage.getItem('theme') ||
+                       (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    setTheme(savedTheme);
+
+    themeBtn.addEventListener('click', () => {
+      const newTheme = htmlEl.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // === LANGUAGE HANDLING ===
     function applyLanguage(lang) {
       try {
         localStorage.setItem('lang', lang);
-      } catch (e) {
-        console.warn('localStorage blocked:', e);
-      }
+      } catch (e) {}
 
       const t = translations[lang] || translations.en;
 
-      const titleEl = document.getElementById('pageTitle');
-      if (titleEl) titleEl.textContent = t.title;
-
-      const subtitleEl = document.getElementById('pageSubtitle');
-      if (subtitleEl) subtitleEl.textContent = t.subtitle;
-
-      const btnEl = document.getElementById('enterBtn');
-      if (btnEl) btnEl.textContent = t.btn;
-
-      const footerEl = document.getElementById('footer');
-      if (footerEl) footerEl.textContent = t.footer;
+      document.getElementById('enterBtn').textContent = t.btn;
+      document.getElementById('footer').textContent = t.footer;
 
       document.querySelectorAll('.language-option').forEach(opt => {
         opt.classList.toggle('active', opt.dataset.lang === lang);
       });
 
-      document.getElementById('languageBtn')?.setAttribute('aria-expanded', 'false');
+      document.querySelector('#languageBtn').setAttribute('aria-expanded', 'false');
 
       document.body.setAttribute('dir', (lang === 'ar' || lang === 'he') ? 'rtl' : '');
       document.documentElement.lang = lang;
     }
 
-    // INIT
+    // INIT LANGUAGE
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('lang') || 'en';
       applyLanguage(savedLang);
     });
 
-    // Events
+    // Language Events
     const languageBtn = document.getElementById('languageBtn');
     const languageMenu = document.getElementById('languageMenu');
 
-    languageBtn?.addEventListener('click', (e) => {
+    languageBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isOpen = languageMenu.classList.toggle('active');
       languageBtn.setAttribute('aria-expanded', isOpen);
@@ -237,25 +279,25 @@
         e.stopPropagation();
         applyLanguage(opt.dataset.lang);
         languageMenu.classList.remove('active');
-        languageBtn?.setAttribute('aria-expanded', 'false');
+        languageBtn.setAttribute('aria-expanded', 'false');
       });
     });
 
     document.addEventListener('click', (e) => {
-      if (!languageBtn?.contains(e.target) && !languageMenu?.contains(e.target)) {
-        languageMenu?.classList.remove('active');
-        languageBtn?.setAttribute('aria-expanded', 'false');
+      if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
+        languageMenu.classList.remove('active');
+        languageBtn.setAttribute('aria-expanded', 'false');
       }
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && languageMenu?.classList.contains('active')) {
+      if (e.key === 'Escape' && languageMenu.classList.contains('active')) {
         languageMenu.classList.remove('active');
-        languageBtn?.setAttribute('aria-expanded', 'false');
+        languageBtn.setAttribute('aria-expanded', 'false');
       }
     });
 
-    languageMenu?.addEventListener('click', e => e.stopPropagation());
+    languageMenu.addEventListener('click', e => e.stopPropagation());
   </script>
 </body>
 </html>
