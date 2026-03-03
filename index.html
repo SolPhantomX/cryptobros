@@ -4,34 +4,65 @@
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <link rel="preload" href="logo.jpg" as="image">
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
       background: #000;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
+      gap: 100px;
+      padding-bottom: 140px;
       position: relative;
+      font-family: 'Quicksand', Arial, sans-serif;
     }
+    
+    /* Лоадер */
+    .loader {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #00ff9d;
+      font-size: 2rem;
+      font-family: 'Quicksand', Arial, sans-serif;
+      z-index: 1000;
+      text-shadow: 0 0 20px rgba(0, 255, 157, 0.8);
+      animation: pulse 1.5s infinite;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* Фон с надёжным фолбэком */
     .bg {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: url('logo.jpg') center/cover no-repeat;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, #00052a, #001133);
+      background-image: linear-gradient(to bottom, #00052a, #001133), url('logo.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       z-index: -1;
       filter: brightness(0.9);
+      transition: filter 0.5s ease;
     }
-    h1 {
-      color: #00ff9d;
-      font-size: clamp(5rem, 15vw, 10rem);
-      font-weight: 700;
-      margin: 0 0 5rem;
-      text-shadow: 0 0 50px rgba(0,255,157,0.8);
-      letter-spacing: 4px;
-    }
+    
     .btn {
       background: linear-gradient(45deg, #003366, #005580);
       color: #fff;
@@ -40,34 +71,37 @@
       font-size: 1.6rem;
       font-weight: bold;
       border-radius: 12px;
-      cursor: pointer;
-      font-family: 'Quicksand', sans-serif;
+      cursor: pointer !important;
+      font-family: 'Quicksand', Arial, sans-serif;
       letter-spacing: 1.5px;
       box-shadow: 0 0 30px rgba(0, 85, 128, 0.9);
-      margin-bottom: 100px; /* ровно 100px над футером */
       transition: all 0.3s ease;
+      z-index: 10;
+      text-decoration: none;
+      display: inline-block;
     }
     .btn:hover {
       transform: scale(1.07);
       box-shadow: 0 0 45px #0066cc;
     }
+    
     footer {
-      position: absolute;
-      bottom: 20px;
       width: 100%;
       text-align: center;
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Quicksand', Arial, sans-serif;
       font-weight: 700;
-      animation: colorChange 15s infinite;
+      padding: 20px 0;
+      animation: colorChange 60s steps(6) infinite forwards;
+      background: transparent;
+      will-change: color;
     }
+    
     @keyframes colorChange {
-      0% { color: #00ff9d; }
-      16.67% { color: #ff00ff; }
-      33.33% { color: #00ffff; }
-      50% { color: #ff9d00; }
-      66.67% { color: #9d00ff; }
-      83.33% { color: #ffff00; }
-      100% { color: #00ff9d; }
+      0%, 20% { color: #00ff9d; }
+      25%, 40% { color: #ff00ff; }
+      45%, 60% { color: #00ffff; }
+      65%, 80% { color: #ff9d00; }
+      85%, 100% { color: #9d00ff; }
     }
 
     .language-btn {
@@ -82,7 +116,7 @@
       font-weight: bold;
       border-radius: 20px;
       cursor: pointer;
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Quicksand', Arial, sans-serif;
       box-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
       z-index: 100;
     }
@@ -102,11 +136,13 @@
       box-shadow: 0 0 20px rgba(102, 255, 255, 0.8);
       min-width: 180px;
     }
-    .language-menu.active { display: block; }
+    .language-menu.active {
+      display: block;
+    }
     .language-option {
       padding: 12px 25px;
       color: #00ff9d;
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Quicksand', Arial, sans-serif;
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s;
@@ -120,16 +156,47 @@
       background: rgba(102, 255, 255, 0.3);
       color: #fff;
     }
+    
+    /* Медиа-запросы для мобильных */
+    @media (max-width: 400px) {
+      .language-menu {
+        right: 10px;
+        min-width: 160px;
+      }
+      .language-option {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+      }
+      .btn {
+        padding: 1.2rem 3rem;
+        font-size: 1.4rem;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .language-menu {
+        right: 5px;
+        min-width: 140px;
+      }
+      .language-option {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+      }
+    }
+    
     body[dir="rtl"] .language-btn { right: auto; left: 20px; }
     body[dir="rtl"] .language-menu { right: auto; left: 20px; text-align: left; }
     body[dir="rtl"] .language-option { text-align: left; }
   </style>
 </head>
 <body>
+  <!-- Лоадер -->
+  <div class="loader" id="loader">Loading...</div>
+  
   <div class="bg"></div>
 
   <!-- Language Button and Menu -->
-  <button class="language-btn" id="languageBtn">LANGUAGE</button>
+  <button type="button" class="language-btn" id="languageBtn">LANGUAGE</button>
   <div class="language-menu" id="languageMenu">
     <div class="language-option active" data-lang="en">English</div>
     <div class="language-option" data-lang="fr">Français</div>
@@ -141,15 +208,40 @@
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
 
-  <!-- Большой старый заголовок -->
-  <h1>CRYPTOBROS</h1>
-
-  <!-- Кнопка Enter the Club внизу по центру, 100px над футером -->
-  <button class="btn" onclick="location.href='onboarding.html'" id="enterBtn">Enter the Club</button>
+  <!-- Кнопка Enter the Club внизу -->
+  <a href="onboarding.html" class="btn" id="enterBtn" aria-label="Enter the Cryptobros Club">Enter the Club</a>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
+    // Лоадер убираем сразу после загрузки DOM (150ms достаточно)
+    document.addEventListener('DOMContentLoaded', () => {
+      const loader = document.getElementById('loader');
+      if (loader) {
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.remove(), 150);
+        }, 150); // Даём браузеру 150ms на отрисовку контента
+      }
+    });
+
+    // Проверка загрузки фонового изображения
+    window.addEventListener('load', () => {
+      const img = new Image();
+      img.src = 'logo.jpg';
+      img.onerror = () => {
+        const bg = document.querySelector('.bg');
+        if (bg) {
+          bg.style.filter = 'brightness(1)'; // Убираем затемнение для градиента
+          console.log('✓ Логотип не загружен — используется градиентный фон');
+        }
+      };
+      img.onload = () => {
+        console.log('✓ Логотип успешно загружен');
+      };
+    });
+
+    // TRANSLATIONS
     const translations = {
       en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
       fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
@@ -164,8 +256,12 @@
     function applyLanguage(lang) {
       localStorage.setItem('lang', lang);
       const t = translations[lang] || translations.en;
-      document.getElementById('enterBtn').textContent = t.btn;
-      document.getElementById('footer').textContent = t.footer;
+
+      const btn = document.getElementById('enterBtn');
+      if (btn) btn.textContent = t.btn;
+
+      const footer = document.getElementById('footer');
+      if (footer) footer.textContent = t.footer;
 
       document.querySelectorAll('.language-option').forEach(opt => {
         opt.classList.toggle('active', opt.dataset.lang === lang);
@@ -208,7 +304,7 @@
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && languageMenu.classList.contains('active')) {
         languageMenu.classList.remove('active');
       }
     });
