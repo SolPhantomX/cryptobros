@@ -13,6 +13,27 @@ color:#e0f7ff;
 font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 min-height:100vh;
 padding:40px 20px;
+position: relative;
+}
+/* Back button in top left */
+.back-button {
+position: absolute;
+top: 20px;
+left: 20px;
+color: #88aaff;
+text-decoration: none;
+font-size: 1.1rem;
+padding: 10px 20px;
+border: 2px solid #4455aa;
+border-radius: 12px;
+transition: all 0.3s ease;
+z-index: 100;
+}
+.back-button:hover {
+color: #00ff9d;
+border-color: #00ff9d;
+transform: translateX(-5px);
+box-shadow: 0 0 20px rgba(0,255,157,0.3);
 }
 .container {
 max-width:1200px;
@@ -31,19 +52,6 @@ color:#88aaff;
 font-size:1.15rem;
 margin-bottom:30px;
 opacity:0.9;
-}
-.demo-indicator {
-position:fixed;
-top:10px;
-right:10px;
-background:#ffaa00;
-color:#0a0c1f;
-padding:5px 12px;
-border-radius:20px;
-font-size:0.8rem;
-font-weight:700;
-z-index:1000;
-box-shadow:0 0 15px #ffaa00;
 }
 .tier-status {
 background:rgba(12,18,45,0.9);
@@ -92,28 +100,34 @@ border-radius:20px;
 padding:28px 20px;
 backdrop-filter:blur(8px);
 -webkit-backdrop-filter:blur(8px);
-transition:all 0.35s ease;
+transition:transform 0.3s ease, box-shadow 0.3s ease;
 border:2px solid transparent;
 background-clip:padding-box;
+transform-style: preserve-3d;
+perspective: 1000px;
 }
 @supports not (backdrop-filter: blur(1px)) {
 .tier-card { background:rgba(17,17,34,0.9); }
+}
+/* 3D tilt effect on corner click/hover */
+.tier-card:hover {
+transform: rotateX(2deg) rotateY(-2deg) translateZ(10px);
+box-shadow: 0 30px 50px rgba(0,0,0,0.7);
+}
+.tier-card:active {
+transform: rotateX(4deg) rotateY(-4deg) translateZ(20px);
 }
 .free { border-image:linear-gradient(180deg,#00ff9d,#00cc88) 1; box-shadow:0 0 30px rgba(0,255,157,0.25); }
 .master { border-image:linear-gradient(180deg,#d700ff,#a500cc) 1; box-shadow:0 0 30px rgba(215,0,255,0.25); }
 .pro { border-image:linear-gradient(180deg,#00d4ff,#0099cc) 1; box-shadow:0 0 30px rgba(0,212,255,0.25); }
 .premium { border-image:linear-gradient(180deg,#ffd700,#ccaa00) 1; box-shadow:0 0 40px rgba(255,215,0,0.35); }
-.tier-card:hover {
-transform:translateY(-10px);
-box-shadow:0 20px 45px rgba(0,0,0,0.55);
-}
 .tier-name { font-size:2.1rem; font-weight:900; margin-bottom:8px; }
 .tier-price { font-size:2.4rem; font-weight:900; margin-bottom:24px; }
 .free    .tier-name,.free    .tier-price { color:#00ff9d; text-shadow:0 0 15px #00ff9d; }
 .master  .tier-name,.master  .tier-price { color:#d700ff; text-shadow:0 0 15px #d700ff; }
 .pro     .tier-name,.pro     .tier-price { color:#00d4ff; text-shadow:0 0 15px #00d4ff; }
 .premium .tier-name,.premium .tier-price { color:#ffd700; text-shadow:0 0 15px #ffd700; }
-ul { text-align:left; margin-bottom:28px; }
+ul { text-align:left; margin-bottom:28px; min-height: 120px; }
 li {
 font-size:0.98rem;
 color:#d0e8ff;
@@ -143,6 +157,17 @@ font-weight:700;
 text-transform:uppercase;
 cursor:pointer;
 transition:all 0.3s ease;
+/* Align all buttons to same line */
+margin-top: auto;
+position: relative;
+bottom: 0;
+}
+.tier-card {
+display: flex;
+flex-direction: column;
+}
+.tier-card ul {
+flex-grow: 1;
 }
 .select-btn:hover:not(:disabled) {
 transform:translateY(-4px);
@@ -302,16 +327,6 @@ display: none;
 #inviteMessage.success { background: rgba(0,255,157,0.1); color:#00ff9d; border:1px solid #00ff9d; }
 #inviteMessage.error { background: rgba(255,77,77,0.1); color:#ff4d4d; border:1px solid #ff4d4d; }
 
-.back-link {
-color: #88aaff;
-text-decoration: none;
-font-size: 1.1rem;
-display: inline-block;
-margin-top: 30px;
-}
-
-.back-link:hover { color:#00ff9d; }
-
 .modal-overlay {
 display:none;
 position:fixed;
@@ -347,14 +362,6 @@ margin-bottom:20px;
 color:#88aaff;
 margin-bottom:20px;
 line-height:1.5;
-}
-.demo-warning {
-color:#ffaa00;
-font-size:0.85rem;
-margin-top:5px;
-padding:8px;
-background:rgba(255,170,0,0.1);
-border-radius:6px;
 }
 .payment-details {
 background:#0a0c1f;
@@ -510,11 +517,14 @@ text-align:center;
 .invite-row { flex-direction:column; }
 .invite-btn { width:100%; padding:14px; }
 .tier-status { flex-direction:column; text-align:center; }
+.back-button { top: 10px; left: 10px; padding: 8px 16px; font-size: 0.9rem; }
 }
 </style>
 </head>
 <body>
-<div class="demo-indicator">🧪 DEMO MODE</div>
+<!-- Back button in top left -->
+<a href="index.html" class="back-button">← BACK</a>
+
 <div class="container">
 <h1>CHOOSE YOUR TIER</h1>
 <div class="subtitle">Select access level and unlock powerful features</div>
@@ -604,8 +614,6 @@ text-align:center;
     </ul>
   </div>
 </div>
-
-<a href="index.html" class="back-link">← Back to Home</a>
 </div>
 
 <div class="modal-overlay" id="paymentModal" aria-hidden="true">
@@ -613,7 +621,6 @@ text-align:center;
 <button class="close-modal" id="closeModalBtn" aria-label="Close payment modal">&times;</button>
 <div class="modal-title" id="modalTitle">💳 Payment Required</div>
 <div class="modal-text" id="modalText"></div>
-<div class="demo-warning" id="demoWarning">⚠️ Demo mode: AUS = SOL for testing</div>
 <div class="memo-box">
 <div class="memo-label">📋 YOUR MEMO (COPY THIS EXACTLY):</div>
 <div id="paymentMemoDisplay" style="color:#00ff9d; font-weight:bold; word-break:break-all; font-size:1rem;"></div>
@@ -756,7 +763,14 @@ const cert=await createSignedCertificate(tier);
 if(cert){storage.set('tierCertificate',cert);showMessage('inviteMessage',`✅ ${tier} activated!`,'success');}
 else{showMessage('inviteMessage','❌ Failed to activate tier','error');return;}
 }else{storage.set('userTier',tier);storage.set('tierActivatedAt',Date.now());showMessage('inviteMessage',`✅ ${tier} activated!`,'success');}
-updateUI();setTimeout(()=>window.location.href='profile.html',1500);
+updateUI();
+
+// For creator: Premium button redirects to profile
+if(tier === 'PREMIUM') {
+setTimeout(()=>window.location.href='profile.html',1500);
+} else {
+setTimeout(()=>window.location.href='index.html',1500);
+}
 }
 
 function selectTier(tier){
