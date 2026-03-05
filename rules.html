@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cryptobros Rules</title>
-  <!-- FIXED: Removed spaces in font URLs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -15,15 +14,26 @@
       background: linear-gradient(135deg, #0a0a1a 0%, #111122 50%, #1a1a2a 100%);
       color: #e0e0ff;
       font-family: 'Inter', sans-serif;
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       padding: 2rem;
       position: relative;
-      overflow: hidden;
+      overflow-x: hidden;
     }
+    body.modal-open { overflow: hidden; }
+    /* FIXED: Added  prefix for SVG noise */
     body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: -1;
+    }
+    body::after {
       content: '';
       position: fixed;
       top: 0; left: 0;
@@ -35,7 +45,7 @@
       z-index: -1;
     }
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       width: 100%;
       background: rgba(15, 10, 25, 0.95);
       border-radius: 32px;
@@ -43,7 +53,8 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
       border: 3px solid rgba(102, 255, 255, 0.3);
       position: relative;
-      overflow: hidden;
+      z-index: 1;
+      margin: 2rem 0;
     }
     .back-btn {
       position: absolute;
@@ -73,278 +84,652 @@
     }
     .header {
       text-align: center;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
       position: relative;
       z-index: 1;
     }
     .header::after {
       content: '';
       position: absolute;
-      bottom: -15px;
+      bottom: -12px;
       left: 50%;
       transform: translateX(-50%);
-      width: 70%;
-      height: 3px;
+      width: 60%;
+      height: 2px;
       background: linear-gradient(90deg, transparent, #00ff9d, #ffd700, #00ff9d, transparent);
       border-radius: 2px;
     }
     h1 {
       font-family: 'Poppins', sans-serif;
-      font-size: 3.2rem;
+      font-size: 2.8rem;
       font-weight: 800;
       letter-spacing: 0.04em;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
       background: linear-gradient(90deg, #00ff9d, #ffd700, #66ffff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 0 25px rgba(0, 255, 157, 0.5);
+      text-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
     }
     .subtitle {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       color: #a0ffff;
-      margin-top: 0.8rem;
+      margin-top: 0.6rem;
       font-weight: 600;
-      line-height: 1.6;
+      line-height: 1.5;
+    }
+    .community-pulse {
+      background: rgba(20, 15, 35, 0.8);
+      border: 1px solid rgba(102, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      margin: 1.5rem 0 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      color: #b0d0ff;
+    }
+    .community-pulse span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .community-pulse .highlight {
+      color: #00ff9d;
+      font-weight: 700;
     }
     .tier-badge {
-      background: rgba(0, 30, 15, 0.7);
-      border: 2px solid #00ff9d;
-      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(30, 25, 50, 0.9), rgba(20, 15, 40, 0.95));
+      border: 2px solid rgba(102, 255, 255, 0.4);
+      border-radius: 16px;
       padding: 1rem 2rem;
       text-align: center;
-      margin: 1.8rem 0;
+      margin: 1.5rem 0;
       font-family: 'Poppins', sans-serif;
       font-weight: 800;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       letter-spacing: 0.03em;
       color: #00ff9d;
-      box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
+      box-shadow: 0 0 25px rgba(0, 255, 157, 0.2), inset 0 0 20px rgba(102, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
     }
+    @supports not (backdrop-filter: blur(1px)) {
+      .tier-badge { background: rgba(30, 25, 50, 0.98); }
+    }
+    .tier-badge:hover {
+      transform: rotateY(5deg) rotateX(2deg);
+      box-shadow: 0 0 35px rgba(0, 255, 157, 0.3), inset 0 0 30px rgba(102, 255, 255, 0.2);
+    }
+    .tier-badge .tier-name { display: block; margin-bottom: 0.3rem; }
+    .tier-badge .tier-details { font-size: 0.95rem; color: #a0a0ff; font-weight: 500; }
     .rules-container {
-      background: rgba(25, 15, 40, 0.8);
+      background: rgba(25, 15, 40, 0.7);
       border-radius: 20px;
       padding: 2rem;
-      margin-bottom: 2rem;
-      border: 2px solid rgba(102, 255, 255, 0.3);
-      max-height: 500px;
-      overflow-y: auto;
+      margin-bottom: 2.5rem;
+      border: 2px solid rgba(102, 255, 255, 0.2);
       position: relative;
       z-index: 1;
     }
-    .section-title.bonuses {
+    .section-title {
       font-family: 'Poppins', sans-serif;
-      font-size: 2rem;
+      font-size: 1.9rem;
       font-weight: 800;
-      margin: 1.8rem 0 1.5rem;
-      color: #00ff9d;
+      margin: 2rem 0 1.5rem;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      padding: 1rem;
-      background: rgba(0, 30, 15, 0.5);
-      border-radius: 16px;
-      border: 2px solid #00ff9d;
-      box-shadow: 0 0 20px rgba(0, 255, 157, 0.3);
+      gap: 10px;
+      padding: 0.8rem;
+      border-radius: 14px;
+      position: relative;
     }
-    .section-title.bonuses::before { content: '💎'; font-size: 2.2rem; }
+    .section-title.bonuses {
+      color: #00ff9d;
+      background: rgba(0, 30, 15, 0.4);
+      border: 2px solid rgba(0, 255, 157, 0.3);
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+    }
+    .section-title.bonuses::before { content: '💎'; font-size: 2rem; }
+    .section-title.punishments {
+      color: #b30000;
+      background: rgba(40, 5, 10, 0.5);
+      border: 2px solid rgba(179, 0, 0, 0.4);
+      box-shadow: 0 0 15px rgba(179, 0, 0, 0.2);
+    }
+    .section-title.punishments::before { content: '⚠️'; font-size: 2rem; }
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: 768px) {
+      .bonus-grid { grid-template-columns: 1fr 1fr; }
+    }
     .bonus-item {
-      background: rgba(10, 25, 15, 0.7);
-      border-radius: 16px;
-      padding: 1.4rem;
-      margin-bottom: 1.2rem;
-      border-left: 5px solid #00ff9d;
+      background: rgba(10, 25, 15, 0.6);
+      border-radius: 14px;
+      padding: 1.2rem;
+      border-left: 4px solid #00ff9d;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
-    .bonus-item:hover { transform: translateX(5px); border-left-width: 8px; box-shadow: 0 5px 20px rgba(0, 255, 157, 0.3); }
+    .bonus-item:hover {
+      transform: translateX(4px);
+      border-left-width: 6px;
+      box-shadow: 0 4px 15px rgba(0, 255, 157, 0.2);
+      background: rgba(10, 25, 15, 0.8);
+    }
+    .bonus-item.highlight {
+      border-left-color: #ffd700;
+      background: linear-gradient(135deg, rgba(30, 25, 15, 0.7), rgba(20, 20, 10, 0.8));
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    .bonus-item.highlight::after {
+      content: '🔥 TOP';
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #ffd700;
+      background: rgba(255, 215, 0, 0.15);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
     .bonus-item h3 {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 800;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
       color: #00ff9d;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-    .bonus-item h3::before { content: '✨'; font-size: 1.8rem; }
-    .bonus-item p { color: #a0ffa0; line-height: 1.8; font-size: 1.05rem; font-weight: 500; }
+    .bonus-item h3::before { content: '✨'; font-size: 1.6rem; }
+    .bonus-item p {
+      color: #b0ffb0;
+      line-height: 1.7;
+      font-size: 1rem;
+      font-weight: 500;
+    }
     .bonus-item p strong { color: #ffd700; font-weight: 700; }
-    .section-title.punishments {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2rem;
-      font-weight: 800;
-      margin: 2.5rem 0 1.5rem;
-      color: #ff0000;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 1rem;
-      background: rgba(50, 5, 5, 0.8);
-      border-radius: 16px;
-      border: 3px solid #ff0000;
-      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    .punishment-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
-    .section-title.punishments::before { content: '⚠️'; font-size: 2.2rem; }
+    @media (min-width: 768px) {
+      .punishment-grid { grid-template-columns: 1fr 1fr; }
+    }
     .punishment-item {
-      background: rgba(40, 10, 15, 0.85);
-      border-radius: 16px;
-      padding: 1.4rem;
-      margin-bottom: 1.2rem;
-      border-left: 6px solid #ff0000;
+      background: rgba(40, 10, 15, 0.7);
+      border-radius: 14px;
+      padding: 1.2rem;
+      border-left: 4px solid #b30000;
       transition: all 0.3s ease;
+      position: relative;
+    }
+    .punishment-item:hover {
+      transform: translateX(4px);
+      border-left-width: 6px;
+      box-shadow: 0 4px 15px rgba(179, 0, 0, 0.2);
+      background: rgba(40, 10, 15, 0.9);
+    }
+    .punishment-item.severe {
+      border-left-color: #660000;
+      background: linear-gradient(135deg, rgba(30, 5, 10, 0.8), rgba(20, 2, 5, 0.9));
+      border: 1px solid rgba(102, 0, 0, 0.4);
+    }
+    .punishment-item.severe::after {
+      content: '⚖️';
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 1.2rem;
+      opacity: 0.8;
     }
     .punishment-item h3 {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 800;
-      margin-bottom: 0.8rem;
-      color: #ff4d4d;
+      margin-bottom: 0.6rem;
+      color: #ff6b6b;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-    .punishment-item h3::before { content: '☠️'; font-size: 1.8rem; }
-    .punishment-item p { color: #ff9d9d; line-height: 1.8; font-size: 1.05rem; font-weight: 500; }
+    .punishment-item h3::before { content: '☠️'; font-size: 1.6rem; }
+    .punishment-item p {
+      color: #ffb3b3;
+      line-height: 1.7;
+      font-size: 1rem;
+      font-weight: 500;
+    }
     .punishment-item p strong { color: #ff0000; font-weight: 700; }
     .final-warning {
-      background: rgba(50, 10, 10, 0.95);
-      border: 4px solid #ff0000;
-      border-radius: 24px;
-      padding: 2rem;
-      margin: 2.5rem 0;
+      background: linear-gradient(135deg, rgba(40, 8, 8, 0.95), rgba(30, 5, 10, 0.98));
+      border: 3px solid #b30000;
+      border-radius: 20px;
+      padding: 1.8rem;
+      margin: 2rem 0;
       text-align: center;
-      box-shadow: 0 0 50px rgba(255, 0, 0, 0.7);
+      box-shadow: 0 0 40px rgba(179, 0, 0, 0.4), inset 0 0 30px rgba(102, 0, 0, 0.2);
+      position: relative;
+    }
+    .final-warning::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      background: linear-gradient(45deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+      border-radius: 22px;
+      pointer-events: none;
+      animation: pulse 3s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
     }
     .final-warning h3 {
       font-family: 'Poppins', sans-serif;
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 800;
-      color: #ff0000;
-      margin-bottom: 1.2rem;
-      text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+      color: #ff4d4d;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
     }
-    .final-warning p { color: #ffcccc; font-size: 1.25rem; line-height: 1.9; font-weight: 600; }
-    .final-warning p strong { color: #ff0000; font-size: 1.5rem; display: block; margin: 1rem 0; }
+    .final-warning p {
+      color: #ffcccc;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    .final-warning p strong {
+      color: #ff0000;
+      font-size: 1.3rem;
+      display: block;
+      margin: 0.8rem 0;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    }
+    .privacy-block {
+      background: rgba(15, 25, 20, 0.8);
+      border: 2px solid rgba(0, 255, 157, 0.3);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .privacy-block h4 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.3rem;
+      color: #00ff9d;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .privacy-block h4::before { content: '🔐'; font-size: 1.4rem; }
+    .privacy-block ul {
+      list-style: none;
+      text-align: left;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .privacy-block li {
+      color: #b0d0ff;
+      font-size: 0.95rem;
+      margin: 0.4rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .privacy-block li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #00ff9d;
+      font-weight: bold;
+    }
     .agreement-section {
       position: relative;
       margin: 2.5rem 0;
       padding: 2rem;
-      background: rgba(30, 5, 15, 0.95);
-      border-radius: 28px;
-      border: 4px solid #ff0000;
-      box-shadow: 0 0 50px rgba(255, 0, 0, 0.7);
+      background: linear-gradient(135deg, rgba(25, 5, 12, 0.95), rgba(20, 3, 10, 0.98));
+      border-radius: 24px;
+      border: 3px solid #b30000;
+      box-shadow: 0 0 40px rgba(179, 0, 0, 0.3), inset 0 0 30px rgba(102, 0, 0, 0.15);
       text-align: center;
     }
-    .blood-seal { text-align: center; margin-bottom: 1.8rem; }
-    .seal-icon { font-size: 4rem; margin-bottom: 0.8rem; }
+    .blood-seal { text-align: center; margin-bottom: 1.5rem; }
+    .seal-icon { font-size: 3.5rem; margin-bottom: 0.6rem; animation: float 3s ease-in-out infinite; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
     .seal-text {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 800;
       color: #ff6b6b;
-      letter-spacing: 0.06em;
-      text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
     }
-    .checkbox-wrapper { position: relative; display: inline-block; margin: 1.5rem auto; }
+    .checkbox-wrapper { position: relative; display: inline-block; margin: 1.2rem auto; }
     .custom-checkbox {
-      width: 80px; height: 80px;
-      border: 6px solid #ff0000;
-      border-radius: 20px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(20, 0, 5, 0.8);
-      position: relative; cursor: pointer;
+      width: 60px; height: 60px;
+      border: 4px solid #b30000;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #2a1a1a, #1a0a0a);
+      position: relative;
+      cursor: pointer;
       transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+      box-shadow: 0 0 20px rgba(179, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.05);
       margin: 0 auto;
     }
-    .custom-checkbox:hover { transform: scale(1.15) rotate(2deg); box-shadow: 0 0 40px rgba(255, 0, 0, 0.9); }
-    .custom-checkbox input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 1; }
+    .custom-checkbox::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+    .custom-checkbox:hover {
+      transform: scale(1.1) rotate(1deg);
+      box-shadow: 0 0 30px rgba(179, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    .custom-checkbox::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 2px;
+      background: rgba(255, 100, 100, 0.8);
+      transform: translate(-50%, -50%) rotate(45deg);
+      transition: width 0.3s ease;
+      border-radius: 2px;
+    }
+    .custom-checkbox:hover::after { width: 40px; }
+    .custom-checkbox input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      z-index: 1;
+    }
     .checkbox-mark {
       font-family: 'Poppins', sans-serif;
-      font-size: 56px; font-weight: 900;
-      color: #ff0000;
-      text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+      font-size: 42px;
+      font-weight: 900;
+      color: #b30000;
+      text-shadow: 0 0 12px rgba(179, 0, 0, 0.6);
       transition: all 0.4s ease;
       user-select: none;
     }
     .custom-checkbox input:checked + .checkbox-mark {
-      text-shadow: 0 0 25px rgba(255, 0, 0, 0.9), 0 0 40px rgba(255, 107, 107, 0.7);
-      transform: scale(1.2) rotate(-5deg);
+      color: #ff4d4d;
+      text-shadow: 0 0 20px rgba(255, 77, 77, 0.8), 0 0 35px rgba(255, 107, 107, 0.6);
+      transform: scale(1.15) rotate(-3deg);
     }
     .checkbox-instruction {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.5rem; font-weight: 700;
-      color: #ff4d4d; margin-top: 1.2rem;
-      text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-      letter-spacing: 0.03em;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ff6b6b;
+      margin-top: 1rem;
+      text-shadow: 0 0 12px rgba(255, 0, 0, 0.3);
+      letter-spacing: 0.02em;
     }
     .checkbox-warning {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.3rem; font-weight: 800;
-      color: #ff0000; margin-top: 0.8rem;
-      text-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
-      letter-spacing: 0.04em;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #b30000;
+      margin-top: 0.6rem;
+      text-shadow: 0 0 10px rgba(179, 0, 0, 0.4);
+      letter-spacing: 0.03em;
     }
-    .btn-container { display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem; }
+    .btn-container { display: flex; gap: 1.2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
     .btn {
-      padding: 1.2rem 3rem; border-radius: 16px;
+      padding: 1.1rem 2.8rem;
+      border-radius: 14px;
       font-family: 'Poppins', sans-serif;
-      font-size: 1.2rem; font-weight: 800;
-      letter-spacing: 0.03em; cursor: pointer;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      cursor: pointer;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      border: none; position: relative; overflow: hidden;
-      min-width: 200px;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      min-width: 190px;
     }
     .btn::after {
-      content: ''; position: absolute; top: 0; left: 0;
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
       width: 100%; height: 100%;
-      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transform: translateX(-100%); transition: transform 0.6s;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
     }
     .btn:hover::after { transform: translateX(100%); }
     .btn.cancel {
-      background: rgba(255, 50, 50, 0.25);
-      color: #ff6b6b; border: 3px solid #ff6b6b; font-weight: 700;
+      background: rgba(40, 10, 15, 0.8);
+      color: #ff6b6b;
+      border: 2px solid #b30000;
+      font-weight: 700;
     }
     .btn.cancel:hover {
-      background: rgba(255, 50, 50, 0.4);
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+      background: rgba(50, 15, 20, 0.9);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(179, 0, 0, 0.4);
     }
     .btn.continue {
-      background: linear-gradient(45deg, #ff0000, #ff6b6b, #ff0000);
-      color: #fff; font-weight: 900;
-      box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5);
+      background: #0a0a0a;
+      color: #fff;
+      border: 3px solid #00ff9d;
+      font-weight: 900;
+      box-shadow: 0 0 25px rgba(0, 255, 157, 0.3);
+      position: relative;
+    }
+    .btn.continue::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      background: linear-gradient(45deg, #00ff9d, #00cc88, #00ff9d);
+      border-radius: 16px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
     .btn.continue:hover {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 12px 40px rgba(255, 0, 0, 0.8);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 0 40px rgba(0, 255, 157, 0.6), 0 0 70px rgba(0, 255, 157, 0.3);
     }
-    .btn.continue:active { transform: translateY(2px) scale(0.98); }
+    .btn.continue:hover::before { opacity: 0.3; }
+    /* FIXED: Pulse animation only on hover to save battery */
+    .btn.continue:not(:disabled):hover { animation: pulse-glow 2s ease-in-out infinite; }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 25px rgba(0, 255, 157, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(0, 255, 157, 0.5); }
+    }
+    .btn.continue:active { transform: translateY(1px) scale(0.98); }
     .btn:disabled {
-      opacity: 0.45; cursor: not-allowed;
-      transform: none !important; box-shadow: none !important;
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+      animation: none !important;
+      pointer-events: none;
     }
+    .btn:focus-visible, .custom-checkbox:focus-visible {
+      outline: 3px solid #00ff9d;
+      outline-offset: 4px;
+    }
+    .exit-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 2rem;
+    }
+    @supports not (backdrop-filter: blur(1px)) {
+      .exit-modal-overlay { background: rgba(0, 0, 0, 0.95); }
+    }
+    .exit-modal-overlay.active { display: flex; }
+    .exit-modal {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 2px solid #00ff9d;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 255, 157, 0.3);
+      position: relative;
+    }
+    .exit-modal h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.6rem;
+      color: #00ff9d;
+      margin-bottom: 1rem;
+    }
+    .exit-modal p {
+      color: #b0d0ff;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .exit-modal ul {
+      list-style: none;
+      text-align: left;
+      margin: 0 0 1.5rem;
+      padding: 0;
+    }
+    .exit-modal li {
+      color: #e0f7ff;
+      font-size: 0.95rem;
+      margin: 0.4rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .exit-modal li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: #00ff9d;
+      font-weight: bold;
+    }
+    .exit-modal .btn-container { margin-top: 0; }
+    .exit-modal .btn { min-width: 140px; font-size: 1rem; padding: 0.9rem 2rem; }
     @media (max-width: 768px) {
-      .back-btn { top: 15px; left: 15px; font-size: 0.85rem; padding: 0.4rem 0.9rem; }
-      .container { padding: 2rem; }
-      h1 { font-size: 2.5rem; }
-      .subtitle { font-size: 1.1rem; }
-      .tier-badge { font-size: 1.2rem; padding: 0.8rem 1.5rem; }
+      .container { padding: 2rem; margin: 1rem 0; }
+      h1 { font-size: 2.3rem; }
+      .subtitle { font-size: 1rem; }
+      .tier-badge { font-size: 1.1rem; padding: 0.8rem 1.5rem; }
+      .community-pulse { flex-direction: column; gap: 0.5rem; font-size: 0.85rem; }
       .section-title { font-size: 1.6rem; }
-      .bonus-item h3, .punishment-item h3 { font-size: 1.3rem; }
-      .bonus-item p, .punishment-item p { font-size: 1rem; }
-      .custom-checkbox { width: 70px; height: 70px; }
-      .checkbox-mark { font-size: 48px; }
-      .checkbox-instruction { font-size: 1.3rem; }
-      .checkbox-warning { font-size: 1.15rem; }
-      .btn { padding: 1rem 2rem; font-size: 1.1rem; }
-      .btn-container { flex-direction: column; gap: 1rem; }
+      .bonus-item h3, .punishment-item h3 { font-size: 1.25rem; }
+      .bonus-item p, .punishment-item p { font-size: 0.95rem; }
+      .final-warning h3 { font-size: 1.7rem; }
+      .final-warning p { font-size: 1rem; }
+      .checkbox-wrapper { margin: 1rem auto; }
+      .custom-checkbox { width: 55px; height: 55px; }
+      .checkbox-mark { font-size: 38px; }
+      .checkbox-instruction { font-size: 1.2rem; }
+      .checkbox-warning { font-size: 1.05rem; }
+      .btn { padding: 1rem 2.4rem; font-size: 1.05rem; min-width: 170px; }
+      .btn-container { flex-direction: column; gap: 0.8rem; }
+      .exit-modal { padding: 1.5rem; }
+      .exit-modal h3 { font-size: 1.4rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      .tier-badge, .btn { transform: none !important; }
+    }
+    @media (prefers-contrast: high) {
+      body { background: #000 !important; color: #fff !important; }
+      .container { background: #000 !important; border: 3px solid #fff !important; box-shadow: none !important; }
+      h1 { 
+        background: none !important; 
+        -webkit-text-fill-color: #fff !important; 
+        color: #fff !important; 
+        text-shadow: none !important; 
+      }
+      .subtitle { color: #fff !important; }
+      .community-pulse { background: #000 !important; border: 2px solid #fff !important; }
+      .tier-badge { 
+        background: #000 !important; 
+        border: 3px solid #fff !important; 
+        color: #fff !important;
+        backdrop-filter: none !important;
+        box-shadow: none !important;
+      }
+      .btn.continue, .btn.cancel { 
+        background: #000 !important; 
+        color: #fff !important; 
+        border: 4px solid #fff !important;
+        box-shadow: none !important;
+      }
+      .btn.continue:hover, .btn.cancel:hover {
+        background: #111 !important;
+        border-color: #fff !important;
+      }
+      .section-title.bonuses,
+      .section-title.punishments {
+        color: #fff !important;
+        background: #000 !important;
+        border: 3px solid #fff !important;
+        box-shadow: none !important;
+      }
+      .bonus-item, .punishment-item {
+        border-left: 6px solid #fff !important;
+        background: #000 !important;
+        box-shadow: none !important;
+      }
+      .bonus-item p, .punishment-item p { color: #fff !important; }
+      .bonus-item p strong, .punishment-item p strong { color: #ffd700 !important; }
+      .final-warning {
+        background: #000 !important;
+        border: 4px solid #fff !important;
+        box-shadow: none !important;
+      }
+      .final-warning h3,
+      .final-warning p,
+      .final-warning p strong {
+        color: #fff !important;
+        text-shadow: none !important;
+      }
+      .privacy-block {
+        background: #000 !important;
+        border: 2px solid #fff !important;
+      }
+      .checkbox-warning { color: #fff !important; }
+      .exit-modal {
+        background: #000 !important;
+        border: 3px solid #fff !important;
+      }
+      .exit-modal p, .exit-modal li { color: #fff !important; }
     }
   </style>
 </head>
@@ -354,153 +739,364 @@
 
 <div class="container">
   <div class="header">
-    <h1>CRYPTOBROS COMMUNITY RULES</h1>
-    <p class="subtitle"><strong>READ CAREFULLY BEFORE PROCEEDING</strong><br>Earn rewards for quality content. Violations = permanent ban + 100% confiscation.</p>
+    <h1 lang="en">CRYPTOBROS RULES</h1>
+    <p class="subtitle" lang="en"><strong>Read & Accept Before Continuing</strong><br>Break them → Lose everything. Follow them → Earn AUS.</p>
+  </div>
+
+  <div class="community-pulse">
+    <span>👥 Active: <strong class="highlight">1.2k</strong></span>
+    <span>⚠️ Violations Today: <strong class="highlight">0</strong></span>
+    <span>💰 AUS Distributed: <strong class="highlight">45k</strong></span>
   </div>
 
   <div class="tier-badge" id="tierBadge">
-    SELECTED TIER: <strong style="color: #00ff9d;">Loading...</strong><br>
-    <span style="font-size: 1.1rem; color: #a0a0ff;">Price: — • Access: —</span>
+    <span class="tier-name">SELECTED TIER: <strong style="color: #00ff9d;">Loading...</strong></span>
+    <span class="tier-details">Price: — • Access: —</span>
   </div>
 
   <div class="rules-container" id="rulesContainer">
-    <!-- БОНУСЫ -->
     <div class="section-title bonuses">💎 BONUSES & REWARDS</div>
-    <div class="bonus-item">
-      <h3>DAILY REWARDS</h3>
-      <p><strong>+1 AUS</strong> for first login of the day<br><strong>+3 AUS</strong> for first post of the day<br><strong>+1 AUS</strong> for first comment of the day<br><br><strong>Streak 7 days:</strong> +10 AUS<br><strong>Streak 30 days:</strong> +100 AUS + «Veteran» badge</p>
-    </div>
-    <div class="bonus-item">
-      <h3>REFERRALS</h3>
-      <p><strong>+10 AUS</strong> for each friend who joins via your link<br><strong>+5% of their first premium purchase</strong> (lifetime)<br><br><span style="color: #ffd700; font-weight: 700;">✨ Max:</span> 1,000 AUS/month from referrals</p>
-    </div>
-    <div class="bonus-item">
-      <h3>TOP POSTS</h3>
-      <p><strong>Top-1 post of the day:</strong> +15 AUS<br><strong>Best post of the month:</strong> 500 AUS<br><br><span style="color: #66ffff; font-weight: 700;">🎯 Criteria:</span> Quality analysis, charts, engagement, AI score ≥8</p>
-    </div>
-    <div class="bonus-item">
-      <h3>SPECIAL EVENTS</h3>
-      <p><strong>Lucky Chest:</strong> Every Friday 18:00 UTC — 1 random user gets 100 AUS<br><strong>Club Anniversary:</strong> +10 AUS to all active users<br><br><span style="color: #00ff9d; font-weight: 700;">💎 Note:</span> Seasonal events announced in advance</p>
+    <div class="bonus-grid">
+      <div class="bonus-item">
+        <h3>DAILY REWARDS</h3>
+        <p><strong>+1 AUS</strong> for first login of the day<br><strong>+3 AUS</strong> for first post of the day<br><strong>+1 AUS</strong> for first comment of the day<br><br><strong>Streak 7 days:</strong> +10 AUS<br><strong>Streak 30 days:</strong> <span style="color:#ffd700;font-weight:700;">+100 AUS</span> + «Veteran» badge</p>
+      </div>
+      <div class="bonus-item">
+        <h3>REFERRALS</h3>
+        <p><strong>+10 AUS</strong> for each friend who joins via your link<br><strong>+5% of their first premium purchase</strong> (lifetime)<br><br><span style="color: #ffd700; font-weight: 700;">✨ Max:</span> 1,000 AUS/month from referrals</p>
+      </div>
+      <div class="bonus-item highlight">
+        <h3>TOP POSTS</h3>
+        <p><strong>Top-1 post of the day:</strong> +15 AUS<br><strong>Best post of the month:</strong> <span style="color:#ffd700;font-weight:800;font-size:1.1rem;">500 AUS</span><br><br><span style="color: #66ffff; font-weight: 700;">🎯 Criteria:</span> Quality analysis, charts, engagement, AI score ≥8</p>
+      </div>
+      <div class="bonus-item">
+        <h3>SPECIAL EVENTS</h3>
+        <p><strong>Lucky Chest:</strong> Every Friday 18:00 UTC — 1 random user gets 100 AUS<br><strong>Club Anniversary:</strong> +10 AUS to all active users<br><br><span style="color: #00ff9d; font-weight: 700;">💎 Note:</span> Seasonal events announced in advance</p>
+      </div>
     </div>
 
-    <!-- НАКАЗАНИЯ -->
     <div class="section-title punishments">⚠️ VIOLATIONS & PUNISHMENTS</div>
-    <div class="punishment-item">
-      <h3>SPAM / FLOOD</h3>
-      <p><strong>>3 posts in 5 minutes</strong> → 24-hour ban<br><strong>Repeat offense</strong> → 7-day ban<br><br><span style="color: #ff6b6b; font-weight: 700;">❗ No warnings</span> for obvious spam bots</p>
-    </div>
-    <div class="punishment-item">
-      <h3>SCAM / PHISHING</h3>
-      <p><strong>Keywords:</strong> "giveaway", "send SOL", "private key", "free money"<br><strong>Action:</strong> Immediate permanent ban + 100% AUS confiscation to club treasury<br><br><span style="color: #ff0000; font-weight: 800; font-size: 1.2rem;">☠️ NO APPEALS. NO EXCEPTIONS.</span></p>
-    </div>
-    <div class="punishment-item">
-      <h3>TOXICITY</h3>
-      <p>Insults, harassment, doxxing, trolling<br><strong>First offense:</strong> Warning + -10 reputation<br><strong>Repeat offense:</strong> 24-hour ban<br><br><span style="color: #ff4d4d; font-weight: 700;">⚠️ Severe cases:</span> Immediate ban</p>
-    </div>
-    <div class="punishment-item">
-      <h3>LOW QUALITY</h3>
-      <p>Posts <15 characters without analysis or $token mention<br><strong>First offense:</strong> Warning<br><strong>Repeat offense:</strong> 24-hour ban<br><br><span style="color: #ff6b6b; font-weight: 700;">💡 Tip:</span> Add charts, data, or DYOR for quality score</p>
-    </div>
-    <div class="punishment-item">
-      <h3>MULTI-ACCOUNTS</h3>
-      <p>Detection of multiple accounts from same device/IP<br><strong>Action:</strong> Accounts merged + 50% penalty on total paid AUS<br><br><span style="color: #ff0000; font-weight: 700;">❗ Free tier users:</span> All accounts banned</p>
-    </div>
-    <div class="punishment-item">
-      <h3>REPORTING SCAMS</h3>
-      <p><strong>Confirmed report:</strong> +20 AUS<br><strong>False report:</strong> -50 reputation points<br><br><span style="color: #ff4d4d; font-weight: 700;">⚠️ Abuse:</span> 3+ false reports = 7-day ban</p>
+    <div class="punishment-grid">
+      <div class="punishment-item">
+        <h3>SPAM / FLOOD</h3>
+        <p><strong>&gt;3 posts in 5 minutes</strong> → 24-hour ban<br><strong>Repeat offense</strong> → 7-day ban<br><br><span style="color: #ff6b6b; font-weight: 700;">❗ No warnings</span> for obvious spam bots</p>
+      </div>
+      <div class="punishment-item">
+        <h3>TOXICITY</h3>
+        <p>Insults, harassment, doxxing, trolling<br><strong>First offense:</strong> Warning + -10 reputation<br><strong>Repeat offense:</strong> 24-hour ban<br><br><span style="color: #ff4d4d; font-weight: 700;">⚠️ Severe cases:</span> Immediate ban</p>
+      </div>
+      <div class="punishment-item">
+        <h3>LOW QUALITY</h3>
+        <p>Posts &lt;15 characters without analysis or $token mention<br><strong>First offense:</strong> Warning<br><strong>Repeat offense:</strong> 24-hour ban<br><br><span style="color: #ff6b6b; font-weight: 700;">💡 Tip:</span> Add charts, data, or DYOR for quality score</p>
+      </div>
+      <div class="punishment-item">
+        <h3>MULTI-ACCOUNTS</h3>
+        <p>Detection of multiple accounts from same device/IP<br><strong>Action:</strong> Accounts merged + 50% penalty on total paid AUS<br><br><span style="color: #ff0000; font-weight: 700;">❗ Free tier users:</span> All accounts banned</p>
+      </div>
+      <div class="punishment-item severe">
+        <h3>SCAM / PHISHING</h3>
+        <p><strong>Keywords:</strong> "giveaway", "send SOL", "private key", "free money"<br><strong>Action:</strong> Immediate permanent ban + 100% AUS confiscation to club treasury<br><br><span style="color: #ff0000; font-weight: 800; font-size: 1.1rem;">☠️ NO APPEALS. NO EXCEPTIONS.</span></p>
+      </div>
+      <div class="punishment-item">
+        <h3>REPORTING SCAMS</h3>
+        <p><strong>Confirmed report:</strong> +20 AUS<br><strong>False report:</strong> -50 reputation points<br><br><span style="color: #ff4d4d; font-weight: 700;">⚠️ Abuse:</span> 3+ false reports = 7-day ban</p>
+      </div>
     </div>
 
     <div class="final-warning">
       <h3>FINAL WARNING</h3>
-      <p><strong>NO APPEALS</strong> for major violations (scam, multi-accounts, severe toxicity).<br><br><span style="color: #00ff9d; font-weight: 700;">✅ BUT:</span> Follow rules → earn rewards → grow reputation → unlock exclusive features.<br><br>Your wallet is linked to account. <strong>Ban = permanent loss of all tokens.</strong></p>
+      <p><strong>NO APPEALS</strong> for major violations (scam, multi-accounts, severe toxicity).</p>
+      <p><span style="color: #00ff9d; font-weight: 700;">✅ BUT:</span> Follow rules → earn rewards → grow reputation → unlock exclusive features.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px; margin-top:1rem;">
+        🔗 Your wallet is linked to account. <strong>Ban = permanent loss of all tokens.</strong>
+      </div>
+    </div>
+
+    <div class="privacy-block">
+      <h4>Your Data & Privacy</h4>
+      <ul>
+        <li>No servers store your wallet data</li>
+        <li>Rules enforced on-chain only (coming Q2 2026)</li>
+        <li>Zero-knowledge proofs for violations (planned)</li>
+        <li>You control your data — always</li>
+      </ul>
     </div>
   </div>
 
-  <!-- ЧЕКБОКС -->
   <div class="agreement-section">
     <div class="blood-seal">
       <div class="seal-icon">⚠️</div>
       <div class="seal-text">YOUR WALLET • YOUR RULES • YOUR RISK</div>
     </div>
     <div class="checkbox-wrapper">
-      <label for="agreeRules" class="custom-checkbox">
-        <!-- FIXED: removed "checked" -->
-        <input type="checkbox" id="agreeRules">
+      <label for="agreeRules" class="custom-checkbox" tabindex="0">
+        <input type="checkbox" id="agreeRules" aria-label="I accept the rules and consequences" aria-describedby="checkbox-warning-text">
         <span class="checkbox-mark">✓</span>
       </label>
     </div>
-    <div class="checkbox-instruction">CLICK THE SEAL TO ACCEPT</div>
-    <div class="checkbox-warning">VIOLATION = PERMANENT BAN + 100% CONFISCATION</div>
+    <div class="checkbox-instruction">I ACCEPT THE RULES & CONSEQUENCES</div>
+    <p class="checkbox-warning" id="checkbox-warning-text">VIOLATION = PERMANENT BAN + 100% CONFISCATION</p>
   </div>
 
   <div class="btn-container">
-    <button class="btn cancel" id="cancelBtn">Cancel</button>
-    <!-- FIXED: button disabled by default -->
-    <button class="btn continue" id="continueBtn" disabled>Accept & Continue</button>
+    <button class="btn cancel" id="cancelBtn" type="button">Cancel</button>
+    <button class="btn continue" id="continueBtn" disabled type="button">Accept & Continue</button>
+  </div>
+</div>
+
+<div class="exit-modal-overlay" id="exitModal" tabindex="-1">
+  <div class="exit-modal" role="dialog" aria-modal="true" aria-labelledby="exitModalTitle" lang="en">
+    <h3 id="exitModalTitle">⏳ Are you sure?</h3>
+    <p>Accepting rules unlocks:</p>
+    <ul>
+      <li>Daily +1 AUS right now</li>
+      <li>Access to premium features</li>
+      <li>Community voting rights</li>
+    </ul>
+    <div class="btn-container">
+      <button class="btn cancel" id="exitCancelBtn" type="button">Go Back</button>
+      <button class="btn continue" id="exitLeaveBtn" type="button">Leave Anyway</button>
+    </div>
   </div>
 </div>
 
 <script>
-  // === FIXED: Checkbox logic ===
-  const checkbox = document.getElementById('agreeRules');
-  const continueBtn = document.getElementById('continueBtn');
-  const cancelBtn = document.getElementById('cancelBtn');
+  (function() {
+    // Constants for magic numbers
+    const RULES_CONFIG = {
+      EXPIRY_DAYS: 30,
+      EXPIRY_MS: 30 * 24 * 60 * 60 * 1000,
+      VERSION: '1.0'
+    };
 
-  // Button enabled only when checkbox is checked
-  checkbox.addEventListener('change', () => {
-    continueBtn.disabled = !checkbox.checked;
-  });
+    function getEl(id) {
+      const el = document.getElementById(id);
+      if (!el) console.warn('Element not found:', id);
+      return el;
+    }
 
-  // Cancel → back to home
-  cancelBtn.addEventListener('click', () => {
-    window.location.href = 'index.html';
-  });
+    // Helper to get focusable elements excluding tabindex="-1"
+    function getFocusableElements(container) {
+      if (!container) return [];
+      return container.querySelectorAll(
+        'button:not([disabled]):not([tabindex="-1"]), ' +
+        '[href]:not([tabindex="-1"]), ' +
+        'input:not([disabled]):not([tabindex="-1"]), ' +
+        'select:not([disabled]):not([tabindex="-1"]), ' +
+        'textarea:not([disabled]):not([tabindex="-1"]), ' +
+        '[tabindex="0"]:not([tabindex="-1"])'
+      );
+    }
 
-  // Continue → go to payment.html (NOT profile.html!)
-  continueBtn.addEventListener('click', () => {
-    // Mark rules as accepted
-    localStorage.setItem('rulesAccepted', 'true');
-    localStorage.setItem('rulesAcceptedAt', Date.now().toString());
-    localStorage.setItem('rulesVersion', '1.0');
+    const checkbox = getEl('agreeRules');
+    const continueBtn = getEl('continueBtn');
+    const cancelBtn = getEl('cancelBtn');
+    const exitModal = getEl('exitModal');
+    const exitCancelBtn = getEl('exitCancelBtn');
+    const exitLeaveBtn = getEl('exitLeaveBtn');
+    const checkboxLabel = document.querySelector('.custom-checkbox');
     
-    // Go to payment page
-    window.location.href = 'payment.html';
-  });
+    // Handlers declared at top level for proper cleanup
+    let focusTrapHandler = null;
+    let escapeHandler = null;
+    let lastFocusedElement = null;
 
-  // === FIXED: Show actual tier from localStorage ===
-  document.addEventListener('DOMContentLoaded', () => {
-    // If already accepted rules → skip to payment
-    if (localStorage.getItem('rulesAccepted') === 'true') {
-      const lastAccepted = parseInt(localStorage.getItem('rulesAcceptedAt') || '0');
-      const now = Date.now();
-      // If accepted less than 30 days ago → skip
-      if (now - lastAccepted < 30 * 24 * 60 * 60 * 1000) {
-        window.location.href = 'payment.html';
-        return;
+    if (checkbox && continueBtn) {
+      checkbox.addEventListener('change', () => {
+        continueBtn.disabled = !checkbox.checked;
+      });
+    }
+
+    // FIXED: Keyboard support for custom checkbox label
+    if (checkboxLabel) {
+      checkboxLabel.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          if (checkbox) checkbox.click();
+        }
+      });
+    }
+
+    function removeFocusTrap() {
+      if (focusTrapHandler && exitModal) {
+        exitModal.removeEventListener('keydown', focusTrapHandler);
+        focusTrapHandler = null;
+      }
+      if (escapeHandler) {
+        document.removeEventListener('keydown', escapeHandler);
+        escapeHandler = null;
       }
     }
 
-    // Show tier badge
-    const tier = localStorage.getItem('userTier') || 
-                 (localStorage.getItem('tierCertificate') && JSON.parse(localStorage.getItem('tierCertificate')).tier) ||
-                 'FREE';
-    
-    const prices = { FREE: '0', MASTER: '500', PRO: '2,000', PREMIUM: '10,000' };
-    const access = { 
-      FREE: '2-week limited', 
-      MASTER: 'Unlimited access', 
-      PRO: 'Unlimited + Priority', 
-      PREMIUM: 'Full access + Governance' 
-    };
-    
-    const badge = document.getElementById('tierBadge');
-    if (badge) {
-      badge.innerHTML = `
-        SELECTED TIER: <strong style="color: #00ff9d;">${tier}</strong><br>
-        <span style="font-size: 1.1rem; color: #a0a0ff;">Price: ${prices[tier] || '0'} AUS • Access: ${access[tier] || 'Limited'}</span>
-      `;
+    function openModal() {
+      if (!exitModal) return;
+      lastFocusedElement = document.activeElement;
+      exitModal.classList.add('active');
+      document.body.classList.add('modal-open');
+      
+      const focusable = getFocusableElements(exitModal);
+      if (focusable.length > 0 && typeof focusable[0].focus === 'function') {
+        try { focusable[0].focus(); } catch (e) { console.warn('Focus failed:', e); }
+      }
+      
+      focusTrapHandler = function trapFocus(e) {
+        if (e.key !== 'Tab') return;
+        if (!exitModal) return;
+        const focusable = getFocusableElements(exitModal);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            if (typeof last.focus === 'function') { try { last.focus(); } catch (e) { console.warn('Focus failed:', e); } }
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            if (typeof first.focus === 'function') { try { first.focus(); } catch (e) { console.warn('Focus failed:', e); } }
+          }
+        }
+      };
+      exitModal.addEventListener('keydown', focusTrapHandler);
+      
+      escapeHandler = function handleEscape(e) {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      };
+      document.addEventListener('keydown', escapeHandler);
     }
-  });
+
+    function closeModal() {
+      if (!exitModal) return;
+      exitModal.classList.remove('active');
+      document.body.classList.remove('modal-open');
+      removeFocusTrap();
+      // Return focus to the element that had it before modal opened
+      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+        try { lastFocusedElement.focus(); } catch (e) { console.warn('Focus restore failed:', e); }
+      } else if (cancelBtn && typeof cancelBtn.focus === 'function') {
+        try { cancelBtn.focus(); } catch (e) { console.warn('Focus fallback failed:', e); }
+      }
+    }
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    }
+
+    if (exitCancelBtn) {
+      exitCancelBtn.addEventListener('click', closeModal);
+    }
+
+    if (exitLeaveBtn) {
+      exitLeaveBtn.addEventListener('click', () => {
+        window.location.href = 'index.html';
+      });
+    }
+
+    if (exitModal) {
+      exitModal.addEventListener('click', (e) => {
+        if (e.target === exitModal) {
+          closeModal();
+        }
+      });
+    }
+
+    if (continueBtn) {
+      continueBtn.addEventListener('click', () => {
+        if (continueBtn.disabled) return;
+        continueBtn.disabled = true;
+        try {
+          localStorage.setItem('rulesAccepted', 'true');
+          localStorage.setItem('rulesAcceptedAt', Date.now().toString());
+          localStorage.setItem('rulesVersion', RULES_CONFIG.VERSION);
+        } catch (e) {
+          if (e.name === 'QuotaExceededError') {
+            console.warn('localStorage quota exceeded, continuing without save');
+          } else {
+            console.warn('localStorage failed:', e);
+          }
+        }
+        try {
+          // FIXED: Use endsWith for more reliable path check
+          if (!window.location.pathname.endsWith('payment.html')) {
+            window.location.href = 'payment.html';
+          }
+        } catch (e) {
+          console.error('Redirect failed:', e);
+          alert('Navigation failed. Please try again.');
+          continueBtn.disabled = false;
+        }
+      });
+    }
+
+    // Early redirect before DOM render
+    try {
+      const rulesAccepted = localStorage.getItem('rulesAccepted');
+      // FIXED: Use endsWith for more reliable path check
+      if (rulesAccepted === 'true' && !window.location.pathname.endsWith('payment.html')) {
+        const lastAccepted = parseInt(localStorage.getItem('rulesAcceptedAt') || '0');
+        const now = Date.now();
+        if (now - lastAccepted < RULES_CONFIG.EXPIRY_MS) {
+          window.location.href = 'payment.html';
+        }
+      }
+    } catch (e) {
+      console.warn('localStorage read failed:', e);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      let tier = 'FREE';
+      try {
+        const userTier = localStorage.getItem('userTier');
+        const certRaw = localStorage.getItem('tierCertificate');
+        if (certRaw) {
+          let cert = { tier: 'FREE' };
+          try {
+            const parsed = JSON.parse(certRaw);
+            if (parsed && typeof parsed === 'object' && parsed.tier) {
+              cert = parsed;
+            }
+          } catch (e) {
+            console.warn('Certificate parse failed:', e);
+          }
+          if (cert.tier) tier = cert.tier;
+        } else if (userTier) {
+          tier = userTier;
+        }
+      } catch (e) {
+        console.warn('Tier parse failed:', e);
+        tier = 'FREE';
+      }
+      
+      const prices = { FREE: '0', MASTER: '500', PRO: '2,000', PREMIUM: '10,000' };
+      const access = { 
+        FREE: '2-week limited', 
+        MASTER: 'Unlimited access', 
+        PRO: 'Unlimited + Priority', 
+        PREMIUM: 'Full access + Governance' 
+      };
+      
+      const badge = getEl('tierBadge');
+      if (badge) {
+        const price = prices[tier] || '0';
+        const acc = access[tier] || 'Limited';
+        const tierNameEl = badge.querySelector('.tier-name strong');
+        const tierDetailsEl = badge.querySelector('.tier-details');
+        if (tierNameEl) tierNameEl.textContent = tier;
+        if (tierDetailsEl) tierDetailsEl.textContent = `Price: ${price} AUS • Access: ${acc}`;
+      }
+    });
+
+    window.addEventListener('beforeunload', () => {
+      document.body.classList.remove('modal-open');
+      removeFocusTrap();
+    });
+  })();
 </script>
 
 </body>
