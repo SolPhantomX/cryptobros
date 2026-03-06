@@ -359,7 +359,7 @@ body.light-mode .page-content {
     <div class="sidebar" id="navSidebar" role="navigation"></div>
     <div class="main" id="profileContent" role="main"></div>
 </div>
-<!-- FIX #2: Restricted image formats to prevent SVG/HEIC issues -->
+<!-- FIX #2: Restricted image formats -->
 <input type="file" id="header-upload" accept="image/png, image/jpeg, image/webp" style="display: none;" aria-hidden="true">
 <input type="file" id="avatar-upload" accept="image/png, image/jpeg, image/webp" style="display: none;" aria-hidden="true">
 <input type="file" id="bg-upload" accept="image/png, image/jpeg, image/webp" style="display: none;" aria-hidden="true">
@@ -415,14 +415,12 @@ const THEME_KEY = 'cryptobros_theme';
 const TIER_PREFIXES = { MASTER: 'MAS', PRO: 'PRO', PREMIUM: 'PRE' };
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 const IMAGE_LOAD_TIMEOUT = 12000;
-const TWITTER_USERNAME_MAX_LENGTH = 15;
 const IMAGE_MAX_WIDTH = 800;
 const IMAGE_COMPRESS_QUALITY = 0.72;
 const BG_IMAGE_COMPRESS_QUALITY = 0.85;
 const MAX_CANVAS_SIZE = 4096;
 const SMALL_PNG_THRESHOLD = 100 * 1024;
 const TOAST_DURATION = 3500;
-const IMAGE_CACHE_SIZE = 10;
 const IMAGE_CACHE_MAX_SIZE = 50 * 1024 * 1024;
 const INVITE_CODE_REGEX = /^[A-Z0-9-]{4,20}$/;
 const SOLANA_ADDRESS_REGEX = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
@@ -563,7 +561,7 @@ function showToast(msg, type = 'success') {
         }, 400);
     }, TOAST_DURATION);
 }
-// FIX #1: sanitizeInput now allows slashes for URLs
+// FIX #1: Improved sanitizeInput - allow slashes for URLs
 function sanitizeInput(str, options = {}) {
     if (!str || typeof str !== 'string') return '';
     const { allowAt = false, allowSlashes = false, maxLength = Infinity, trim = true } = options;
@@ -579,11 +577,13 @@ function sanitizeInput(str, options = {}) {
     else result = result.replace(/[^a-zA-Z0-9_@\-\s]/g, '');
     return result.slice(0, maxLength);
 }
+// FIX #1: Improved sanitizeUrl - better data URL support
 function sanitizeUrl(url) {
     if (!url || typeof url !== 'string') return null;
     try {
+        // FIX: Allow all valid data URLs
         if (url.startsWith('data:image/')) {
-            if (/^data:image\/(png|jpeg|jpg|gif|webp);base64,[A-Za-z0-9+/=]+$/.test(url)) {
+            if (/^data:image\/(png|jpeg|jpg|gif|webp);base64,/.test(url)) {
                 return url;
             }
             return null;
@@ -604,10 +604,9 @@ function validateTwitter(handle) {
     if (!clean || !/^[a-zA-Z0-9_]{1,15}$/.test(clean)) return '';
     return '@' + clean;
 }
-// FIX #1: validateWebsite no longer uses sanitizeInput which removes slashes
+// FIX #1: validateWebsite no longer breaks URLs
 function validateWebsite(url) {
     if (!url) return '';
-    // Soft cleanup without removing slashes
     let clean = url.trim().replace(/[<>"'`]/g, '');
     if (!clean) return '';
     if (!/^https?:\/\//i.test(clean)) clean = 'https://' + clean;
@@ -886,12 +885,13 @@ async function fileToDataURL(file) {
         reader.readAsDataURL(file);
     });
 }
+// FIX #2: Better image compression with format validation
 async function compressImage(file, element = null, type = 'avatar') {
     if (!file) throw new Error('No file provided');
     if (file.size > MAX_FILE_SIZE) throw new Error('File too large (max 2MB)');
-    // FIX #2: Block SVG and HEIC formats
+    // FIX: Block unsupported formats
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
-        throw new Error('Unsupported image format. Please use PNG, JPEG, or WebP.');
+        throw new Error('Unsupported format. Use PNG, JPEG, or WebP.');
     }
     if (element) setLoading(element, true);
     showLoadingProgress(true);
@@ -997,12 +997,18 @@ function createUploadHandler(type, element) {
             if (type === 'header' || type === 'avatar') {
                 showPreview(dataUrl, type);
             } else {
+                // FIX #3: Better error handling for background
                 profile[type] = dataUrl;
                 applyProfile();
-                saveProfile();
-                showToast(`${type} updated!`, 'success');
+                const saved = saveProfile();
+                if (saved) {
+                    showToast(`${type} updated!`, 'success');
+                } else {
+                    showToast(`${type} processed but not saved (storage full)`, 'warning');
+                }
             }
         } catch (err) {
+            console.error('Upload error:', err);
             showToast(err.message, 'error');
         }
         e.target.value = '';
@@ -1074,6 +1080,7 @@ function applyProfile() {
     } else {
         els.avatar.style.backgroundImage = '';
     }
+    // FIX #1: Better background handling
     if (profile.bg) {
         if (profile.bg.startsWith('#') && /^#[0-9A-Fa-f]{3,8}$/.test(profile.bg)) {
             document.body.style.background = profile.bg;
@@ -1086,6 +1093,7 @@ function applyProfile() {
             if (safe) {
                 document.body.style.backgroundImage = `url("${safe}")`;
                 document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundAttachment = 'fixed';
                 document.body.style.background = 'transparent';
             } else {
                 profile.bg = '';
@@ -1146,7 +1154,7 @@ function applyProfile() {
     ['inputName', 'inputBio', 'inputLocation', 'inputTwitter', 'inputWebsite'].forEach(setupAutoSave);
     updateWalletBadge();
 }
-// FIX #4: Update input values after save to show sanitized data
+// FIX #4: Sync input values after save
 function saveProfileData(isAuto = false) {
     if (!hasProfileChanged()) return;
     if (isSaving) {
@@ -1166,7 +1174,7 @@ function saveProfileData(isAuto = false) {
         if (saveProfile(isAuto)) {
             if (domCache.name) domCache.name.textContent = profile.name;
             if (domCache.rank) domCache.rank.textContent = `${profile.tier || 'FREE'} TIER`;
-            // FIX #4: Sync input values with sanitized profile data
+            // Sync inputs with sanitized values
             if (nameEl) nameEl.value = profile.name;
             if (bioEl) bioEl.value = profile.bio;
             const locationEl = document.getElementById('inputLocation');
@@ -1281,7 +1289,6 @@ function setupInviteSystem() {
             }
         });
     }
-    // FIX #5: Corrected Telegram share URL (use text parameter instead of url)
     if (els.inviteShareTg) {
         els.inviteShareTg.addEventListener('click', () => {
             const code = els.inviteCodeDisplay?.textContent;
@@ -1337,7 +1344,7 @@ function setupDragAndDrop() {
         element.addEventListener('dragleave', handleDragLeave);
         element.addEventListener('drop', handleDrop);
         element.addEventListener('touchstart', handleTouchStart);
-        // FIX #3: Removed preventDefault from touchmove to allow page scrolling on mobile
+        // FIX #4: Removed preventDefault from touchmove to allow scrolling
         element.addEventListener('touchend', handleTouchEnd);
     });
 }
