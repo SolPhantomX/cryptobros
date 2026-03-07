@@ -4,24 +4,78 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <title>CRYPTOBROS - Profile</title>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:;">
+  <title>CRYPTOBROS - Profile (DEMO)</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self'; base-uri 'self'; form-action 'self'">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* CSS Variables for proper theming */
+    :root {
+      --bg-color: #000;
+      --text-color: #ffcc00;
+      --secondary-text: #aaa;
+      --border-color: #555;
+      --menu-bg: #000;
+      --input-bg: rgba(0,0,0,0.4);
+      --toast-bg: #00ff9d;
+      --toast-text: #0a0a0f;
+      --toast-success-bg: #00ff9d;
+      --toast-error-bg: #ff4d4d;
+      --toast-warning-bg: #ffd700;
+      --toast-info-bg: #3399ff;
+      --btn-bg: #4267B2;
+      --btn-text: white;
+    }
+    
+    body.light-mode {
+      --bg-color: #f5f7fa;
+      --text-color: #1a1a2e;
+      --secondary-text: #666;
+      --border-color: #ccc;
+      --menu-bg: #fff;
+      --input-bg: #fff;
+      --toast-bg: #00cc7a;
+      --toast-text: #0a0a0f;
+      --toast-success-bg: #00cc7a;
+      --toast-error-bg: #ff4d4d;
+      --toast-warning-bg: #ffaa00;
+      --toast-info-bg: #3399ff;
+      --btn-bg: #4267B2;
+      --btn-text: white;
+    }
+    
     body {
       font-family: Arial, sans-serif;
       background-size: cover;
       background-attachment: fixed;
-      background-color: #000;
-      color: #ffcc00;
-      transition: background 0.3s ease, color 0.3s ease;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    body.light-mode { background-color: #f5f7fa; color: #1a1a2e; }
+    
+    /* DEMO MODE BANNER */
+    .demo-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #ff4d4d;
+      color: white;
+      text-align: center;
+      padding: 6px;
+      font-weight: bold;
+      z-index: 10000;
+      font-size: 14px;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    
     .top-section { position: relative; height: 300px; }
     .header {
       width: 100%; height: 100%; background: center/cover no-repeat;
-      border: 2px dashed #555; border-radius: 8px; cursor: pointer;
+      border: 2px dashed var(--border-color); border-radius: 8px; cursor: pointer;
       position: relative;
+      transition: border 0.3s ease;
     }
     .header.loaded { border: none; }
     .avatar {
@@ -30,6 +84,7 @@
       position: absolute; bottom: -100px; left: 50%;
       transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       cursor: pointer;
+      transition: border 0.3s ease;
     }
     .main-layout {
       max-width: 1200px; margin: 220px auto 0;
@@ -38,81 +93,115 @@
     .theme-switch {
       position: absolute; top: 16px; left: 16px;
       width: 40px; height: 40px; background: #333;
-      border: 1px solid #666; border-radius: 50%;
+      border: 1px solid var(--border-color); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; z-index: 100; font-size: 1.4rem;
+      color: var(--text-color);
+      background: var(--menu-bg);
+      transition: all 0.3s ease;
     }
     .edit-btn {
       position: absolute; top: 16px; right: 16px;
       width: 40px; height: 40px; background: #333;
-      border: 1px solid #666; border-radius: 50%;
+      border: 1px solid var(--border-color); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; z-index: 100; font-size: 1.4rem;
+      color: var(--text-color);
+      background: var(--menu-bg);
+      transition: all 0.3s ease;
     }
     .edit-menu {
       position: absolute; top: 70px; right: 16px;
-      background: #000; border: 1px solid #ffcc00;
+      background: var(--menu-bg); border: 1px solid var(--text-color);
       border-radius: 8px; padding: 12px; display: none;
       z-index: 100; min-width: 200px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
     }
     .edit-menu button {
-      background: #222; color: #ffcc00; border: 1px solid #555;
+      background: #222; color: var(--text-color); border: 1px solid var(--border-color);
       border-radius: 6px; padding: 10px 16px; margin: 6px 0;
       cursor: pointer; font-size: 0.95rem; width: 100%; text-align: left;
+      transition: background 0.2s ease;
+    }
+    body.light-mode .edit-menu button {
+      background: #f0f0f0;
+      color: #1a1a2e;
     }
     .edit-menu button:hover { background: #333; }
+    body.light-mode .edit-menu button:hover { background: #e0e0e0; }
+    
     .sidebar { width: 200px; }
     .nav-item {
-      padding: 12px 0; color: #ffcc00; font-weight: bold;
+      padding: 12px 0; color: var(--text-color); font-weight: bold;
       font-size: 1.1rem; text-decoration: none; display: block;
       cursor: pointer;
+      transition: opacity 0.2s ease;
     }
-    .nav-item:hover { opacity: 0.9; text-shadow: 0 0 8px #ffcc00; }
+    .nav-item:hover { opacity: 0.9; text-shadow: 0 0 8px var(--text-color); }
     .main { flex: 1; }
-    .name { font-size: 2rem; font-weight: bold; margin-bottom: 8px; color: #ffcc00; }
+    .name { font-size: 2rem; font-weight: bold; margin-bottom: 8px; color: var(--text-color); }
     .rank { margin-bottom: 24px; font-weight: bold; color: #ffd700; font-size: 1.1rem; }
-    .field-label { color: #aaa; margin: 12px 0 6px; font-weight: bold; }
-    .field-value { color: #ffcc00; margin-bottom: 16px; }
+    .field-label { color: var(--secondary-text); margin: 12px 0 6px; font-weight: bold; }
     input, textarea {
       width: 100%; padding: 12px; margin: 6px 0 16px;
-      background: rgba(0,0,0,0.4); color: #ffcc00; border: 1px solid #555;
+      background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color);
       border-radius: 6px; font-size: 1rem;
+      transition: border 0.2s ease;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #00ff9d;
+      box-shadow: 0 0 0 2px rgba(0, 255, 157, 0.2);
     }
     .btn {
-      background: #4267B2; color: white; border: none;
+      background: var(--btn-bg); color: var(--btn-text); border: none;
       padding: 12px 24px; border-radius: 6px; cursor: pointer;
       font-weight: bold; margin-top: 12px;
+      transition: opacity 0.2s ease, transform 0.1s ease;
     }
+    .btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    .btn:active:not(:disabled) { transform: translateY(0); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Toast Notifications */
+    /* Toast Notifications with theme support */
     .toast {
       position: fixed; bottom: 24px; right: 24px; padding: 1rem 1.5rem;
       border-radius: 12px; z-index: 9999; font-weight: 600; max-width: 320px;
       border: 1px solid rgba(0,0,0,0.3); box-shadow: 0 6px 24px rgba(0,0,0,0.4);
       animation: toastIn 0.4s ease-out;
+      transition: background 0.3s ease, color 0.3s ease;
     }
-    .toast.success { background: #00ff9d; color: #0a0a0f; }
-    .toast.error { background: #ff4d4d; color: white; }
-    .toast.warning { background: #ffd700; color: #0a0a0f; }
-    .toast.info { background: #3399ff; color: white; }
+    .toast.success { background: var(--toast-success-bg); color: var(--toast-text); }
+    .toast.error { background: var(--toast-error-bg); color: white; }
+    .toast.warning { background: var(--toast-warning-bg); color: var(--toast-text); }
+    .toast.info { background: var(--toast-info-bg); color: white; }
     @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     /* Wallet Badge */
     .wallet-badge {
       position: absolute; bottom: -120px; left: 50%; transform: translateX(-50%);
       display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.9);
-      border: 1px solid #444; border-radius: 24px; padding: 8px 16px;
+      border: 1px solid var(--border-color); border-radius: 24px; padding: 8px 16px;
       cursor: pointer; transition: all 0.3s; z-index: 100; white-space: nowrap;
+    }
+    body.light-mode .wallet-badge {
+      background: rgba(255,255,255,0.9);
     }
     .wallet-badge:hover {
       border-color: #00ff9d; box-shadow: 0 0 20px rgba(0,255,157,0.6);
       transform: translateX(-50%) scale(1.05);
     }
-    .badge-indicator { width: 10px; height: 10px; border-radius: 50%; background: #666; }
+    .badge-indicator { width: 10px; height: 10px; border-radius: 50%; background: #666; transition: background 0.3s ease; }
     .badge-indicator.connected { background: #00ff9d; }
     .badge-indicator.locked { background: #ffd700; }
-    .badge-text { color: #ffcc00; font-size: 0.9rem; font-weight: 600; }
+    .badge-text { color: var(--text-color); font-size: 0.9rem; font-weight: 600; }
+
+    /* DEMO badge */
+    .demo-badge {
+      font-size: 10px;
+      color: #ff9999;
+      margin-left: 5px;
+      font-style: italic;
+    }
 
     /* Image Preview Modal */
     .image-preview-modal {
@@ -133,22 +222,133 @@
       position: absolute; top: 10px; right: 15px;
       background: none; border: none; color: #ffcc00; font-size: 32px;
       cursor: pointer; z-index: 1001;
+      transition: color 0.2s ease;
     }
     .preview-close:hover { color: #ff4d4d; }
     .preview-confirm {
       display: block; width: 100%; margin-top: 20px;
       background: #00ff9d; color: #000; border: none; padding: 12px 32px;
       border-radius: 24px; font-weight: bold; cursor: pointer; font-size: 1.1rem;
+      transition: background 0.2s ease;
     }
     .preview-confirm:hover { background: #00cc7a; }
+
+    /* Invite Button */
+    .invite-gen-btn {
+      position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+      width: 60px; height: 140px; background: linear-gradient(180deg, #6644ff, #4488ff);
+      border: none; border-radius: 16px 0 0 16px; color: white;
+      font-weight: 800; font-size: 14px; cursor: pointer; z-index: 200; display: none;
+      align-items: center; justify-content: center;
+      transition: all 0.3s;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+    @media (max-width: 768px) {
+      .invite-gen-btn {
+        writing-mode: horizontal-tb;
+        width: auto;
+        height: 50px;
+        padding: 0 20px;
+        border-radius: 30px 0 0 30px;
+        top: auto;
+        bottom: 20px;
+        right: 0;
+        box-shadow: -2px 2px 10px rgba(0,0,0,0.3);
+      }
+    }
+    .invite-gen-btn.visible { display: flex; }
+    .invite-gen-btn:hover { width: 70px; background: linear-gradient(180deg, #7755ff, #5599ff); }
+
+    /* Invite Modal */
+    .invite-modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92); align-items: center; justify-content: center; z-index: 300;
+    }
+    .invite-modal-overlay.active { display: flex; }
+    .invite-modal {
+      background: var(--menu-bg); border: 2px solid #ffcc00; border-radius: 16px;
+      padding: 24px; max-width: 380px; width: 90%; text-align: center; position: relative;
+    }
+    .invite-modal h3 { color: #ffcc00; margin-bottom: 20px; font-size: 1.5rem; }
+    .invite-tier-select { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .invite-tier-option {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      background: #222; border: 1px solid #555; border-radius: 10px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .invite-tier-option:focus-within {
+      outline: 3px solid #00ff9d;
+    }
+    .invite-tier-option input:focus {
+      outline: 3px solid #00ff9d;
+      outline-offset: 2px;
+    }
+    .invite-tier-option.selected { border-color: #ffcc00; background: #333; transform: scale(1.02); }
+    .invite-tier-option input { width: auto; margin: 0; cursor: pointer; }
+    .invite-generate-btn {
+      width: 100%; padding: 14px; background: #4267B2; color: white;
+      border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1.1rem;
+      transition: opacity 0.2s ease;
+    }
+    .invite-generate-btn:hover:not(:disabled) { opacity: 0.9; }
+    .invite-generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .invite-result {
+      margin-top: 20px; padding: 16px; background: rgba(0,255,157,0.08);
+      border: 2px dashed #00ff9d; border-radius: 12px; display: none;
+    }
+    .invite-result.active { display: block; }
+    .invite-code {
+      font-family: monospace; font-size: 1.8rem; font-weight: bold;
+      color: #00ff9d; margin: 12px 0; letter-spacing: 2px;
+      word-break: break-all;
+    }
+    .invite-copy-btn, .invite-share-x, .invite-share-tg {
+      background: transparent; border: 1px solid #00ff9d; color: #00ff9d;
+      padding: 8px 20px; border-radius: 8px; cursor: pointer; margin: 8px 4px;
+      font-weight: 600; transition: all 0.2s;
+    }
+    .invite-copy-btn:disabled, .invite-share-x:disabled, .invite-share-tg:disabled {
+      opacity: 0.5; cursor: not-allowed; border-color: #555; color: #666;
+    }
+    .invite-copy-btn:hover:not(:disabled), .invite-share-x:hover:not(:disabled), .invite-share-tg:hover:not(:disabled) {
+      background: rgba(0,255,157,0.1); transform: scale(1.05);
+    }
+    .invite-close-btn {
+      position: absolute; top: 12px; right: 16px; background: none;
+      border: none; color: #ffcc00; font-size: 28px; cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .invite-close-btn:hover { color: #ff4d4d; }
 
     /* Loading Indicators */
     .image-loading { position: relative; }
     .image-loading::after {
-      content: ''; position: absolute; inset: 0;
-      background: rgba(0,0,0,0.5) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%23ffcc00"><circle cx="50" cy="50" r="40" stroke="%23ffcc00" stroke-width="4" fill="none"><animate attributeName="r" values="40;20;40" dur="2s" repeatCount="indefinite"/></circle></svg>') center/50px no-repeat;
-      border-radius: inherit; z-index: 5;
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      border-radius: inherit;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    .image-loading::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 4px solid #ffcc00;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      z-index: 6;
+    }
+    @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
 
     /* File Inputs */
     #header-upload, #avatar-upload, #bg-upload { display: none; }
@@ -158,42 +358,96 @@
       .sidebar { width: 100%; display: flex; flex-wrap: wrap; gap: 10px; }
       .nav-item { padding: 8px 12px; }
     }
+
+    /* Focus styles */
+    :focus-visible {
+      outline: 3px solid #00ff9d;
+      outline-offset: 2px;
+    }
+
+    /* Placeholder styles for images */
+    .image-placeholder {
+      background: linear-gradient(45deg, #333 25%, #444 25%, #444 50%, #333 50%, #333 75%, #444 75%);
+      background-size: 20px 20px;
+    }
   </style>
 </head>
 <body>
+  <!-- DEMO MODE BANNER with ARIA alert -->
+  <div class="demo-banner" role="alert" aria-live="assertive">⚠️ DEMO MODE - No real wallet connection ⚠️</div>
+
   <div class="top-section">
     <div class="header" id="header" role="button" aria-label="Change header image" tabindex="0"></div>
     <div class="avatar" id="avatar" role="button" aria-label="Change avatar image" tabindex="0"></div>
     
     <!-- Wallet Badge -->
-    <div class="wallet-badge" id="walletBadge" role="button" aria-label="Connect wallet" tabindex="0">
+    <div class="wallet-badge" id="walletBadge" role="button" aria-label="Connect wallet (demo mode)" tabindex="0" aria-pressed="false">
       <div class="badge-indicator" id="badgeIndicator"></div>
-      <div class="badge-text" id="badgeText">Connect Wallet</div>
+      <div class="badge-text" id="badgeText">Connect Wallet <span class="demo-badge">(demo)</span></div>
     </div>
     
-    <div class="theme-switch" id="themeSwitch" aria-label="Toggle theme" role="button" tabindex="0">🌙</div>
-    <div class="edit-btn" id="editBtn" aria-label="Edit profile" role="button" tabindex="0">⚙️</div>
-    <div class="edit-menu" id="editMenu" aria-label="Edit menu"></div>
+    <div class="theme-switch" id="themeSwitch" aria-label="Toggle theme" role="button" aria-pressed="false" tabindex="0">🌙</div>
+    <div class="edit-btn" id="editBtn" aria-label="Edit profile" role="button" aria-expanded="false" tabindex="0">⚙️</div>
+    <div class="edit-menu" id="editMenu" role="menu" aria-label="Edit menu"></div>
   </div>
   
   <div class="main-layout">
     <div class="sidebar" id="navSidebar" role="navigation">
-      <a href="#" class="nav-item" data-page="profile">👤 My Profile</a>
-      <a href="#" class="nav-item" data-page="feed">📰 News Feed</a>
-      <a href="#" class="nav-item" data-page="messages">💬 Messages</a>
-      <a href="#" class="nav-item" data-page="groups">👥 My Groups</a>
-      <a href="#" class="nav-item" data-page="tribunal">⚖️ Tribunal</a>
-      <a href="#" class="nav-item" data-page="friends">👫 My Friends</a>
-      <a href="#" class="nav-item" data-page="help">❓ Help Desk</a>
-      <a href="#" class="nav-item" data-page="news">📰 CryptoNews</a>
+      <a href="feed.html" class="nav-item">📰 News Feed</a>
+      <a href="messages.html" class="nav-item">💬 Messages</a>
+      <a href="groups.html" class="nav-item">👥 My Groups</a>
+      <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
+      <a href="friends.html" class="nav-item">👫 My Friends</a>
+      <a href="help.html" class="nav-item">❓ Help Desk</a>
+      <a href="news.html" class="nav-item">📰 CryptoNews</a>
     </div>
-    <div class="main" id="profileContent" role="main"></div>
+    <div class="main" id="profileContent" role="main">
+      <div class="name" id="displayName">@Cryptobros</div>
+      <div class="rank" id="displayRank">FREE TIER</div>
+    </div>
   </div>
 
-  <!-- File Inputs -->
   <input type="file" id="header-upload" accept="image/*" aria-hidden="true">
   <input type="file" id="avatar-upload" accept="image/*" aria-hidden="true">
   <input type="file" id="bg-upload" accept="image/*" aria-hidden="true">
+
+  <!-- INVITE BUTTON -->
+  <button class="invite-gen-btn" id="inviteGenBtn" title="Generate Invite (demo)" aria-label="Generate invite code (demo mode)">🎫<br>INVITE</button>
+
+  <!-- INVITE MODAL -->
+  <div class="invite-modal-overlay" id="inviteModal" role="dialog" aria-modal="true" aria-label="Generate invite code (demo mode)">
+    <div class="invite-modal">
+      <button class="invite-close-btn" id="inviteCloseBtn" aria-label="Close modal">×</button>
+      <h3>🎫 Generate Invite <span class="demo-badge">(demo)</span></h3>
+      <div class="invite-tier-select">
+        <label class="invite-tier-option" id="tierMaster">
+          <input type="radio" name="inviteTier" value="MASTER" checked>
+          <span>Master</span>
+          <span style="color:#00ff9d;font-family:monospace;">MAS-#####</span>
+        </label>
+        <label class="invite-tier-option" id="tierPro">
+          <input type="radio" name="inviteTier" value="PRO">
+          <span>Pro</span>
+          <span style="color:#00ff9d;font-family:monospace;">PRO-#####</span>
+        </label>
+        <label class="invite-tier-option" id="tierPremium">
+          <input type="radio" name="inviteTier" value="PREMIUM">
+          <span>Premium</span>
+          <span style="color:#00ff9d;font-family:monospace;">PRE-#####</span>
+        </label>
+      </div>
+      <button class="invite-generate-btn" id="inviteGenerateBtn">Generate Code (demo)</button>
+      <div class="invite-result" id="inviteResult">
+        <div style="color:#aaa;font-size:0.9rem;margin-bottom:8px;">Your demo invite code:</div>
+        <div class="invite-code" id="inviteCodeDisplay">MAS-00000</div>
+        <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <button class="invite-copy-btn" id="inviteCopyBtn" aria-label="Copy invite code" disabled>📋 Copy</button>
+          <button class="invite-share-x" id="inviteShareX" aria-label="Share on X (demo)" disabled>𝕏 Share</button>
+          <button class="invite-share-tg" id="inviteShareTg" aria-label="Share on Telegram (demo)" disabled>📱 TG</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Image Preview Modal -->
   <div class="image-preview-modal" id="imagePreviewModal" role="dialog" aria-modal="true" aria-label="Image preview">
@@ -209,11 +463,12 @@
       'use strict';
 
       // ============ CONSTANTS ============
-      const OWNER_WALLETS = ['C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6'];
       const STORAGE_KEY = 'cryptobros_profile';
       const THEME_KEY = 'cryptobros_theme';
       const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
       const TOAST_DURATION = 3500;
+      const TIER_PREFIXES = { MASTER: 'MAS', PRO: 'PRO', PREMIUM: 'PRE' };
+      const MAX_STORAGE_MB = 5; // Maximum localStorage size in MB
 
       // ============ STATE ============
       let profile = {
@@ -228,10 +483,19 @@
         tier: 'FREE',
         wallet: null
       };
-      let currentPage = 'profile';
+      let selectedInviteTier = 'MASTER';
       let pendingImageData = null;
       let pendingImageTarget = null;
       let toastTimeout = null;
+      let isProfileSaving = false;
+      let isApplyingProfile = false; // Флаг для предотвращения рекурсии
+      let saveTimeout = null; // Для debounce сохранения
+      let imageCache = {
+        header: null,
+        avatar: null,
+        bg: null
+      };
+      let lastProfileBg = '';
 
       // DOM Elements
       const els = {
@@ -244,15 +508,43 @@
         uploadAvatar: document.getElementById('avatar-upload'),
         uploadBg: document.getElementById('bg-upload'),
         profileContent: document.getElementById('profileContent'),
-        navSidebar: document.getElementById('navSidebar'),
         walletBadge: document.getElementById('walletBadge'),
         badgeIndicator: document.getElementById('badgeIndicator'),
         badgeText: document.getElementById('badgeText'),
         previewModal: document.getElementById('imagePreviewModal'),
         previewImage: document.getElementById('previewImage'),
         previewCloseBtn: document.getElementById('previewCloseBtn'),
-        previewConfirmBtn: document.getElementById('previewConfirmBtn')
+        previewConfirmBtn: document.getElementById('previewConfirmBtn'),
+        inviteGenBtn: document.getElementById('inviteGenBtn'),
+        inviteModal: document.getElementById('inviteModal'),
+        inviteCloseBtn: document.getElementById('inviteCloseBtn'),
+        inviteGenerateBtn: document.getElementById('inviteGenerateBtn'),
+        inviteResult: document.getElementById('inviteResult'),
+        inviteCodeDisplay: document.getElementById('inviteCodeDisplay'),
+        inviteCopyBtn: document.getElementById('inviteCopyBtn'),
+        inviteShareX: document.getElementById('inviteShareX'),
+        inviteShareTg: document.getElementById('inviteShareTg'),
+        displayName: document.getElementById('displayName'),
+        displayRank: document.getElementById('displayRank')
       };
+
+      // ============ SAFE HTML ESCAPE ============
+      function escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      // ============ SAFE CSS URL ============
+      function safeCssUrl(url) {
+        if (!url) return '';
+        const escaped = String(url).replace(/[\\"']/g, '\\$&');
+        return `url("${escaped}")`;
+      }
 
       // ============ UTILITY FUNCTIONS ============
       function showToast(msg, type = 'success') {
@@ -296,17 +588,68 @@
         }
       }
 
-      function isValidSolanaAddress(addr) {
-        return addr && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(addr);
-      }
-
-      function generateFakeSolanaAddress() {
-        const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-        return Array(44).fill(0).map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
+      // DEMO wallet address generator (shorter version)
+      function generateDemoAddress() {
+        const randomPart = Math.random().toString(36).substring(2, 10).toUpperCase();
+        const address = `DEMO-${randomPart}`;
+        return address.length > 42 ? address.substring(0, 42) : address; // Ограничиваем длину
       }
 
       function setLoading(el, loading) {
         if (el) el.classList.toggle('image-loading', loading);
+      }
+
+      // ============ CLIPBOARD ============
+      async function copyToClipboard(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast('Copied!', 'success');
+        } catch (err) {
+          try {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            textarea.remove();
+            showToast('Copied (fallback)!', 'success');
+          } catch (fallbackErr) {
+            showToast('Copy failed', 'error');
+          }
+        }
+      }
+
+      // ============ STORAGE SIZE CHECK ============
+      function getTotalStorageSize() {
+        let total = 0;
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const value = localStorage.getItem(key);
+          total += (key.length + value.length) * 2; // Approximate byte size
+        }
+        return total / 1024 / 1024; // Convert to MB
+      }
+
+      function checkStorageLimit(additionalData) {
+        const currentSize = getTotalStorageSize();
+        const additionalSize = (JSON.stringify(additionalData).length * 2) / 1024 / 1024;
+        
+        if (currentSize + additionalSize > MAX_STORAGE_MB) {
+          showToast('Storage limit approaching. Consider clearing old data.', 'warning');
+          return false;
+        }
+        return true;
+      }
+
+      // ============ CACHE CLEANUP ============
+      function cleanupImageCache() {
+        for (let key in imageCache) {
+          if (!profile[key]) {
+            imageCache[key] = null; // Очищаем кэш для удаленных изображений
+          }
+        }
       }
 
       // ============ LOCAL STORAGE ============
@@ -314,21 +657,70 @@
         try {
           const data = localStorage.getItem(STORAGE_KEY);
           if (data) {
-            profile = { ...profile, ...JSON.parse(data) };
+            const parsed = JSON.parse(data);
+            if (parsed && typeof parsed === 'object') {
+              profile.name = parsed.name && typeof parsed.name === 'string' ? parsed.name : '@Cryptobros';
+              profile.bio = parsed.bio && typeof parsed.bio === 'string' ? parsed.bio : '';
+              profile.location = parsed.location && typeof parsed.location === 'string' ? parsed.location : '';
+              profile.twitter = parsed.twitter && typeof parsed.twitter === 'string' ? parsed.twitter : '';
+              profile.website = parsed.website && typeof parsed.website === 'string' ? parsed.website : '';
+              profile.avatar = parsed.avatar && typeof parsed.avatar === 'string' ? parsed.avatar : '';
+              profile.header = parsed.header && typeof parsed.header === 'string' ? parsed.header : '';
+              profile.bg = parsed.bg && typeof parsed.bg === 'string' ? parsed.bg : '';
+              profile.tier = parsed.tier && typeof parsed.tier === 'string' ? parsed.tier : 'FREE';
+              
+              // Обновляем кэш из загруженного профиля
+              imageCache.avatar = profile.avatar || null;
+              imageCache.header = profile.header || null;
+              imageCache.bg = profile.bg || null;
+            }
           }
+          profile.wallet = null;
         } catch (e) {
           console.warn('Failed to load profile:', e);
         }
+        updateInviteBtnVisibility();
+        cleanupImageCache(); // Очищаем неиспользуемый кэш
       }
 
-      function saveProfile() {
+      function saveProfile(showToastMessage = true) {
+        if (isProfileSaving) return false;
+        
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
-          showToast('Profile saved!', 'success');
+          isProfileSaving = true;
+          
+          const safeProfile = {
+            name: profile.name,
+            bio: profile.bio,
+            location: profile.location,
+            twitter: profile.twitter,
+            website: profile.website,
+            avatar: profile.avatar,
+            header: profile.header,
+            bg: profile.bg,
+            tier: profile.tier
+          };
+          
+          // Проверяем размер перед сохранением
+          checkStorageLimit(safeProfile);
+          
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(safeProfile));
+          cleanupImageCache(); // Очищаем кэш после сохранения
+          
+          if (showToastMessage) {
+            showToast('Profile saved!', 'success');
+          }
+          
           return true;
         } catch (e) {
-          showToast('Failed to save profile', 'error');
+          if (e.name === 'QuotaExceededError') {
+            showToast('Storage full – try smaller images or clear data', 'error');
+          } else if (showToastMessage) {
+            showToast('Failed to save profile', 'error');
+          }
           return false;
+        } finally {
+          setTimeout(() => { isProfileSaving = false; }, 300);
         }
       }
 
@@ -337,7 +729,10 @@
         try {
           if (localStorage.getItem(THEME_KEY) === 'light') {
             document.body.classList.add('light-mode');
-            if (els.themeSwitch) els.themeSwitch.textContent = '☀️';
+            if (els.themeSwitch) {
+              els.themeSwitch.textContent = '☀️';
+              els.themeSwitch.setAttribute('aria-pressed', 'true');
+            }
           }
         } catch (e) {
           console.warn('Failed to load theme:', e);
@@ -349,6 +744,7 @@
         const isLight = document.body.classList.contains('light-mode');
         if (els.themeSwitch) {
           els.themeSwitch.textContent = isLight ? '☀️' : '🌙';
+          els.themeSwitch.setAttribute('aria-pressed', isLight.toString());
         }
         try {
           localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
@@ -357,28 +753,135 @@
         }
       }
 
+      // ============ MODAL FOCUS MANAGEMENT ============
+      function openModal(modal) {
+        if (!modal) return;
+        modal.classList.add('active');
+        // Save previous focus
+        modal._previousFocus = document.activeElement;
+        // Move focus to modal
+        const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusable) focusable.focus();
+      }
+
+      function closeModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('active');
+        // Restore focus
+        if (modal._previousFocus && modal._previousFocus.focus) {
+          modal._previousFocus.focus();
+        }
+      }
+
       // ============ WALLET ============
       function updateWalletBadge() {
         if (!els.badgeIndicator || !els.badgeText) return;
         
-        if (profile.wallet && isValidSolanaAddress(profile.wallet)) {
+        if (profile.wallet && typeof profile.wallet === 'string') {
           els.badgeIndicator.className = 'badge-indicator connected';
-          const short = `${profile.wallet.slice(0,4)}...${profile.wallet.slice(-4)}`;
-          els.badgeText.textContent = OWNER_WALLETS.includes(profile.wallet) ? '👑 Owner Mode' : short;
+          const short = profile.wallet.length > 10 
+            ? `${profile.wallet.slice(0,8)}...` 
+            : profile.wallet;
+          els.badgeText.innerHTML = `Demo: ${escapeHTML(short)} <span class="demo-badge">(demo)</span>`;
         } else {
           els.badgeIndicator.className = 'badge-indicator locked';
-          els.badgeText.textContent = '🔌 Connect Wallet';
+          els.badgeText.innerHTML = 'Connect Wallet <span class="demo-badge">(demo)</span>';
         }
       }
 
       function handleWalletClick() {
-        if (profile.wallet && isValidSolanaAddress(profile.wallet)) {
-          showToast(`Wallet: ${profile.wallet}`, 'info');
-        } else {
-          profile.wallet = generateFakeSolanaAddress();
+        showToast('🔷 DEMO MODE: No real wallet connection', 'warning');
+        
+        if (!profile.wallet) {
+          profile.wallet = generateDemoAddress();
           updateWalletBadge();
           saveProfile();
-          showToast('✅ Demo wallet connected!', 'success');
+          showToast('✅ Demo wallet connected! (not real)', 'success');
+        } else {
+          profile.wallet = null;
+          updateWalletBadge();
+          saveProfile();
+          showToast('Demo wallet disconnected', 'info');
+        }
+      }
+
+      function updateInviteBtnVisibility() {
+        if (els.inviteGenBtn) {
+          els.inviteGenBtn.classList.add('visible');
+        }
+      }
+
+      // ============ INVITE SYSTEM ============
+      function setupInviteSystem() {
+        if (!els.inviteGenBtn || !els.inviteModal || !els.inviteCloseBtn || !els.inviteGenerateBtn) return;
+
+        els.inviteGenBtn.addEventListener('click', () => {
+          showToast('🎫 DEMO: Invite codes are for demonstration only', 'info');
+          openModal(els.inviteModal);
+        });
+
+        els.inviteCloseBtn.addEventListener('click', () => closeModal(els.inviteModal));
+        
+        els.inviteModal.addEventListener('click', (e) => {
+          if (e.target === els.inviteModal) closeModal(els.inviteModal);
+        });
+
+        // Fix radio button handling
+        const tierRadios = document.querySelectorAll('input[name="inviteTier"]');
+        tierRadios.forEach(radio => {
+          if (radio.checked) selectedInviteTier = radio.value;
+          radio.addEventListener('change', (e) => {
+            selectedInviteTier = e.target.value;
+          });
+        });
+
+        els.inviteGenerateBtn.addEventListener('click', () => {
+          showToast('🎫 Demo invite code generated', 'success');
+          
+          const prefix = TIER_PREFIXES[selectedInviteTier] || 'MAS';
+          const randomNum = Math.floor(10000 + Math.random() * 90000); // 5 digits
+          const code = prefix + '-' + randomNum;
+          
+          if (els.inviteCodeDisplay) els.inviteCodeDisplay.textContent = code;
+          els.inviteResult.classList.add('active');
+          
+          if (els.inviteCopyBtn) els.inviteCopyBtn.disabled = false;
+          if (els.inviteShareX) els.inviteShareX.disabled = false;
+          if (els.inviteShareTg) els.inviteShareTg.disabled = false;
+        });
+
+        if (els.inviteCopyBtn) {
+          els.inviteCopyBtn.addEventListener('click', async () => {
+            const code = els.inviteCodeDisplay?.textContent;
+            if (!code) {
+              showToast('No code to copy', 'error');
+              return;
+            }
+            await copyToClipboard(code);
+          });
+        }
+
+        if (els.inviteShareX) {
+          els.inviteShareX.addEventListener('click', () => {
+            const code = els.inviteCodeDisplay?.textContent;
+            if (code) {
+              const safeCode = encodeURIComponent(code);
+              const text = encodeURIComponent(`Join me on CRYPTOBROS (demo)! Use invite code: ${safeCode}`);
+              window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank', 'noopener,noreferrer');
+            }
+          });
+        }
+
+        if (els.inviteShareTg) {
+          els.inviteShareTg.addEventListener('click', () => {
+            const code = els.inviteCodeDisplay?.textContent;
+            if (code) {
+              const safeCode = encodeURIComponent(code);
+              const text = encodeURIComponent(`Join me on CRYPTOBROS (demo)! Use invite code: ${safeCode}`);
+              const url = encodeURIComponent('https://cryptobros.app');
+              window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
+            }
+          });
         }
       }
 
@@ -392,59 +895,65 @@
         });
       }
 
-      async function compressImage(file, element = null) {
+      async function validateImageDimensions(file, target) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          const objectUrl = URL.createObjectURL(file);
+          
+          img.onload = () => {
+            URL.revokeObjectURL(objectUrl);
+            
+            if (target === 'avatar') {
+              const ratio = img.width / img.height;
+              if (ratio < 0.8 || ratio > 1.2) {
+                showToast('Warning: Avatar should be roughly square', 'warning');
+              }
+              if (img.width < 100 || img.height < 100) {
+                showToast('Avatar should be at least 100×100 pixels', 'warning');
+              }
+            }
+            resolve();
+          };
+          
+          img.onerror = () => {
+            URL.revokeObjectURL(objectUrl);
+            resolve();
+          };
+          
+          img.src = objectUrl;
+        });
+      }
+
+      async function loadImageWithFallback(url, target) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            // Cache the image
+            imageCache[target] = url;
+            resolve(url);
+          };
+          img.onerror = () => {
+            showToast(`Failed to load ${target} image`, 'error');
+            // Fall back to cached version if available
+            if (imageCache[target]) {
+              resolve(imageCache[target]);
+            } else {
+              resolve(null);
+            }
+          };
+          img.src = url;
+        });
+      }
+
+      async function compressImage(file, element = null, target = null) {
         if (!file) throw new Error('No file selected');
         if (file.size > MAX_FILE_SIZE) throw new Error('File too large (max 2MB)');
         
         if (element) setLoading(element, true);
         
         try {
-          // For small PNG files, return as-is
-          if (file.type === 'image/png' && file.size < 100 * 1024) {
-            return await fileToDataURL(file);
-          }
-          
-          const dataUrl = await fileToDataURL(file);
-          
-          // Create image for compression
-          const img = new Image();
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = dataUrl;
-          });
-          
-          // Calculate dimensions (max 800px width)
-          let width = img.width;
-          let height = img.height;
-          if (width > 800) {
-            height = Math.round(height * 800 / width);
-            width = 800;
-          }
-          
-          // Compress via canvas
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          
-          // Fill background for non-PNG
-          if (file.type !== 'image/png') {
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, width, height);
-          }
-          
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          // Get compressed data URL
-          const compressed = canvas.toDataURL('image/jpeg', 0.8);
-          
-          // Clean up
-          canvas.width = 0;
-          canvas.height = 0;
-          img.src = '';
-          
-          return compressed;
+          await validateImageDimensions(file, target);
+          return await fileToDataURL(file);
         } catch (err) {
           throw new Error('Image processing failed');
         } finally {
@@ -458,12 +967,12 @@
         pendingImageData = dataUrl;
         pendingImageTarget = target;
         els.previewImage.src = dataUrl;
-        els.previewModal.classList.add('active');
+        openModal(els.previewModal);
       }
 
       function hidePreview() {
         if (!els.previewModal) return;
-        els.previewModal.classList.remove('active');
+        closeModal(els.previewModal);
         els.previewImage.src = '';
         pendingImageData = null;
         pendingImageTarget = null;
@@ -471,6 +980,8 @@
 
       function confirmPreview() {
         if (pendingImageData && pendingImageTarget) {
+          // Сначала обновляем кэш, потом профиль
+          imageCache[pendingImageTarget] = pendingImageData;
           profile[pendingImageTarget] = pendingImageData;
           applyProfile();
           saveProfile();
@@ -480,7 +991,12 @@
       }
 
       // ============ UPLOAD HANDLERS ============
-      function createUploadHandler(type, element) {
+      function createUploadHandler(type) {
+        let element = null;
+        if (type === 'header') element = els.header;
+        else if (type === 'avatar') element = els.avatar;
+        else if (type === 'bg') element = document.body;
+        
         return async (e) => {
           const file = e.target.files?.[0];
           if (!file) return;
@@ -493,11 +1009,13 @@
           
           try {
             showToast(`Processing ${type}...`, 'warning');
-            const dataUrl = await compressImage(file, element);
+            const dataUrl = await compressImage(file, element, type);
             
             if (type === 'header' || type === 'avatar') {
               showPreview(dataUrl, type);
             } else {
+              // Для фона сначала обновляем кэш, потом профиль
+              imageCache[type] = dataUrl;
               profile[type] = dataUrl;
               applyProfile();
               saveProfile();
@@ -511,11 +1029,11 @@
         };
       }
 
-      // ============ EDIT MENU (OLD STYLE) ============
+      // ============ EDIT MENU ============
       function setupEditMenu() {
         if (!els.editMenu || !els.editBtn) return;
         
-        // Old style menu items
+        // Create buttons without inline onclick
         els.editMenu.innerHTML = `
           <button id="changeHeaderBtn">📷 Change Header</button>
           <button id="changeAvatarBtn">👤 Change Avatar</button>
@@ -523,24 +1041,25 @@
           <button id="resetProfileBtn">🔄 Reset Profile</button>
         `;
         
+        // Attach event listeners
         document.getElementById('changeHeaderBtn')?.addEventListener('click', () => {
-          els.editMenu.style.display = 'none';
           els.uploadHeader?.click();
+          els.editMenu.style.display = 'none';
         });
         
         document.getElementById('changeAvatarBtn')?.addEventListener('click', () => {
-          els.editMenu.style.display = 'none';
           els.uploadAvatar?.click();
+          els.editMenu.style.display = 'none';
         });
         
         document.getElementById('changeBgBtn')?.addEventListener('click', () => {
-          els.editMenu.style.display = 'none';
           els.uploadBg?.click();
+          els.editMenu.style.display = 'none';
         });
         
         document.getElementById('resetProfileBtn')?.addEventListener('click', () => {
-          els.editMenu.style.display = 'none';
           if (confirm('Reset all profile data?')) {
+            const wallet = profile.wallet;
             profile = {
               name: '@Cryptobros',
               bio: '',
@@ -551,96 +1070,226 @@
               header: '',
               bg: '',
               tier: 'FREE',
-              wallet: profile.wallet // Keep wallet connection
+              wallet: wallet
             };
+            // Clear image cache
+            imageCache = { header: null, avatar: null, bg: null };
+            lastProfileBg = '';
             saveProfile();
             applyProfile();
             showToast('Profile reset', 'warning');
           }
+          els.editMenu.style.display = 'none';
         });
         
-        // Toggle menu
         els.editBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          els.editMenu.style.display = els.editMenu.style.display === 'block' ? 'none' : 'block';
+          const expanded = els.editMenu.style.display === 'block';
+          els.editMenu.style.display = expanded ? 'none' : 'block';
+          els.editBtn.setAttribute('aria-expanded', (!expanded).toString());
         });
         
-        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
           if (!els.editMenu.contains(e.target) && !els.editBtn.contains(e.target)) {
             els.editMenu.style.display = 'none';
+            els.editBtn.setAttribute('aria-expanded', 'false');
           }
         });
       }
 
       // ============ PROFILE RENDER ============
       function applyProfile() {
-        if (!els.header || !els.avatar || !els.profileContent) return;
+        // Предотвращаем рекурсию
+        if (isApplyingProfile) return;
+        isApplyingProfile = true;
         
-        // Header image
-        if (profile.header) {
-          els.header.style.backgroundImage = `url("${profile.header}")`;
-          els.header.classList.add('loaded');
-        } else {
-          els.header.style.backgroundImage = '';
-          els.header.classList.remove('loaded');
+        try {
+          if (!els.header || !els.avatar || !els.profileContent) return;
+          
+          // Header image
+          if (profile.header && typeof profile.header === 'string') {
+            if (imageCache.header !== profile.header) {
+              loadImageWithFallback(profile.header, 'header').then(validUrl => {
+                if (validUrl) {
+                  els.header.style.backgroundImage = safeCssUrl(validUrl);
+                  els.header.classList.add('loaded');
+                } else {
+                  els.header.style.backgroundImage = '';
+                  els.header.classList.remove('loaded');
+                  // Не меняем profile.header, чтобы избежать рекурсии
+                }
+              });
+            } else {
+              els.header.style.backgroundImage = safeCssUrl(profile.header);
+              els.header.classList.add('loaded');
+            }
+          } else {
+            els.header.style.backgroundImage = '';
+            els.header.classList.remove('loaded');
+          }
+          
+          // Avatar image
+          if (profile.avatar && typeof profile.avatar === 'string') {
+            if (imageCache.avatar !== profile.avatar) {
+              loadImageWithFallback(profile.avatar, 'avatar').then(validUrl => {
+                if (validUrl) {
+                  els.avatar.style.backgroundImage = safeCssUrl(validUrl);
+                } else {
+                  els.avatar.style.backgroundImage = '';
+                  // Не меняем profile.avatar
+                }
+              });
+            } else {
+              els.avatar.style.backgroundImage = safeCssUrl(profile.avatar);
+            }
+          } else {
+            els.avatar.style.backgroundImage = '';
+          }
+          
+          // Background image - исправленная версия без рекурсии
+          if (profile.bg && typeof profile.bg === 'string' && profile.bg !== lastProfileBg) {
+            lastProfileBg = profile.bg;
+            if (imageCache.bg !== profile.bg) {
+              loadImageWithFallback(profile.bg, 'bg').then(validUrl => {
+                if (validUrl) {
+                  document.body.style.backgroundImage = safeCssUrl(validUrl);
+                  document.body.style.backgroundSize = 'cover';
+                } else {
+                  document.body.style.backgroundImage = '';
+                  document.body.style.backgroundColor = 'var(--bg-color)';
+                  lastProfileBg = ''; // Сбрасываем lastProfileBg
+                  // Не меняем profile.bg
+                }
+              });
+            } else {
+              document.body.style.backgroundImage = safeCssUrl(profile.bg);
+              document.body.style.backgroundSize = 'cover';
+            }
+          } else if (!profile.bg) {
+            document.body.style.backgroundImage = '';
+            document.body.style.backgroundColor = 'var(--bg-color)';
+            lastProfileBg = '';
+          }
+          
+          // Update display name and rank
+          if (els.displayName) els.displayName.textContent = profile.name || '@Cryptobros';
+          if (els.displayRank) els.displayRank.textContent = `${profile.tier || 'FREE'} TIER`;
+          
+          // Rebuild form fields
+          rebuildFormFields();
+          
+          updateWalletBadge();
+          cleanupImageCache(); // Очищаем кэш после применения
+        } finally {
+          isApplyingProfile = false;
         }
-        
-        // Avatar image
-        if (profile.avatar) {
-          els.avatar.style.backgroundImage = `url("${profile.avatar}")`;
-        } else {
-          els.avatar.style.backgroundImage = '';
-        }
-        
-        // Background
-        if (profile.bg) {
-          document.body.style.backgroundImage = `url("${profile.bg}")`;
-          document.body.style.backgroundSize = 'cover';
-        } else {
-          document.body.style.backgroundImage = '';
-          document.body.style.backgroundColor = '#000';
-        }
-        
-        // Render profile form
-        const content = els.profileContent;
-        content.innerHTML = `
-          <div class="name" id="displayName">${profile.name || '@Cryptobros'}</div>
-          <div class="rank" id="displayRank">${profile.tier || 'FREE'} TIER</div>
-          
-          <div class="field-label">Username</div>
-          <input type="text" id="inputName" value="${profile.name || ''}" maxlength="20">
-          
-          <div class="field-label">Bio</div>
-          <textarea id="inputBio" rows="3" maxlength="200">${profile.bio || ''}</textarea>
-          
-          <div class="field-label">Location</div>
-          <input type="text" id="inputLocation" value="${profile.location || ''}" maxlength="50">
-          
-          <div class="field-label">Twitter</div>
-          <input type="text" id="inputTwitter" value="${profile.twitter || ''}" maxlength="30">
-          
-          <div class="field-label">Website</div>
-          <input type="text" id="inputWebsite" value="${profile.website || ''}" maxlength="100">
-          
-          <button class="btn" id="saveProfileBtn">💾 Save Changes</button>
-        `;
-        
-        // Save button
-        document.getElementById('saveProfileBtn')?.addEventListener('click', saveProfileData);
-        
-        // Input listeners
-        ['inputName', 'inputBio', 'inputLocation', 'inputTwitter', 'inputWebsite'].forEach(id => {
-          document.getElementById(id)?.addEventListener('input', () => {
-            clearTimeout(window.saveTimeout);
-            window.saveTimeout = setTimeout(() => saveProfileData(true), 800);
-          });
-        });
-        
-        updateWalletBadge();
       }
 
-      function saveProfileData(isAuto = false) {
+      function rebuildFormFields() {
+        if (!els.profileContent) return;
+        
+        // Check if form already exists
+        const existingNameInput = document.getElementById('inputName');
+        if (existingNameInput) {
+          // Update existing fields
+          document.getElementById('inputName').value = profile.name || '';
+          document.getElementById('inputBio').value = profile.bio || '';
+          document.getElementById('inputLocation').value = profile.location || '';
+          document.getElementById('inputTwitter').value = profile.twitter || '';
+          document.getElementById('inputWebsite').value = profile.website || '';
+          return;
+        }
+        
+        // Build new form
+        const content = els.profileContent;
+        
+        // Username field
+        const nameLabel = document.createElement('div');
+        nameLabel.className = 'field-label';
+        nameLabel.textContent = 'Username';
+        content.appendChild(nameLabel);
+        
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.id = 'inputName';
+        nameInput.value = profile.name || '';
+        nameInput.maxLength = 20;
+        content.appendChild(nameInput);
+        
+        // Bio field
+        const bioLabel = document.createElement('div');
+        bioLabel.className = 'field-label';
+        bioLabel.textContent = 'Bio';
+        content.appendChild(bioLabel);
+        
+        const bioTextarea = document.createElement('textarea');
+        bioTextarea.id = 'inputBio';
+        bioTextarea.rows = 3;
+        bioTextarea.maxLength = 200;
+        bioTextarea.textContent = profile.bio || '';
+        content.appendChild(bioTextarea);
+        
+        // Location field
+        const locLabel = document.createElement('div');
+        locLabel.className = 'field-label';
+        locLabel.textContent = 'Location';
+        content.appendChild(locLabel);
+        
+        const locInput = document.createElement('input');
+        locInput.type = 'text';
+        locInput.id = 'inputLocation';
+        locInput.value = profile.location || '';
+        locInput.maxLength = 50;
+        content.appendChild(locInput);
+        
+        // Twitter field
+        const twitterLabel = document.createElement('div');
+        twitterLabel.className = 'field-label';
+        twitterLabel.textContent = 'Twitter';
+        content.appendChild(twitterLabel);
+        
+        const twitterInput = document.createElement('input');
+        twitterInput.type = 'text';
+        twitterInput.id = 'inputTwitter';
+        twitterInput.value = profile.twitter || '';
+        twitterInput.maxLength = 30;
+        content.appendChild(twitterInput);
+        
+        // Website field
+        const websiteLabel = document.createElement('div');
+        websiteLabel.className = 'field-label';
+        websiteLabel.textContent = 'Website';
+        content.appendChild(websiteLabel);
+        
+        const websiteInput = document.createElement('input');
+        websiteInput.type = 'text';
+        websiteInput.id = 'inputWebsite';
+        websiteInput.value = profile.website || '';
+        websiteInput.maxLength = 100;
+        content.appendChild(websiteInput);
+        
+        // Save button
+        const saveBtn = document.createElement('button');
+        saveBtn.className = 'btn';
+        saveBtn.id = 'saveProfileBtn';
+        saveBtn.textContent = '💾 Save Changes';
+        content.appendChild(saveBtn);
+        
+        // Save button listener with debouncing
+        saveBtn.addEventListener('click', () => {
+          debouncedSave();
+        });
+      }
+
+      // Debounced save function
+      function debouncedSave() {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+          saveProfileData();
+        }, 500);
+      }
+
+      function saveProfileData() {
         const nameEl = document.getElementById('inputName');
         const bioEl = document.getElementById('inputBio');
         const locationEl = document.getElementById('inputLocation');
@@ -655,91 +1304,57 @@
         profile.twitter = validateTwitter(twitterEl?.value || '');
         profile.website = validateWebsite(websiteEl?.value || '');
         
-        // Update display
-        const displayName = document.getElementById('displayName');
-        const displayRank = document.getElementById('displayRank');
-        if (displayName) displayName.textContent = profile.name;
-        if (displayRank) displayRank.textContent = `${profile.tier} TIER`;
+        if (els.displayName) els.displayName.textContent = profile.name;
+        if (els.displayRank) els.displayRank.textContent = `${profile.tier} TIER`;
         
         saveProfile();
       }
 
-      // ============ NAVIGATION ============
-      function showPage(pageId) {
-        currentPage = pageId;
-        
-        if (pageId === 'profile') {
-          applyProfile();
-          return;
-        }
-        
-        const pages = {
-          feed: { title: '📰 News Feed', content: 'Latest crypto news and updates...' },
-          messages: { title: '💬 Messages', content: 'Your private messages...' },
-          groups: { title: '👥 My Groups', content: 'Your crypto communities...' },
-          tribunal: { title: '⚖️ Tribunal', content: 'Community voting and disputes...' },
-          friends: { title: '👫 My Friends', content: 'Your crypto friends...' },
-          help: { title: '❓ Help Desk', content: 'FAQ and support...' },
-          news: { title: '📰 CryptoNews', content: 'Real-time crypto news feed...' }
-        };
-        
-        const page = pages[pageId];
-        if (!page) return;
-        
-        els.profileContent.innerHTML = `
-          <div class="page-content" style="padding:20px; background:rgba(0,0,0,0.3); border-radius:12px;">
-            <h2 class="name">${page.title}</h2>
-            <div style="margin-top:20px; color:#ffcc00;">${page.content}</div>
-            <div style="margin-top:30px; padding:20px; background:rgba(0,0,0,0.2); border-radius:8px;">
-              <p style="color:#aaa;">This feature is coming soon!</p>
-              <button class="btn" id="backToProfile">⬅️ Back to Profile</button>
-            </div>
-          </div>
-        `;
-        
-        document.getElementById('backToProfile')?.addEventListener('click', () => showPage('profile'));
-      }
-
-      function setupNavigation() {
-        if (!els.navSidebar) return;
-        
-        els.navSidebar.querySelectorAll('.nav-item').forEach(link => {
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const page = link.dataset.page || 'profile';
-            showPage(page);
-          });
+      // ============ GLOBAL ESCAPE HANDLER ============
+      function setupGlobalEscapeHandler() {
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            if (els.previewModal?.classList.contains('active')) {
+              hidePreview();
+              e.preventDefault();
+            }
+            else if (els.inviteModal?.classList.contains('active')) {
+              closeModal(els.inviteModal);
+              e.preventDefault();
+            }
+            else if (els.editMenu?.style.display === 'block') {
+              els.editMenu.style.display = 'none';
+              els.editBtn.setAttribute('aria-expanded', 'false');
+              e.preventDefault();
+            }
+          }
         });
       }
 
       // ============ INITIALIZATION ============
       function init() {
-        // Check required elements
         if (!els.header || !els.avatar || !els.profileContent) {
           console.error('Required DOM elements missing');
           return;
         }
         
-        // Load data
         loadTheme();
         loadProfile();
         
-        // Setup components
-        setupNavigation();
         setupEditMenu();
+        setupInviteSystem();
+        setupGlobalEscapeHandler();
         
-        // Setup image uploads
         if (els.uploadHeader) {
-          els.uploadHeader.addEventListener('change', createUploadHandler('header', els.header));
+          els.uploadHeader.addEventListener('change', createUploadHandler('header'));
         }
         if (els.uploadAvatar) {
-          els.uploadAvatar.addEventListener('change', createUploadHandler('avatar', els.avatar));
+          els.uploadAvatar.addEventListener('change', createUploadHandler('avatar'));
         }
         if (els.uploadBg) {
-          els.uploadBg.addEventListener('change', createUploadHandler('bg', null));
+          els.uploadBg.addEventListener('change', createUploadHandler('bg'));
         }
         
-        // Setup click handlers
         if (els.header) {
           els.header.addEventListener('click', () => els.uploadHeader?.click());
         }
@@ -753,7 +1368,6 @@
           els.walletBadge.addEventListener('click', handleWalletClick);
         }
         
-        // Setup preview modal
         if (els.previewConfirmBtn) {
           els.previewConfirmBtn.addEventListener('click', confirmPreview);
         }
@@ -766,19 +1380,10 @@
           });
         }
         
-        // Keyboard support
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && els.previewModal?.classList.contains('active')) {
-            hidePreview();
-          }
-        });
-        
-        // Show profile
-        showPage('profile');
-        showToast('🚀 CRYPTOBROS ready!', 'success');
+        applyProfile();
+        showToast('🚀 CRYPTOBROS DEMO ready!', 'success');
       }
 
-      // Start when DOM is ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
