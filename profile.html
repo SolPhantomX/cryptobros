@@ -25,6 +25,7 @@
       --toast-info-bg: #3399ff;
       --btn-bg: #4267B2;
       --btn-text: white;
+      --placeholder-bg: linear-gradient(45deg, #333 25%, #444 25%, #444 50%, #333 50%, #333 75%, #444 75%);
     }
     
     body.light-mode {
@@ -42,6 +43,7 @@
       --toast-info-bg: #3399ff;
       --btn-bg: #4267B2;
       --btn-text: white;
+      --placeholder-bg: linear-gradient(45deg, #e0e0e0 25%, #f0f0f0 25%, #f0f0f0 50%, #e0e0e0 50%, #e0e0e0 75%, #f0f0f0 75%);
     }
     
     body {
@@ -50,7 +52,7 @@
       background-attachment: fixed;
       background-color: var(--bg-color);
       color: var(--text-color);
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease, background-image 0.5s ease;
     }
     
     /* DEMO MODE BANNER */
@@ -75,7 +77,7 @@
       width: 100%; height: 100%; background: center/cover no-repeat;
       border: 2px dashed var(--border-color); border-radius: 8px; cursor: pointer;
       position: relative;
-      transition: border 0.3s ease;
+      transition: border 0.3s ease, background-image 0.3s ease;
     }
     .header.loaded { border: none; }
     .avatar {
@@ -84,7 +86,7 @@
       position: absolute; bottom: -100px; left: 50%;
       transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       cursor: pointer;
-      transition: border 0.3s ease;
+      transition: border 0.3s ease, background-image 0.3s ease;
     }
     .main-layout {
       max-width: 1200px; margin: 220px auto 0;
@@ -284,6 +286,10 @@
       outline: 3px solid #00ff9d;
       outline-offset: 2px;
     }
+    .invite-tier-option input:checked + span:first-of-type {
+      font-weight: bold;
+      color: #00ff9d;
+    }
     .invite-tier-option.selected { border-color: #ffcc00; background: #333; transform: scale(1.02); }
     .invite-tier-option input { width: auto; margin: 0; cursor: pointer; }
     .invite-generate-btn {
@@ -367,8 +373,11 @@
 
     /* Placeholder styles for images */
     .image-placeholder {
-      background: linear-gradient(45deg, #333 25%, #444 25%, #444 50%, #333 50%, #333 75%, #444 75%);
+      background: var(--placeholder-bg);
       background-size: 20px 20px;
+    }
+    .header, .avatar, body {
+      transition: background-image 0.3s ease-in-out;
     }
   </style>
 </head>
@@ -466,30 +475,31 @@
       const STORAGE_KEY = 'cryptobros_profile';
       const THEME_KEY = 'cryptobros_theme';
       const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+      const MAX_TOTAL_SIZE = 6 * 1024 * 1024; // 6MB total for all images (base64)
       const TOAST_DURATION = 3500;
       const TIER_PREFIXES = { MASTER: 'MAS', PRO: 'PRO', PREMIUM: 'PRE' };
-      const MAX_STORAGE_MB = 5; // Maximum localStorage size in MB
 
       // ============ STATE ============
-      let profile = {
-        name: '@Cryptobros',
-        bio: '',
-        location: '',
-        twitter: '',
-        website: '',
-        avatar: '',
-        header: '',
-        bg: '',
-        tier: 'FREE',
-        wallet: null
-      };
+      let profile = Object.create(null);
+      // Initialize with defaults using Object.defineProperty to prevent prototype pollution
+      Object.defineProperties(profile, {
+        name: { value: '@Cryptobros', writable: true, enumerable: true },
+        bio: { value: '', writable: true, enumerable: true },
+        location: { value: '', writable: true, enumerable: true },
+        twitter: { value: '', writable: true, enumerable: true },
+        website: { value: '', writable: true, enumerable: true },
+        avatar: { value: '', writable: true, enumerable: true },
+        header: { value: '', writable: true, enumerable: true },
+        bg: { value: '', writable: true, enumerable: true },
+        tier: { value: 'FREE', writable: true, enumerable: true },
+        wallet: { value: null, writable: true, enumerable: true }
+      });
+
       let selectedInviteTier = 'MASTER';
       let pendingImageData = null;
       let pendingImageTarget = null;
       let toastTimeout = null;
       let isProfileSaving = false;
-      let isApplyingProfile = false; // Флаг для предотвращения рекурсии
-      let saveTimeout = null; // Для debounce сохранения
       let imageCache = {
         header: null,
         avatar: null,
@@ -588,11 +598,38 @@
         }
       }
 
+      // Check total image size and clear if too large
+      function validateImageSizes() {
+        const totalSize = 
+          (profile.avatar?.length || 0) +
+          (profile.header?.length || 0) +
+          (profile.bg?.length || 0);
+
+        if (totalSize > MAX_TOTAL_SIZE) {
+          showToast('Images too large – clearing largest images', 'error');
+          
+          // Clear largest images first
+          if (profile.bg?.length > 2_000_000) {
+            profile.bg = '';
+            imageCache.bg = null;
+          }
+          if (profile.header?.length > 2_000_000) {
+            profile.header = '';
+            imageCache.header = null;
+          }
+          if (profile.avatar?.length > 1_500_000) {
+            profile.avatar = '';
+            imageCache.avatar = null;
+          }
+          return false;
+        }
+        return true;
+      }
+
       // DEMO wallet address generator (shorter version)
       function generateDemoAddress() {
         const randomPart = Math.random().toString(36).substring(2, 10).toUpperCase();
-        const address = `DEMO-${randomPart}`;
-        return address.length > 42 ? address.substring(0, 42) : address; // Ограничиваем длину
+        return `DEMO-${randomPart}`;
       }
 
       function setLoading(el, loading) {
@@ -621,66 +658,42 @@
         }
       }
 
-      // ============ STORAGE SIZE CHECK ============
-      function getTotalStorageSize() {
-        let total = 0;
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          const value = localStorage.getItem(key);
-          total += (key.length + value.length) * 2; // Approximate byte size
-        }
-        return total / 1024 / 1024; // Convert to MB
-      }
-
-      function checkStorageLimit(additionalData) {
-        const currentSize = getTotalStorageSize();
-        const additionalSize = (JSON.stringify(additionalData).length * 2) / 1024 / 1024;
-        
-        if (currentSize + additionalSize > MAX_STORAGE_MB) {
-          showToast('Storage limit approaching. Consider clearing old data.', 'warning');
-          return false;
-        }
-        return true;
-      }
-
-      // ============ CACHE CLEANUP ============
-      function cleanupImageCache() {
-        for (let key in imageCache) {
-          if (!profile[key]) {
-            imageCache[key] = null; // Очищаем кэш для удаленных изображений
-          }
-        }
-      }
-
       // ============ LOCAL STORAGE ============
       function loadProfile() {
         try {
           const data = localStorage.getItem(STORAGE_KEY);
           if (data) {
             const parsed = JSON.parse(data);
-            if (parsed && typeof parsed === 'object') {
-              profile.name = parsed.name && typeof parsed.name === 'string' ? parsed.name : '@Cryptobros';
-              profile.bio = parsed.bio && typeof parsed.bio === 'string' ? parsed.bio : '';
-              profile.location = parsed.location && typeof parsed.location === 'string' ? parsed.location : '';
-              profile.twitter = parsed.twitter && typeof parsed.twitter === 'string' ? parsed.twitter : '';
-              profile.website = parsed.website && typeof parsed.website === 'string' ? parsed.website : '';
-              profile.avatar = parsed.avatar && typeof parsed.avatar === 'string' ? parsed.avatar : '';
-              profile.header = parsed.header && typeof parsed.header === 'string' ? parsed.header : '';
-              profile.bg = parsed.bg && typeof parsed.bg === 'string' ? parsed.bg : '';
-              profile.tier = parsed.tier && typeof parsed.tier === 'string' ? parsed.tier : 'FREE';
-              
-              // Обновляем кэш из загруженного профиля
-              imageCache.avatar = profile.avatar || null;
-              imageCache.header = profile.header || null;
-              imageCache.bg = profile.bg || null;
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+              // Safe assignment with hasOwnProperty checks
+              if (Object.prototype.hasOwnProperty.call(parsed, 'name') && typeof parsed.name === 'string') 
+                profile.name = parsed.name;
+              if (Object.prototype.hasOwnProperty.call(parsed, 'bio') && typeof parsed.bio === 'string') 
+                profile.bio = parsed.bio;
+              if (Object.prototype.hasOwnProperty.call(parsed, 'location') && typeof parsed.location === 'string') 
+                profile.location = parsed.location;
+              if (Object.prototype.hasOwnProperty.call(parsed, 'twitter') && typeof parsed.twitter === 'string') 
+                profile.twitter = parsed.twitter;
+              if (Object.prototype.hasOwnProperty.call(parsed, 'website') && typeof parsed.website === 'string') 
+                profile.website = parsed.website;
+              if (Object.prototype.hasOwnProperty.call(parsed, 'avatar') && typeof parsed.avatar === 'string') 
+                profile.avatar = parsed.avatar;
+              if (Object.prototype.hasOwnProperty.call(parsed, 'header') && typeof parsed.header === 'string') 
+                profile.header = parsed.header;
+              if (Object.prototype.hasOwnProperty.call(parsed, 'bg') && typeof parsed.bg === 'string') 
+                profile.bg = parsed.bg;
+              if (Object.prototype.hasOwnProperty.call(parsed, 'tier') && typeof parsed.tier === 'string') 
+                profile.tier = parsed.tier;
             }
           }
           profile.wallet = null;
+          
+          // Validate image sizes after loading
+          validateImageSizes();
         } catch (e) {
           console.warn('Failed to load profile:', e);
         }
         updateInviteBtnVisibility();
-        cleanupImageCache(); // Очищаем неиспользуемый кэш
       }
 
       function saveProfile(showToastMessage = true) {
@@ -689,23 +702,18 @@
         try {
           isProfileSaving = true;
           
-          const safeProfile = {
-            name: profile.name,
-            bio: profile.bio,
-            location: profile.location,
-            twitter: profile.twitter,
-            website: profile.website,
-            avatar: profile.avatar,
-            header: profile.header,
-            bg: profile.bg,
-            tier: profile.tier
-          };
+          // Validate image sizes before saving
+          validateImageSizes();
           
-          // Проверяем размер перед сохранением
-          checkStorageLimit(safeProfile);
+          // Create safe copy with only own properties
+          const safeProfile = {};
+          for (const key of Object.keys(profile)) {
+            if (key !== 'wallet') { // Skip wallet
+              safeProfile[key] = profile[key];
+            }
+          }
           
           localStorage.setItem(STORAGE_KEY, JSON.stringify(safeProfile));
-          cleanupImageCache(); // Очищаем кэш после сохранения
           
           if (showToastMessage) {
             showToast('Profile saved!', 'success');
@@ -715,6 +723,17 @@
         } catch (e) {
           if (e.name === 'QuotaExceededError') {
             showToast('Storage full – try smaller images or clear data', 'error');
+            // Clear largest image to free space
+            if (profile.bg) {
+              profile.bg = '';
+              imageCache.bg = null;
+            } else if (profile.header) {
+              profile.header = '';
+              imageCache.header = null;
+            } else if (profile.avatar) {
+              profile.avatar = '';
+              imageCache.avatar = null;
+            }
           } else if (showToastMessage) {
             showToast('Failed to save profile', 'error');
           }
@@ -750,26 +769,6 @@
           localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
         } catch (e) {
           console.warn('Failed to save theme:', e);
-        }
-      }
-
-      // ============ MODAL FOCUS MANAGEMENT ============
-      function openModal(modal) {
-        if (!modal) return;
-        modal.classList.add('active');
-        // Save previous focus
-        modal._previousFocus = document.activeElement;
-        // Move focus to modal
-        const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        if (focusable) focusable.focus();
-      }
-
-      function closeModal(modal) {
-        if (!modal) return;
-        modal.classList.remove('active');
-        // Restore focus
-        if (modal._previousFocus && modal._previousFocus.focus) {
-          modal._previousFocus.focus();
         }
       }
 
@@ -817,13 +816,17 @@
 
         els.inviteGenBtn.addEventListener('click', () => {
           showToast('🎫 DEMO: Invite codes are for demonstration only', 'info');
-          openModal(els.inviteModal);
+          els.inviteModal.classList.add('active');
         });
 
-        els.inviteCloseBtn.addEventListener('click', () => closeModal(els.inviteModal));
-        
+        const closeModal = () => {
+          els.inviteModal.classList.remove('active');
+          els.inviteResult.classList.remove('active');
+        };
+
+        els.inviteCloseBtn.addEventListener('click', closeModal);
         els.inviteModal.addEventListener('click', (e) => {
-          if (e.target === els.inviteModal) closeModal(els.inviteModal);
+          if (e.target === els.inviteModal) closeModal();
         });
 
         // Fix radio button handling
@@ -865,8 +868,7 @@
           els.inviteShareX.addEventListener('click', () => {
             const code = els.inviteCodeDisplay?.textContent;
             if (code) {
-              const safeCode = encodeURIComponent(code);
-              const text = encodeURIComponent(`Join me on CRYPTOBROS (demo)! Use invite code: ${safeCode}`);
+              const text = encodeURIComponent(`Join me on CRYPTOBROS (demo)! Use invite code: ${code}`);
               window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank', 'noopener,noreferrer');
             }
           });
@@ -876,8 +878,7 @@
           els.inviteShareTg.addEventListener('click', () => {
             const code = els.inviteCodeDisplay?.textContent;
             if (code) {
-              const safeCode = encodeURIComponent(code);
-              const text = encodeURIComponent(`Join me on CRYPTOBROS (demo)! Use invite code: ${safeCode}`);
+              const text = encodeURIComponent(`Join me on CRYPTOBROS (demo)! Use invite code: ${code}`);
               const url = encodeURIComponent('https://cryptobros.app');
               window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
             }
@@ -967,12 +968,12 @@
         pendingImageData = dataUrl;
         pendingImageTarget = target;
         els.previewImage.src = dataUrl;
-        openModal(els.previewModal);
+        els.previewModal.classList.add('active');
       }
 
       function hidePreview() {
         if (!els.previewModal) return;
-        closeModal(els.previewModal);
+        els.previewModal.classList.remove('active');
         els.previewImage.src = '';
         pendingImageData = null;
         pendingImageTarget = null;
@@ -980,9 +981,8 @@
 
       function confirmPreview() {
         if (pendingImageData && pendingImageTarget) {
-          // Сначала обновляем кэш, потом профиль
-          imageCache[pendingImageTarget] = pendingImageData;
           profile[pendingImageTarget] = pendingImageData;
+          imageCache[pendingImageTarget] = pendingImageData;
           applyProfile();
           saveProfile();
           showToast(`${pendingImageTarget} updated!`, 'success');
@@ -1014,9 +1014,8 @@
             if (type === 'header' || type === 'avatar') {
               showPreview(dataUrl, type);
             } else {
-              // Для фона сначала обновляем кэш, потом профиль
-              imageCache[type] = dataUrl;
               profile[type] = dataUrl;
+              imageCache[type] = dataUrl;
               applyProfile();
               saveProfile();
               showToast(`${type} updated!`, 'success');
@@ -1060,23 +1059,28 @@
         document.getElementById('resetProfileBtn')?.addEventListener('click', () => {
           if (confirm('Reset all profile data?')) {
             const wallet = profile.wallet;
-            profile = {
-              name: '@Cryptobros',
-              bio: '',
-              location: '',
-              twitter: '',
-              website: '',
-              avatar: '',
-              header: '',
-              bg: '',
-              tier: 'FREE',
-              wallet: wallet
-            };
+            
+            // Create new profile with Object.create(null) for safety
+            profile = Object.create(null);
+            Object.defineProperties(profile, {
+              name: { value: '@Cryptobros', writable: true, enumerable: true },
+              bio: { value: '', writable: true, enumerable: true },
+              location: { value: '', writable: true, enumerable: true },
+              twitter: { value: '', writable: true, enumerable: true },
+              website: { value: '', writable: true, enumerable: true },
+              avatar: { value: '', writable: true, enumerable: true },
+              header: { value: '', writable: true, enumerable: true },
+              bg: { value: '', writable: true, enumerable: true },
+              tier: { value: 'FREE', writable: true, enumerable: true },
+              wallet: { value: wallet, writable: true, enumerable: true }
+            });
+            
             // Clear image cache
             imageCache = { header: null, avatar: null, bg: null };
             lastProfileBg = '';
-            saveProfile();
+            saveProfile(false);
             applyProfile();
+            rebuildFormFields(true); // Force rebuild
             showToast('Profile reset', 'warning');
           }
           els.editMenu.style.display = 'none';
@@ -1099,98 +1103,88 @@
 
       // ============ PROFILE RENDER ============
       function applyProfile() {
-        // Предотвращаем рекурсию
-        if (isApplyingProfile) return;
-        isApplyingProfile = true;
+        if (!els.header || !els.avatar || !els.profileContent) return;
         
-        try {
-          if (!els.header || !els.avatar || !els.profileContent) return;
-          
-          // Header image
-          if (profile.header && typeof profile.header === 'string') {
-            if (imageCache.header !== profile.header) {
-              loadImageWithFallback(profile.header, 'header').then(validUrl => {
-                if (validUrl) {
-                  els.header.style.backgroundImage = safeCssUrl(validUrl);
-                  els.header.classList.add('loaded');
-                } else {
-                  els.header.style.backgroundImage = '';
-                  els.header.classList.remove('loaded');
-                  // Не меняем profile.header, чтобы избежать рекурсии
-                }
-              });
-            } else {
-              els.header.style.backgroundImage = safeCssUrl(profile.header);
-              els.header.classList.add('loaded');
-            }
+        // Header image
+        if (profile.header && typeof profile.header === 'string') {
+          if (imageCache.header !== profile.header) {
+            loadImageWithFallback(profile.header, 'header').then(validUrl => {
+              if (validUrl) {
+                els.header.style.backgroundImage = safeCssUrl(validUrl);
+                els.header.classList.add('loaded');
+              } else {
+                els.header.style.backgroundImage = '';
+                els.header.classList.remove('loaded');
+                profile.header = '';
+              }
+            });
           } else {
-            els.header.style.backgroundImage = '';
-            els.header.classList.remove('loaded');
+            els.header.style.backgroundImage = safeCssUrl(profile.header);
+            els.header.classList.add('loaded');
           }
-          
-          // Avatar image
-          if (profile.avatar && typeof profile.avatar === 'string') {
-            if (imageCache.avatar !== profile.avatar) {
-              loadImageWithFallback(profile.avatar, 'avatar').then(validUrl => {
-                if (validUrl) {
-                  els.avatar.style.backgroundImage = safeCssUrl(validUrl);
-                } else {
-                  els.avatar.style.backgroundImage = '';
-                  // Не меняем profile.avatar
-                }
-              });
-            } else {
-              els.avatar.style.backgroundImage = safeCssUrl(profile.avatar);
-            }
-          } else {
-            els.avatar.style.backgroundImage = '';
-          }
-          
-          // Background image - исправленная версия без рекурсии
-          if (profile.bg && typeof profile.bg === 'string' && profile.bg !== lastProfileBg) {
-            lastProfileBg = profile.bg;
-            if (imageCache.bg !== profile.bg) {
-              loadImageWithFallback(profile.bg, 'bg').then(validUrl => {
-                if (validUrl) {
-                  document.body.style.backgroundImage = safeCssUrl(validUrl);
-                  document.body.style.backgroundSize = 'cover';
-                } else {
-                  document.body.style.backgroundImage = '';
-                  document.body.style.backgroundColor = 'var(--bg-color)';
-                  lastProfileBg = ''; // Сбрасываем lastProfileBg
-                  // Не меняем profile.bg
-                }
-              });
-            } else {
-              document.body.style.backgroundImage = safeCssUrl(profile.bg);
-              document.body.style.backgroundSize = 'cover';
-            }
-          } else if (!profile.bg) {
-            document.body.style.backgroundImage = '';
-            document.body.style.backgroundColor = 'var(--bg-color)';
-            lastProfileBg = '';
-          }
-          
-          // Update display name and rank
-          if (els.displayName) els.displayName.textContent = profile.name || '@Cryptobros';
-          if (els.displayRank) els.displayRank.textContent = `${profile.tier || 'FREE'} TIER`;
-          
-          // Rebuild form fields
-          rebuildFormFields();
-          
-          updateWalletBadge();
-          cleanupImageCache(); // Очищаем кэш после применения
-        } finally {
-          isApplyingProfile = false;
+        } else {
+          els.header.style.backgroundImage = '';
+          els.header.classList.remove('loaded');
         }
+        
+        // Avatar image
+        if (profile.avatar && typeof profile.avatar === 'string') {
+          if (imageCache.avatar !== profile.avatar) {
+            loadImageWithFallback(profile.avatar, 'avatar').then(validUrl => {
+              if (validUrl) {
+                els.avatar.style.backgroundImage = safeCssUrl(validUrl);
+              } else {
+                els.avatar.style.backgroundImage = '';
+                profile.avatar = '';
+              }
+            });
+          } else {
+            els.avatar.style.backgroundImage = safeCssUrl(profile.avatar);
+          }
+        } else {
+          els.avatar.style.backgroundImage = '';
+        }
+        
+        // Background image - only update if changed
+        if (profile.bg && typeof profile.bg === 'string' && profile.bg !== lastProfileBg) {
+          lastProfileBg = profile.bg;
+          if (imageCache.bg !== profile.bg) {
+            loadImageWithFallback(profile.bg, 'bg').then(validUrl => {
+              if (validUrl) {
+                document.body.style.backgroundImage = safeCssUrl(validUrl);
+                document.body.style.backgroundSize = 'cover';
+              } else {
+                document.body.style.backgroundImage = '';
+                document.body.style.backgroundColor = 'var(--bg-color)';
+                profile.bg = '';
+              }
+            });
+          } else {
+            document.body.style.backgroundImage = safeCssUrl(profile.bg);
+            document.body.style.backgroundSize = 'cover';
+          }
+        } else if (!profile.bg) {
+          document.body.style.backgroundImage = '';
+          document.body.style.backgroundColor = 'var(--bg-color)';
+          lastProfileBg = '';
+        }
+        
+        // Update display name and rank
+        if (els.displayName) els.displayName.textContent = profile.name || '@Cryptobros';
+        if (els.displayRank) els.displayRank.textContent = `${profile.tier || 'FREE'} TIER`;
+        
+        // Rebuild form fields
+        rebuildFormFields();
+        
+        updateWalletBadge();
       }
 
-      function rebuildFormFields() {
+      function rebuildFormFields(force = false) {
         if (!els.profileContent) return;
         
-        // Check if form already exists
+        // Check if form already exists and we don't need to force rebuild
         const existingNameInput = document.getElementById('inputName');
-        if (existingNameInput) {
+        if (existingNameInput && !force) {
           // Update existing fields
           document.getElementById('inputName').value = profile.name || '';
           document.getElementById('inputBio').value = profile.bio || '';
@@ -1200,93 +1194,108 @@
           return;
         }
         
-        // Build new form
-        const content = els.profileContent;
+        // Clear and rebuild
+        els.profileContent.innerHTML = '';
+        
+        // Add display elements back
+        const nameDisplay = document.createElement('div');
+        nameDisplay.className = 'name';
+        nameDisplay.id = 'displayName';
+        nameDisplay.textContent = profile.name || '@Cryptobros';
+        els.profileContent.appendChild(nameDisplay);
+        
+        const rankDisplay = document.createElement('div');
+        rankDisplay.className = 'rank';
+        rankDisplay.id = 'displayRank';
+        rankDisplay.textContent = `${profile.tier || 'FREE'} TIER`;
+        els.profileContent.appendChild(rankDisplay);
         
         // Username field
         const nameLabel = document.createElement('div');
         nameLabel.className = 'field-label';
         nameLabel.textContent = 'Username';
-        content.appendChild(nameLabel);
+        els.profileContent.appendChild(nameLabel);
         
         const nameInput = document.createElement('input');
         nameInput.type = 'text';
         nameInput.id = 'inputName';
         nameInput.value = profile.name || '';
         nameInput.maxLength = 20;
-        content.appendChild(nameInput);
+        els.profileContent.appendChild(nameInput);
         
         // Bio field
         const bioLabel = document.createElement('div');
         bioLabel.className = 'field-label';
         bioLabel.textContent = 'Bio';
-        content.appendChild(bioLabel);
+        els.profileContent.appendChild(bioLabel);
         
         const bioTextarea = document.createElement('textarea');
         bioTextarea.id = 'inputBio';
         bioTextarea.rows = 3;
         bioTextarea.maxLength = 200;
         bioTextarea.textContent = profile.bio || '';
-        content.appendChild(bioTextarea);
+        els.profileContent.appendChild(bioTextarea);
         
         // Location field
         const locLabel = document.createElement('div');
         locLabel.className = 'field-label';
         locLabel.textContent = 'Location';
-        content.appendChild(locLabel);
+        els.profileContent.appendChild(locLabel);
         
         const locInput = document.createElement('input');
         locInput.type = 'text';
         locInput.id = 'inputLocation';
         locInput.value = profile.location || '';
         locInput.maxLength = 50;
-        content.appendChild(locInput);
+        els.profileContent.appendChild(locInput);
         
         // Twitter field
         const twitterLabel = document.createElement('div');
         twitterLabel.className = 'field-label';
         twitterLabel.textContent = 'Twitter';
-        content.appendChild(twitterLabel);
+        els.profileContent.appendChild(twitterLabel);
         
         const twitterInput = document.createElement('input');
         twitterInput.type = 'text';
         twitterInput.id = 'inputTwitter';
         twitterInput.value = profile.twitter || '';
         twitterInput.maxLength = 30;
-        content.appendChild(twitterInput);
+        els.profileContent.appendChild(twitterInput);
         
         // Website field
         const websiteLabel = document.createElement('div');
         websiteLabel.className = 'field-label';
         websiteLabel.textContent = 'Website';
-        content.appendChild(websiteLabel);
+        els.profileContent.appendChild(websiteLabel);
         
         const websiteInput = document.createElement('input');
         websiteInput.type = 'text';
         websiteInput.id = 'inputWebsite';
         websiteInput.value = profile.website || '';
         websiteInput.maxLength = 100;
-        content.appendChild(websiteInput);
+        els.profileContent.appendChild(websiteInput);
         
         // Save button
         const saveBtn = document.createElement('button');
         saveBtn.className = 'btn';
         saveBtn.id = 'saveProfileBtn';
         saveBtn.textContent = '💾 Save Changes';
-        content.appendChild(saveBtn);
+        els.profileContent.appendChild(saveBtn);
         
         // Save button listener with debouncing
-        saveBtn.addEventListener('click', () => {
-          debouncedSave();
-        });
-      }
-
-      // Debounced save function
-      function debouncedSave() {
-        clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
+        saveBtn.addEventListener('click', async () => {
+          saveBtn.disabled = true;
+          const originalText = saveBtn.textContent;
+          saveBtn.textContent = 'Saving...';
+          
+          // Small delay to show loading state
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
           saveProfileData();
-        }, 500);
+          
+          saveBtn.disabled = false;
+          saveBtn.textContent = originalText;
+        });
       }
 
       function saveProfileData() {
@@ -1319,7 +1328,8 @@
               e.preventDefault();
             }
             else if (els.inviteModal?.classList.contains('active')) {
-              closeModal(els.inviteModal);
+              els.inviteModal.classList.remove('active');
+              els.inviteResult.classList.remove('active');
               e.preventDefault();
             }
             else if (els.editMenu?.style.display === 'block') {
