@@ -1,15 +1,17 @@
+
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <title>CRYPTOBROS - Profile (DEMO)</title>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self'; base-uri 'self'; form-action 'self'">
+  <title>CRYPTOBROS - Profile</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: https: data: ; connect-src 'self'; base-uri 'self'; form-action 'self'">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    /* CSS Variables for proper theming */
     :root {
       --bg-color: #000;
       --text-color: #ffcc00;
@@ -17,15 +19,14 @@
       --border-color: #555;
       --menu-bg: #000;
       --input-bg: rgba(0,0,0,0.4);
-      --toast-bg: #00ff9d;
-      --toast-text: #0a0a0f;
-      --toast-success-bg: #00ff9d;
-      --toast-error-bg: #ff4d4d;
-      --toast-warning-bg: #ffd700;
-      --toast-info-bg: #3399ff;
       --btn-bg: #4267B2;
       --btn-text: white;
-      --placeholder-bg: linear-gradient(45deg, #333 25%, #444 25%, #444 50%, #333 50%, #333 75%, #444 75%);
+      --toast-bg: #00ff9d;
+      --toast-text: #000;
+      --toast-error-bg: #ff4d4d;
+      --toast-error-text: white;
+      --toast-warning-bg: #ffd700;
+      --toast-warning-text: #000;
     }
     
     body.light-mode {
@@ -35,435 +36,413 @@
       --border-color: #ccc;
       --menu-bg: #fff;
       --input-bg: #fff;
-      --toast-bg: #00cc7a;
-      --toast-text: #0a0a0f;
-      --toast-success-bg: #00cc7a;
-      --toast-error-bg: #ff4d4d;
-      --toast-warning-bg: #ffaa00;
-      --toast-info-bg: #3399ff;
       --btn-bg: #4267B2;
       --btn-text: white;
-      --placeholder-bg: linear-gradient(45deg, #e0e0e0 25%, #f0f0f0 25%, #f0f0f0 50%, #e0e0e0 50%, #e0e0e0 75%, #f0f0f0 75%);
+      --toast-bg: #00cc7a;
+      --toast-text: #fff;
+      --toast-error-bg: #ff4d4d;
+      --toast-error-text: white;
+      --toast-warning-bg: #ffaa00;
+      --toast-warning-text: #000;
     }
     
     body {
       font-family: Arial, sans-serif;
-      background-size: cover;
-      background-attachment: fixed;
       background-color: var(--bg-color);
       color: var(--text-color);
-      transition: background-color 0.3s ease, color 0.3s ease, background-image 0.5s ease;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      margin: 0;
+      padding: 0;
     }
     
-    /* DEMO MODE BANNER */
-    .demo-banner {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: #ff4d4d;
-      color: white;
-      text-align: center;
-      padding: 6px;
-      font-weight: bold;
-      z-index: 10000;
-      font-size: 14px;
-      letter-spacing: 1px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    .top-section { 
+      position: relative; 
+      height: 300px; 
     }
     
-    .top-section { position: relative; height: 300px; }
     .header {
-      width: 100%; height: 100%; background: center/cover no-repeat;
-      border: 2px dashed var(--border-color); border-radius: 8px; cursor: pointer;
-      position: relative;
-      transition: border 0.3s ease, background-image 0.3s ease;
-    }
-    .header.loaded { border: none; }
-    .avatar {
-      width: 200px; height: 200px; border-radius: 50%;
-      border: 4px solid white; background: center/cover no-repeat;
-      position: absolute; bottom: -100px; left: 50%;
-      transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      width: 100%; 
+      height: 100%; 
+      background: #333 center/cover no-repeat;
+      border: 2px dashed var(--border-color); 
+      border-radius: 8px; 
       cursor: pointer;
-      transition: border 0.3s ease, background-image 0.3s ease;
     }
+    
+    .header.loaded { border: 2px solid #00ff9d; }
+    
+    .avatar {
+      width: 150px; 
+      height: 150px; 
+      border-radius: 50%;
+      border: 4px solid #ffcc00; 
+      background: #444 center/cover no-repeat;
+      position: absolute; 
+      bottom: -75px; 
+      left: 50%;
+      transform: translateX(-50%); 
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    
     .main-layout {
-      max-width: 1200px; margin: 220px auto 0;
-      display: flex; gap: 20px; padding: 0 20px;
+      max-width: 1200px; 
+      margin: 100px auto 0;
+      display: flex; 
+      gap: 20px; 
+      padding: 0 20px;
     }
+    
     .theme-switch {
-      position: absolute; top: 16px; left: 16px;
-      width: 40px; height: 40px; background: #333;
-      border: 1px solid var(--border-color); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 100; font-size: 1.4rem;
+      position: absolute; 
+      top: 20px; 
+      left: 20px;
+      width: 40px; 
+      height: 40px; 
+      background: #333;
+      border: 1px solid var(--border-color); 
+      border-radius: 50%;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      cursor: pointer; 
+      z-index: 100; 
+      font-size: 1.4rem;
       color: var(--text-color);
-      background: var(--menu-bg);
-      transition: all 0.3s ease;
     }
+    
     .edit-btn {
-      position: absolute; top: 16px; right: 16px;
-      width: 40px; height: 40px; background: #333;
-      border: 1px solid var(--border-color); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 100; font-size: 1.4rem;
+      position: absolute; 
+      top: 20px; 
+      right: 20px;
+      width: 40px; 
+      height: 40px; 
+      background: #333;
+      border: 1px solid var(--border-color); 
+      border-radius: 50%;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      cursor: pointer; 
+      z-index: 100; 
+      font-size: 1.4rem;
       color: var(--text-color);
-      background: var(--menu-bg);
-      transition: all 0.3s ease;
     }
+    
     .edit-menu {
-      position: absolute; top: 70px; right: 16px;
-      background: var(--menu-bg); border: 1px solid var(--text-color);
-      border-radius: 8px; padding: 12px; display: none;
-      z-index: 100; min-width: 200px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+      position: absolute; 
+      top: 70px; 
+      right: 20px;
+      background: var(--menu-bg); 
+      border: 1px solid #ffcc00;
+      border-radius: 6px; 
+      padding: 10px; 
+      display: none;
+      z-index: 100; 
+      min-width: 180px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
+    
     .edit-menu button {
-      background: #222; color: var(--text-color); border: 1px solid var(--border-color);
-      border-radius: 6px; padding: 10px 16px; margin: 6px 0;
-      cursor: pointer; font-size: 0.95rem; width: 100%; text-align: left;
-      transition: background 0.2s ease;
+      background: #222; 
+      color: #ffcc00; 
+      border: 1px solid #555;
+      border-radius: 4px; 
+      padding: 8px 12px; 
+      margin: 5px 0;
+      cursor: pointer; 
+      width: 100%; 
+      text-align: left;
     }
+    
     body.light-mode .edit-menu button {
       background: #f0f0f0;
       color: #1a1a2e;
+      border-color: #ccc;
     }
-    .edit-menu button:hover { background: #333; }
-    body.light-mode .edit-menu button:hover { background: #e0e0e0; }
     
-    .sidebar { width: 200px; }
+    .edit-menu button:hover { 
+      background: #333; 
+      border-color: #ffcc00;
+    }
+    
+    .sidebar { 
+      width: 200px; 
+    }
+    
     .nav-item {
-      padding: 12px 0; color: var(--text-color); font-weight: bold;
-      font-size: 1.1rem; text-decoration: none; display: block;
-      cursor: pointer;
-      transition: opacity 0.2s ease;
+      padding: 12px 0; 
+      color: var(--text-color); 
+      font-weight: bold;
+      font-size: 1.1rem; 
+      text-decoration: none; 
+      display: block;
     }
-    .nav-item:hover { opacity: 0.9; text-shadow: 0 0 8px var(--text-color); }
-    .main { flex: 1; }
-    .name { font-size: 2rem; font-weight: bold; margin-bottom: 8px; color: var(--text-color); }
-    .rank { margin-bottom: 24px; font-weight: bold; color: #ffd700; font-size: 1.1rem; }
-    .field-label { color: var(--secondary-text); margin: 12px 0 6px; font-weight: bold; }
+    
+    .nav-item:hover { 
+      opacity: 0.8; 
+      text-shadow: 0 0 8px var(--text-color);
+    }
+    
+    .main { 
+      flex: 1; 
+    }
+    
+    .name { 
+      font-size: 2rem; 
+      font-weight: bold; 
+      margin-bottom: 8px; 
+    }
+    
+    .rank { 
+      margin-bottom: 24px; 
+      font-weight: bold; 
+      color: #ffd700; 
+    }
+    
+    .field-label { 
+      color: var(--secondary-text); 
+      margin: 12px 0 6px; 
+      font-weight: bold; 
+    }
+    
     input, textarea {
-      width: 100%; padding: 12px; margin: 6px 0 16px;
-      background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color);
-      border-radius: 6px; font-size: 1rem;
-      transition: border 0.2s ease;
+      width: 100%; 
+      padding: 12px; 
+      margin: 6px 0 16px;
+      background: var(--input-bg); 
+      color: var(--text-color); 
+      border: 1px solid var(--border-color);
+      border-radius: 6px; 
+      font-size: 1rem;
     }
+    
     input:focus, textarea:focus {
       outline: none;
       border-color: #00ff9d;
-      box-shadow: 0 0 0 2px rgba(0, 255, 157, 0.2);
     }
+    
     .btn {
-      background: var(--btn-bg); color: var(--btn-text); border: none;
-      padding: 12px 24px; border-radius: 6px; cursor: pointer;
-      font-weight: bold; margin-top: 12px;
-      transition: opacity 0.2s ease, transform 0.1s ease;
+      background: var(--btn-bg); 
+      color: var(--btn-text); 
+      border: none;
+      padding: 12px 24px; 
+      border-radius: 6px; 
+      cursor: pointer;
+      font-weight: bold; 
+      margin-top: 12px;
     }
-    .btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
-    .btn:active:not(:disabled) { transform: translateY(0); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* Toast Notifications with theme support */
-    .toast {
-      position: fixed; bottom: 24px; right: 24px; padding: 1rem 1.5rem;
-      border-radius: 12px; z-index: 9999; font-weight: 600; max-width: 320px;
-      border: 1px solid rgba(0,0,0,0.3); box-shadow: 0 6px 24px rgba(0,0,0,0.4);
-      animation: toastIn 0.4s ease-out;
-      transition: background 0.3s ease, color 0.3s ease;
+    
+    .btn:hover { 
+      opacity: 0.9; 
     }
-    .toast.success { background: var(--toast-success-bg); color: var(--toast-text); }
-    .toast.error { background: var(--toast-error-bg); color: white; }
-    .toast.warning { background: var(--toast-warning-bg); color: var(--toast-text); }
-    .toast.info { background: var(--toast-info-bg); color: white; }
-    @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-    /* Wallet Badge */
+    
     .wallet-badge {
-      position: absolute; bottom: -120px; left: 50%; transform: translateX(-50%);
-      display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.9);
-      border: 1px solid var(--border-color); border-radius: 24px; padding: 8px 16px;
-      cursor: pointer; transition: all 0.3s; z-index: 100; white-space: nowrap;
+      position: absolute; 
+      bottom: -80px; 
+      left: 50%; 
+      transform: translateX(-50%);
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      background: rgba(0,0,0,0.9);
+      border: 1px solid var(--border-color); 
+      border-radius: 24px; 
+      padding: 8px 16px;
+      cursor: pointer; 
+      z-index: 100; 
+      white-space: nowrap;
     }
+    
     body.light-mode .wallet-badge {
       background: rgba(255,255,255,0.9);
     }
-    .wallet-badge:hover {
-      border-color: #00ff9d; box-shadow: 0 0 20px rgba(0,255,157,0.6);
-      transform: translateX(-50%) scale(1.05);
+    
+    .badge-indicator { 
+      width: 10px; 
+      height: 10px; 
+      border-radius: 50%; 
+      background: #666; 
     }
-    .badge-indicator { width: 10px; height: 10px; border-radius: 50%; background: #666; transition: background 0.3s ease; }
-    .badge-indicator.connected { background: #00ff9d; }
-    .badge-indicator.locked { background: #ffd700; }
-    .badge-text { color: var(--text-color); font-size: 0.9rem; font-weight: 600; }
-
-    /* DEMO badge */
-    .demo-badge {
-      font-size: 10px;
-      color: #ff9999;
-      margin-left: 5px;
-      font-style: italic;
+    
+    .badge-indicator.connected { 
+      background: #00ff9d; 
     }
-
-    /* Image Preview Modal */
-    .image-preview-modal {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.95); z-index: 1000;
-      align-items: center; justify-content: center;
+    
+    .badge-indicator.locked { 
+      background: #ffd700; 
     }
-    .image-preview-modal.active { display: flex; }
-    .image-preview-content {
-      max-width: 90vw; max-height: 90vh; position: relative;
-      background: #000; padding: 20px; border: 2px solid #ffcc00; border-radius: 12px;
+    
+    #header-upload, #avatar-upload, #bg-upload { 
+      display: none; 
     }
-    .image-preview-content img {
-      max-width: 100%; max-height: 70vh; border-radius: 8px;
-      display: block; margin: 0 auto;
+    
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      z-index: 9999;
+      font-weight: bold;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    .preview-close {
-      position: absolute; top: 10px; right: 15px;
-      background: none; border: none; color: #ffcc00; font-size: 32px;
-      cursor: pointer; z-index: 1001;
-      transition: color 0.2s ease;
+    
+    .toast.success { background: var(--toast-bg); color: var(--toast-text); }
+    .toast.error { background: var(--toast-error-bg); color: var(--toast-error-text); }
+    .toast.warning { background: var(--toast-warning-bg); color: var(--toast-warning-text); }
+    
+    @keyframes slideIn { 
+      from { transform: translateX(100%); opacity: 0; } 
+      to { transform: translateX(0); opacity: 1; } 
     }
-    .preview-close:hover { color: #ff4d4d; }
-    .preview-confirm {
-      display: block; width: 100%; margin-top: 20px;
-      background: #00ff9d; color: #000; border: none; padding: 12px 32px;
-      border-radius: 24px; font-weight: bold; cursor: pointer; font-size: 1.1rem;
-      transition: background 0.2s ease;
-    }
-    .preview-confirm:hover { background: #00cc7a; }
-
-    /* Invite Button */
+    
     .invite-gen-btn {
       position: fixed; right: 0; top: 50%; transform: translateY(-50%);
       width: 60px; height: 140px; background: linear-gradient(180deg, #6644ff, #4488ff);
       border: none; border-radius: 16px 0 0 16px; color: white;
-      font-weight: 800; font-size: 14px; cursor: pointer; z-index: 200; display: none;
-      align-items: center; justify-content: center;
-      transition: all 0.3s;
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
+      font-weight: 800; font-size: 14px; cursor: pointer; z-index: 200;
+      writing-mode: vertical-rl; text-orientation: mixed;
     }
-    @media (max-width: 768px) {
-      .invite-gen-btn {
-        writing-mode: horizontal-tb;
-        width: auto;
-        height: 50px;
-        padding: 0 20px;
-        border-radius: 30px 0 0 30px;
-        top: auto;
-        bottom: 20px;
-        right: 0;
-        box-shadow: -2px 2px 10px rgba(0,0,0,0.3);
-      }
-    }
-    .invite-gen-btn.visible { display: flex; }
-    .invite-gen-btn:hover { width: 70px; background: linear-gradient(180deg, #7755ff, #5599ff); }
-
-    /* Invite Modal */
+    
     .invite-modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.92); align-items: center; justify-content: center; z-index: 300;
     }
     .invite-modal-overlay.active { display: flex; }
+    
     .invite-modal {
       background: var(--menu-bg); border: 2px solid #ffcc00; border-radius: 16px;
       padding: 24px; max-width: 380px; width: 90%; text-align: center; position: relative;
     }
-    .invite-modal h3 { color: #ffcc00; margin-bottom: 20px; font-size: 1.5rem; }
-    .invite-tier-select { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-    .invite-tier-option {
-      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-      background: #222; border: 1px solid #555; border-radius: 10px; cursor: pointer;
-      transition: all 0.2s;
-    }
-    .invite-tier-option:focus-within {
-      outline: 3px solid #00ff9d;
-    }
-    .invite-tier-option input:focus {
-      outline: 3px solid #00ff9d;
-      outline-offset: 2px;
-    }
-    .invite-tier-option input:checked + span:first-of-type {
-      font-weight: bold;
-      color: #00ff9d;
-    }
-    .invite-tier-option.selected { border-color: #ffcc00; background: #333; transform: scale(1.02); }
-    .invite-tier-option input { width: auto; margin: 0; cursor: pointer; }
-    .invite-generate-btn {
-      width: 100%; padding: 14px; background: #4267B2; color: white;
-      border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1.1rem;
-      transition: opacity 0.2s ease;
-    }
-    .invite-generate-btn:hover:not(:disabled) { opacity: 0.9; }
-    .invite-generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .invite-result {
-      margin-top: 20px; padding: 16px; background: rgba(0,255,157,0.08);
-      border: 2px dashed #00ff9d; border-radius: 12px; display: none;
-    }
-    .invite-result.active { display: block; }
-    .invite-code {
-      font-family: monospace; font-size: 1.8rem; font-weight: bold;
-      color: #00ff9d; margin: 12px 0; letter-spacing: 2px;
-      word-break: break-all;
-    }
-    .invite-copy-btn, .invite-share-x, .invite-share-tg {
-      background: transparent; border: 1px solid #00ff9d; color: #00ff9d;
-      padding: 8px 20px; border-radius: 8px; cursor: pointer; margin: 8px 4px;
-      font-weight: 600; transition: all 0.2s;
-    }
-    .invite-copy-btn:disabled, .invite-share-x:disabled, .invite-share-tg:disabled {
-      opacity: 0.5; cursor: not-allowed; border-color: #555; color: #666;
-    }
-    .invite-copy-btn:hover:not(:disabled), .invite-share-x:hover:not(:disabled), .invite-share-tg:hover:not(:disabled) {
-      background: rgba(0,255,157,0.1); transform: scale(1.05);
-    }
+    
     .invite-close-btn {
       position: absolute; top: 12px; right: 16px; background: none;
       border: none; color: #ffcc00; font-size: 28px; cursor: pointer;
-      transition: color 0.2s ease;
     }
-    .invite-close-btn:hover { color: #ff4d4d; }
-
-    /* Loading Indicators */
-    .image-loading { position: relative; }
-    .image-loading::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      border-radius: inherit;
-      z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    
+    .invite-tier-select { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    
+    .invite-tier-option {
+      display: flex; align-items: center; gap: 12px; padding: 12px;
+      background: #222; border: 2px solid #555; border-radius: 10px; cursor: pointer;
     }
-    .image-loading::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 50px;
-      height: 50px;
-      border: 4px solid #ffcc00;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      z-index: 6;
+    
+    .invite-tier-option.selected {
+      border-color: #00ff9d; background: rgba(0, 255, 157, 0.1);
     }
-    @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-
-    /* File Inputs */
-    #header-upload, #avatar-upload, #bg-upload { display: none; }
-
+    
+    .invite-generate-btn {
+      width: 100%; padding: 14px; background: #4267B2; color: white;
+      border: none; border-radius: 10px; cursor: pointer; font-weight: bold;
+    }
+    
+    .invite-result { margin-top: 20px; padding: 16px; border: 2px dashed #00ff9d; border-radius: 12px; display: none; }
+    .invite-result.active { display: block; }
+    
+    .invite-code { font-family: monospace; font-size: 1.8rem; font-weight: bold; color: #00ff9d; margin: 12px 0; word-break: break-all; }
+    
     @media (max-width: 768px) {
       .main-layout { flex-direction: column; }
       .sidebar { width: 100%; display: flex; flex-wrap: wrap; gap: 10px; }
       .nav-item { padding: 8px 12px; }
-    }
-
-    /* Focus styles */
-    :focus-visible {
-      outline: 3px solid #00ff9d;
-      outline-offset: 2px;
-    }
-
-    /* Placeholder styles for images */
-    .image-placeholder {
-      background: var(--placeholder-bg);
-      background-size: 20px 20px;
-    }
-    .header, .avatar, body {
-      transition: background-image 0.3s ease-in-out;
+      .invite-gen-btn {
+        writing-mode: horizontal-tb; width: auto; height: 50px; padding: 0 20px;
+        border-radius: 30px 0 0 30px; top: auto; bottom: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- DEMO MODE BANNER with ARIA alert -->
-  <div class="demo-banner" role="alert" aria-live="assertive">⚠️ DEMO MODE - No real wallet connection ⚠️</div>
-
   <div class="top-section">
+    <!-- Header background image -->
     <div class="header" id="header" role="button" aria-label="Change header image" tabindex="0"></div>
+    
+    <!-- Avatar image -->
     <div class="avatar" id="avatar" role="button" aria-label="Change avatar image" tabindex="0"></div>
     
-    <!-- Wallet Badge -->
-    <div class="wallet-badge" id="walletBadge" role="button" aria-label="Connect wallet (demo mode)" tabindex="0" aria-pressed="false">
+    <!-- Wallet connection badge -->
+    <div class="wallet-badge" id="walletBadge" role="button" aria-label="Connect wallet" tabindex="0">
       <div class="badge-indicator" id="badgeIndicator"></div>
-      <div class="badge-text" id="badgeText">Connect Wallet <span class="demo-badge">(demo)</span></div>
+      <div class="badge-text" id="badgeText">Connect Wallet</div>
     </div>
     
-    <div class="theme-switch" id="themeSwitch" aria-label="Toggle theme" role="button" aria-pressed="false" tabindex="0">🌙</div>
-    <div class="edit-btn" id="editBtn" aria-label="Edit profile" role="button" aria-expanded="false" tabindex="0">⚙️</div>
-    <div class="edit-menu" id="editMenu" role="menu" aria-label="Edit menu"></div>
+    <!-- Theme toggle -->
+    <div class="theme-switch" id="themeSwitch" role="button" aria-label="Toggle theme" tabindex="0">🌙</div>
+    
+    <!-- Edit menu button -->
+    <div class="edit-btn" id="editBtn" role="button" aria-label="Edit profile" tabindex="0">⚙️</div>
+    
+    <!-- Edit menu -->
+    <div class="edit-menu" id="editMenu" role="menu"></div>
   </div>
   
   <div class="main-layout">
-    <div class="sidebar" id="navSidebar" role="navigation">
-      <a href="feed.html" class="nav-item">📰 News Feed</a>
-      <a href="messages.html" class="nav-item">💬 Messages</a>
-      <a href="groups.html" class="nav-item">👥 My Groups</a>
-      <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
-      <a href="friends.html" class="nav-item">👫 My Friends</a>
-      <a href="help.html" class="nav-item">❓ Help Desk</a>
-      <a href="news.html" class="nav-item">📰 CryptoNews</a>
+    <!-- Sidebar navigation -->
+    <div class="sidebar" role="navigation">
+      <a href="#" class="nav-item">📰 News Feed</a>
+      <a href="#" class="nav-item">💬 Messages</a>
+      <a href="#" class="nav-item">👥 My Groups</a>
+      <a href="#" class="nav-item">⚖️ Tribunal</a>
+      <a href="#" class="nav-item">👫 My Friends</a>
+      <a href="#" class="nav-item">❓ Help Desk</a>
+      <a href="#" class="nav-item">📰 CryptoNews</a>
     </div>
-    <div class="main" id="profileContent" role="main">
+    
+    <!-- Main content -->
+    <div class="main" id="profileContent">
       <div class="name" id="displayName">@Cryptobros</div>
       <div class="rank" id="displayRank">FREE TIER</div>
+      
+      <div class="field-label">Username</div>
+      <input type="text" id="inputName" maxlength="20" value="@Cryptobros" aria-label="Username">
+      
+      <div class="field-label">Bio</div>
+      <textarea id="inputBio" rows="3" maxlength="200" aria-label="Bio"></textarea>
+      
+      <div class="field-label">Location</div>
+      <input type="text" id="inputLocation" maxlength="50" aria-label="Location">
+      
+      <div class="field-label">Twitter</div>
+      <input type="text" id="inputTwitter" maxlength="30" aria-label="Twitter handle">
+      
+      <div class="field-label">Website</div>
+      <input type="text" id="inputWebsite" maxlength="100" aria-label="Website URL">
+      
+      <button class="btn" id="saveProfileBtn">💾 Save Changes</button>
     </div>
   </div>
 
-  <input type="file" id="header-upload" accept="image/*" aria-hidden="true">
-  <input type="file" id="avatar-upload" accept="image/*" aria-hidden="true">
-  <input type="file" id="bg-upload" accept="image/*" aria-hidden="true">
+  <!-- File inputs for images -->
+  <input type="file" id="header-upload" accept="image/*">
+  <input type="file" id="avatar-upload" accept="image/*">
+  <input type="file" id="bg-upload" accept="image/*">
 
-  <!-- INVITE BUTTON -->
-  <button class="invite-gen-btn" id="inviteGenBtn" title="Generate Invite (demo)" aria-label="Generate invite code (demo mode)">🎫<br>INVITE</button>
+  <!-- Invite button -->
+  <button class="invite-gen-btn" id="inviteGenBtn">🎫<br>INVITE</button>
 
-  <!-- INVITE MODAL -->
-  <div class="invite-modal-overlay" id="inviteModal" role="dialog" aria-modal="true" aria-label="Generate invite code (demo mode)">
+  <!-- Invite modal -->
+  <div class="invite-modal-overlay" id="inviteModal">
     <div class="invite-modal">
-      <button class="invite-close-btn" id="inviteCloseBtn" aria-label="Close modal">×</button>
-      <h3>🎫 Generate Invite <span class="demo-badge">(demo)</span></h3>
+      <button class="invite-close-btn" id="inviteCloseBtn">×</button>
+      <h3>🎫 Generate Invite</h3>
       <div class="invite-tier-select">
-        <label class="invite-tier-option" id="tierMaster">
-          <input type="radio" name="inviteTier" value="MASTER" checked>
-          <span>Master</span>
-          <span style="color:#00ff9d;font-family:monospace;">MAS-#####</span>
+        <label class="invite-tier-option">
+          <input type="radio" name="inviteTier" value="MASTER" checked> Master
         </label>
-        <label class="invite-tier-option" id="tierPro">
-          <input type="radio" name="inviteTier" value="PRO">
-          <span>Pro</span>
-          <span style="color:#00ff9d;font-family:monospace;">PRO-#####</span>
+        <label class="invite-tier-option">
+          <input type="radio" name="inviteTier" value="PRO"> Pro
         </label>
-        <label class="invite-tier-option" id="tierPremium">
-          <input type="radio" name="inviteTier" value="PREMIUM">
-          <span>Premium</span>
-          <span style="color:#00ff9d;font-family:monospace;">PRE-#####</span>
+        <label class="invite-tier-option">
+          <input type="radio" name="inviteTier" value="PREMIUM"> Premium
         </label>
       </div>
-      <button class="invite-generate-btn" id="inviteGenerateBtn">Generate Code (demo)</button>
+      <button class="invite-generate-btn" id="inviteGenerateBtn">Generate Code</button>
       <div class="invite-result" id="inviteResult">
-        <div style="color:#aaa;font-size:0.9rem;margin-bottom:8px;">Your demo invite code:</div>
-        <div class="invite-code" id="inviteCodeDisplay">MAS-00000</div>
-        <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-          <button class="invite-copy-btn" id="inviteCopyBtn" aria-label="Copy invite code" disabled>📋 Copy</button>
-          <button class="invite-share-x" id="inviteShareX" aria-label="Share on X (demo)" disabled>𝕏 Share</button>
-          <button class="invite-share-tg" id="inviteShareTg" aria-label="Share on Telegram (demo)" disabled>📱 TG</button>
-        </div>
+        <div class="invite-code" id="inviteCodeDisplay"></div>
+        <button class="invite-copy-btn" id="inviteCopyBtn">📋 Copy Code</button>
       </div>
-    </div>
-  </div>
-
-  <!-- Image Preview Modal -->
-  <div class="image-preview-modal" id="imagePreviewModal" role="dialog" aria-modal="true" aria-label="Image preview">
-    <div class="image-preview-content">
-      <button class="preview-close" id="previewCloseBtn" aria-label="Close preview">×</button>
-      <img id="previewImage" src="" alt="Preview">
-      <button class="preview-confirm" id="previewConfirmBtn" aria-label="Use this image">✓ Use This Image</button>
     </div>
   </div>
 
@@ -471,929 +450,424 @@
     (function() {
       'use strict';
 
-      // ============ CONSTANTS ============
+      // Get all elements
+      const header = document.getElementById('header');
+      const avatar = document.getElementById('avatar');
+      const themeSwitch = document.getElementById('themeSwitch');
+      const editBtn = document.getElementById('editBtn');
+      const editMenu = document.getElementById('editMenu');
+      const uploadHeader = document.getElementById('header-upload');
+      const uploadAvatar = document.getElementById('avatar-upload');
+      const uploadBg = document.getElementById('bg-upload');
+      const walletBadge = document.getElementById('walletBadge');
+      const badgeIndicator = document.getElementById('badgeIndicator');
+      const badgeText = document.getElementById('badgeText');
+      const displayName = document.getElementById('displayName');
+      const displayRank = document.getElementById('displayRank');
+      const inputName = document.getElementById('inputName');
+      const inputBio = document.getElementById('inputBio');
+      const inputLocation = document.getElementById('inputLocation');
+      const inputTwitter = document.getElementById('inputTwitter');
+      const inputWebsite = document.getElementById('inputWebsite');
+      const saveBtn = document.getElementById('saveProfileBtn');
+      const inviteGenBtn = document.getElementById('inviteGenBtn');
+      const inviteModal = document.getElementById('inviteModal');
+      const inviteCloseBtn = document.getElementById('inviteCloseBtn');
+      const inviteGenerateBtn = document.getElementById('inviteGenerateBtn');
+      const inviteResult = document.getElementById('inviteResult');
+      const inviteCodeDisplay = document.getElementById('inviteCodeDisplay');
+      const inviteCopyBtn = document.getElementById('inviteCopyBtn');
+      const tierRadios = document.querySelectorAll('input[name="inviteTier"]');
+
       const STORAGE_KEY = 'cryptobros_profile';
       const THEME_KEY = 'cryptobros_theme';
       const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-      const MAX_TOTAL_SIZE = 6 * 1024 * 1024; // 6MB total for all images (base64)
-      const TOAST_DURATION = 3500;
-      const TIER_PREFIXES = { MASTER: 'MAS', PRO: 'PRO', PREMIUM: 'PRE' };
 
-      // ============ STATE ============
-      let profile = Object.create(null);
-      // Initialize with defaults using Object.defineProperty to prevent prototype pollution
-      Object.defineProperties(profile, {
-        name: { value: '@Cryptobros', writable: true, enumerable: true },
-        bio: { value: '', writable: true, enumerable: true },
-        location: { value: '', writable: true, enumerable: true },
-        twitter: { value: '', writable: true, enumerable: true },
-        website: { value: '', writable: true, enumerable: true },
-        avatar: { value: '', writable: true, enumerable: true },
-        header: { value: '', writable: true, enumerable: true },
-        bg: { value: '', writable: true, enumerable: true },
-        tier: { value: 'FREE', writable: true, enumerable: true },
-        wallet: { value: null, writable: true, enumerable: true }
-      });
-
-      let selectedInviteTier = 'MASTER';
-      let pendingImageData = null;
-      let pendingImageTarget = null;
-      let toastTimeout = null;
-      let isProfileSaving = false;
-      let imageCache = {
-        header: null,
-        avatar: null,
-        bg: null
-      };
-      let lastProfileBg = '';
-
-      // DOM Elements
-      const els = {
-        header: document.getElementById('header'),
-        avatar: document.getElementById('avatar'),
-        themeSwitch: document.getElementById('themeSwitch'),
-        editBtn: document.getElementById('editBtn'),
-        editMenu: document.getElementById('editMenu'),
-        uploadHeader: document.getElementById('header-upload'),
-        uploadAvatar: document.getElementById('avatar-upload'),
-        uploadBg: document.getElementById('bg-upload'),
-        profileContent: document.getElementById('profileContent'),
-        walletBadge: document.getElementById('walletBadge'),
-        badgeIndicator: document.getElementById('badgeIndicator'),
-        badgeText: document.getElementById('badgeText'),
-        previewModal: document.getElementById('imagePreviewModal'),
-        previewImage: document.getElementById('previewImage'),
-        previewCloseBtn: document.getElementById('previewCloseBtn'),
-        previewConfirmBtn: document.getElementById('previewConfirmBtn'),
-        inviteGenBtn: document.getElementById('inviteGenBtn'),
-        inviteModal: document.getElementById('inviteModal'),
-        inviteCloseBtn: document.getElementById('inviteCloseBtn'),
-        inviteGenerateBtn: document.getElementById('inviteGenerateBtn'),
-        inviteResult: document.getElementById('inviteResult'),
-        inviteCodeDisplay: document.getElementById('inviteCodeDisplay'),
-        inviteCopyBtn: document.getElementById('inviteCopyBtn'),
-        inviteShareX: document.getElementById('inviteShareX'),
-        inviteShareTg: document.getElementById('inviteShareTg'),
-        displayName: document.getElementById('displayName'),
-        displayRank: document.getElementById('displayRank')
+      // Profile data
+      let profile = {
+        name: '@Cryptobros',
+        bio: '',
+        location: '',
+        twitter: '',
+        website: '',
+        avatar: '',
+        header: '',
+        bg: '',
+        tier: 'FREE',
+        wallet: null
       };
 
-      // ============ SAFE HTML ESCAPE ============
-      function escapeHTML(str) {
-        if (!str) return '';
-        return String(str)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      }
-
-      // ============ SAFE CSS URL ============
-      function safeCssUrl(url) {
-        if (!url) return '';
-        const escaped = String(url).replace(/[\\"']/g, '\\$&');
-        return `url("${escaped}")`;
-      }
-
-      // ============ UTILITY FUNCTIONS ============
-      function showToast(msg, type = 'success') {
-        document.querySelectorAll('.toast').forEach(t => t.remove());
-        if (toastTimeout) clearTimeout(toastTimeout);
-        
+      // Show notification
+      function showNotification(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.textContent = msg;
-        toast.setAttribute('role', 'alert');
+        toast.textContent = message;
         document.body.appendChild(toast);
         
-        toastTimeout = setTimeout(() => {
-          toast.style.transition = 'opacity 0.4s ease';
-          toast.style.opacity = '0';
-          setTimeout(() => toast.remove(), 400);
-        }, TOAST_DURATION);
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
       }
 
-      function sanitizeInput(str, maxLength = Infinity) {
-        if (!str || typeof str !== 'string') return '';
-        return str.replace(/[<>"'`]/g, '').slice(0, maxLength);
-      }
-
-      function validateTwitter(handle) {
-        if (!handle) return '';
-        let clean = handle.replace(/^@+/, '').trim();
-        return /^[a-zA-Z0-9_]{1,15}$/.test(clean) ? '@' + clean : '';
-      }
-
-      function validateWebsite(url) {
-        if (!url) return '';
-        let clean = url.trim().replace(/[<>"'`]/g, '');
-        if (!clean) return '';
-        if (!/^https?:\/\//i.test(clean)) clean = 'https://' + clean;
-        try {
-          const parsed = new URL(clean);
-          return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
-        } catch {
-          return '';
-        }
-      }
-
-      // Check total image size and clear if too large
-      function validateImageSizes() {
-        const totalSize = 
-          (profile.avatar?.length || 0) +
-          (profile.header?.length || 0) +
-          (profile.bg?.length || 0);
-
-        if (totalSize > MAX_TOTAL_SIZE) {
-          showToast('Images too large – clearing largest images', 'error');
-          
-          // Clear largest images first
-          if (profile.bg?.length > 2_000_000) {
-            profile.bg = '';
-            imageCache.bg = null;
-          }
-          if (profile.header?.length > 2_000_000) {
-            profile.header = '';
-            imageCache.header = null;
-          }
-          if (profile.avatar?.length > 1_500_000) {
-            profile.avatar = '';
-            imageCache.avatar = null;
-          }
-          return false;
-        }
-        return true;
-      }
-
-      // DEMO wallet address generator (shorter version)
-      function generateDemoAddress() {
-        const randomPart = Math.random().toString(36).substring(2, 10).toUpperCase();
-        return `DEMO-${randomPart}`;
-      }
-
-      function setLoading(el, loading) {
-        if (el) el.classList.toggle('image-loading', loading);
-      }
-
-      // ============ CLIPBOARD ============
-      async function copyToClipboard(text) {
-        try {
-          await navigator.clipboard.writeText(text);
-          showToast('Copied!', 'success');
-        } catch (err) {
-          try {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            textarea.remove();
-            showToast('Copied (fallback)!', 'success');
-          } catch (fallbackErr) {
-            showToast('Copy failed', 'error');
-          }
-        }
-      }
-
-      // ============ LOCAL STORAGE ============
+      // Load profile from localStorage
       function loadProfile() {
         try {
-          const data = localStorage.getItem(STORAGE_KEY);
-          if (data) {
-            const parsed = JSON.parse(data);
-            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-              // Safe assignment with hasOwnProperty checks
-              if (Object.prototype.hasOwnProperty.call(parsed, 'name') && typeof parsed.name === 'string') 
-                profile.name = parsed.name;
-              if (Object.prototype.hasOwnProperty.call(parsed, 'bio') && typeof parsed.bio === 'string') 
-                profile.bio = parsed.bio;
-              if (Object.prototype.hasOwnProperty.call(parsed, 'location') && typeof parsed.location === 'string') 
-                profile.location = parsed.location;
-              if (Object.prototype.hasOwnProperty.call(parsed, 'twitter') && typeof parsed.twitter === 'string') 
-                profile.twitter = parsed.twitter;
-              if (Object.prototype.hasOwnProperty.call(parsed, 'website') && typeof parsed.website === 'string') 
-                profile.website = parsed.website;
-              if (Object.prototype.hasOwnProperty.call(parsed, 'avatar') && typeof parsed.avatar === 'string') 
-                profile.avatar = parsed.avatar;
-              if (Object.prototype.hasOwnProperty.call(parsed, 'header') && typeof parsed.header === 'string') 
-                profile.header = parsed.header;
-              if (Object.prototype.hasOwnProperty.call(parsed, 'bg') && typeof parsed.bg === 'string') 
-                profile.bg = parsed.bg;
-              if (Object.prototype.hasOwnProperty.call(parsed, 'tier') && typeof parsed.tier === 'string') 
-                profile.tier = parsed.tier;
-            }
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            const data = JSON.parse(saved);
+            profile = { ...profile, ...data };
           }
-          profile.wallet = null;
-          
-          // Validate image sizes after loading
-          validateImageSizes();
         } catch (e) {
-          console.warn('Failed to load profile:', e);
+          console.warn('Failed to load profile');
         }
-        updateInviteBtnVisibility();
-      }
-
-      function saveProfile(showToastMessage = true) {
-        if (isProfileSaving) return false;
         
+        // Update UI
+        inputName.value = profile.name;
+        inputBio.value = profile.bio;
+        inputLocation.value = profile.location;
+        inputTwitter.value = profile.twitter;
+        inputWebsite.value = profile.website;
+        displayName.textContent = profile.name;
+        displayRank.textContent = profile.tier + ' TIER';
+        
+        if (profile.header) {
+          header.style.backgroundImage = `url("${profile.header}")`;
+          header.classList.add('loaded');
+        }
+        
+        if (profile.avatar) {
+          avatar.style.backgroundImage = `url("${profile.avatar}")`;
+        }
+        
+        if (profile.bg) {
+          document.body.style.backgroundImage = `url("${profile.bg}")`;
+        }
+        
+        updateWalletBadge();
+      }
+
+      // Save profile to localStorage
+      function saveProfile(showToast = true) {
         try {
-          isProfileSaving = true;
+          profile.name = inputName.value.trim() || '@Cryptobros';
+          profile.bio = inputBio.value.trim();
+          profile.location = inputLocation.value.trim();
+          profile.twitter = inputTwitter.value.trim();
+          profile.website = inputWebsite.value.trim();
           
-          // Validate image sizes before saving
-          validateImageSizes();
+          displayName.textContent = profile.name;
+          displayRank.textContent = profile.tier + ' TIER';
           
-          // Create safe copy with only own properties
-          const safeProfile = {};
-          for (const key of Object.keys(profile)) {
-            if (key !== 'wallet') { // Skip wallet
-              safeProfile[key] = profile[key];
-            }
-          }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
           
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(safeProfile));
-          
-          if (showToastMessage) {
-            showToast('Profile saved!', 'success');
-          }
-          
-          return true;
+          if (showToast) showNotification('Profile saved!', 'success');
         } catch (e) {
-          if (e.name === 'QuotaExceededError') {
-            showToast('Storage full – try smaller images or clear data', 'error');
-            // Clear largest image to free space
-            if (profile.bg) {
-              profile.bg = '';
-              imageCache.bg = null;
-            } else if (profile.header) {
-              profile.header = '';
-              imageCache.header = null;
-            } else if (profile.avatar) {
-              profile.avatar = '';
-              imageCache.avatar = null;
-            }
-          } else if (showToastMessage) {
-            showToast('Failed to save profile', 'error');
-          }
-          return false;
-        } finally {
-          setTimeout(() => { isProfileSaving = false; }, 300);
+          showNotification('Failed to save profile', 'error');
         }
       }
 
-      // ============ THEME ============
+      // Load theme
       function loadTheme() {
         try {
-          if (localStorage.getItem(THEME_KEY) === 'light') {
+          const theme = localStorage.getItem(THEME_KEY);
+          if (theme === 'light') {
             document.body.classList.add('light-mode');
-            if (els.themeSwitch) {
-              els.themeSwitch.textContent = '☀️';
-              els.themeSwitch.setAttribute('aria-pressed', 'true');
-            }
+            themeSwitch.textContent = '☀️';
           }
         } catch (e) {
-          console.warn('Failed to load theme:', e);
+          console.warn('Failed to load theme');
         }
       }
 
+      // Toggle theme
       function toggleTheme() {
         document.body.classList.toggle('light-mode');
         const isLight = document.body.classList.contains('light-mode');
-        if (els.themeSwitch) {
-          els.themeSwitch.textContent = isLight ? '☀️' : '🌙';
-          els.themeSwitch.setAttribute('aria-pressed', isLight.toString());
-        }
+        themeSwitch.textContent = isLight ? '☀️' : '🌙';
+        
         try {
           localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
         } catch (e) {
-          console.warn('Failed to save theme:', e);
+          console.warn('Failed to save theme');
         }
       }
 
-      // ============ WALLET ============
+      // Update wallet badge
       function updateWalletBadge() {
-        if (!els.badgeIndicator || !els.badgeText) return;
-        
-        if (profile.wallet && typeof profile.wallet === 'string') {
-          els.badgeIndicator.className = 'badge-indicator connected';
-          const short = profile.wallet.length > 10 
-            ? `${profile.wallet.slice(0,8)}...` 
-            : profile.wallet;
-          els.badgeText.innerHTML = `Demo: ${escapeHTML(short)} <span class="demo-badge">(demo)</span>`;
+        if (profile.wallet) {
+          badgeIndicator.className = 'badge-indicator connected';
+          badgeText.textContent = profile.wallet.slice(0, 6) + '...' + profile.wallet.slice(-4);
         } else {
-          els.badgeIndicator.className = 'badge-indicator locked';
-          els.badgeText.innerHTML = 'Connect Wallet <span class="demo-badge">(demo)</span>';
+          badgeIndicator.className = 'badge-indicator locked';
+          badgeText.textContent = 'Connect Wallet';
         }
       }
 
+      // Handle wallet click
       function handleWalletClick() {
-        showToast('🔷 DEMO MODE: No real wallet connection', 'warning');
-        
         if (!profile.wallet) {
-          profile.wallet = generateDemoAddress();
+          profile.wallet = '0x' + Math.random().toString(36).substring(2, 10) + '...' + 
+                          Math.random().toString(36).substring(2, 6).toUpperCase();
           updateWalletBadge();
-          saveProfile();
-          showToast('✅ Demo wallet connected! (not real)', 'success');
+          saveProfile(false);
+          showNotification('Wallet connected!', 'success');
         } else {
           profile.wallet = null;
           updateWalletBadge();
-          saveProfile();
-          showToast('Demo wallet disconnected', 'info');
+          saveProfile(false);
+          showNotification('Wallet disconnected', 'warning');
         }
       }
 
-      function updateInviteBtnVisibility() {
-        if (els.inviteGenBtn) {
-          els.inviteGenBtn.classList.add('visible');
-        }
-      }
-
-      // ============ INVITE SYSTEM ============
-      function setupInviteSystem() {
-        if (!els.inviteGenBtn || !els.inviteModal || !els.inviteCloseBtn || !els.inviteGenerateBtn) return;
-
-        els.inviteGenBtn.addEventListener('click', () => {
-          showToast('🎫 DEMO: Invite codes are for demonstration only', 'info');
-          els.inviteModal.classList.add('active');
-        });
-
-        const closeModal = () => {
-          els.inviteModal.classList.remove('active');
-          els.inviteResult.classList.remove('active');
-        };
-
-        els.inviteCloseBtn.addEventListener('click', closeModal);
-        els.inviteModal.addEventListener('click', (e) => {
-          if (e.target === els.inviteModal) closeModal();
-        });
-
-        // Fix radio button handling
-        const tierRadios = document.querySelectorAll('input[name="inviteTier"]');
-        tierRadios.forEach(radio => {
-          if (radio.checked) selectedInviteTier = radio.value;
-          radio.addEventListener('change', (e) => {
-            selectedInviteTier = e.target.value;
-          });
-        });
-
-        els.inviteGenerateBtn.addEventListener('click', () => {
-          showToast('🎫 Demo invite code generated', 'success');
-          
-          const prefix = TIER_PREFIXES[selectedInviteTier] || 'MAS';
-          const randomNum = Math.floor(10000 + Math.random() * 90000); // 5 digits
-          const code = prefix + '-' + randomNum;
-          
-          if (els.inviteCodeDisplay) els.inviteCodeDisplay.textContent = code;
-          els.inviteResult.classList.add('active');
-          
-          if (els.inviteCopyBtn) els.inviteCopyBtn.disabled = false;
-          if (els.inviteShareX) els.inviteShareX.disabled = false;
-          if (els.inviteShareTg) els.inviteShareTg.disabled = false;
-        });
-
-        if (els.inviteCopyBtn) {
-          els.inviteCopyBtn.addEventListener('click', async () => {
-            const code = els.inviteCodeDisplay?.textContent;
-            if (!code) {
-              showToast('No code to copy', 'error');
-              return;
-            }
-            await copyToClipboard(code);
-          });
-        }
-
-        if (els.inviteShareX) {
-          els.inviteShareX.addEventListener('click', () => {
-            const code = els.inviteCodeDisplay?.textContent;
-            if (code) {
-              const text = encodeURIComponent(`Join me on CRYPTOBROS (demo)! Use invite code: ${code}`);
-              window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank', 'noopener,noreferrer');
-            }
-          });
-        }
-
-        if (els.inviteShareTg) {
-          els.inviteShareTg.addEventListener('click', () => {
-            const code = els.inviteCodeDisplay?.textContent;
-            if (code) {
-              const text = encodeURIComponent(`Join me on CRYPTOBROS (demo)! Use invite code: ${code}`);
-              const url = encodeURIComponent('https://cryptobros.app');
-              window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
-            }
-          });
-        }
-      }
-
-      // ============ IMAGE HANDLING ============
-      function fileToDataURL(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = () => reject(new Error('Failed to read file'));
-          reader.readAsDataURL(file);
-        });
-      }
-
-      async function validateImageDimensions(file, target) {
-        return new Promise((resolve) => {
-          const img = new Image();
-          const objectUrl = URL.createObjectURL(file);
-          
-          img.onload = () => {
-            URL.revokeObjectURL(objectUrl);
-            
-            if (target === 'avatar') {
-              const ratio = img.width / img.height;
-              if (ratio < 0.8 || ratio > 1.2) {
-                showToast('Warning: Avatar should be roughly square', 'warning');
-              }
-              if (img.width < 100 || img.height < 100) {
-                showToast('Avatar should be at least 100×100 pixels', 'warning');
-              }
-            }
-            resolve();
-          };
-          
-          img.onerror = () => {
-            URL.revokeObjectURL(objectUrl);
-            resolve();
-          };
-          
-          img.src = objectUrl;
-        });
-      }
-
-      async function loadImageWithFallback(url, target) {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.onload = () => {
-            // Cache the image
-            imageCache[target] = url;
-            resolve(url);
-          };
-          img.onerror = () => {
-            showToast(`Failed to load ${target} image`, 'error');
-            // Fall back to cached version if available
-            if (imageCache[target]) {
-              resolve(imageCache[target]);
-            } else {
-              resolve(null);
-            }
-          };
-          img.src = url;
-        });
-      }
-
-      async function compressImage(file, element = null, target = null) {
-        if (!file) throw new Error('No file selected');
-        if (file.size > MAX_FILE_SIZE) throw new Error('File too large (max 2MB)');
+      // Handle image upload
+      function handleImageUpload(type, file) {
+        if (!file) return;
         
-        if (element) setLoading(element, true);
-        
-        try {
-          await validateImageDimensions(file, target);
-          return await fileToDataURL(file);
-        } catch (err) {
-          throw new Error('Image processing failed');
-        } finally {
-          if (element) setLoading(element, false);
+        if (!file.type.startsWith('image/')) {
+          showNotification('Please select an image file', 'error');
+          return;
         }
-      }
-
-      // ============ IMAGE PREVIEW MODAL ============
-      function showPreview(dataUrl, target) {
-        if (!els.previewModal || !els.previewImage) return;
-        pendingImageData = dataUrl;
-        pendingImageTarget = target;
-        els.previewImage.src = dataUrl;
-        els.previewModal.classList.add('active');
-      }
-
-      function hidePreview() {
-        if (!els.previewModal) return;
-        els.previewModal.classList.remove('active');
-        els.previewImage.src = '';
-        pendingImageData = null;
-        pendingImageTarget = null;
-      }
-
-      function confirmPreview() {
-        if (pendingImageData && pendingImageTarget) {
-          profile[pendingImageTarget] = pendingImageData;
-          imageCache[pendingImageTarget] = pendingImageData;
-          applyProfile();
-          saveProfile();
-          showToast(`${pendingImageTarget} updated!`, 'success');
-          hidePreview();
-        }
-      }
-
-      // ============ UPLOAD HANDLERS ============
-      function createUploadHandler(type) {
-        let element = null;
-        if (type === 'header') element = els.header;
-        else if (type === 'avatar') element = els.avatar;
-        else if (type === 'bg') element = document.body;
         
-        return async (e) => {
-          const file = e.target.files?.[0];
-          if (!file) return;
+        if (file.size > MAX_FILE_SIZE) {
+          showNotification('File too large (max 2MB)', 'error');
+          return;
+        }
+        
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+          const dataUrl = e.target.result;
           
-          if (!file.type.startsWith('image/')) {
-            showToast('Please select an image file', 'error');
-            e.target.value = '';
-            return;
+          if (type === 'bg') {
+            profile.bg = dataUrl;
+            document.body.style.backgroundImage = `url("${dataUrl}")`;
+          } else if (type === 'header') {
+            profile.header = dataUrl;
+            header.style.backgroundImage = `url("${dataUrl}")`;
+            header.classList.add('loaded');
+          } else if (type === 'avatar') {
+            profile.avatar = dataUrl;
+            avatar.style.backgroundImage = `url("${dataUrl}")`;
           }
           
-          try {
-            showToast(`Processing ${type}...`, 'warning');
-            const dataUrl = await compressImage(file, element, type);
-            
-            if (type === 'header' || type === 'avatar') {
-              showPreview(dataUrl, type);
-            } else {
-              profile[type] = dataUrl;
-              imageCache[type] = dataUrl;
-              applyProfile();
-              saveProfile();
-              showToast(`${type} updated!`, 'success');
-            }
-          } catch (err) {
-            showToast(err.message || 'Upload failed', 'error');
-          }
-          
-          e.target.value = '';
+          saveProfile(false);
+          showNotification(type.charAt(0).toUpperCase() + type.slice(1) + ' updated!', 'success');
         };
+        
+        reader.onerror = () => {
+          showNotification('Failed to read file', 'error');
+        };
+        
+        reader.readAsDataURL(file);
       }
 
-      // ============ EDIT MENU ============
+      // Setup edit menu
       function setupEditMenu() {
-        if (!els.editMenu || !els.editBtn) return;
-        
-        // Create buttons without inline onclick
-        els.editMenu.innerHTML = `
+        editMenu.innerHTML = `
           <button id="changeHeaderBtn">📷 Change Header</button>
           <button id="changeAvatarBtn">👤 Change Avatar</button>
           <button id="changeBgBtn">🎨 Change Background</button>
           <button id="resetProfileBtn">🔄 Reset Profile</button>
         `;
         
-        // Attach event listeners
-        document.getElementById('changeHeaderBtn')?.addEventListener('click', () => {
-          els.uploadHeader?.click();
-          els.editMenu.style.display = 'none';
-        });
-        
-        document.getElementById('changeAvatarBtn')?.addEventListener('click', () => {
-          els.uploadAvatar?.click();
-          els.editMenu.style.display = 'none';
-        });
-        
-        document.getElementById('changeBgBtn')?.addEventListener('click', () => {
-          els.uploadBg?.click();
-          els.editMenu.style.display = 'none';
-        });
-        
-        document.getElementById('resetProfileBtn')?.addEventListener('click', () => {
-          if (confirm('Reset all profile data?')) {
-            const wallet = profile.wallet;
-            
-            // Create new profile with Object.create(null) for safety
-            profile = Object.create(null);
-            Object.defineProperties(profile, {
-              name: { value: '@Cryptobros', writable: true, enumerable: true },
-              bio: { value: '', writable: true, enumerable: true },
-              location: { value: '', writable: true, enumerable: true },
-              twitter: { value: '', writable: true, enumerable: true },
-              website: { value: '', writable: true, enumerable: true },
-              avatar: { value: '', writable: true, enumerable: true },
-              header: { value: '', writable: true, enumerable: true },
-              bg: { value: '', writable: true, enumerable: true },
-              tier: { value: 'FREE', writable: true, enumerable: true },
-              wallet: { value: wallet, writable: true, enumerable: true }
-            });
-            
-            // Clear image cache
-            imageCache = { header: null, avatar: null, bg: null };
-            lastProfileBg = '';
-            saveProfile(false);
-            applyProfile();
-            rebuildFormFields(true); // Force rebuild
-            showToast('Profile reset', 'warning');
-          }
-          els.editMenu.style.display = 'none';
-        });
-        
-        els.editBtn.addEventListener('click', (e) => {
+        // Toggle menu
+        editBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const expanded = els.editMenu.style.display === 'block';
-          els.editMenu.style.display = expanded ? 'none' : 'block';
-          els.editBtn.setAttribute('aria-expanded', (!expanded).toString());
+          editMenu.style.display = editMenu.style.display === 'block' ? 'none' : 'block';
         });
         
-        document.addEventListener('click', (e) => {
-          if (!els.editMenu.contains(e.target) && !els.editBtn.contains(e.target)) {
-            els.editMenu.style.display = 'none';
-            els.editBtn.setAttribute('aria-expanded', 'false');
+        // Menu buttons
+        document.getElementById('changeHeaderBtn').addEventListener('click', () => {
+          uploadHeader.click();
+          editMenu.style.display = 'none';
+        });
+        
+        document.getElementById('changeAvatarBtn').addEventListener('click', () => {
+          uploadAvatar.click();
+          editMenu.style.display = 'none';
+        });
+        
+        document.getElementById('changeBgBtn').addEventListener('click', () => {
+          uploadBg.click();
+          editMenu.style.display = 'none';
+        });
+        
+        document.getElementById('resetProfileBtn').addEventListener('click', () => {
+          if (confirm('Reset all profile data? This cannot be undone.')) {
+            const wallet = profile.wallet;
+            profile = {
+              name: '@Cryptobros',
+              bio: '',
+              location: '',
+              twitter: '',
+              website: '',
+              avatar: '',
+              header: '',
+              bg: '',
+              tier: 'FREE',
+              wallet: wallet
+            };
+            
+            // Update UI
+            inputName.value = profile.name;
+            inputBio.value = profile.bio;
+            inputLocation.value = profile.location;
+            inputTwitter.value = profile.twitter;
+            inputWebsite.value = profile.website;
+            displayName.textContent = profile.name;
+            displayRank.textContent = profile.tier + ' TIER';
+            
+            header.style.backgroundImage = '';
+            avatar.style.backgroundImage = '';
+            document.body.style.backgroundImage = '';
+            header.classList.remove('loaded');
+            
+            saveProfile(false);
+            showNotification('Profile reset', 'warning');
           }
+          editMenu.style.display = 'none';
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', () => {
+          editMenu.style.display = 'none';
+        });
+        
+        editMenu.addEventListener('click', (e) => {
+          e.stopPropagation();
         });
       }
 
-      // ============ PROFILE RENDER ============
-      function applyProfile() {
-        if (!els.header || !els.avatar || !els.profileContent) return;
+      // Setup invite system
+      function setupInviteSystem() {
+        let selectedTier = 'MASTER';
         
-        // Header image
-        if (profile.header && typeof profile.header === 'string') {
-          if (imageCache.header !== profile.header) {
-            loadImageWithFallback(profile.header, 'header').then(validUrl => {
-              if (validUrl) {
-                els.header.style.backgroundImage = safeCssUrl(validUrl);
-                els.header.classList.add('loaded');
-              } else {
-                els.header.style.backgroundImage = '';
-                els.header.classList.remove('loaded');
-                profile.header = '';
-              }
+        // Update selected class
+        tierRadios.forEach(radio => {
+          radio.addEventListener('change', () => {
+            document.querySelectorAll('.invite-tier-option').forEach(opt => {
+              opt.classList.remove('selected');
             });
-          } else {
-            els.header.style.backgroundImage = safeCssUrl(profile.header);
-            els.header.classList.add('loaded');
-          }
-        } else {
-          els.header.style.backgroundImage = '';
-          els.header.classList.remove('loaded');
-        }
-        
-        // Avatar image
-        if (profile.avatar && typeof profile.avatar === 'string') {
-          if (imageCache.avatar !== profile.avatar) {
-            loadImageWithFallback(profile.avatar, 'avatar').then(validUrl => {
-              if (validUrl) {
-                els.avatar.style.backgroundImage = safeCssUrl(validUrl);
-              } else {
-                els.avatar.style.backgroundImage = '';
-                profile.avatar = '';
-              }
-            });
-          } else {
-            els.avatar.style.backgroundImage = safeCssUrl(profile.avatar);
-          }
-        } else {
-          els.avatar.style.backgroundImage = '';
-        }
-        
-        // Background image - only update if changed
-        if (profile.bg && typeof profile.bg === 'string' && profile.bg !== lastProfileBg) {
-          lastProfileBg = profile.bg;
-          if (imageCache.bg !== profile.bg) {
-            loadImageWithFallback(profile.bg, 'bg').then(validUrl => {
-              if (validUrl) {
-                document.body.style.backgroundImage = safeCssUrl(validUrl);
-                document.body.style.backgroundSize = 'cover';
-              } else {
-                document.body.style.backgroundImage = '';
-                document.body.style.backgroundColor = 'var(--bg-color)';
-                profile.bg = '';
-              }
-            });
-          } else {
-            document.body.style.backgroundImage = safeCssUrl(profile.bg);
-            document.body.style.backgroundSize = 'cover';
-          }
-        } else if (!profile.bg) {
-          document.body.style.backgroundImage = '';
-          document.body.style.backgroundColor = 'var(--bg-color)';
-          lastProfileBg = '';
-        }
-        
-        // Update display name and rank
-        if (els.displayName) els.displayName.textContent = profile.name || '@Cryptobros';
-        if (els.displayRank) els.displayRank.textContent = `${profile.tier || 'FREE'} TIER`;
-        
-        // Rebuild form fields
-        rebuildFormFields();
-        
-        updateWalletBadge();
-      }
-
-      function rebuildFormFields(force = false) {
-        if (!els.profileContent) return;
-        
-        // Check if form already exists and we don't need to force rebuild
-        const existingNameInput = document.getElementById('inputName');
-        if (existingNameInput && !force) {
-          // Update existing fields
-          document.getElementById('inputName').value = profile.name || '';
-          document.getElementById('inputBio').value = profile.bio || '';
-          document.getElementById('inputLocation').value = profile.location || '';
-          document.getElementById('inputTwitter').value = profile.twitter || '';
-          document.getElementById('inputWebsite').value = profile.website || '';
-          return;
-        }
-        
-        // Clear and rebuild
-        els.profileContent.innerHTML = '';
-        
-        // Add display elements back
-        const nameDisplay = document.createElement('div');
-        nameDisplay.className = 'name';
-        nameDisplay.id = 'displayName';
-        nameDisplay.textContent = profile.name || '@Cryptobros';
-        els.profileContent.appendChild(nameDisplay);
-        
-        const rankDisplay = document.createElement('div');
-        rankDisplay.className = 'rank';
-        rankDisplay.id = 'displayRank';
-        rankDisplay.textContent = `${profile.tier || 'FREE'} TIER`;
-        els.profileContent.appendChild(rankDisplay);
-        
-        // Username field
-        const nameLabel = document.createElement('div');
-        nameLabel.className = 'field-label';
-        nameLabel.textContent = 'Username';
-        els.profileContent.appendChild(nameLabel);
-        
-        const nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.id = 'inputName';
-        nameInput.value = profile.name || '';
-        nameInput.maxLength = 20;
-        els.profileContent.appendChild(nameInput);
-        
-        // Bio field
-        const bioLabel = document.createElement('div');
-        bioLabel.className = 'field-label';
-        bioLabel.textContent = 'Bio';
-        els.profileContent.appendChild(bioLabel);
-        
-        const bioTextarea = document.createElement('textarea');
-        bioTextarea.id = 'inputBio';
-        bioTextarea.rows = 3;
-        bioTextarea.maxLength = 200;
-        bioTextarea.textContent = profile.bio || '';
-        els.profileContent.appendChild(bioTextarea);
-        
-        // Location field
-        const locLabel = document.createElement('div');
-        locLabel.className = 'field-label';
-        locLabel.textContent = 'Location';
-        els.profileContent.appendChild(locLabel);
-        
-        const locInput = document.createElement('input');
-        locInput.type = 'text';
-        locInput.id = 'inputLocation';
-        locInput.value = profile.location || '';
-        locInput.maxLength = 50;
-        els.profileContent.appendChild(locInput);
-        
-        // Twitter field
-        const twitterLabel = document.createElement('div');
-        twitterLabel.className = 'field-label';
-        twitterLabel.textContent = 'Twitter';
-        els.profileContent.appendChild(twitterLabel);
-        
-        const twitterInput = document.createElement('input');
-        twitterInput.type = 'text';
-        twitterInput.id = 'inputTwitter';
-        twitterInput.value = profile.twitter || '';
-        twitterInput.maxLength = 30;
-        els.profileContent.appendChild(twitterInput);
-        
-        // Website field
-        const websiteLabel = document.createElement('div');
-        websiteLabel.className = 'field-label';
-        websiteLabel.textContent = 'Website';
-        els.profileContent.appendChild(websiteLabel);
-        
-        const websiteInput = document.createElement('input');
-        websiteInput.type = 'text';
-        websiteInput.id = 'inputWebsite';
-        websiteInput.value = profile.website || '';
-        websiteInput.maxLength = 100;
-        els.profileContent.appendChild(websiteInput);
-        
-        // Save button
-        const saveBtn = document.createElement('button');
-        saveBtn.className = 'btn';
-        saveBtn.id = 'saveProfileBtn';
-        saveBtn.textContent = '💾 Save Changes';
-        els.profileContent.appendChild(saveBtn);
-        
-        // Save button listener with debouncing
-        saveBtn.addEventListener('click', async () => {
-          saveBtn.disabled = true;
-          const originalText = saveBtn.textContent;
-          saveBtn.textContent = 'Saving...';
-          
-          // Small delay to show loading state
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
-          saveProfileData();
-          
-          saveBtn.disabled = false;
-          saveBtn.textContent = originalText;
+            if (radio.checked) {
+              radio.closest('.invite-tier-option').classList.add('selected');
+              selectedTier = radio.value;
+            }
+          });
         });
-      }
-
-      function saveProfileData() {
-        const nameEl = document.getElementById('inputName');
-        const bioEl = document.getElementById('inputBio');
-        const locationEl = document.getElementById('inputLocation');
-        const twitterEl = document.getElementById('inputTwitter');
-        const websiteEl = document.getElementById('inputWebsite');
         
-        if (!nameEl) return;
+        // Set initial selected
+        document.querySelector('input[name="inviteTier"]:checked')
+          ?.closest('.invite-tier-option')?.classList.add('selected');
         
-        profile.name = sanitizeInput(nameEl.value, 20) || '@Cryptobros';
-        profile.bio = sanitizeInput(bioEl?.value || '', 200);
-        profile.location = sanitizeInput(locationEl?.value || '', 50);
-        profile.twitter = validateTwitter(twitterEl?.value || '');
-        profile.website = validateWebsite(websiteEl?.value || '');
+        // Open modal
+        inviteGenBtn.addEventListener('click', () => {
+          inviteModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
         
-        if (els.displayName) els.displayName.textContent = profile.name;
-        if (els.displayRank) els.displayRank.textContent = `${profile.tier} TIER`;
+        // Close modal
+        inviteCloseBtn.addEventListener('click', () => {
+          inviteModal.classList.remove('active');
+          inviteResult.classList.remove('active');
+          document.body.style.overflow = '';
+        });
         
-        saveProfile();
-      }
-
-      // ============ GLOBAL ESCAPE HANDLER ============
-      function setupGlobalEscapeHandler() {
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            if (els.previewModal?.classList.contains('active')) {
-              hidePreview();
-              e.preventDefault();
-            }
-            else if (els.inviteModal?.classList.contains('active')) {
-              els.inviteModal.classList.remove('active');
-              els.inviteResult.classList.remove('active');
-              e.preventDefault();
-            }
-            else if (els.editMenu?.style.display === 'block') {
-              els.editMenu.style.display = 'none';
-              els.editBtn.setAttribute('aria-expanded', 'false');
-              e.preventDefault();
-            }
+        // Close on overlay click
+        inviteModal.addEventListener('click', (e) => {
+          if (e.target === inviteModal) {
+            inviteModal.classList.remove('active');
+            inviteResult.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        });
+        
+        // Generate code
+        inviteGenerateBtn.addEventListener('click', () => {
+          const prefixes = { MASTER: 'MAS', PRO: 'PRO', PREMIUM: 'PRE' };
+          const prefix = prefixes[selectedTier];
+          const code = prefix + '-' + Math.floor(100000 + Math.random() * 900000);
+          
+          inviteCodeDisplay.textContent = code;
+          inviteResult.classList.add('active');
+        });
+        
+        // Copy code
+        inviteCopyBtn.addEventListener('click', async () => {
+          const code = inviteCodeDisplay.textContent;
+          if (!code) return;
+          
+          try {
+            await navigator.clipboard.writeText(code);
+            showNotification('Copied!', 'success');
+          } catch {
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showNotification('Copied!', 'success');
           }
         });
       }
 
-      // ============ INITIALIZATION ============
+      // Auto-save
+      let autoSaveTimer;
+      function setupAutoSave() {
+        const inputs = [inputName, inputBio, inputLocation, inputTwitter, inputWebsite];
+        inputs.forEach(input => {
+          input.addEventListener('input', () => {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => saveProfile(false), 1000);
+          });
+        });
+      }
+
+      // Initialize
       function init() {
-        if (!els.header || !els.avatar || !els.profileContent) {
-          console.error('Required DOM elements missing');
-          return;
-        }
-        
-        loadTheme();
         loadProfile();
-        
+        loadTheme();
         setupEditMenu();
         setupInviteSystem();
-        setupGlobalEscapeHandler();
+        setupAutoSave();
         
-        if (els.uploadHeader) {
-          els.uploadHeader.addEventListener('change', createUploadHandler('header'));
-        }
-        if (els.uploadAvatar) {
-          els.uploadAvatar.addEventListener('change', createUploadHandler('avatar'));
-        }
-        if (els.uploadBg) {
-          els.uploadBg.addEventListener('change', createUploadHandler('bg'));
-        }
+        // Event listeners
+        themeSwitch.addEventListener('click', toggleTheme);
+        walletBadge.addEventListener('click', handleWalletClick);
+        saveBtn.addEventListener('click', () => saveProfile(true));
         
-        if (els.header) {
-          els.header.addEventListener('click', () => els.uploadHeader?.click());
-        }
-        if (els.avatar) {
-          els.avatar.addEventListener('click', () => els.uploadAvatar?.click());
-        }
-        if (els.themeSwitch) {
-          els.themeSwitch.addEventListener('click', toggleTheme);
-        }
-        if (els.walletBadge) {
-          els.walletBadge.addEventListener('click', handleWalletClick);
-        }
+        // Image upload triggers
+        header.addEventListener('click', () => uploadHeader.click());
+        avatar.addEventListener('click', () => uploadAvatar.click());
         
-        if (els.previewConfirmBtn) {
-          els.previewConfirmBtn.addEventListener('click', confirmPreview);
-        }
-        if (els.previewCloseBtn) {
-          els.previewCloseBtn.addEventListener('click', hidePreview);
-        }
-        if (els.previewModal) {
-          els.previewModal.addEventListener('click', (e) => {
-            if (e.target === els.previewModal) hidePreview();
+        // File upload handlers
+        uploadHeader.addEventListener('change', (e) => {
+          handleImageUpload('header', e.target.files[0]);
+          e.target.value = '';
+        });
+        
+        uploadAvatar.addEventListener('change', (e) => {
+          handleImageUpload('avatar', e.target.files[0]);
+          e.target.value = '';
+        });
+        
+        uploadBg.addEventListener('change', (e) => {
+          handleImageUpload('bg', e.target.files[0]);
+          e.target.value = '';
+        });
+        
+        // Keyboard support
+        [header, avatar, walletBadge, themeSwitch, editBtn].forEach(el => {
+          el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              el.click();
+            }
           });
-        }
-        
-        applyProfile();
-        showToast('🚀 CRYPTOBROS DEMO ready!', 'success');
+        });
       }
 
+      // Start
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
@@ -1403,3 +877,4 @@
   </script>
 </body>
 </html>
+```
