@@ -1,6 +1,3 @@
-
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,9 +47,11 @@
       font-family: Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease, background-image 0.5s ease-in-out;
       margin: 0;
       padding: 0;
+      background-size: cover;
+      background-attachment: fixed;
     }
     
     .top-section { 
@@ -72,13 +71,13 @@
     .header.loaded { border: 2px solid #00ff9d; }
     
     .avatar {
-      width: 150px; 
-      height: 150px; 
+      width: 200px; 
+      height: 200px; 
       border-radius: 50%;
-      border: 4px solid #ffcc00; 
+      border: 4px solid white; 
       background: #444 center/cover no-repeat;
       position: absolute; 
-      bottom: -75px; 
+      bottom: -100px; 
       left: 50%;
       transform: translateX(-50%); 
       cursor: pointer;
@@ -87,7 +86,7 @@
     
     .main-layout {
       max-width: 1200px; 
-      margin: 100px auto 0;
+      margin: 220px auto 0;
       display: flex; 
       gap: 20px; 
       padding: 0 20px;
@@ -109,6 +108,7 @@
       z-index: 100; 
       font-size: 1.4rem;
       color: var(--text-color);
+      transition: all 0.3s ease;
     }
     
     .edit-btn {
@@ -118,7 +118,7 @@
       width: 40px; 
       height: 40px; 
       background: #333;
-      border: 1px solid var(--border-color); 
+      border: 1px solid #666; 
       border-radius: 50%;
       display: flex; 
       align-items: center; 
@@ -126,7 +126,22 @@
       cursor: pointer; 
       z-index: 100; 
       font-size: 1.4rem;
-      color: var(--text-color);
+      color: #ffcc00;
+      transition: all 0.3s ease;
+      animation: rotate 8s linear infinite;
+      animation-play-state: paused;
+    }
+    
+    .edit-btn:hover {
+      animation-play-state: running;
+      border-color: #ffcc00;
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+      color: #ffcc00;
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
     
     .edit-menu {
@@ -140,6 +155,9 @@
       display: none;
       z-index: 100; 
       min-width: 180px;
+      max-width: 250px;
+      max-height: 400px; 
+      overflow-y: auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
     
@@ -148,9 +166,11 @@
       color: #ffcc00; 
       border: 1px solid #555;
       border-radius: 4px; 
-      padding: 8px 12px; 
-      margin: 5px 0;
+      padding: 6px 10px; 
+      margin: 3px 0;
       cursor: pointer; 
+      font-size: 12px; 
+      display: inline-block;
       width: 100%; 
       text-align: left;
     }
@@ -159,11 +179,6 @@
       background: #f0f0f0;
       color: #1a1a2e;
       border-color: #ccc;
-    }
-    
-    .edit-menu button:hover { 
-      background: #333; 
-      border-color: #ffcc00;
     }
     
     .sidebar { 
@@ -177,6 +192,7 @@
       font-size: 1.1rem; 
       text-decoration: none; 
       display: block;
+      animation: flicker 3s infinite alternate;
     }
     
     .nav-item:hover { 
@@ -192,18 +208,26 @@
       font-size: 2rem; 
       font-weight: bold; 
       margin-bottom: 8px; 
+      animation: flicker 3s infinite alternate;
     }
     
     .rank { 
       margin-bottom: 24px; 
       font-weight: bold; 
       color: #ffd700; 
+      animation: flicker 3s infinite alternate;
     }
     
     .field-label { 
       color: var(--secondary-text); 
       margin: 12px 0 6px; 
       font-weight: bold; 
+    }
+    
+    .field-value {
+      color: var(--text-color);
+      margin-bottom: 15px;
+      animation: flicker 3s infinite alternate;
     }
     
     input, textarea {
@@ -239,30 +263,38 @@
     
     .wallet-badge {
       position: absolute; 
-      bottom: -80px; 
+      bottom: -120px; 
       left: 50%; 
       transform: translateX(-50%);
       display: flex; 
       align-items: center; 
-      gap: 10px; 
-      background: rgba(0,0,0,0.9);
+      gap: 8px; 
+      background: rgba(0,0,0,0.85);
       border: 1px solid var(--border-color); 
-      border-radius: 24px; 
-      padding: 8px 16px;
+      border-radius: 20px; 
+      padding: 6px 14px;
       cursor: pointer; 
       z-index: 100; 
       white-space: nowrap;
+      transition: all 0.3s;
     }
     
     body.light-mode .wallet-badge {
       background: rgba(255,255,255,0.9);
     }
     
+    .wallet-badge:hover {
+      border-color: #00ff9d;
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
+    }
+    
     .badge-indicator { 
-      width: 10px; 
-      height: 10px; 
+      width: 8px; 
+      height: 8px; 
       border-radius: 50%; 
       background: #666; 
+      animation: pulse 2s infinite;
     }
     
     .badge-indicator.connected { 
@@ -271,6 +303,24 @@
     
     .badge-indicator.locked { 
       background: #ffd700; 
+    }
+    
+    .badge-text { 
+      color: var(--text-color); 
+      font-size: 0.9rem; 
+      font-weight: 600;
+    }
+    
+    .badge-text.locked { color: #ffd700; }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
+      20%,24%,55%,81%,85% { opacity:0.8; }
     }
     
     #header-upload, #avatar-upload, #bg-upload { 
@@ -298,50 +348,137 @@
       to { transform: translateX(0); opacity: 1; } 
     }
     
+    /* Invite Button */
     .invite-gen-btn {
-      position: fixed; right: 0; top: 50%; transform: translateY(-50%);
-      width: 60px; height: 140px; background: linear-gradient(180deg, #6644ff, #4488ff);
-      border: none; border-radius: 16px 0 0 16px; color: white;
-      font-weight: 800; font-size: 14px; cursor: pointer; z-index: 200;
-      writing-mode: vertical-rl; text-orientation: mixed;
+      position: fixed; 
+      right: 0; 
+      top: 50%; 
+      transform: translateY(-50%);
+      width: 60px; 
+      height: 140px; 
+      background: linear-gradient(180deg, #6644ff, #4488ff);
+      border: none; 
+      border-radius: 16px 0 0 16px; 
+      color: white;
+      font-weight: 800; 
+      font-size: 14px; 
+      cursor: pointer; 
+      z-index: 200;
+      writing-mode: vertical-rl; 
+      text-orientation: mixed;
+      transition: all 0.3s ease;
     }
     
-    .invite-modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.92); align-items: center; justify-content: center; z-index: 300;
+    .invite-gen-btn:hover { 
+      width: 70px; 
+      background: linear-gradient(180deg, #7755ff, #5599ff); 
     }
-    .invite-modal-overlay.active { display: flex; }
+    
+    /* Invite Modal */
+    .invite-modal-overlay {
+      display: none; 
+      position: fixed; 
+      inset: 0;
+      background: rgba(0,0,0,0.92); 
+      align-items: center; 
+      justify-content: center; 
+      z-index: 300;
+    }
+    .invite-modal-overlay.active { 
+      display: flex; 
+    }
     
     .invite-modal {
-      background: var(--menu-bg); border: 2px solid #ffcc00; border-radius: 16px;
-      padding: 24px; max-width: 380px; width: 90%; text-align: center; position: relative;
+      background: var(--menu-bg); 
+      border: 2px solid #ffcc00; 
+      border-radius: 16px;
+      padding: 24px; 
+      max-width: 380px; 
+      width: 90%; 
+      text-align: center; 
+      position: relative;
     }
     
     .invite-close-btn {
-      position: absolute; top: 12px; right: 16px; background: none;
-      border: none; color: #ffcc00; font-size: 28px; cursor: pointer;
+      position: absolute; 
+      top: 12px; 
+      right: 16px; 
+      background: none;
+      border: none; 
+      color: #ffcc00; 
+      font-size: 28px; 
+      cursor: pointer;
     }
     
-    .invite-tier-select { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .invite-tier-select { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 12px; 
+      margin: 20px 0; 
+    }
     
     .invite-tier-option {
-      display: flex; align-items: center; gap: 12px; padding: 12px;
-      background: #222; border: 2px solid #555; border-radius: 10px; cursor: pointer;
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      padding: 12px;
+      background: #222; 
+      border: 2px solid #555; 
+      border-radius: 10px; 
+      cursor: pointer;
     }
     
     .invite-tier-option.selected {
-      border-color: #00ff9d; background: rgba(0, 255, 157, 0.1);
+      border-color: #00ff9d; 
+      background: rgba(0, 255, 157, 0.1);
+    }
+    
+    .invite-tier-option input { 
+      width: auto; 
+      margin: 0; 
+      cursor: pointer; 
     }
     
     .invite-generate-btn {
-      width: 100%; padding: 14px; background: #4267B2; color: white;
-      border: none; border-radius: 10px; cursor: pointer; font-weight: bold;
+      width: 100%; 
+      padding: 14px; 
+      background: #4267B2; 
+      color: white;
+      border: none; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      font-weight: bold;
     }
     
-    .invite-result { margin-top: 20px; padding: 16px; border: 2px dashed #00ff9d; border-radius: 12px; display: none; }
-    .invite-result.active { display: block; }
+    .invite-result { 
+      margin-top: 20px; 
+      padding: 16px; 
+      border: 2px dashed #00ff9d; 
+      border-radius: 12px; 
+      display: none; 
+    }
+    .invite-result.active { 
+      display: block; 
+    }
     
-    .invite-code { font-family: monospace; font-size: 1.8rem; font-weight: bold; color: #00ff9d; margin: 12px 0; word-break: break-all; }
+    .invite-code { 
+      font-family: monospace; 
+      font-size: 1.8rem; 
+      font-weight: bold; 
+      color: #00ff9d; 
+      margin: 12px 0; 
+      word-break: break-all; 
+    }
+    
+    .invite-copy-btn {
+      background: transparent; 
+      border: 1px solid #00ff9d; 
+      color: #00ff9d;
+      padding: 8px 24px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: bold;
+    }
     
     @media (max-width: 768px) {
       .main-layout { flex-direction: column; }
@@ -356,41 +493,30 @@
 </head>
 <body>
   <div class="top-section">
-    <!-- Header background image -->
     <div class="header" id="header" role="button" aria-label="Change header image" tabindex="0"></div>
-    
-    <!-- Avatar image -->
     <div class="avatar" id="avatar" role="button" aria-label="Change avatar image" tabindex="0"></div>
     
-    <!-- Wallet connection badge -->
     <div class="wallet-badge" id="walletBadge" role="button" aria-label="Connect wallet" tabindex="0">
       <div class="badge-indicator" id="badgeIndicator"></div>
       <div class="badge-text" id="badgeText">Connect Wallet</div>
     </div>
     
-    <!-- Theme toggle -->
     <div class="theme-switch" id="themeSwitch" role="button" aria-label="Toggle theme" tabindex="0">🌙</div>
-    
-    <!-- Edit menu button -->
     <div class="edit-btn" id="editBtn" role="button" aria-label="Edit profile" tabindex="0">⚙️</div>
-    
-    <!-- Edit menu -->
     <div class="edit-menu" id="editMenu" role="menu"></div>
   </div>
   
   <div class="main-layout">
-    <!-- Sidebar navigation -->
     <div class="sidebar" role="navigation">
-      <a href="#" class="nav-item">📰 News Feed</a>
-      <a href="#" class="nav-item">💬 Messages</a>
-      <a href="#" class="nav-item">👥 My Groups</a>
-      <a href="#" class="nav-item">⚖️ Tribunal</a>
-      <a href="#" class="nav-item">👫 My Friends</a>
-      <a href="#" class="nav-item">❓ Help Desk</a>
-      <a href="#" class="nav-item">📰 CryptoNews</a>
+      <a href="feed.html" class="nav-item">📰 News Feed</a>
+      <a href="messages.html" class="nav-item">💬 Messages</a>
+      <a href="groups.html" class="nav-item">👥 My Groups</a>
+      <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
+      <a href="friends.html" class="nav-item">👫 My Friends</a>
+      <a href="help.html" class="nav-item">❓ Help Desk</a>
+      <a href="news.html" class="nav-item">📰 CryptoNews</a>
     </div>
     
-    <!-- Main content -->
     <div class="main" id="profileContent">
       <div class="name" id="displayName">@Cryptobros</div>
       <div class="rank" id="displayRank">FREE TIER</div>
@@ -414,28 +540,25 @@
     </div>
   </div>
 
-  <!-- File inputs for images -->
   <input type="file" id="header-upload" accept="image/*">
   <input type="file" id="avatar-upload" accept="image/*">
   <input type="file" id="bg-upload" accept="image/*">
 
-  <!-- Invite button -->
   <button class="invite-gen-btn" id="inviteGenBtn">🎫<br>INVITE</button>
 
-  <!-- Invite modal -->
   <div class="invite-modal-overlay" id="inviteModal">
     <div class="invite-modal">
       <button class="invite-close-btn" id="inviteCloseBtn">×</button>
       <h3>🎫 Generate Invite</h3>
       <div class="invite-tier-select">
         <label class="invite-tier-option">
-          <input type="radio" name="inviteTier" value="MASTER" checked> Master
+          <input type="radio" name="inviteTier" value="MASTER" checked> <span>Master</span>
         </label>
         <label class="invite-tier-option">
-          <input type="radio" name="inviteTier" value="PRO"> Pro
+          <input type="radio" name="inviteTier" value="PRO"> <span>Pro</span>
         </label>
         <label class="invite-tier-option">
-          <input type="radio" name="inviteTier" value="PREMIUM"> Premium
+          <input type="radio" name="inviteTier" value="PREMIUM"> <span>Premium</span>
         </label>
       </div>
       <button class="invite-generate-btn" id="inviteGenerateBtn">Generate Code</button>
@@ -470,6 +593,8 @@
       const inputTwitter = document.getElementById('inputTwitter');
       const inputWebsite = document.getElementById('inputWebsite');
       const saveBtn = document.getElementById('saveProfileBtn');
+      
+      // Invite elements
       const inviteGenBtn = document.getElementById('inviteGenBtn');
       const inviteModal = document.getElementById('inviteModal');
       const inviteCloseBtn = document.getElementById('inviteCloseBtn');
@@ -573,6 +698,9 @@
           if (theme === 'light') {
             document.body.classList.add('light-mode');
             themeSwitch.textContent = '☀️';
+          } else {
+            document.body.classList.remove('light-mode');
+            themeSwitch.textContent = '🌙';
           }
         } catch (e) {
           console.warn('Failed to load theme');
@@ -606,7 +734,7 @@
       // Handle wallet click
       function handleWalletClick() {
         if (!profile.wallet) {
-          profile.wallet = '0x' + Math.random().toString(36).substring(2, 10) + '...' + 
+          profile.wallet = '0x' + Math.random().toString(36).substring(2, 10) + 
                           Math.random().toString(36).substring(2, 6).toUpperCase();
           updateWalletBadge();
           saveProfile(false);
@@ -670,45 +798,45 @@
           <button id="resetProfileBtn">🔄 Reset Profile</button>
         `;
         
-        // Toggle menu
         editBtn.addEventListener('click', (e) => {
+          e.preventDefault();
           e.stopPropagation();
           editMenu.style.display = editMenu.style.display === 'block' ? 'none' : 'block';
         });
-        
-        // Menu buttons
-        document.getElementById('changeHeaderBtn').addEventListener('click', () => {
-          uploadHeader.click();
-          editMenu.style.display = 'none';
+
+        editMenu.addEventListener('click', (e) => e.stopPropagation());
+
+        document.getElementById('changeHeaderBtn').addEventListener('click', () => { 
+          uploadHeader.click(); 
+          editMenu.style.display = 'none'; 
         });
         
-        document.getElementById('changeAvatarBtn').addEventListener('click', () => {
-          uploadAvatar.click();
-          editMenu.style.display = 'none';
+        document.getElementById('changeAvatarBtn').addEventListener('click', () => { 
+          uploadAvatar.click(); 
+          editMenu.style.display = 'none'; 
         });
         
-        document.getElementById('changeBgBtn').addEventListener('click', () => {
-          uploadBg.click();
-          editMenu.style.display = 'none';
+        document.getElementById('changeBgBtn').addEventListener('click', () => { 
+          uploadBg.click(); 
+          editMenu.style.display = 'none'; 
         });
         
         document.getElementById('resetProfileBtn').addEventListener('click', () => {
           if (confirm('Reset all profile data? This cannot be undone.')) {
             const wallet = profile.wallet;
-            profile = {
-              name: '@Cryptobros',
-              bio: '',
-              location: '',
-              twitter: '',
-              website: '',
-              avatar: '',
-              header: '',
-              bg: '',
-              tier: 'FREE',
-              wallet: wallet
+            profile = { 
+              name: '@Cryptobros', 
+              bio: '', 
+              location: '', 
+              twitter: '', 
+              website: '', 
+              avatar: '', 
+              header: '', 
+              bg: '', 
+              tier: 'FREE', 
+              wallet: wallet 
             };
             
-            // Update UI
             inputName.value = profile.name;
             inputBio.value = profile.bio;
             inputLocation.value = profile.location;
@@ -717,24 +845,21 @@
             displayName.textContent = profile.name;
             displayRank.textContent = profile.tier + ' TIER';
             
-            header.style.backgroundImage = '';
-            avatar.style.backgroundImage = '';
+            header.style.backgroundImage = ''; 
+            avatar.style.backgroundImage = ''; 
             document.body.style.backgroundImage = '';
             header.classList.remove('loaded');
             
             saveProfile(false);
-            showNotification('Profile reset', 'warning');
+            showNotification('Profile reset successfully', 'warning');
           }
           editMenu.style.display = 'none';
         });
         
-        // Close menu when clicking outside
-        document.addEventListener('click', () => {
-          editMenu.style.display = 'none';
-        });
-        
-        editMenu.addEventListener('click', (e) => {
-          e.stopPropagation();
+        document.addEventListener('click', (e) => { 
+          if (!editMenu.contains(e.target) && e.target !== editBtn) { 
+            editMenu.style.display = 'none'; 
+          } 
         });
       }
 
@@ -742,7 +867,6 @@
       function setupInviteSystem() {
         let selectedTier = 'MASTER';
         
-        // Update selected class
         tierRadios.forEach(radio => {
           radio.addEventListener('change', () => {
             document.querySelectorAll('.invite-tier-option').forEach(opt => {
@@ -756,8 +880,10 @@
         });
         
         // Set initial selected
-        document.querySelector('input[name="inviteTier"]:checked')
-          ?.closest('.invite-tier-option')?.classList.add('selected');
+        const checkedRadio = document.querySelector('input[name="inviteTier"]:checked');
+        if (checkedRadio) {
+          checkedRadio.closest('.invite-tier-option')?.classList.add('selected');
+        }
         
         // Open modal
         inviteGenBtn.addEventListener('click', () => {
@@ -784,7 +910,7 @@
         // Generate code
         inviteGenerateBtn.addEventListener('click', () => {
           const prefixes = { MASTER: 'MAS', PRO: 'PRO', PREMIUM: 'PRE' };
-          const prefix = prefixes[selectedTier];
+          const prefix = prefixes[selectedTier] || 'MAS';
           const code = prefix + '-' + Math.floor(100000 + Math.random() * 900000);
           
           inviteCodeDisplay.textContent = code;
@@ -798,7 +924,7 @@
           
           try {
             await navigator.clipboard.writeText(code);
-            showNotification('Copied!', 'success');
+            showNotification('Copied to clipboard!', 'success');
           } catch {
             const textarea = document.createElement('textarea');
             textarea.value = code;
@@ -806,7 +932,7 @@
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-            showNotification('Copied!', 'success');
+            showNotification('Copied to clipboard!', 'success');
           }
         });
       }
@@ -831,16 +957,13 @@
         setupInviteSystem();
         setupAutoSave();
         
-        // Event listeners
         themeSwitch.addEventListener('click', toggleTheme);
         walletBadge.addEventListener('click', handleWalletClick);
         saveBtn.addEventListener('click', () => saveProfile(true));
         
-        // Image upload triggers
         header.addEventListener('click', () => uploadHeader.click());
         avatar.addEventListener('click', () => uploadAvatar.click());
         
-        // File upload handlers
         uploadHeader.addEventListener('change', (e) => {
           handleImageUpload('header', e.target.files[0]);
           e.target.value = '';
@@ -877,4 +1000,3 @@
   </script>
 </body>
 </html>
-```
