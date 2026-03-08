@@ -1,45 +1,417 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRYPTOBROS - Profile</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg-color: #000;
+      --text-color: #ffcc00;
+      --secondary-text: #aaa;
+      --border-color: #555;
+      --menu-bg: #000;
+      --input-bg: rgba(0,0,0,0.4);
+      --btn-bg: #4267B2;
+      --btn-text: white;
+    }
+    
+    body.light-mode {
+      --bg-color: #f5f7fa;
+      --text-color: #1a1a2e;
+      --secondary-text: #666;
+      --border-color: #ccc;
+      --menu-bg: #fff;
+      --input-bg: #fff;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    
+    .top-section { 
+      position: relative; 
+      height: 300px; 
+    }
+    
+    .header {
+      width: 100%; 
+      height: 100%; 
+      background: #333 center/cover no-repeat;
+      border: 2px dashed var(--border-color); 
+      border-radius: 8px; 
+      cursor: pointer;
+    }
+    
+    .header.loaded { border: 2px solid #00ff9d; }
+    
+    .avatar {
+      width: 200px; 
+      height: 200px; 
+      border-radius: 50%;
+      border: 4px solid #ffcc00; 
+      background: #444 center/cover no-repeat;
+      position: absolute; 
+      bottom: -100px; 
+      left: 50%;
+      transform: translateX(-50%); 
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    
+    .main-layout {
+      max-width: 1200px; 
+      margin: 220px auto 0;
+      display: flex; 
+      gap: 20px; 
+      padding: 0 20px;
+    }
+    
+    .theme-switch {
+      position: absolute; 
+      top: 16px; 
+      left: 16px;
+      width: 32px; 
+      height: 32px; 
+      background: #333;
+      border: 1px solid var(--border-color); 
+      border-radius: 50%;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      cursor: pointer; 
+      z-index: 100; 
+      font-size: 16px;
+      color: #ffcc00;
+    }
+    
+    /* ШЕСТЕРЕНКА ИЗ СТАРОГО КОДА */
+    .edit-btn {
+      position: absolute; 
+      top: 16px; 
+      right: 16px;
+      width: 32px; 
+      height: 32px; 
+      background: #333;
+      border: 1px solid #ffcc00; 
+      border-radius: 50%;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      cursor: pointer; 
+      z-index: 100;
+      color: #ffcc00;
+      animation: rotate 8s linear infinite;
+      animation-play-state: paused;
+    }
+    
+    .edit-btn:hover {
+      animation-play-state: running;
+      border-color: #ffcc00;
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* МЕНЮ ИЗ СТАРОГО КОДА - ТОЧНО ТАКОЕ ЖЕ */
+    .edit-menu {
+      position: absolute; 
+      top: 50px; 
+      right: 16px;
+      background: #000; 
+      border: 1px solid #ffcc00;
+      border-radius: 6px; 
+      padding: 10px; 
+      display: none;
+      z-index: 100; 
+      min-width: 180px;
+      max-width: 250px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    
+    .edit-menu button {
+      background: #222; 
+      color: #ffcc00; 
+      border: 1px solid #555;
+      border-radius: 4px; 
+      padding: 6px 10px; 
+      margin: 3px 0;
+      cursor: pointer; 
+      font-size: 12px; 
+      width: 100%; 
+      text-align: left;
+    }
+    
+    body.light-mode .edit-menu button {
+      background: #f0f0f0;
+      color: #1a1a2e;
+      border-color: #ccc;
+    }
+    
+    .edit-menu button:hover { 
+      background: #333; 
+      border-color: #ffcc00;
+    }
+    
+    .sidebar { 
+      width: 200px; 
+    }
+    
+    .nav-item {
+      padding: 10px 0; 
+      color: var(--text-color); 
+      font-weight: bold;
+      font-size: 18px; 
+      text-decoration: none; 
+      display: block;
+      animation: flicker 3s infinite alternate;
+    }
+    
+    .nav-item:hover { 
+      opacity: 0.8; 
+      text-shadow: 0 0 8px var(--text-color);
+    }
+    
+    .main { 
+      flex: 1; 
+    }
+    
+    .name { 
+      font-size: 28px; 
+      font-weight: bold; 
+      margin-bottom: 8px; 
+      animation: flicker 3s infinite alternate;
+    }
+    
+    .rank { 
+      margin-bottom: 20px; 
+      font-weight: bold; 
+      color: #ffd700; 
+      animation: flicker 3s infinite alternate;
+    }
+    
+    .field-label { 
+      color: var(--secondary-text); 
+      margin: 10px 0 4px; 
+      font-weight: bold; 
+    }
+    
+    input, textarea {
+      width: 100%; 
+      padding: 10px; 
+      margin: 5px 0 15px;
+      background: var(--input-bg); 
+      color: var(--text-color); 
+      border: 1px solid var(--border-color);
+      border-radius: 4px; 
+    }
+    
+    .btn {
+      background: var(--btn-bg); 
+      color: var(--btn-text); 
+      border: none;
+      padding: 10px 20px; 
+      border-radius: 4px; 
+      cursor: pointer; 
+      margin-top: 10px;
+    }
+    
+    .btn:hover { 
+      opacity: 0.9; 
+    }
+    
+    .wallet-badge {
+      position: absolute; 
+      bottom: -120px; 
+      left: 50%; 
+      transform: translateX(-50%);
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      background: rgba(0,0,0,0.85);
+      border: 1px solid var(--border-color); 
+      border-radius: 20px; 
+      padding: 6px 14px;
+      cursor: pointer; 
+      z-index: 100; 
+      transition: all 0.3s;
+    }
+    
+    .wallet-badge:hover {
+      border-color: #00ff9d;
+      transform: translateX(-50%) scale(1.05);
+    }
+    
+    .badge-indicator { 
+      width: 8px; 
+      height: 8px; 
+      border-radius: 50%; 
+      background: #666; 
+      animation: pulse 2s infinite;
+    }
+    
+    .badge-indicator.connected { background: #00ff9d; }
+    .badge-indicator.locked { background: #ffd700; }
+    
+    .badge-text { 
+      color: var(--text-color); 
+      font-size: 0.9rem; 
+      font-weight: 600;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
+      20%,24%,55%,81%,85% { opacity:0.8; }
+    }
+    
+    #header-upload, #avatar-upload, #bg-upload { 
+      display: none; 
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      z-index: 9999;
+      animation: slideIn 0.3s;
+    }
+    
+    .toast.success { background: #00ff9d; color: #000; }
+    .toast.error { background: #ff4d4d; color: #fff; }
+    .toast.warning { background: #ffd700; color: #000; }
+    
+    @keyframes slideIn { 
+      from { transform: translateX(100%); } 
+      to { transform: translateX(0); } 
+    }
+    
+    .invite-gen-btn {
+      position: fixed; 
+      right: 0; 
+      top: 50%; 
+      transform: translateY(-50%);
+      width: 60px; 
+      height: 140px; 
+      background: linear-gradient(180deg, #6644ff, #4488ff);
+      border: none; 
+      border-radius: 16px 0 0 16px; 
+      color: white;
+      font-weight: 800; 
+      font-size: 14px; 
+      cursor: pointer; 
+      z-index: 200;
+      writing-mode: vertical-rl; 
+    }
+    
+    @media (max-width: 768px) {
+      .main-layout { flex-direction: column; }
+      .sidebar { width: 100%; display: flex; flex-wrap: wrap; gap: 10px; }
+      .nav-item { padding: 8px 12px; }
+      .invite-gen-btn {
+        writing-mode: horizontal-tb; width: auto; height: 50px; padding: 0 20px;
+        border-radius: 30px 0 0 30px; top: auto; bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-section">
+    <div class="header" id="header"></div>
+    <div class="avatar" id="avatar"></div>
+    
+    <div class="wallet-badge" id="walletBadge">
+      <div class="badge-indicator" id="badgeIndicator"></div>
+      <div class="badge-text" id="badgeText">Connect Wallet</div>
+    </div>
+    
+    <div class="theme-switch" id="themeSwitch">🌙</div>
+    <div class="edit-btn" id="editBtn">⚙️</div>
+    <div class="edit-menu" id="editMenu"></div>
+  </div>
+  
+  <div class="main-layout">
+    <div class="sidebar">
+      <a href="feed.html" class="nav-item">📰 News Feed</a>
+      <a href="messages.html" class="nav-item">💬 Messages</a>
+      <a href="groups.html" class="nav-item">👥 My Groups</a>
+      <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
+      <a href="friends.html" class="nav-item">👫 My Friends</a>
+      <a href="help.html" class="nav-item">❓ Help Desk</a>
+      <a href="news.html" class="nav-item">📰 CryptoNews</a>
+    </div>
+    
+    <div class="main">
+      <div class="name" id="displayName">@Cryptobros</div>
+      <div class="rank" id="displayRank">FREE TIER</div>
+      
+      <div class="field-label">Username</div>
+      <input type="text" id="inputName" maxlength="20" value="@Cryptobros">
+      
+      <div class="field-label">Bio</div>
+      <textarea id="inputBio" rows="3" maxlength="200"></textarea>
+      
+      <div class="field-label">Location</div>
+      <input type="text" id="inputLocation" maxlength="50">
+      
+      <div class="field-label">Twitter</div>
+      <input type="text" id="inputTwitter" maxlength="30">
+      
+      <div class="field-label">Website</div>
+      <input type="text" id="inputWebsite" maxlength="100">
+      
+      <button class="btn" id="saveProfileBtn">💾 Save Changes</button>
+    </div>
+  </div>
+
+  <input type="file" id="header-upload" accept="image/*">
+  <input type="file" id="avatar-upload" accept="image/*">
+  <input type="file" id="bg-upload" accept="image/*">
+
+  <button class="invite-gen-btn" id="inviteGenBtn">🎫<br>INVITE</button>
+
+  <script>
     (function() {
       'use strict';
 
-      // Функция безопасного получения элемента
-      function getElement(id) {
-        const el = document.getElementById(id);
-        if (!el) console.warn(`Element #${id} not found`);
-        return el;
-      }
-
-      // Get elements с проверками
-      const header = getElement('header');
-      const avatar = getElement('avatar');
-      const themeSwitch = getElement('themeSwitch');
-      const editBtn = getElement('editBtn');
-      const editMenu = getElement('editMenu');
-      const uploadHeader = getElement('header-upload');
-      const uploadAvatar = getElement('avatar-upload');
-      const uploadBg = getElement('bg-upload');
-      const walletBadge = getElement('walletBadge');
-      const badgeIndicator = getElement('badgeIndicator');
-      const badgeText = getElement('badgeText');
-      const displayName = getElement('displayName');
-      const displayRank = getElement('displayRank');
-      const inputName = getElement('inputName');
-      const inputBio = getElement('inputBio');
-      const inputLocation = getElement('inputLocation');
-      const inputTwitter = getElement('inputTwitter');
-      const inputWebsite = getElement('inputWebsite');
-      const saveBtn = getElement('saveProfileBtn');
-      const inviteGenBtn = getElement('inviteGenBtn');
-
-      // Проверка наличия всех элементов
-      if (!header || !avatar || !themeSwitch || !editBtn || !editMenu || 
-          !uploadHeader || !uploadAvatar || !uploadBg || !walletBadge || 
-          !badgeIndicator || !badgeText || !displayName || !displayRank || 
-          !inputName || !inputBio || !inputLocation || !inputTwitter || 
-          !inputWebsite || !saveBtn || !inviteGenBtn) {
-        console.error('Critical elements missing!');
-        return;
-      }
+      // Get elements
+      const header = document.getElementById('header');
+      const avatar = document.getElementById('avatar');
+      const themeSwitch = document.getElementById('themeSwitch');
+      const editBtn = document.getElementById('editBtn');
+      const editMenu = document.getElementById('editMenu');
+      const uploadHeader = document.getElementById('header-upload');
+      const uploadAvatar = document.getElementById('avatar-upload');
+      const uploadBg = document.getElementById('bg-upload');
+      const walletBadge = document.getElementById('walletBadge');
+      const badgeIndicator = document.getElementById('badgeIndicator');
+      const badgeText = document.getElementById('badgeText');
+      const displayName = document.getElementById('displayName');
+      const displayRank = document.getElementById('displayRank');
+      const inputName = document.getElementById('inputName');
+      const inputBio = document.getElementById('inputBio');
+      const inputLocation = document.getElementById('inputLocation');
+      const inputTwitter = document.getElementById('inputTwitter');
+      const inputWebsite = document.getElementById('inputWebsite');
+      const saveBtn = document.getElementById('saveProfileBtn');
+      const inviteGenBtn = document.getElementById('inviteGenBtn');
 
       const STORAGE_KEY = 'cryptobros_profile';
       const MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -58,28 +430,11 @@
         wallet: null
       };
 
-      // Валидация URL
-      function isValidUrl(string) {
-        try {
-          new URL(string);
-          return true;
-        } catch (_) {
-          return false;
-        }
-      }
-
-      // Валидация Twitter handle
-      function isValidTwitter(handle) {
-        if (!handle) return true;
-        return /^@?[A-Za-z0-9_]{1,15}$/.test(handle);
-      }
-
       // Show notification
       function showNotification(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.textContent = message;
-        toast.setAttribute('role', 'alert');
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
       }
@@ -92,9 +447,7 @@
             const data = JSON.parse(saved);
             profile = { ...profile, ...data };
           }
-        } catch (e) {
-          console.warn('Failed to load profile:', e);
-        }
+        } catch (e) {}
         
         inputName.value = profile.name;
         inputBio.value = profile.bio;
@@ -117,35 +470,19 @@
       // Save profile
       function saveProfile(showToast = true) {
         try {
-          // Валидация
-          const twitter = inputTwitter.value.trim();
-          if (twitter && !isValidTwitter(twitter)) {
-            showNotification('Invalid Twitter handle', 'error');
-            return false;
-          }
-
-          const website = inputWebsite.value.trim();
-          if (website && !isValidUrl(website) && !website.startsWith('http')) {
-            showNotification('Invalid website URL', 'error');
-            return false;
-          }
-
           profile.name = inputName.value.trim() || '@Cryptobros';
           profile.bio = inputBio.value.trim();
           profile.location = inputLocation.value.trim();
-          profile.twitter = twitter;
-          profile.website = website;
+          profile.twitter = inputTwitter.value.trim();
+          profile.website = inputWebsite.value.trim();
           
           displayName.textContent = profile.name;
           displayRank.textContent = profile.tier + ' TIER';
           
           localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
           if (showToast) showNotification('Profile saved!', 'success');
-          return true;
         } catch (e) {
           showNotification('Failed to save profile', 'error');
-          console.error('Save error:', e);
-          return false;
         }
       }
 
@@ -157,47 +494,32 @@
             document.body.classList.add('light-mode');
             themeSwitch.textContent = '☀️';
           }
-        } catch (e) {
-          console.warn('Failed to load theme:', e);
-        }
+        } catch (e) {}
       }
 
       function toggleTheme() {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        themeSwitch.textContent = isLight ? '☀️' : '🌙';
         try {
-          document.body.classList.toggle('light-mode');
-          const isLight = document.body.classList.contains('light-mode');
-          themeSwitch.textContent = isLight ? '☀️' : '🌙';
           localStorage.setItem('cryptobros_theme', isLight ? 'light' : 'dark');
-        } catch (e) {
-          console.warn('Failed to save theme:', e);
-          showNotification('Failed to save theme preference', 'warning');
-        }
+        } catch (e) {}
       }
 
       // Wallet
       function updateWalletBadge() {
         if (profile.wallet) {
-          badgeIndicator.className = 'badge-indicator connected'; // Исправлено
+          badgeIndicator.className = 'badge-indicator connected';
           badgeText.textContent = profile.wallet.slice(0, 6) + '...' + profile.wallet.slice(-4);
         } else {
-          badgeIndicator.className = 'badge-indicator locked'; // Исправлено
+          badgeIndicator.className = 'badge-indicator locked';
           badgeText.textContent = 'Connect Wallet';
         }
       }
 
-      function generateWalletAddress() {
-        // Генерация корректного Ethereum адреса
-        const chars = '0123456789abcdef';
-        let address = '0x';
-        for (let i = 0; i < 40; i++) {
-          address += chars[Math.floor(Math.random() * 16)];
-        }
-        return address;
-      }
-
       function handleWalletClick() {
         if (!profile.wallet) {
-          profile.wallet = generateWalletAddress();
+          profile.wallet = '0x' + Math.random().toString(36).substring(2, 10);
           updateWalletBadge();
           saveProfile(false);
           showNotification('Wallet connected!', 'success');
@@ -240,13 +562,10 @@
           saveProfile(false);
           showNotification(type + ' updated!', 'success');
         };
-        reader.onerror = () => {
-          showNotification('Failed to read file', 'error');
-        };
         reader.readAsDataURL(file);
       }
 
-      // Setup edit menu
+      // SETUP EDIT MENU - ТОЧНО ИЗ СТАРОГО КОДА
       function setupEditMenu() {
         editMenu.innerHTML = `
           <button id="changeHeaderBtn">📷 Change Header</button>
@@ -263,68 +582,55 @@
 
         editMenu.addEventListener('click', (e) => e.stopPropagation());
 
-        const changeHeaderBtn = document.getElementById('changeHeaderBtn');
-        const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-        const changeBgBtn = document.getElementById('changeBgBtn');
-        const resetProfileBtn = document.getElementById('resetProfileBtn');
-
-        if (changeHeaderBtn) {
-          changeHeaderBtn.addEventListener('click', () => { 
-            uploadHeader.click(); 
-            editMenu.style.display = 'none'; 
-          });
-        }
+        document.getElementById('changeHeaderBtn').addEventListener('click', () => { 
+          uploadHeader.click(); 
+          editMenu.style.display = 'none'; 
+        });
         
-        if (changeAvatarBtn) {
-          changeAvatarBtn.addEventListener('click', () => { 
-            uploadAvatar.click(); 
-            editMenu.style.display = 'none'; 
-          });
-        }
+        document.getElementById('changeAvatarBtn').addEventListener('click', () => { 
+          uploadAvatar.click(); 
+          editMenu.style.display = 'none'; 
+        });
         
-        if (changeBgBtn) {
-          changeBgBtn.addEventListener('click', () => { 
-            uploadBg.click(); 
-            editMenu.style.display = 'none'; 
-          });
-        }
+        document.getElementById('changeBgBtn').addEventListener('click', () => { 
+          uploadBg.click(); 
+          editMenu.style.display = 'none'; 
+        });
         
-        if (resetProfileBtn) {
-          resetProfileBtn.addEventListener('click', () => {
-            if (confirm('Reset all profile data? This cannot be undone.')) {
-              const wallet = profile.wallet;
-              profile = { 
-                name: '@Cryptobros', 
-                bio: '', 
-                location: '', 
-                twitter: '', 
-                website: '', 
-                avatar: '', 
-                header: '', 
-                bg: '', 
-                tier: 'FREE', 
-                wallet: wallet 
-              };
-              
-              inputName.value = profile.name;
-              inputBio.value = profile.bio;
-              inputLocation.value = profile.location;
-              inputTwitter.value = profile.twitter;
-              inputWebsite.value = profile.website;
-              displayName.textContent = profile.name;
-              displayRank.textContent = profile.tier + ' TIER';
-              
-              header.style.backgroundImage = ''; 
-              avatar.style.backgroundImage = ''; 
-              document.body.style.backgroundImage = '';
-              header.classList.remove('loaded');
-              
-              saveProfile(false);
-              showNotification('Profile reset successfully', 'warning');
-            }
-            editMenu.style.display = 'none';
-          });
-        }
+        document.getElementById('resetProfileBtn').addEventListener('click', () => {
+          if (confirm('Reset all profile data? This cannot be undone.')) {
+            const wallet = profile.wallet;
+            profile = { 
+              name: '@Cryptobros', 
+              bio: '', 
+              location: '', 
+              twitter: '', 
+              website: '', 
+              avatar: '', 
+              header: '', 
+              bg: '', 
+              tier: 'FREE', 
+              wallet: wallet 
+            };
+            
+            inputName.value = profile.name;
+            inputBio.value = profile.bio;
+            inputLocation.value = profile.location;
+            inputTwitter.value = profile.twitter;
+            inputWebsite.value = profile.website;
+            displayName.textContent = profile.name;
+            displayRank.textContent = profile.tier + ' TIER';
+            
+            header.style.backgroundImage = ''; 
+            avatar.style.backgroundImage = ''; 
+            document.body.style.backgroundImage = '';
+            header.classList.remove('loaded');
+            
+            saveProfile(false);
+            showNotification('Profile reset successfully', 'warning');
+          }
+          editMenu.style.display = 'none';
+        });
         
         document.addEventListener('click', (e) => { 
           if (!editMenu.contains(e.target) && e.target !== editBtn) { 
@@ -376,14 +682,12 @@
         
         // Keyboard support
         [header, avatar, walletBadge, themeSwitch, editBtn].forEach(el => {
-          if (el) {
-            el.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                el.click();
-              }
-            });
-          }
+          el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              el.click();
+            }
+          });
         });
       }
 
@@ -393,4 +697,6 @@
         init();
       }
     })();
-</script>
+  </script>
+</body>
+</html>
