@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
   <title>CRYPTOBROS - Profile</title>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: https: data: ; connect-src 'self'; base-uri 'self'; form-action 'self'">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
@@ -18,12 +17,6 @@
       --input-bg: rgba(0,0,0,0.4);
       --btn-bg: #4267B2;
       --btn-text: white;
-      --toast-bg: #00ff9d;
-      --toast-text: #000;
-      --toast-error-bg: #ff4d4d;
-      --toast-error-text: white;
-      --toast-warning-bg: #ffd700;
-      --toast-warning-text: #000;
     }
     
     body.light-mode {
@@ -35,23 +28,14 @@
       --input-bg: #fff;
       --btn-bg: #4267B2;
       --btn-text: white;
-      --toast-bg: #00cc7a;
-      --toast-text: #fff;
-      --toast-error-bg: #ff4d4d;
-      --toast-error-text: white;
-      --toast-warning-bg: #ffaa00;
-      --toast-warning-text: #000;
     }
     
     body {
       font-family: Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
-      transition: background-color 0.3s ease, color 0.3s ease, background-image 0.5s ease-in-out;
       margin: 0;
       padding: 0;
-      background-size: cover;
-      background-attachment: fixed;
     }
     
     .top-section { 
@@ -64,24 +48,20 @@
       height: 100%; 
       background: #333 center/cover no-repeat;
       border: 2px dashed var(--border-color); 
-      border-radius: 8px; 
       cursor: pointer;
     }
-    
-    .header.loaded { border: 2px solid #00ff9d; }
     
     .avatar {
       width: 200px; 
       height: 200px; 
       border-radius: 50%;
-      border: 4px solid white; 
+      border: 4px solid #ffcc00; 
       background: #444 center/cover no-repeat;
       position: absolute; 
       bottom: -100px; 
       left: 50%;
       transform: translateX(-50%); 
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
     
     .main-layout {
@@ -107,8 +87,7 @@
       cursor: pointer; 
       z-index: 100; 
       font-size: 1.4rem;
-      color: var(--text-color);
-      transition: all 0.3s ease;
+      color: #ffcc00;
     }
     
     .edit-btn {
@@ -118,7 +97,7 @@
       width: 40px; 
       height: 40px; 
       background: #333;
-      border: 1px solid #666; 
+      border: 1px solid #ffcc00; 
       border-radius: 50%;
       display: flex; 
       align-items: center; 
@@ -127,16 +106,14 @@
       z-index: 100; 
       font-size: 1.4rem;
       color: #ffcc00;
-      transition: all 0.3s ease;
-      animation: rotate 8s linear infinite;
+      animation: rotate 4s linear infinite;
       animation-play-state: paused;
     }
     
     .edit-btn:hover {
       animation-play-state: running;
-      border-color: #ffcc00;
-      box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
-      color: #ffcc00;
+      border-color: #00ff9d;
+      color: #00ff9d;
     }
     
     @keyframes rotate {
@@ -155,10 +132,6 @@
       display: none;
       z-index: 100; 
       min-width: 180px;
-      max-width: 250px;
-      max-height: 400px; 
-      overflow-y: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
     
     .edit-menu button {
@@ -166,19 +139,10 @@
       color: #ffcc00; 
       border: 1px solid #555;
       border-radius: 4px; 
-      padding: 6px 10px; 
-      margin: 3px 0;
+      padding: 8px; 
+      margin: 5px 0;
       cursor: pointer; 
-      font-size: 12px; 
-      display: inline-block;
       width: 100%; 
-      text-align: left;
-    }
-    
-    body.light-mode .edit-menu button {
-      background: #f0f0f0;
-      color: #1a1a2e;
-      border-color: #ccc;
     }
     
     .sidebar { 
@@ -189,15 +153,8 @@
       padding: 12px 0; 
       color: var(--text-color); 
       font-weight: bold;
-      font-size: 1.1rem; 
       text-decoration: none; 
       display: block;
-      animation: flicker 3s infinite alternate;
-    }
-    
-    .nav-item:hover { 
-      opacity: 0.8; 
-      text-shadow: 0 0 8px var(--text-color);
     }
     
     .main { 
@@ -207,43 +164,26 @@
     .name { 
       font-size: 2rem; 
       font-weight: bold; 
-      margin-bottom: 8px; 
-      animation: flicker 3s infinite alternate;
     }
     
     .rank { 
-      margin-bottom: 24px; 
-      font-weight: bold; 
       color: #ffd700; 
-      animation: flicker 3s infinite alternate;
+      margin-bottom: 20px;
     }
     
     .field-label { 
       color: var(--secondary-text); 
-      margin: 12px 0 6px; 
-      font-weight: bold; 
-    }
-    
-    .field-value {
-      color: var(--text-color);
-      margin-bottom: 15px;
-      animation: flicker 3s infinite alternate;
+      margin: 10px 0 5px; 
     }
     
     input, textarea {
       width: 100%; 
-      padding: 12px; 
-      margin: 6px 0 16px;
+      padding: 10px; 
+      margin: 5px 0 15px;
       background: var(--input-bg); 
       color: var(--text-color); 
       border: 1px solid var(--border-color);
-      border-radius: 6px; 
-      font-size: 1rem;
-    }
-    
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: #00ff9d;
+      border-radius: 4px; 
     }
     
     .btn {
@@ -251,14 +191,9 @@
       color: var(--btn-text); 
       border: none;
       padding: 12px 24px; 
-      border-radius: 6px; 
+      border-radius: 4px; 
       cursor: pointer;
       font-weight: bold; 
-      margin-top: 12px;
-    }
-    
-    .btn:hover { 
-      opacity: 0.9; 
     }
     
     .wallet-badge {
@@ -268,246 +203,85 @@
       transform: translateX(-50%);
       display: flex; 
       align-items: center; 
-      gap: 8px; 
-      background: rgba(0,0,0,0.85);
+      gap: 10px; 
+      background: rgba(0,0,0,0.9);
       border: 1px solid var(--border-color); 
       border-radius: 20px; 
-      padding: 6px 14px;
+      padding: 8px 16px;
       cursor: pointer; 
-      z-index: 100; 
-      white-space: nowrap;
-      transition: all 0.3s;
-    }
-    
-    body.light-mode .wallet-badge {
-      background: rgba(255,255,255,0.9);
-    }
-    
-    .wallet-badge:hover {
-      border-color: #00ff9d;
-      transform: translateX(-50%) scale(1.05);
-      box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
     }
     
     .badge-indicator { 
-      width: 8px; 
-      height: 8px; 
+      width: 10px; 
+      height: 10px; 
       border-radius: 50%; 
       background: #666; 
-      animation: pulse 2s infinite;
     }
     
-    .badge-indicator.connected { 
-      background: #00ff9d; 
-    }
+    .badge-indicator.connected { background: #00ff9d; }
+    .badge-indicator.locked { background: #ffd700; }
     
-    .badge-indicator.locked { 
-      background: #ffd700; 
-    }
-    
-    .badge-text { 
-      color: var(--text-color); 
-      font-size: 0.9rem; 
-      font-weight: 600;
-    }
-    
-    .badge-text.locked { color: #ffd700; }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
-      20%,24%,55%,81%,85% { opacity:0.8; }
-    }
-    
-    #header-upload, #avatar-upload, #bg-upload { 
-      display: none; 
-    }
+    #header-upload, #avatar-upload, #bg-upload { display: none; }
     
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 20px;
+      right: 20px;
       padding: 12px 24px;
       border-radius: 8px;
       z-index: 9999;
-      font-weight: bold;
-      animation: slideIn 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      animation: slideIn 0.3s;
     }
     
-    .toast.success { background: var(--toast-bg); color: var(--toast-text); }
-    .toast.error { background: var(--toast-error-bg); color: var(--toast-error-text); }
-    .toast.warning { background: var(--toast-warning-bg); color: var(--toast-warning-text); }
+    .toast.success { background: #00ff9d; color: #000; }
+    .toast.error { background: #ff4d4d; color: white; }
     
     @keyframes slideIn { 
-      from { transform: translateX(100%); opacity: 0; } 
-      to { transform: translateX(0); opacity: 1; } 
+      from { transform: translateX(100%); } 
+      to { transform: translateX(0); } 
     }
     
-    /* Invite Button */
     .invite-gen-btn {
-      position: fixed; 
-      right: 0; 
-      top: 50%; 
-      transform: translateY(-50%);
-      width: 60px; 
-      height: 140px; 
-      background: linear-gradient(180deg, #6644ff, #4488ff);
-      border: none; 
-      border-radius: 16px 0 0 16px; 
-      color: white;
-      font-weight: 800; 
-      font-size: 14px; 
-      cursor: pointer; 
-      z-index: 200;
-      writing-mode: vertical-rl; 
-      text-orientation: mixed;
-      transition: all 0.3s ease;
+      position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+      width: 60px; height: 140px; background: linear-gradient(180deg, #6644ff, #4488ff);
+      border: none; border-radius: 16px 0 0 16px; color: white;
+      font-weight: 800; cursor: pointer; z-index: 200;
+      writing-mode: vertical-rl;
     }
     
-    .invite-gen-btn:hover { 
-      width: 70px; 
-      background: linear-gradient(180deg, #7755ff, #5599ff); 
-    }
-    
-    /* Invite Modal */
     .invite-modal-overlay {
-      display: none; 
-      position: fixed; 
-      inset: 0;
-      background: rgba(0,0,0,0.92); 
-      align-items: center; 
-      justify-content: center; 
-      z-index: 300;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 300;
     }
-    .invite-modal-overlay.active { 
-      display: flex; 
-    }
+    .invite-modal-overlay.active { display: flex; }
     
     .invite-modal {
-      background: var(--menu-bg); 
-      border: 2px solid #ffcc00; 
-      border-radius: 16px;
-      padding: 24px; 
-      max-width: 380px; 
-      width: 90%; 
-      text-align: center; 
-      position: relative;
+      background: var(--menu-bg); border: 2px solid #ffcc00; border-radius: 16px;
+      padding: 24px; max-width: 380px; width: 90%; text-align: center;
     }
     
     .invite-close-btn {
-      position: absolute; 
-      top: 12px; 
-      right: 16px; 
-      background: none;
-      border: none; 
-      color: #ffcc00; 
-      font-size: 28px; 
-      cursor: pointer;
-    }
-    
-    .invite-tier-select { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 12px; 
-      margin: 20px 0; 
-    }
-    
-    .invite-tier-option {
-      display: flex; 
-      align-items: center; 
-      gap: 12px; 
-      padding: 12px;
-      background: #222; 
-      border: 2px solid #555; 
-      border-radius: 10px; 
-      cursor: pointer;
-    }
-    
-    .invite-tier-option.selected {
-      border-color: #00ff9d; 
-      background: rgba(0, 255, 157, 0.1);
-    }
-    
-    .invite-tier-option input { 
-      width: auto; 
-      margin: 0; 
-      cursor: pointer; 
-    }
-    
-    .invite-generate-btn {
-      width: 100%; 
-      padding: 14px; 
-      background: #4267B2; 
-      color: white;
-      border: none; 
-      border-radius: 10px; 
-      cursor: pointer; 
-      font-weight: bold;
-    }
-    
-    .invite-result { 
-      margin-top: 20px; 
-      padding: 16px; 
-      border: 2px dashed #00ff9d; 
-      border-radius: 12px; 
-      display: none; 
-    }
-    .invite-result.active { 
-      display: block; 
-    }
-    
-    .invite-code { 
-      font-family: monospace; 
-      font-size: 1.8rem; 
-      font-weight: bold; 
-      color: #00ff9d; 
-      margin: 12px 0; 
-      word-break: break-all; 
-    }
-    
-    .invite-copy-btn {
-      background: transparent; 
-      border: 1px solid #00ff9d; 
-      color: #00ff9d;
-      padding: 8px 24px; 
-      border-radius: 6px; 
-      cursor: pointer; 
-      font-weight: bold;
-    }
-    
-    @media (max-width: 768px) {
-      .main-layout { flex-direction: column; }
-      .sidebar { width: 100%; display: flex; flex-wrap: wrap; gap: 10px; }
-      .nav-item { padding: 8px 12px; }
-      .invite-gen-btn {
-        writing-mode: horizontal-tb; width: auto; height: 50px; padding: 0 20px;
-        border-radius: 30px 0 0 30px; top: auto; bottom: 20px;
-      }
+      float: right; background: none; border: none; color: #ffcc00; font-size: 28px; cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="top-section">
-    <div class="header" id="header" role="button" aria-label="Change header image" tabindex="0"></div>
-    <div class="avatar" id="avatar" role="button" aria-label="Change avatar image" tabindex="0"></div>
+    <div class="header" id="header"></div>
+    <div class="avatar" id="avatar"></div>
     
-    <div class="wallet-badge" id="walletBadge" role="button" aria-label="Connect wallet" tabindex="0">
+    <div class="wallet-badge" id="walletBadge">
       <div class="badge-indicator" id="badgeIndicator"></div>
       <div class="badge-text" id="badgeText">Connect Wallet</div>
     </div>
     
-    <div class="theme-switch" id="themeSwitch" role="button" aria-label="Toggle theme" tabindex="0">🌙</div>
-    <div class="edit-btn" id="editBtn" role="button" aria-label="Edit profile" tabindex="0">⚙️</div>
-    <div class="edit-menu" id="editMenu" role="menu"></div>
+    <div class="theme-switch" id="themeSwitch">🌙</div>
+    <div class="edit-btn" id="editBtn">⚙️</div>
+    <div class="edit-menu" id="editMenu"></div>
   </div>
   
   <div class="main-layout">
-    <div class="sidebar" role="navigation">
+    <div class="sidebar">
       <a href="feed.html" class="nav-item">📰 News Feed</a>
       <a href="messages.html" class="nav-item">💬 Messages</a>
       <a href="groups.html" class="nav-item">👥 My Groups</a>
@@ -517,24 +291,24 @@
       <a href="news.html" class="nav-item">📰 CryptoNews</a>
     </div>
     
-    <div class="main" id="profileContent">
+    <div class="main">
       <div class="name" id="displayName">@Cryptobros</div>
       <div class="rank" id="displayRank">FREE TIER</div>
       
       <div class="field-label">Username</div>
-      <input type="text" id="inputName" maxlength="20" value="@Cryptobros" aria-label="Username">
+      <input type="text" id="inputName" value="@Cryptobros">
       
       <div class="field-label">Bio</div>
-      <textarea id="inputBio" rows="3" maxlength="200" aria-label="Bio"></textarea>
+      <textarea id="inputBio" rows="3"></textarea>
       
       <div class="field-label">Location</div>
-      <input type="text" id="inputLocation" maxlength="50" aria-label="Location">
+      <input type="text" id="inputLocation">
       
       <div class="field-label">Twitter</div>
-      <input type="text" id="inputTwitter" maxlength="30" aria-label="Twitter handle">
+      <input type="text" id="inputTwitter">
       
       <div class="field-label">Website</div>
-      <input type="text" id="inputWebsite" maxlength="100" aria-label="Website URL">
+      <input type="text" id="inputWebsite">
       
       <button class="btn" id="saveProfileBtn">💾 Save Changes</button>
     </div>
@@ -551,452 +325,187 @@
       <button class="invite-close-btn" id="inviteCloseBtn">×</button>
       <h3>🎫 Generate Invite</h3>
       <div class="invite-tier-select">
-        <label class="invite-tier-option">
-          <input type="radio" name="inviteTier" value="MASTER" checked> <span>Master</span>
-        </label>
-        <label class="invite-tier-option">
-          <input type="radio" name="inviteTier" value="PRO"> <span>Pro</span>
-        </label>
-        <label class="invite-tier-option">
-          <input type="radio" name="inviteTier" value="PREMIUM"> <span>Premium</span>
-        </label>
+        <label><input type="radio" name="tier" value="MASTER" checked> Master</label><br>
+        <label><input type="radio" name="tier" value="PRO"> Pro</label><br>
+        <label><input type="radio" name="tier" value="PREMIUM"> Premium</label>
       </div>
       <button class="invite-generate-btn" id="inviteGenerateBtn">Generate Code</button>
-      <div class="invite-result" id="inviteResult">
+      <div class="invite-result" id="inviteResult" style="display:none">
         <div class="invite-code" id="inviteCodeDisplay"></div>
-        <button class="invite-copy-btn" id="inviteCopyBtn">📋 Copy Code</button>
+        <button id="inviteCopyBtn">Copy</button>
       </div>
     </div>
   </div>
 
   <script>
-    (function() {
-      'use strict';
-
-      // Get all elements
-      const header = document.getElementById('header');
-      const avatar = document.getElementById('avatar');
-      const themeSwitch = document.getElementById('themeSwitch');
-      const editBtn = document.getElementById('editBtn');
-      const editMenu = document.getElementById('editMenu');
-      const uploadHeader = document.getElementById('header-upload');
-      const uploadAvatar = document.getElementById('avatar-upload');
-      const uploadBg = document.getElementById('bg-upload');
-      const walletBadge = document.getElementById('walletBadge');
-      const badgeIndicator = document.getElementById('badgeIndicator');
-      const badgeText = document.getElementById('badgeText');
-      const displayName = document.getElementById('displayName');
-      const displayRank = document.getElementById('displayRank');
-      const inputName = document.getElementById('inputName');
-      const inputBio = document.getElementById('inputBio');
-      const inputLocation = document.getElementById('inputLocation');
-      const inputTwitter = document.getElementById('inputTwitter');
-      const inputWebsite = document.getElementById('inputWebsite');
-      const saveBtn = document.getElementById('saveProfileBtn');
+    // ===== PROFILE SAVE FUNCTION =====
+    const STORAGE_KEY = 'cryptobros_profile';
+    
+    // Load profile on startup
+    function loadProfile() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const data = JSON.parse(saved);
+          document.getElementById('inputName').value = data.name || '@Cryptobros';
+          document.getElementById('inputBio').value = data.bio || '';
+          document.getElementById('inputLocation').value = data.location || '';
+          document.getElementById('inputTwitter').value = data.twitter || '';
+          document.getElementById('inputWebsite').value = data.website || '';
+          document.getElementById('displayName').textContent = data.name || '@Cryptobros';
+        }
+      } catch (e) {}
+    }
+    
+    // SAVE FUNCTION - ЭТО РАБОТАЕТ!
+    window.saveProfile = function(showToast = true) {
+      try {
+        const profile = {
+          name: document.getElementById('inputName').value || '@Cryptobros',
+          bio: document.getElementById('inputBio').value,
+          location: document.getElementById('inputLocation').value,
+          twitter: document.getElementById('inputTwitter').value,
+          website: document.getElementById('inputWebsite').value
+        };
+        
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+        document.getElementById('displayName').textContent = profile.name;
+        
+        if (showToast) showNotification('Profile saved!', 'success');
+        return true;
+      } catch (e) {
+        if (showToast) showNotification('Save failed', 'error');
+        return false;
+      }
+    };
+    
+    // Show notification
+    window.showNotification = function(msg, type) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    };
+    
+    // ===== EDIT MENU =====
+    document.getElementById('editBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const menu = document.getElementById('editMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', () => {
+      document.getElementById('editMenu').style.display = 'none';
+    });
+    
+    document.getElementById('editMenu').addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+    
+    // Menu buttons
+    document.getElementById('editMenu').innerHTML = `
+      <button onclick="document.getElementById('header-upload').click(); this.closest('.edit-menu').style.display='none'">📷 Change Header</button>
+      <button onclick="document.getElementById('avatar-upload').click(); this.closest('.edit-menu').style.display='none'">👤 Change Avatar</button>
+      <button onclick="document.getElementById('bg-upload').click(); this.closest('.edit-menu').style.display='none'">🎨 Change Background</button>
+      <button onclick="if(confirm('Reset profile?')){localStorage.removeItem('${STORAGE_KEY}');location.reload();}">🔄 Reset</button>
+    `;
+    
+    // ===== SAVE BUTTON =====
+    document.getElementById('saveProfileBtn').addEventListener('click', () => {
+      saveProfile(true);
+    });
+    
+    // ===== THEME TOGGLE =====
+    document.getElementById('themeSwitch').addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      document.getElementById('themeSwitch').textContent = isLight ? '☀️' : '🌙';
+    });
+    
+    // ===== WALLET =====
+    let walletConnected = false;
+    document.getElementById('walletBadge').addEventListener('click', () => {
+      walletConnected = !walletConnected;
+      const indicator = document.getElementById('badgeIndicator');
+      const text = document.getElementById('badgeText');
       
-      // Invite elements
-      const inviteGenBtn = document.getElementById('inviteGenBtn');
-      const inviteModal = document.getElementById('inviteModal');
-      const inviteCloseBtn = document.getElementById('inviteCloseBtn');
-      const inviteGenerateBtn = document.getElementById('inviteGenerateBtn');
-      const inviteResult = document.getElementById('inviteResult');
-      const inviteCodeDisplay = document.getElementById('inviteCodeDisplay');
-      const inviteCopyBtn = document.getElementById('inviteCopyBtn');
-      const tierRadios = document.querySelectorAll('input[name="inviteTier"]');
-
-      const STORAGE_KEY = 'cryptobros_profile';
-      const THEME_KEY = 'cryptobros_theme';
-      const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-
-      // Profile data
-      let profile = {
-        name: '@Cryptobros',
-        bio: '',
-        location: '',
-        twitter: '',
-        website: '',
-        avatar: '',
-        header: '',
-        bg: '',
-        tier: 'FREE',
-        wallet: null
-      };
-
-      // Show notification
-      function showNotification(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-          toast.remove();
-        }, 3000);
-      }
-
-      // Load profile from localStorage
-      function loadProfile() {
-        try {
-          const saved = localStorage.getItem(STORAGE_KEY);
-          if (saved) {
-            const data = JSON.parse(saved);
-            profile = { ...profile, ...data };
-          }
-        } catch (e) {
-          console.warn('Failed to load profile');
-        }
-        
-        // Update UI
-        inputName.value = profile.name;
-        inputBio.value = profile.bio;
-        inputLocation.value = profile.location;
-        inputTwitter.value = profile.twitter;
-        inputWebsite.value = profile.website;
-        displayName.textContent = profile.name;
-        displayRank.textContent = profile.tier + ' TIER';
-        
-        if (profile.header) {
-          header.style.backgroundImage = `url("${profile.header}")`;
-          header.classList.add('loaded');
-        }
-        
-        if (profile.avatar) {
-          avatar.style.backgroundImage = `url("${profile.avatar}")`;
-        }
-        
-        if (profile.bg) {
-          document.body.style.backgroundImage = `url("${profile.bg}")`;
-        }
-        
-        updateWalletBadge();
-      }
-
-      // Save profile to localStorage
-      function saveProfile(showToast = true) {
-        try {
-          profile.name = inputName.value.trim() || '@Cryptobros';
-          profile.bio = inputBio.value.trim();
-          profile.location = inputLocation.value.trim();
-          profile.twitter = inputTwitter.value.trim();
-          profile.website = inputWebsite.value.trim();
-          
-          displayName.textContent = profile.name;
-          displayRank.textContent = profile.tier + ' TIER';
-          
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
-          
-          if (showToast) showNotification('Profile saved!', 'success');
-        } catch (e) {
-          showNotification('Failed to save profile', 'error');
-        }
-      }
-
-      // Load theme
-      function loadTheme() {
-        try {
-          const theme = localStorage.getItem(THEME_KEY);
-          if (theme === 'light') {
-            document.body.classList.add('light-mode');
-            themeSwitch.textContent = '☀️';
-          } else {
-            document.body.classList.remove('light-mode');
-            themeSwitch.textContent = '🌙';
-          }
-        } catch (e) {
-          console.warn('Failed to load theme');
-        }
-      }
-
-      // Toggle theme
-      function toggleTheme() {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        themeSwitch.textContent = isLight ? '☀️' : '🌙';
-        
-        try {
-          localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
-        } catch (e) {
-          console.warn('Failed to save theme');
-        }
-      }
-
-      // Update wallet badge
-      function updateWalletBadge() {
-        if (profile.wallet) {
-          badgeIndicator.className = 'badge-indicator connected';
-          badgeText.textContent = profile.wallet.slice(0, 6) + '...' + profile.wallet.slice(-4);
-        } else {
-          badgeIndicator.className = 'badge-indicator locked';
-          badgeText.textContent = 'Connect Wallet';
-        }
-      }
-
-      // Handle wallet click
-      function handleWalletClick() {
-        if (!profile.wallet) {
-          profile.wallet = '0x' + Math.random().toString(36).substring(2, 10) + 
-                          Math.random().toString(36).substring(2, 6).toUpperCase();
-          updateWalletBadge();
-          saveProfile(false);
-          showNotification('Wallet connected!', 'success');
-        } else {
-          profile.wallet = null;
-          updateWalletBadge();
-          saveProfile(false);
-          showNotification('Wallet disconnected', 'warning');
-        }
-      }
-
-      // Handle image upload
-      function handleImageUpload(type, file) {
-        if (!file) return;
-        
-        if (!file.type.startsWith('image/')) {
-          showNotification('Please select an image file', 'error');
-          return;
-        }
-        
-        if (file.size > MAX_FILE_SIZE) {
-          showNotification('File too large (max 2MB)', 'error');
-          return;
-        }
-        
-        const reader = new FileReader();
-        
-        reader.onload = (e) => {
-          const dataUrl = e.target.result;
-          
-          if (type === 'bg') {
-            profile.bg = dataUrl;
-            document.body.style.backgroundImage = `url("${dataUrl}")`;
-          } else if (type === 'header') {
-            profile.header = dataUrl;
-            header.style.backgroundImage = `url("${dataUrl}")`;
-            header.classList.add('loaded');
-          } else if (type === 'avatar') {
-            profile.avatar = dataUrl;
-            avatar.style.backgroundImage = `url("${dataUrl}")`;
-          }
-          
-          saveProfile(false);
-          showNotification(type.charAt(0).toUpperCase() + type.slice(1) + ' updated!', 'success');
-        };
-        
-        reader.onerror = () => {
-          showNotification('Failed to read file', 'error');
-        };
-        
-        reader.readAsDataURL(file);
-      }
-
-      // Setup edit menu
-      function setupEditMenu() {
-        editMenu.innerHTML = `
-          <button id="changeHeaderBtn">📷 Change Header</button>
-          <button id="changeAvatarBtn">👤 Change Avatar</button>
-          <button id="changeBgBtn">🎨 Change Background</button>
-          <button id="resetProfileBtn">🔄 Reset Profile</button>
-        `;
-        
-        editBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          editMenu.style.display = editMenu.style.display === 'block' ? 'none' : 'block';
-        });
-
-        editMenu.addEventListener('click', (e) => e.stopPropagation());
-
-        document.getElementById('changeHeaderBtn').addEventListener('click', () => { 
-          uploadHeader.click(); 
-          editMenu.style.display = 'none'; 
-        });
-        
-        document.getElementById('changeAvatarBtn').addEventListener('click', () => { 
-          uploadAvatar.click(); 
-          editMenu.style.display = 'none'; 
-        });
-        
-        document.getElementById('changeBgBtn').addEventListener('click', () => { 
-          uploadBg.click(); 
-          editMenu.style.display = 'none'; 
-        });
-        
-        document.getElementById('resetProfileBtn').addEventListener('click', () => {
-          if (confirm('Reset all profile data? This cannot be undone.')) {
-            const wallet = profile.wallet;
-            profile = { 
-              name: '@Cryptobros', 
-              bio: '', 
-              location: '', 
-              twitter: '', 
-              website: '', 
-              avatar: '', 
-              header: '', 
-              bg: '', 
-              tier: 'FREE', 
-              wallet: wallet 
-            };
-            
-            inputName.value = profile.name;
-            inputBio.value = profile.bio;
-            inputLocation.value = profile.location;
-            inputTwitter.value = profile.twitter;
-            inputWebsite.value = profile.website;
-            displayName.textContent = profile.name;
-            displayRank.textContent = profile.tier + ' TIER';
-            
-            header.style.backgroundImage = ''; 
-            avatar.style.backgroundImage = ''; 
-            document.body.style.backgroundImage = '';
-            header.classList.remove('loaded');
-            
-            saveProfile(false);
-            showNotification('Profile reset successfully', 'warning');
-          }
-          editMenu.style.display = 'none';
-        });
-        
-        document.addEventListener('click', (e) => { 
-          if (!editMenu.contains(e.target) && e.target !== editBtn) { 
-            editMenu.style.display = 'none'; 
-          } 
-        });
-      }
-
-      // Setup invite system
-      function setupInviteSystem() {
-        let selectedTier = 'MASTER';
-        
-        tierRadios.forEach(radio => {
-          radio.addEventListener('change', () => {
-            document.querySelectorAll('.invite-tier-option').forEach(opt => {
-              opt.classList.remove('selected');
-            });
-            if (radio.checked) {
-              radio.closest('.invite-tier-option').classList.add('selected');
-              selectedTier = radio.value;
-            }
-          });
-        });
-        
-        // Set initial selected
-        const checkedRadio = document.querySelector('input[name="inviteTier"]:checked');
-        if (checkedRadio) {
-          checkedRadio.closest('.invite-tier-option')?.classList.add('selected');
-        }
-        
-        // Open modal
-        inviteGenBtn.addEventListener('click', () => {
-          inviteModal.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        });
-        
-        // Close modal
-        inviteCloseBtn.addEventListener('click', () => {
-          inviteModal.classList.remove('active');
-          inviteResult.classList.remove('active');
-          document.body.style.overflow = '';
-        });
-        
-        // Close on overlay click
-        inviteModal.addEventListener('click', (e) => {
-          if (e.target === inviteModal) {
-            inviteModal.classList.remove('active');
-            inviteResult.classList.remove('active');
-            document.body.style.overflow = '';
-          }
-        });
-        
-        // Generate code
-        inviteGenerateBtn.addEventListener('click', () => {
-          const prefixes = { MASTER: 'MAS', PRO: 'PRO', PREMIUM: 'PRE' };
-          const prefix = prefixes[selectedTier] || 'MAS';
-          const code = prefix + '-' + Math.floor(100000 + Math.random() * 900000);
-          
-          inviteCodeDisplay.textContent = code;
-          inviteResult.classList.add('active');
-        });
-        
-        // Copy code
-        inviteCopyBtn.addEventListener('click', async () => {
-          const code = inviteCodeDisplay.textContent;
-          if (!code) return;
-          
-          try {
-            await navigator.clipboard.writeText(code);
-            showNotification('Copied to clipboard!', 'success');
-          } catch {
-            const textarea = document.createElement('textarea');
-            textarea.value = code;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            showNotification('Copied to clipboard!', 'success');
-          }
-        });
-      }
-
-      // Auto-save
-      let autoSaveTimer;
-      function setupAutoSave() {
-        const inputs = [inputName, inputBio, inputLocation, inputTwitter, inputWebsite];
-        inputs.forEach(input => {
-          input.addEventListener('input', () => {
-            clearTimeout(autoSaveTimer);
-            autoSaveTimer = setTimeout(() => saveProfile(false), 1000);
-          });
-        });
-      }
-
-      // Initialize
-      function init() {
-        loadProfile();
-        loadTheme();
-        setupEditMenu();
-        setupInviteSystem();
-        setupAutoSave();
-        
-        themeSwitch.addEventListener('click', toggleTheme);
-        walletBadge.addEventListener('click', handleWalletClick);
-        saveBtn.addEventListener('click', () => saveProfile(true));
-        
-        header.addEventListener('click', () => uploadHeader.click());
-        avatar.addEventListener('click', () => uploadAvatar.click());
-        
-        uploadHeader.addEventListener('change', (e) => {
-          handleImageUpload('header', e.target.files[0]);
-          e.target.value = '';
-        });
-        
-        uploadAvatar.addEventListener('change', (e) => {
-          handleImageUpload('avatar', e.target.files[0]);
-          e.target.value = '';
-        });
-        
-        uploadBg.addEventListener('change', (e) => {
-          handleImageUpload('bg', e.target.files[0]);
-          e.target.value = '';
-        });
-        
-        // Keyboard support
-        [header, avatar, walletBadge, themeSwitch, editBtn].forEach(el => {
-          el.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              el.click();
-            }
-          });
-        });
-      }
-
-      // Start
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+      if (walletConnected) {
+        indicator.className = 'badge-indicator connected';
+        text.textContent = '0x' + Math.random().toString(36).substring(2, 8) + '...';
+        showNotification('Wallet connected!', 'success');
       } else {
-        init();
+        indicator.className = 'badge-indicator locked';
+        text.textContent = 'Connect Wallet';
+        showNotification('Wallet disconnected', 'warning');
       }
-    })();
+    });
+    
+    // ===== IMAGE UPLOADS =====
+    function handleImageUpload(input, element, type) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (type === 'bg') {
+          document.body.style.backgroundImage = `url("${e.target.result}")`;
+        } else {
+          element.style.backgroundImage = `url("${e.target.result}")`;
+          if (type === 'header') element.classList.add('loaded');
+        }
+        showNotification('Image updated!', 'success');
+      };
+      reader.readAsDataURL(file);
+      input.value = '';
+    }
+    
+    document.getElementById('header').addEventListener('click', () => 
+      document.getElementById('header-upload').click());
+    document.getElementById('avatar').addEventListener('click', () => 
+      document.getElementById('avatar-upload').click());
+    
+    document.getElementById('header-upload').addEventListener('change', function() {
+      handleImageUpload(this, document.getElementById('header'), 'header');
+    });
+    document.getElementById('avatar-upload').addEventListener('change', function() {
+      handleImageUpload(this, document.getElementById('avatar'), 'avatar');
+    });
+    document.getElementById('bg-upload').addEventListener('change', function() {
+      handleImageUpload(this, null, 'bg');
+    });
+    
+    // ===== INVITE MODAL =====
+    const modal = document.getElementById('inviteModal');
+    document.getElementById('inviteGenBtn').addEventListener('click', () => {
+      modal.classList.add('active');
+    });
+    document.getElementById('inviteCloseBtn').addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('active');
+    });
+    
+    document.getElementById('inviteGenerateBtn').addEventListener('click', () => {
+      const tier = document.querySelector('input[name="tier"]:checked')?.value || 'MASTER';
+      const prefixes = {MASTER:'MAS', PRO:'PRO', PREMIUM:'PRE'};
+      const code = prefixes[tier] + '-' + Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('inviteCodeDisplay').textContent = code;
+      document.getElementById('inviteResult').style.display = 'block';
+    });
+    
+    document.getElementById('inviteCopyBtn').addEventListener('click', async () => {
+      const code = document.getElementById('inviteCodeDisplay').textContent;
+      if (code) {
+        await navigator.clipboard.writeText(code);
+        showNotification('Copied!', 'success');
+      }
+    });
+    
+    // Load profile at start
+    loadProfile();
   </script>
 </body>
 </html>
