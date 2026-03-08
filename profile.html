@@ -1,511 +1,396 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark light">
-  <title>CRYPTOBROS - Profile</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    :root {
-      --bg-color: #000;
-      --text-color: #ffcc00;
-      --secondary-text: #aaa;
-      --border-color: #555;
-      --menu-bg: #000;
-      --input-bg: rgba(0,0,0,0.4);
-      --btn-bg: #4267B2;
-      --btn-text: white;
-    }
-    
-    body.light-mode {
-      --bg-color: #f5f7fa;
-      --text-color: #1a1a2e;
-      --secondary-text: #666;
-      --border-color: #ccc;
-      --menu-bg: #fff;
-      --input-bg: #fff;
-      --btn-bg: #4267B2;
-      --btn-text: white;
-    }
-    
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 0;
-    }
-    
-    .top-section { 
-      position: relative; 
-      height: 300px; 
-    }
-    
-    .header {
-      width: 100%; 
-      height: 100%; 
-      background: #333 center/cover no-repeat;
-      border: 2px dashed var(--border-color); 
-      cursor: pointer;
-    }
-    
-    .avatar {
-      width: 200px; 
-      height: 200px; 
-      border-radius: 50%;
-      border: 4px solid #ffcc00; 
-      background: #444 center/cover no-repeat;
-      position: absolute; 
-      bottom: -100px; 
-      left: 50%;
-      transform: translateX(-50%); 
-      cursor: pointer;
-    }
-    
-    .main-layout {
-      max-width: 1200px; 
-      margin: 220px auto 0;
-      display: flex; 
-      gap: 20px; 
-      padding: 0 20px;
-    }
-    
-    .theme-switch {
-      position: absolute; 
-      top: 20px; 
-      left: 20px;
-      width: 40px; 
-      height: 40px; 
-      background: #333;
-      border: 1px solid var(--border-color); 
-      border-radius: 50%;
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      cursor: pointer; 
-      z-index: 100; 
-      font-size: 1.4rem;
-      color: #ffcc00;
-    }
-    
-    .edit-btn {
-      position: absolute; 
-      top: 20px; 
-      right: 20px;
-      width: 40px; 
-      height: 40px; 
-      background: #333;
-      border: 1px solid #ffcc00; 
-      border-radius: 50%;
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      cursor: pointer; 
-      z-index: 100; 
-      font-size: 1.4rem;
-      color: #ffcc00;
-      animation: rotate 4s linear infinite;
-      animation-play-state: paused;
-    }
-    
-    .edit-btn:hover {
-      animation-play-state: running;
-      border-color: #00ff9d;
-      color: #00ff9d;
-    }
-    
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    
-    .edit-menu {
-      position: absolute; 
-      top: 70px; 
-      right: 20px;
-      background: var(--menu-bg); 
-      border: 1px solid #ffcc00;
-      border-radius: 6px; 
-      padding: 10px; 
-      display: none;
-      z-index: 100; 
-      min-width: 180px;
-    }
-    
-    .edit-menu button {
-      background: #222; 
-      color: #ffcc00; 
-      border: 1px solid #555;
-      border-radius: 4px; 
-      padding: 8px; 
-      margin: 5px 0;
-      cursor: pointer; 
-      width: 100%; 
-    }
-    
-    .sidebar { 
-      width: 200px; 
-    }
-    
-    .nav-item {
-      padding: 12px 0; 
-      color: var(--text-color); 
-      font-weight: bold;
-      text-decoration: none; 
-      display: block;
-    }
-    
-    .main { 
-      flex: 1; 
-    }
-    
-    .name { 
-      font-size: 2rem; 
-      font-weight: bold; 
-    }
-    
-    .rank { 
-      color: #ffd700; 
-      margin-bottom: 20px;
-    }
-    
-    .field-label { 
-      color: var(--secondary-text); 
-      margin: 10px 0 5px; 
-    }
-    
-    input, textarea {
-      width: 100%; 
-      padding: 10px; 
-      margin: 5px 0 15px;
-      background: var(--input-bg); 
-      color: var(--text-color); 
-      border: 1px solid var(--border-color);
-      border-radius: 4px; 
-    }
-    
-    .btn {
-      background: var(--btn-bg); 
-      color: var(--btn-text); 
-      border: none;
-      padding: 12px 24px; 
-      border-radius: 4px; 
-      cursor: pointer;
-      font-weight: bold; 
-    }
-    
-    .wallet-badge {
-      position: absolute; 
-      bottom: -120px; 
-      left: 50%; 
-      transform: translateX(-50%);
-      display: flex; 
-      align-items: center; 
-      gap: 10px; 
-      background: rgba(0,0,0,0.9);
-      border: 1px solid var(--border-color); 
-      border-radius: 20px; 
-      padding: 8px 16px;
-      cursor: pointer; 
-    }
-    
-    .badge-indicator { 
-      width: 10px; 
-      height: 10px; 
-      border-radius: 50%; 
-      background: #666; 
-    }
-    
-    .badge-indicator.connected { background: #00ff9d; }
-    .badge-indicator.locked { background: #ffd700; }
-    
-    #header-upload, #avatar-upload, #bg-upload { display: none; }
-    
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 12px 24px;
-      border-radius: 8px;
-      z-index: 9999;
-      animation: slideIn 0.3s;
-    }
-    
-    .toast.success { background: #00ff9d; color: #000; }
-    .toast.error { background: #ff4d4d; color: white; }
-    
-    @keyframes slideIn { 
-      from { transform: translateX(100%); } 
-      to { transform: translateX(0); } 
-    }
-    
-    .invite-gen-btn {
-      position: fixed; right: 0; top: 50%; transform: translateY(-50%);
-      width: 60px; height: 140px; background: linear-gradient(180deg, #6644ff, #4488ff);
-      border: none; border-radius: 16px 0 0 16px; color: white;
-      font-weight: 800; cursor: pointer; z-index: 200;
-      writing-mode: vertical-rl;
-    }
-    
-    .invite-modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 300;
-    }
-    .invite-modal-overlay.active { display: flex; }
-    
-    .invite-modal {
-      background: var(--menu-bg); border: 2px solid #ffcc00; border-radius: 16px;
-      padding: 24px; max-width: 380px; width: 90%; text-align: center;
-    }
-    
-    .invite-close-btn {
-      float: right; background: none; border: none; color: #ffcc00; font-size: 28px; cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div class="top-section">
-    <div class="header" id="header"></div>
-    <div class="avatar" id="avatar"></div>
-    
-    <div class="wallet-badge" id="walletBadge">
-      <div class="badge-indicator" id="badgeIndicator"></div>
-      <div class="badge-text" id="badgeText">Connect Wallet</div>
-    </div>
-    
-    <div class="theme-switch" id="themeSwitch">🌙</div>
-    <div class="edit-btn" id="editBtn">⚙️</div>
-    <div class="edit-menu" id="editMenu"></div>
-  </div>
-  
-  <div class="main-layout">
-    <div class="sidebar">
-      <a href="feed.html" class="nav-item">📰 News Feed</a>
-      <a href="messages.html" class="nav-item">💬 Messages</a>
-      <a href="groups.html" class="nav-item">👥 My Groups</a>
-      <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
-      <a href="friends.html" class="nav-item">👫 My Friends</a>
-      <a href="help.html" class="nav-item">❓ Help Desk</a>
-      <a href="news.html" class="nav-item">📰 CryptoNews</a>
-    </div>
-    
-    <div class="main">
-      <div class="name" id="displayName">@Cryptobros</div>
-      <div class="rank" id="displayRank">FREE TIER</div>
-      
-      <div class="field-label">Username</div>
-      <input type="text" id="inputName" value="@Cryptobros">
-      
-      <div class="field-label">Bio</div>
-      <textarea id="inputBio" rows="3"></textarea>
-      
-      <div class="field-label">Location</div>
-      <input type="text" id="inputLocation">
-      
-      <div class="field-label">Twitter</div>
-      <input type="text" id="inputTwitter">
-      
-      <div class="field-label">Website</div>
-      <input type="text" id="inputWebsite">
-      
-      <button class="btn" id="saveProfileBtn">💾 Save Changes</button>
-    </div>
-  </div>
+<script>
+    (function() {
+      'use strict';
 
-  <input type="file" id="header-upload" accept="image/*">
-  <input type="file" id="avatar-upload" accept="image/*">
-  <input type="file" id="bg-upload" accept="image/*">
-
-  <button class="invite-gen-btn" id="inviteGenBtn">🎫<br>INVITE</button>
-
-  <div class="invite-modal-overlay" id="inviteModal">
-    <div class="invite-modal">
-      <button class="invite-close-btn" id="inviteCloseBtn">×</button>
-      <h3>🎫 Generate Invite</h3>
-      <div class="invite-tier-select">
-        <label><input type="radio" name="tier" value="MASTER" checked> Master</label><br>
-        <label><input type="radio" name="tier" value="PRO"> Pro</label><br>
-        <label><input type="radio" name="tier" value="PREMIUM"> Premium</label>
-      </div>
-      <button class="invite-generate-btn" id="inviteGenerateBtn">Generate Code</button>
-      <div class="invite-result" id="inviteResult" style="display:none">
-        <div class="invite-code" id="inviteCodeDisplay"></div>
-        <button id="inviteCopyBtn">Copy</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ===== PROFILE SAVE FUNCTION =====
-    const STORAGE_KEY = 'cryptobros_profile';
-    
-    // Load profile on startup
-    function loadProfile() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const data = JSON.parse(saved);
-          document.getElementById('inputName').value = data.name || '@Cryptobros';
-          document.getElementById('inputBio').value = data.bio || '';
-          document.getElementById('inputLocation').value = data.location || '';
-          document.getElementById('inputTwitter').value = data.twitter || '';
-          document.getElementById('inputWebsite').value = data.website || '';
-          document.getElementById('displayName').textContent = data.name || '@Cryptobros';
-        }
-      } catch (e) {}
-    }
-    
-    // SAVE FUNCTION - ЭТО РАБОТАЕТ!
-    window.saveProfile = function(showToast = true) {
-      try {
-        const profile = {
-          name: document.getElementById('inputName').value || '@Cryptobros',
-          bio: document.getElementById('inputBio').value,
-          location: document.getElementById('inputLocation').value,
-          twitter: document.getElementById('inputTwitter').value,
-          website: document.getElementById('inputWebsite').value
-        };
-        
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
-        document.getElementById('displayName').textContent = profile.name;
-        
-        if (showToast) showNotification('Profile saved!', 'success');
-        return true;
-      } catch (e) {
-        if (showToast) showNotification('Save failed', 'error');
-        return false;
+      // Функция безопасного получения элемента
+      function getElement(id) {
+        const el = document.getElementById(id);
+        if (!el) console.warn(`Element #${id} not found`);
+        return el;
       }
-    };
-    
-    // Show notification
-    window.showNotification = function(msg, type) {
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = msg;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    };
-    
-    // ===== EDIT MENU =====
-    document.getElementById('editBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      const menu = document.getElementById('editMenu');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', () => {
-      document.getElementById('editMenu').style.display = 'none';
-    });
-    
-    document.getElementById('editMenu').addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-    
-    // Menu buttons
-    document.getElementById('editMenu').innerHTML = `
-      <button onclick="document.getElementById('header-upload').click(); this.closest('.edit-menu').style.display='none'">📷 Change Header</button>
-      <button onclick="document.getElementById('avatar-upload').click(); this.closest('.edit-menu').style.display='none'">👤 Change Avatar</button>
-      <button onclick="document.getElementById('bg-upload').click(); this.closest('.edit-menu').style.display='none'">🎨 Change Background</button>
-      <button onclick="if(confirm('Reset profile?')){localStorage.removeItem('${STORAGE_KEY}');location.reload();}">🔄 Reset</button>
-    `;
-    
-    // ===== SAVE BUTTON =====
-    document.getElementById('saveProfileBtn').addEventListener('click', () => {
-      saveProfile(true);
-    });
-    
-    // ===== THEME TOGGLE =====
-    document.getElementById('themeSwitch').addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
-      const isLight = document.body.classList.contains('light-mode');
-      document.getElementById('themeSwitch').textContent = isLight ? '☀️' : '🌙';
-    });
-    
-    // ===== WALLET =====
-    let walletConnected = false;
-    document.getElementById('walletBadge').addEventListener('click', () => {
-      walletConnected = !walletConnected;
-      const indicator = document.getElementById('badgeIndicator');
-      const text = document.getElementById('badgeText');
-      
-      if (walletConnected) {
-        indicator.className = 'badge-indicator connected';
-        text.textContent = '0x' + Math.random().toString(36).substring(2, 8) + '...';
-        showNotification('Wallet connected!', 'success');
-      } else {
-        indicator.className = 'badge-indicator locked';
-        text.textContent = 'Connect Wallet';
-        showNotification('Wallet disconnected', 'warning');
+
+      // Get elements с проверками
+      const header = getElement('header');
+      const avatar = getElement('avatar');
+      const themeSwitch = getElement('themeSwitch');
+      const editBtn = getElement('editBtn');
+      const editMenu = getElement('editMenu');
+      const uploadHeader = getElement('header-upload');
+      const uploadAvatar = getElement('avatar-upload');
+      const uploadBg = getElement('bg-upload');
+      const walletBadge = getElement('walletBadge');
+      const badgeIndicator = getElement('badgeIndicator');
+      const badgeText = getElement('badgeText');
+      const displayName = getElement('displayName');
+      const displayRank = getElement('displayRank');
+      const inputName = getElement('inputName');
+      const inputBio = getElement('inputBio');
+      const inputLocation = getElement('inputLocation');
+      const inputTwitter = getElement('inputTwitter');
+      const inputWebsite = getElement('inputWebsite');
+      const saveBtn = getElement('saveProfileBtn');
+      const inviteGenBtn = getElement('inviteGenBtn');
+
+      // Проверка наличия всех элементов
+      if (!header || !avatar || !themeSwitch || !editBtn || !editMenu || 
+          !uploadHeader || !uploadAvatar || !uploadBg || !walletBadge || 
+          !badgeIndicator || !badgeText || !displayName || !displayRank || 
+          !inputName || !inputBio || !inputLocation || !inputTwitter || 
+          !inputWebsite || !saveBtn || !inviteGenBtn) {
+        console.error('Critical elements missing!');
+        return;
       }
-    });
-    
-    // ===== IMAGE UPLOADS =====
-    function handleImageUpload(input, element, type) {
-      const file = input.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (type === 'bg') {
-          document.body.style.backgroundImage = `url("${e.target.result}")`;
-        } else {
-          element.style.backgroundImage = `url("${e.target.result}")`;
-          if (type === 'header') element.classList.add('loaded');
-        }
-        showNotification('Image updated!', 'success');
+
+      const STORAGE_KEY = 'cryptobros_profile';
+      const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
+      // Profile data
+      let profile = {
+        name: '@Cryptobros',
+        bio: '',
+        location: '',
+        twitter: '',
+        website: '',
+        avatar: '',
+        header: '',
+        bg: '',
+        tier: 'FREE',
+        wallet: null
       };
-      reader.readAsDataURL(file);
-      input.value = '';
-    }
-    
-    document.getElementById('header').addEventListener('click', () => 
-      document.getElementById('header-upload').click());
-    document.getElementById('avatar').addEventListener('click', () => 
-      document.getElementById('avatar-upload').click());
-    
-    document.getElementById('header-upload').addEventListener('change', function() {
-      handleImageUpload(this, document.getElementById('header'), 'header');
-    });
-    document.getElementById('avatar-upload').addEventListener('change', function() {
-      handleImageUpload(this, document.getElementById('avatar'), 'avatar');
-    });
-    document.getElementById('bg-upload').addEventListener('change', function() {
-      handleImageUpload(this, null, 'bg');
-    });
-    
-    // ===== INVITE MODAL =====
-    const modal = document.getElementById('inviteModal');
-    document.getElementById('inviteGenBtn').addEventListener('click', () => {
-      modal.classList.add('active');
-    });
-    document.getElementById('inviteCloseBtn').addEventListener('click', () => {
-      modal.classList.remove('active');
-    });
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.classList.remove('active');
-    });
-    
-    document.getElementById('inviteGenerateBtn').addEventListener('click', () => {
-      const tier = document.querySelector('input[name="tier"]:checked')?.value || 'MASTER';
-      const prefixes = {MASTER:'MAS', PRO:'PRO', PREMIUM:'PRE'};
-      const code = prefixes[tier] + '-' + Math.floor(100000 + Math.random() * 900000);
-      document.getElementById('inviteCodeDisplay').textContent = code;
-      document.getElementById('inviteResult').style.display = 'block';
-    });
-    
-    document.getElementById('inviteCopyBtn').addEventListener('click', async () => {
-      const code = document.getElementById('inviteCodeDisplay').textContent;
-      if (code) {
-        await navigator.clipboard.writeText(code);
-        showNotification('Copied!', 'success');
+
+      // Валидация URL
+      function isValidUrl(string) {
+        try {
+          new URL(string);
+          return true;
+        } catch (_) {
+          return false;
+        }
       }
-    });
-    
-    // Load profile at start
-    loadProfile();
-  </script>
-</body>
-</html>
+
+      // Валидация Twitter handle
+      function isValidTwitter(handle) {
+        if (!handle) return true;
+        return /^@?[A-Za-z0-9_]{1,15}$/.test(handle);
+      }
+
+      // Show notification
+      function showNotification(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        toast.setAttribute('role', 'alert');
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+
+      // Load profile
+      function loadProfile() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            const data = JSON.parse(saved);
+            profile = { ...profile, ...data };
+          }
+        } catch (e) {
+          console.warn('Failed to load profile:', e);
+        }
+        
+        inputName.value = profile.name;
+        inputBio.value = profile.bio;
+        inputLocation.value = profile.location;
+        inputTwitter.value = profile.twitter;
+        inputWebsite.value = profile.website;
+        displayName.textContent = profile.name;
+        displayRank.textContent = profile.tier + ' TIER';
+        
+        if (profile.header) {
+          header.style.backgroundImage = `url("${profile.header}")`;
+          header.classList.add('loaded');
+        }
+        if (profile.avatar) avatar.style.backgroundImage = `url("${profile.avatar}")`;
+        if (profile.bg) document.body.style.backgroundImage = `url("${profile.bg}")`;
+        
+        updateWalletBadge();
+      }
+
+      // Save profile
+      function saveProfile(showToast = true) {
+        try {
+          // Валидация
+          const twitter = inputTwitter.value.trim();
+          if (twitter && !isValidTwitter(twitter)) {
+            showNotification('Invalid Twitter handle', 'error');
+            return false;
+          }
+
+          const website = inputWebsite.value.trim();
+          if (website && !isValidUrl(website) && !website.startsWith('http')) {
+            showNotification('Invalid website URL', 'error');
+            return false;
+          }
+
+          profile.name = inputName.value.trim() || '@Cryptobros';
+          profile.bio = inputBio.value.trim();
+          profile.location = inputLocation.value.trim();
+          profile.twitter = twitter;
+          profile.website = website;
+          
+          displayName.textContent = profile.name;
+          displayRank.textContent = profile.tier + ' TIER';
+          
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+          if (showToast) showNotification('Profile saved!', 'success');
+          return true;
+        } catch (e) {
+          showNotification('Failed to save profile', 'error');
+          console.error('Save error:', e);
+          return false;
+        }
+      }
+
+      // Theme
+      function loadTheme() {
+        try {
+          const theme = localStorage.getItem('cryptobros_theme');
+          if (theme === 'light') {
+            document.body.classList.add('light-mode');
+            themeSwitch.textContent = '☀️';
+          }
+        } catch (e) {
+          console.warn('Failed to load theme:', e);
+        }
+      }
+
+      function toggleTheme() {
+        try {
+          document.body.classList.toggle('light-mode');
+          const isLight = document.body.classList.contains('light-mode');
+          themeSwitch.textContent = isLight ? '☀️' : '🌙';
+          localStorage.setItem('cryptobros_theme', isLight ? 'light' : 'dark');
+        } catch (e) {
+          console.warn('Failed to save theme:', e);
+          showNotification('Failed to save theme preference', 'warning');
+        }
+      }
+
+      // Wallet
+      function updateWalletBadge() {
+        if (profile.wallet) {
+          badgeIndicator.className = 'badge-indicator connected'; // Исправлено
+          badgeText.textContent = profile.wallet.slice(0, 6) + '...' + profile.wallet.slice(-4);
+        } else {
+          badgeIndicator.className = 'badge-indicator locked'; // Исправлено
+          badgeText.textContent = 'Connect Wallet';
+        }
+      }
+
+      function generateWalletAddress() {
+        // Генерация корректного Ethereum адреса
+        const chars = '0123456789abcdef';
+        let address = '0x';
+        for (let i = 0; i < 40; i++) {
+          address += chars[Math.floor(Math.random() * 16)];
+        }
+        return address;
+      }
+
+      function handleWalletClick() {
+        if (!profile.wallet) {
+          profile.wallet = generateWalletAddress();
+          updateWalletBadge();
+          saveProfile(false);
+          showNotification('Wallet connected!', 'success');
+        } else {
+          profile.wallet = null;
+          updateWalletBadge();
+          saveProfile(false);
+          showNotification('Wallet disconnected', 'warning');
+        }
+      }
+
+      // Image upload
+      function handleImageUpload(type, file) {
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          showNotification('Please select an image', 'error');
+          return;
+        }
+        if (file.size > MAX_FILE_SIZE) {
+          showNotification('File too large (max 2MB)', 'error');
+          return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target.result;
+          
+          if (type === 'bg') {
+            profile.bg = dataUrl;
+            document.body.style.backgroundImage = `url("${dataUrl}")`;
+          } else if (type === 'header') {
+            profile.header = dataUrl;
+            header.style.backgroundImage = `url("${dataUrl}")`;
+            header.classList.add('loaded');
+          } else if (type === 'avatar') {
+            profile.avatar = dataUrl;
+            avatar.style.backgroundImage = `url("${dataUrl}")`;
+          }
+          
+          saveProfile(false);
+          showNotification(type + ' updated!', 'success');
+        };
+        reader.onerror = () => {
+          showNotification('Failed to read file', 'error');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Setup edit menu
+      function setupEditMenu() {
+        editMenu.innerHTML = `
+          <button id="changeHeaderBtn">📷 Change Header</button>
+          <button id="changeAvatarBtn">👤 Change Avatar</button>
+          <button id="changeBgBtn">🎨 Change Background</button>
+          <button id="resetProfileBtn">🔄 Reset Profile</button>
+        `;
+        
+        editBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          editMenu.style.display = editMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        editMenu.addEventListener('click', (e) => e.stopPropagation());
+
+        const changeHeaderBtn = document.getElementById('changeHeaderBtn');
+        const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+        const changeBgBtn = document.getElementById('changeBgBtn');
+        const resetProfileBtn = document.getElementById('resetProfileBtn');
+
+        if (changeHeaderBtn) {
+          changeHeaderBtn.addEventListener('click', () => { 
+            uploadHeader.click(); 
+            editMenu.style.display = 'none'; 
+          });
+        }
+        
+        if (changeAvatarBtn) {
+          changeAvatarBtn.addEventListener('click', () => { 
+            uploadAvatar.click(); 
+            editMenu.style.display = 'none'; 
+          });
+        }
+        
+        if (changeBgBtn) {
+          changeBgBtn.addEventListener('click', () => { 
+            uploadBg.click(); 
+            editMenu.style.display = 'none'; 
+          });
+        }
+        
+        if (resetProfileBtn) {
+          resetProfileBtn.addEventListener('click', () => {
+            if (confirm('Reset all profile data? This cannot be undone.')) {
+              const wallet = profile.wallet;
+              profile = { 
+                name: '@Cryptobros', 
+                bio: '', 
+                location: '', 
+                twitter: '', 
+                website: '', 
+                avatar: '', 
+                header: '', 
+                bg: '', 
+                tier: 'FREE', 
+                wallet: wallet 
+              };
+              
+              inputName.value = profile.name;
+              inputBio.value = profile.bio;
+              inputLocation.value = profile.location;
+              inputTwitter.value = profile.twitter;
+              inputWebsite.value = profile.website;
+              displayName.textContent = profile.name;
+              displayRank.textContent = profile.tier + ' TIER';
+              
+              header.style.backgroundImage = ''; 
+              avatar.style.backgroundImage = ''; 
+              document.body.style.backgroundImage = '';
+              header.classList.remove('loaded');
+              
+              saveProfile(false);
+              showNotification('Profile reset successfully', 'warning');
+            }
+            editMenu.style.display = 'none';
+          });
+        }
+        
+        document.addEventListener('click', (e) => { 
+          if (!editMenu.contains(e.target) && e.target !== editBtn) { 
+            editMenu.style.display = 'none'; 
+          } 
+        });
+      }
+
+      // Auto-save
+      let autoSaveTimer;
+      function setupAutoSave() {
+        const inputs = [inputName, inputBio, inputLocation, inputTwitter, inputWebsite];
+        inputs.forEach(input => {
+          input.addEventListener('input', () => {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => saveProfile(false), 1000);
+          });
+        });
+      }
+
+      // Initialize
+      function init() {
+        loadProfile();
+        loadTheme();
+        setupEditMenu();
+        setupAutoSave();
+        
+        themeSwitch.addEventListener('click', toggleTheme);
+        walletBadge.addEventListener('click', handleWalletClick);
+        saveBtn.addEventListener('click', () => saveProfile(true));
+        
+        header.addEventListener('click', () => uploadHeader.click());
+        avatar.addEventListener('click', () => uploadAvatar.click());
+        
+        uploadHeader.addEventListener('change', (e) => {
+          handleImageUpload('header', e.target.files[0]);
+          e.target.value = '';
+        });
+        
+        uploadAvatar.addEventListener('change', (e) => {
+          handleImageUpload('avatar', e.target.files[0]);
+          e.target.value = '';
+        });
+        
+        uploadBg.addEventListener('change', (e) => {
+          handleImageUpload('bg', e.target.files[0]);
+          e.target.value = '';
+        });
+        
+        // Keyboard support
+        [header, avatar, walletBadge, themeSwitch, editBtn].forEach(el => {
+          if (el) {
+            el.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                el.click();
+              }
+            });
+          }
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+</script>
