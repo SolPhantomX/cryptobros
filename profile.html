@@ -58,10 +58,10 @@
       position: absolute;
       top: 16px;
       right: 16px;
-      width: 42px;
-      height: 42px;
+      width: 48px;
+      height: 48px;
       background: #1a1a1a;
-      border: 2px solid #ffcc00;
+      border: 2px solid rgba(255, 204, 0, 0.3);
       border-radius: 50%;
       color: #ffcc00;
       display: flex;
@@ -69,10 +69,13 @@
       justify-content: center;
       cursor: pointer;
       z-index: 100;
-      font-size: 22px;
-      transition: transform 0.6s ease-in-out, box-shadow 0.3s ease;
-      animation: gearGlow 20s infinite, spinSlow 10s infinite linear;
-      box-shadow: 0 0 15px #ffcc00;
+      font-size: 28px;
+      transition: transform 0.3s ease;
+      animation: spinSlow 8s infinite linear;
+      box-shadow: 
+        0 0 20px currentColor,
+        inset 0 0 15px currentColor;
+      text-shadow: 0 0 15px currentColor;
     }
 
     /* spinning gear */
@@ -81,19 +84,25 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* color glow cycle every 20 seconds */
-    @keyframes gearGlow {
-      0% { box-shadow: 0 0 20px #ffcc00, 0 0 30px #ffaa00; border-color: #ffcc00; color: #ffcc00; }
-      25% { box-shadow: 0 0 20px #00ffff, 0 0 30px #0088ff; border-color: #00ffff; color: #00ffff; }
-      50% { box-shadow: 0 0 20px #ff00ff, 0 0 30px #cc00cc; border-color: #ff00ff; color: #ff00ff; }
-      75% { box-shadow: 0 0 20px #00ffaa, 0 0 30px #00cc88; border-color: #00ffaa; color: #00ffaa; }
-      100% { box-shadow: 0 0 20px #ffcc00, 0 0 30px #ffaa00; border-color: #ffcc00; color: #ffcc00; }
+    /* color change animation - applied to text and shadows */
+    .edit-btn {
+      animation: spinSlow 8s infinite linear, colorPulse 12s infinite;
     }
 
-    /* pause spinning on hover */
+    @keyframes colorPulse {
+      0% { color: #ffcc00; }
+      20% { color: #ff6600; }
+      40% { color: #ff3366; }
+      60% { color: #aa66ff; }
+      80% { color: #33ccff; }
+      100% { color: #ffcc00; }
+    }
+
+    /* pause spinning on hover, but keep color change */
     .edit-btn:hover {
-      animation: gearGlow 20s infinite, none; 
-      transform: scale(1.1);
+      animation: colorPulse 12s infinite, none;
+      transform: scale(1.15);
+      border-color: rgba(255,255,255,0.5);
     }
 
     .theme-switch {
@@ -116,7 +125,7 @@
 
     .edit-menu {
       position: absolute;
-      top: 60px;
+      top: 70px;
       right: 16px;
       background: #000;
       border: 1px solid #ffcc00;
@@ -128,7 +137,7 @@
       max-width: 250px;
       max-height: 400px;
       overflow-y: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 20px rgba(255,204,0,0.3);
     }
 
     .edit-menu button {
@@ -143,6 +152,11 @@
       display: inline-block;
       width: 100%;
       text-align: left;
+    }
+
+    .edit-menu button:hover {
+      background: #333;
+      border-color: #ffcc00;
     }
 
     .sidebar { width: 200px; }
@@ -206,26 +220,13 @@
       margin-top: 10px;
     }
 
-    #header-upload, #avatar-upload, #bg-upload, #secret-input {
+    #header-upload, #avatar-upload, #bg-upload {
       display: none;
     }
 
     @keyframes flicker {
       0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
       20%,24%,55%,81%,85% { opacity:0.8; }
-    }
-
-    .creator-section {
-      background: rgba(215, 0, 255, 0.2);
-      border: 1px solid #d700ff;
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 20px;
-    }
-    .creator-section h3 {
-      color: #d700ff;
-      margin-bottom: 10px;
-      font-size: 16px;
     }
   </style>
 </head>
@@ -240,7 +241,6 @@
 
   <div class="main-layout">
     <div class="sidebar">
-      <!-- CRYPTONEWS button added exactly like others -->
       <a href="news.html" class="nav-item">📰 CryptoNews</a>
       <a href="feed.html" class="nav-item">📰 News Feed</a>
       <a href="messages.html" class="nav-item">💬 Messages</a>
@@ -251,20 +251,15 @@
     <div class="main" id="profileContent"></div>
   </div>
 
-  <!-- hidden file inputs -->
   <input type="file" id="header-upload" accept="image/*">
   <input type="file" id="avatar-upload" accept="image/*">
   <input type="file" id="bg-upload" accept="image/*">
-  <input type="text" id="secret-input" placeholder="Enter secret word">
 
   <script>
     (function() {
       // ---------- DATA & STATE ----------
-      const SECRET_WORD = 'CRYPTOBROS';
-      // master password for double‑click gear (visible in code, but safe from localStorage tricks)
-      const CREATOR_PASSWORD = 'SolPhantomX2026'; // change to your strong pass
+      const CREATOR_PASSWORD = 'SolPhantomX2026';
 
-      // profile data — fixed
       let profileData = JSON.parse(localStorage.getItem('profileData')) || {
         name: '@cryptobros',
         about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype',
@@ -276,8 +271,8 @@
       let pageBg = localStorage.getItem('pageBg') || '';
       let currentTheme = localStorage.getItem('theme') || 'dark';
 
-      // IMPORTANT: isCreator is NOT stored in localStorage anymore. default false.
-      let isCreator = false;   // only becomes true after correct password (double‑click gear)
+      // Creator mode - default false, only activated by double-click
+      let isCreator = false;
 
       const bgPresets = [
         'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png',
@@ -285,12 +280,10 @@
         'bg11.jpg', 'bg12.jpg', 'bg13.jpg'
       ];
 
-      // ---------- INIT ----------
       function init() {
         applyTheme();
         if (pageBg) document.body.style.backgroundImage = `url(${pageBg})`;
 
-        // header
         const headerImg = localStorage.getItem('header') || '';
         const headerEl = document.getElementById('header');
         if (headerImg) {
@@ -299,7 +292,6 @@
           headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
         }
 
-        // avatar
         const avatarImg = localStorage.getItem('avatar') || '';
         const avatarEl = document.getElementById('avatar');
         if (avatarImg) avatarEl.style.backgroundImage = `url(${avatarImg})`;
@@ -307,10 +299,9 @@
         renderViewMode();
         setupEditMenuTriggers();
         attachGlobalListeners();
-        buildEditMenuContent();   // fill menu (invite buttons hidden by default)
+        buildEditMenuContent();
       }
 
-      // ---------- THEME ----------
       function applyTheme() {
         if (currentTheme === 'light') {
           document.body.style.backgroundColor = '#f0f0f0';
@@ -337,25 +328,24 @@
         applyTheme();
       }
 
-      // ---------- CREATOR MODE (double‑click gear) ----------
+      // DOUBLE CLICK ON GEAR — ONLY WAY TO ACTIVATE CREATOR MODE
       function tryActivateCreator() {
         const pwd = prompt('🔐 Enter creator password:');
         if (pwd === CREATOR_PASSWORD) {
           isCreator = true;
-          alert('✅ Creator mode activated for this session. Invite tools are now visible.');
-          buildEditMenuContent();   // rebuild menu to show invite buttons
+          alert('✅ Creator mode activated! Invite tools now available in menu.');
+          buildEditMenuContent();
         } else {
           alert('❌ Access denied.');
         }
       }
 
-      // ---------- EDIT MENU ----------
       function toggleEditMenu() {
         const menu = document.getElementById('editMenu');
         if (menu.style.display === 'block') {
           menu.style.display = 'none';
         } else {
-          buildEditMenuContent();   // refresh content (respects isCreator)
+          buildEditMenuContent();
           menu.style.display = 'block';
         }
       }
@@ -366,7 +356,6 @@
           `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
         ).join('');
 
-        // base buttons (always there)
         let html = `
           <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
           <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
@@ -377,7 +366,7 @@
           <button onclick="enterEditMode()">✏️ Edit Profile</button>
         `;
 
-        // creator-only buttons – only if isCreator === true
+        // ONLY show invite buttons if creator mode is active
         if (isCreator) {
           html += `
             <div style="margin-top:10px;padding-top:10px;border-top:1px solid #555">
@@ -394,9 +383,9 @@
         menu.innerHTML = html;
       }
 
-      // ---------- INVITE FUNCTIONS (only work if isCreator = true) ----------
+      // Invite functions (guarded)
       function generateInviteCode(tier) {
-        if (!isCreator) { alert('No permission.'); return; }
+        if (!isCreator) { alert('Permission denied'); return; }
         const raw = Math.random().toString(36).substring(2, 10).toUpperCase();
         const fullCode = `${tier.slice(0,3).toUpperCase()}-${raw}`;
 
@@ -427,7 +416,7 @@
         document.getElementById('editMenu').style.display = 'none';
       }
 
-      // ---------- BACKGROUND & COLOR ----------
+      // Background & color functions
       window.setPresetBg = function(filename) {
         pageBg = filename;
         localStorage.setItem('pageBg', pageBg);
@@ -459,7 +448,6 @@
         };
       };
 
-      // ---------- VIEW / EDIT MODE ----------
       function getTierBadge() {
         const tier = localStorage.getItem('selectedTier') || 'Free';
         const badges = { 'Free': 'FREE USER', 'Master': 'MASTER', 'Pro': 'PRO USER', 'Premium': 'PREMIUM' };
@@ -477,36 +465,9 @@
           <div class="field-value">${profileData.city || 'Not specified'}</div>
         `;
 
-        // If NOT creator, show activation panel (but they can also use double‑click gear)
-        if (!isCreator) {
-          content += `
-            <div class="creator-section">
-              <h3>🔓 Creator Access</h3>
-              <p>Enter secret word to unlock creator tools:</p>
-              <input type="text" id="secretWordInput" placeholder="Secret word..." style="width:100%;padding:8px;margin-top:5px">
-              <button class="btn" onclick="activateCreator()" style="width:100%;margin-top:5px">ACTIVATE</button>
-              <p style="font-size:12px; margin-top:8px;">(or double‑click ⚙️ gear)</p>
-            </div>
-          `;
-        }
-
+        // NO CREATOR ACCESS PANEL — only double-click on gear
         document.getElementById('profileContent').innerHTML = content;
       }
-
-      // old secret‑word activation (still works)
-      window.activateCreator = function() {
-        const input = document.getElementById('secretWordInput');
-        if (input && input.value.trim().toUpperCase() === SECRET_WORD) {
-          isCreator = true;
-          localStorage.setItem('isCreator', 'true'); // we keep for backward compatibility, but buttons rely on isCreator variable
-          alert('✅ Creator mode activated!\n\nYou now have access to invite code generation.');
-          renderViewMode();
-          buildEditMenuContent();
-          document.getElementById('editMenu').style.display = 'none';
-        } else {
-          alert('❌ Invalid secret word!');
-        }
-      };
 
       window.enterEditMode = function() {
         document.getElementById('editMenu').style.display = 'none';
@@ -533,7 +494,6 @@
         alert('✅ Profile saved!');
       };
 
-      // ---------- DRAG HEADER ----------
       function setupDragToPan() {
         const headerEl = document.getElementById('header');
         let isDragging = false;
@@ -570,7 +530,6 @@
         });
       }
 
-      // ---------- FILE UPLOAD TRIGGERS ----------
       function setupEditMenuTriggers() {
         const headerEl = document.getElementById('header');
         const avatarEl = document.getElementById('avatar');
@@ -615,12 +574,11 @@
       function attachGlobalListeners() {
         document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
         document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
-        // DOUBLE CLICK on gear to become creator
         document.getElementById('editBtn').addEventListener('dblclick', tryActivateCreator);
         setupDragToPan();
       }
 
-      // expose functions to global for onclick=
+      // Expose to global
       window.setPresetBg = setPresetBg;
       window.changeTextColor = changeTextColor;
       window.changePageBg = changePageBg;
@@ -629,7 +587,6 @@
       window.generateInviteCode = generateInviteCode;
       window.showActiveCodes = showActiveCodes;
       window.revokeAllCodes = revokeAllCodes;
-      window.activateCreator = activateCreator;
 
       window.addEventListener('DOMContentLoaded', init);
     })();
