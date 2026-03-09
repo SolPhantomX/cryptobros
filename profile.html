@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>CRYPTOBROS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRYPTOBROS — fixed</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -12,124 +12,181 @@
       background-attachment: fixed;
       background-color: #000;
       color: #ffcc00;
-      transition: background 0.3s ease, color 0.3s ease;
+      transition: background-color 0.2s, color 0.2s;
     }
-    .top-section { position: relative; height: 300px; }
+    .top-section {
+      position: relative;
+      height: 300px;
+    }
     .header {
-      width: 100%; height: 100%; background: center/cover;
-      border: 2px dashed #555; border-radius: 8px; cursor: pointer;
+      width: 100%;
+      height: 100%;
+      background: center/cover;
+      border: 2px dashed #555;
+      border-radius: 8px;
+      cursor: pointer;
     }
-    .header.loaded { border: none; }
+    .header.loaded {
+      border: none;
+    }
     .avatar {
-      width: 200px; height: 200px; border-radius: 50%;
-      border: 4px solid white; background: center/cover;
-      position: absolute; bottom: -100px; left: 50%;
-      transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 4px solid white;
+      background: center/cover;
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       cursor: pointer;
     }
     .main-layout {
-      max-width: 1200px; margin: 220px auto 0;
-      display: flex; gap: 20px; padding: 0 20px;
+      max-width: 1200px;
+      margin: 220px auto 0;
+      display: flex;
+      gap: 20px;
+      padding: 0 20px;
     }
     .theme-switch {
-      position: absolute; top: 16px; left: 16px;
-      width: 32px; height: 32px; background: #333;
-      border: 1px solid #666; border-radius: 50%;
-      color: #ffcc00; display: flex; align-items: center;
-      justify-content: center; cursor: pointer; z-index: 100; font-size: 16px;
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 32px;
+      height: 32px;
+      background: #333;
+      border: 1px solid #666;
+      border-radius: 50%;
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      font-size: 16px;
     }
     .edit-btn {
-      position: absolute; top: 16px; right: 16px;
-      width: 32px; height: 32px; background: #333;
-      border: 1px solid #666; border-radius: 50%;
-      color: #ffcc00; display: flex; align-items: center;
-      justify-content: center; cursor: pointer; z-index: 100;
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: #333;
+      border: 1px solid #666;
+      border-radius: 50%;
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
     }
     .edit-menu {
-      position: absolute; top: 50px; right: 16px;
-      background: #000; border: 1px solid #ffcc00;
-      border-radius: 6px; padding: 10px; display: none;
-      z-index: 100; min-width: 180px; max-width: 250px;
-      max-height: 400px; overflow-y: auto;
+      position: absolute;
+      top: 50px;
+      right: 16px;
+      background: #000;
+      border: 1px solid #ffcc00;
+      border-radius: 6px;
+      padding: 10px;
+      display: none;
+      z-index: 101; /* higher than buttons */
+      min-width: 180px;
+      max-width: 250px;
+      max-height: 400px;
+      overflow-y: auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
     .edit-menu button {
-      background: #222; color: #ffcc00; border: 1px solid #555;
-      border-radius: 4px; padding: 6px 10px; margin: 3px 0;
-      cursor: pointer; font-size: 12px; display: inline-block;
-      width: 100%; text-align: left;
+      background: #222;
+      color: #ffcc00;
+      border: 1px solid #555;
+      border-radius: 4px;
+      padding: 6px 10px;
+      margin: 3px 0;
+      cursor: pointer;
+      font-size: 12px;
+      display: inline-block;
+      width: 100%;
+      text-align: left;
     }
     .sidebar { width: 200px; }
     .nav-item {
-      padding: 12px 16px; margin: 8px 0;
-      background: #1a1a1a; border: 1px solid #333;
-      border-radius: 8px; cursor: pointer; text-align: center;
-      transition: 0.2s;
+      padding: 10px 0;
+      color: #ffcc00;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 18px;
+      animation: flicker 3s infinite alternate;
+      text-decoration: none;
+      display: block;
     }
-    .nav-item:hover { background: #2a2a2a; border-color: #ffcc00; }
-    .content {
-      flex: 1; background: rgba(20,20,20,0.8);
-      border-radius: 12px; padding: 20px; min-height: 400px;
+    .nav-item:hover {
+      opacity: 0.8;
+      text-shadow: 0 0 8px #ffcc00;
     }
-    .glow {
-      text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
-      animation: glowPulse 2s infinite;
+    .main { flex: 1; }
+    .name { 
+      font-size: 28px; 
+      font-weight: bold; 
+      margin-bottom: 8px; 
+      animation: flicker 3s infinite alternate;
     }
-    @keyframes glowPulse {
+    .rank { 
+      margin-bottom: 20px; 
+      font-weight: bold;
+      animation: flicker 3s infinite alternate;
+    }
+    .field-label { 
+      color: #aaa; 
+      margin: 10px 0 4px; 
+      font-weight: bold; 
+    }
+    .field-value {
+      color: #ffcc00;
+      margin-bottom: 15px;
+      animation: flicker 3s infinite alternate;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      background: rgba(0,0,0,0.3);
+      color: #ffcc00;
+      border: 1px solid #555;
+      border-radius: 4px;
+    }
+    .btn {
+      background: #4267B2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    /* hidden file inputs + secret field */
+    #header-upload, #avatar-upload, #bg-upload, #secret-input {
+      display: none;
+    }
+
+    @keyframes flicker {
       0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
       20%,24%,55%,81%,85% { opacity:0.8; }
     }
-    .toast {
-      position: fixed; bottom: 20px; right: 20px;
-      padding: 1rem 1.5rem; border-radius: 12px; z-index: 9999;
-      background: #333; color: white; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      animation: toastIn 0.3s ease forwards;
+
+    .creator-section {
+      background: rgba(215, 0, 255, 0.2);
+      border: 1px solid #d700ff;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
     }
-    .toast.success { background: #00c851; }
-    .toast.error { background: #ff4444; }
-    .toast.warning { background: #ffd700; color: #0a0a0f; }
-    @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
-    
-    .wallet-badge {
-      position: absolute;
-      bottom: -120px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0, 0, 0, 0.85);
-      border: 1px solid #333;
-      border-radius: 20px;
-      padding: 6px 14px;
-      cursor: pointer;
-      transition: all 0.3s;
-      z-index: 100;
-      white-space: nowrap;
-    }
-    .wallet-badge:hover {
-      border-color: #00ff9d;
-      box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
-      transform: translateX(-50%) scale(1.05);
-    }
-    .badge-indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #666;
-      animation: pulse 2s infinite;
-    }
-    .badge-indicator.connected { background: #00ff9d; }
-    .badge-text {
-      color: #ffcc00;
-      font-size: 0.8rem;
-      font-weight: 600;
-      font-family: Arial, sans-serif;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    .creator-section h3 {
+      color: #d700ff;
+      margin-bottom: 10px;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -137,12 +194,6 @@
   <div class="top-section">
     <div class="header" id="header"></div>
     <div class="avatar" id="avatar"></div>
-    
-    <div class="wallet-badge" id="walletBadge" onclick="handleWalletClick()">
-      <div class="badge-indicator" id="badgeIndicator"></div>
-      <div class="badge-text" id="badgeText">Connect Wallet</div>
-    </div>
-    
     <div class="theme-switch" id="themeSwitch">🌙</div>
     <div class="edit-btn" id="editBtn">⚙️</div>
     <div class="edit-menu" id="editMenu"></div>
@@ -150,183 +201,397 @@
 
   <div class="main-layout">
     <div class="sidebar">
-      <div class="nav-item" onclick="loadContent('feed')">📰 Feed</div>
-      <div class="nav-item" onclick="loadContent('portfolio')">📊 Portfolio</div>
-      <div class="nav-item" onclick="loadContent('market')">📈 Market</div>
-      <div class="nav-item" onclick="loadContent('profile')">👤 Profile</div>
+      <a href="feed.html" class="nav-item">📰 News Feed</a>
+      <a href="messages.html" class="nav-item">💬 Messages</a>
+      <a href="groups.html" class="nav-item">👥 My Groups</a>
+      <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
+      <a href="friends.html" class="nav-item">👫 My Friends</a>
     </div>
-    <div class="content" id="content">Welcome to CRYPTOBROS</div>
+    <div class="main" id="profileContent"></div>
   </div>
 
+  <!-- hidden file inputs -->
+  <input type="file" id="header-upload" accept="image/*">
+  <input type="file" id="avatar-upload" accept="image/*">
+  <input type="file" id="bg-upload" accept="image/*">
+  <input type="text" id="secret-input" placeholder="Enter secret word">
+
   <script>
-    function safeGet(key, defaultVal) {
-      try {
-        const val = localStorage.getItem(key);
-        if (val === null) return defaultVal;
-        if (typeof defaultVal === 'string') return val;
-        return JSON.parse(val);
-      } catch(e) {
-        return defaultVal;
-      }
-    }
+    (function() {
+      // ---------- DATA & STATE ----------
+      const SECRET_WORD = 'CRYPTOBROS';
 
-    function safeSet(key, val) {
-      try {
-        const valueToStore = typeof val === 'string' ? val : JSON.stringify(val);
-        localStorage.setItem(key, valueToStore);
-      } catch(e) {}
-    }
-
-    function showToast(msg, type = 'info') {
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = msg;
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        toast.style.animation = 'toastOut 0.3s ease forwards';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    function applyBgStyles() {
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundAttachment = 'fixed';
-      document.body.style.backgroundRepeat = 'no-repeat';
-    }
-
-    function applyAllBackgrounds() {
-      let pageBg = safeGet('pageBg', '');
-      if (!pageBg) pageBg = sessionStorage.getItem('pageBgTemp') || '';
-
-      if (pageBg && pageBg !== 'none') {
-        const isBase64 = pageBg.startsWith('data:image');
-        if (isBase64) {
-          const img = new Image();
-          img.onload = () => {
-            document.body.style.backgroundImage = `url(${pageBg})`;
-            applyBgStyles();
-            sessionStorage.removeItem('pageBgTemp');
-          };
-          img.onerror = () => {
-            document.body.style.backgroundImage = 'none';
-            sessionStorage.removeItem('pageBgTemp');
-          };
-          img.src = pageBg;
-        } else {
-          document.body.style.backgroundImage = `url(${pageBg})`;
-          applyBgStyles();
-          sessionStorage.removeItem('pageBgTemp');
-        }
-      } else {
-        document.body.style.backgroundImage = 'none';
-        sessionStorage.removeItem('pageBgTemp');
-      }
-
-      const headerImg = safeGet('header', '');
-      const headerEl = document.getElementById('header');
-      if (headerImg) {
-        headerEl.style.backgroundImage = `url(${headerImg})`;
-        const pos = safeGet('headerPos', { x: 50, y: 50 });
-        headerEl.style.backgroundPosition = `${pos.x}px ${pos.y}px`;
-      }
-
-      const avatarImg = safeGet('avatar', '');
-      const avatarEl = document.getElementById('avatar');
-      if (avatarImg) {
-        avatarEl.style.backgroundImage = `url(${avatarImg})`;
-      }
-    }
-
-    function saveProfileBg(file) {
-      if (!file) return;
-      if (file.size > 2 * 1024 * 1024) {
-        showToast('File too large (max 2MB)', 'error');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64 = e.target.result;
-        sessionStorage.setItem('pageBgTemp', base64);
-        document.body.style.backgroundImage = `url(${base64})`;
-        applyBgStyles();
-        showToast('Background applied (save profile to keep)', 'success');
+      // profile data — fixed: single declaration
+      let profileData = JSON.parse(localStorage.getItem('profileData')) || {
+        name: '@cryptobros',
+        about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype',
+        city: 'Cyberspace'
       };
-      reader.onerror = () => showToast('Failed to read file', 'error');
-      reader.readAsDataURL(file);
-    }
 
-    function updateWalletBadge() {
-      const wallet = localStorage.getItem('walletAddress');
-      const indicator = document.getElementById('badgeIndicator');
-      const text = document.getElementById('badgeText');
-      const badge = document.getElementById('walletBadge');
-      
-      if (!badge || !indicator || !text) return;
-      
-      if (wallet) {
-        indicator.className = 'badge-indicator connected';
-        text.textContent = `${wallet.slice(0, 6)}...${wallet.slice(-4)}`;
-        badge.title = 'Click to disconnect';
-      } else {
-        indicator.className = 'badge-indicator';
-        text.textContent = 'Connect Wallet';
-        badge.title = 'Click to connect';
-      }
-    }
+      let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
+      let textColor = localStorage.getItem('textColor') || '#ffcc00';
+      let pageBg = localStorage.getItem('pageBg') || '';
+      let currentTheme = localStorage.getItem('theme') || 'dark';
 
-    function handleWalletClick() {
-      const wallet = localStorage.getItem('walletAddress');
-      
-      if (wallet) {
-        if (confirm('Disconnect wallet?')) {
-          localStorage.removeItem('walletAddress');
-          localStorage.removeItem('walletName');
-          localStorage.removeItem('walletConnected');
-          updateWalletBadge();
-          showToast('🔌 Disconnected', 'success');
+      // isCreator — read from storage, default false. (no forced true)
+      let isCreator = localStorage.getItem('isCreator') === 'true';
+
+      const bgPresets = [
+        'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png',
+        'bg6.jpg', 'bg7.jpg', 'bg8.jpg', 'bg9.jpg', 'bg10.jpg',
+        'bg11.jpg', 'bg12.jpg', 'bg13.jpg'
+      ];
+
+      // ---------- INIT ----------
+      function init() {
+        applyTheme();
+        if (pageBg) document.body.style.backgroundImage = `url(${pageBg})`;
+
+        // header
+        const headerImg = localStorage.getItem('header') || '';
+        const headerEl = document.getElementById('header');
+        if (headerImg) {
+          headerEl.style.backgroundImage = `url(${headerImg})`;
+          headerEl.classList.add('loaded');
+          headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
         }
-      } else {
-        window.location.href = 'wallet-connect.html';
+
+        // avatar
+        const avatarImg = localStorage.getItem('avatar') || '';
+        const avatarEl = document.getElementById('avatar');
+        if (avatarImg) avatarEl.style.backgroundImage = `url(${avatarImg})`;
+
+        renderViewMode();
+        setupEditMenuTriggers();   // file uploads + drag-to-pan
+        attachGlobalListeners();
+
+        // Build the edit menu content (but keep hidden)
+        buildEditMenuContent();    // fills innerHTML, display stays none
       }
-    }
 
-    function toggleTheme() {
-      const isDark = document.body.style.backgroundColor !== '#fff';
-      document.body.style.backgroundColor = isDark ? '#fff' : '#000';
-      document.body.style.color = isDark ? '#000' : '#ffcc00';
-      document.getElementById('themeSwitch').textContent = isDark ? '☀️' : '🌙';
-    }
+      // ---------- THEME ----------
+      function applyTheme() {
+        if (currentTheme === 'light') {
+          document.body.style.backgroundColor = '#f0f0f0';
+          document.body.style.color = '#2c2c2c';
+          updateElementColors('#2c2c2c');
+          document.getElementById('themeSwitch').textContent = '☀️';
+        } else {
+          document.body.style.backgroundColor = '#000';
+          document.body.style.color = '#ffcc00';
+          updateElementColors('#ffcc00');
+          document.getElementById('themeSwitch').textContent = '🌙';
+        }
+      }
 
-    function toggleEditMenu() {
-      const menu = document.getElementById('editMenu');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    }
+      function updateElementColors(color) {
+        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
+          el.style.color = color;
+        });
+      }
 
-    function loadContent(page) {
-      document.getElementById('content').innerHTML = `Loading ${page}...`;
-    }
+      function toggleTheme() {
+        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', currentTheme);
+        applyTheme();
+      }
 
-    function init() {
-      applyAllBackgrounds();
-      updateWalletBadge();
+      // ---------- EDIT MENU ----------
+      function toggleEditMenu() {
+        const menu = document.getElementById('editMenu');
+        if (menu.style.display === 'block') {
+          menu.style.display = 'none';
+        } else {
+          // rebuild to reflect latest creator status
+          buildEditMenuContent();
+          menu.style.display = 'block';
+        }
+      }
 
-      document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
-      document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
-      document.getElementById('header').addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = (e) => {
+      function buildEditMenuContent() {
+        const menu = document.getElementById('editMenu');
+        let bgButtons = bgPresets.map(bg => 
+          `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
+        ).join('');
+
+        // base buttons (always visible)
+        let html = `
+          <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
+          <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
+          <button onclick="changeTextColor('#66ffff')">🔵 Cyan</button>
+          <button onclick="changeTextColor('#d700ff')">🟣 Purple</button>
+          ${bgButtons}
+          <button onclick="changePageBg()">🖼️ Custom Background</button>
+          <button onclick="enterEditMode()">✏️ Edit Profile</button>
+        `;
+
+        // creator-only buttons (only if isCreator == true)
+        if (isCreator) {
+          html += `
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #555">
+              <button onclick="generateInviteCode('Premium')">🎁 Premium Invite</button>
+              <button onclick="generateInviteCode('Master')">🎁 Master Invite</button>
+              <button onclick="generateInviteCode('Pro')">🎁 Pro Invite</button>
+              <button onclick="showActiveCodes()">📊 Active Codes</button>
+              <button onclick="revokeAllCodes()">🗑️ Revoke All</button>
+            </div>
+          `;
+        }
+
+        // close button (single)
+        html += `<button onclick="document.getElementById('editMenu').style.display='none'">❌ Close</button>`;
+
+        menu.innerHTML = html;
+      }
+
+      // ---------- CREATOR TOOLS (INVITES) ----------
+      function generateInviteCode(tier) {
+        // better 8-char alphanumeric code
+        const raw = Math.random().toString(36).substring(2, 10).toUpperCase();
+        const fullCode = `${tier.slice(0,3).toUpperCase()}-${raw}`;
+
+        let activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
+        activeCodes.push({
+          code: fullCode,
+          tier: tier,
+          generatedAt: Date.now(),
+          used: false
+        });
+        localStorage.setItem('activeInviteCodes', JSON.stringify(activeCodes));
+
+        navigator.clipboard.writeText(fullCode).then(() => {
+          alert(`✅ Invite code generated!\n\nCode: ${fullCode}\nTier: ${tier}\n\nCopied to clipboard!`);
+        }).catch(() => {
+          alert(`✅ Code: ${fullCode}\nTier: ${tier}\n(manual copy)`);
+        });
+      }
+
+      function showActiveCodes() {
+        const codes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
+        if (!codes.length) { alert('No active invite codes.'); return; }
+        let msg = 'Active Invite Codes:\n\n';
+        codes.forEach(c => msg += `${c.code} — ${c.tier} — ${c.used ? 'USED' : 'ACTIVE'}\n`);
+        alert(msg);
+      }
+
+      function revokeAllCodes() {
+        if (confirm('Revoke all active invite codes?')) {
+          localStorage.removeItem('activeInviteCodes');
+          alert('✅ All codes revoked');
+          document.getElementById('editMenu').style.display = 'none';
+        }
+      }
+
+      // ---------- BACKGROUND & COLOR ----------
+      window.setPresetBg = function(filename) {
+        pageBg = filename;
+        localStorage.setItem('pageBg', pageBg);
+        document.body.style.backgroundImage = `url(${filename})`;
+        document.getElementById('editMenu').style.display = 'none';
+      };
+
+      window.changeTextColor = function(color) {
+        textColor = color;
+        localStorage.setItem('textColor', color);
+        updateElementColors(color);
+        document.getElementById('editMenu').style.display = 'none';
+      };
+
+      window.changePageBg = function() {
+        document.getElementById('bg-upload').click();
+        document.getElementById('bg-upload').onchange = function(e) {
           const file = e.target.files[0];
-          if (file) saveProfileBg(file);
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              pageBg = event.target.result;
+              localStorage.setItem('pageBg', pageBg);
+              document.body.style.backgroundImage = `url(${pageBg})`;
+            };
+            reader.readAsDataURL(file);
+          }
+          document.getElementById('editMenu').style.display = 'none';
         };
-        input.click();
-      });
-    }
+      };
 
-    window.onload = init;
+      // ---------- VIEW / EDIT MODE ----------
+      function getTierBadge() {
+        const tier = localStorage.getItem('selectedTier') || 'Free';
+        const badges = { 'Free': 'FREE USER', 'Master': 'MASTER', 'Pro': 'PRO USER', 'Premium': 'PREMIUM' };
+        return badges[tier] || 'FREE USER';
+      }
+
+      function renderViewMode() {
+        const tierBadge = getTierBadge();
+        let content = `
+          <div class="name">${profileData.name || '@user'}</div>
+          <div class="rank">${tierBadge}</div>
+          <div class="field-label">About</div>
+          <div class="field-value">${profileData.about || 'No bio yet'}</div>
+          <div class="field-label">City</div>
+          <div class="field-value">${profileData.city || 'Not specified'}</div>
+        `;
+
+        // If NOT creator, show activation panel
+        if (!isCreator) {
+          content += `
+            <div class="creator-section">
+              <h3>🔓 Creator Access</h3>
+              <p>Enter secret word to unlock creator tools:</p>
+              <input type="text" id="secretWordInput" placeholder="Secret word..." style="width:100%;padding:8px;margin-top:5px">
+              <button class="btn" onclick="activateCreator()" style="width:100%;margin-top:5px">ACTIVATE</button>
+            </div>
+          `;
+        }
+
+        document.getElementById('profileContent').innerHTML = content;
+      }
+
+      window.activateCreator = function() {
+        const input = document.getElementById('secretWordInput');
+        if (input && input.value.trim().toUpperCase() === SECRET_WORD) {
+          isCreator = true;
+          localStorage.setItem('isCreator', 'true');
+          alert('✅ Creator mode activated!\n\nYou now have access to invite code generation and admin tools.');
+          renderViewMode();           // refresh view (hides the panel)
+          buildEditMenuContent();     // refresh menu (adds creator buttons)
+          document.getElementById('editMenu').style.display = 'none'; // close menu
+        } else {
+          alert('❌ Invalid secret word!');
+        }
+      };
+
+      window.enterEditMode = function() {
+        document.getElementById('editMenu').style.display = 'none';
+        document.getElementById('profileContent').innerHTML = `
+          <div class="name">${profileData.name}</div>
+          <div class="rank">${getTierBadge()}</div>
+
+          <div class="field-label">Name</div>
+          <input type="text" id="nameInput" value="${profileData.name.replace(/^@/, '')}" placeholder="username without @">
+
+          <div class="field-label">About</div>
+          <textarea id="aboutInput">${profileData.about}</textarea>
+
+          <div class="field-label">City</div>
+          <input type="text" id="cityInput" value="${profileData.city}">
+
+          <button class="btn" onclick="saveProfile()">💾 SAVE PROFILE</button>
+        `;
+      };
+
+      window.saveProfile = function() {
+        const nameRaw = document.getElementById('nameInput').value.trim();
+        profileData.name = nameRaw ? '@' + nameRaw : '@user';
+        profileData.about = document.getElementById('aboutInput').value;
+        profileData.city = document.getElementById('cityInput').value;
+
+        localStorage.setItem('profileData', JSON.stringify(profileData));
+        renderViewMode();
+        alert('✅ Profile saved!');
+      };
+
+      // ---------- DRAG & DROP HEADER ----------
+      function setupDragToPan() {
+        const headerEl = document.getElementById('header');
+        let isDragging = false;
+        let startX, startY, startXPx, startYPx;
+
+        headerEl.addEventListener('mousedown', (e) => {
+          if (headerEl.classList.contains('loaded')) {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            const bgPos = headerEl.style.backgroundPosition.split(' ');
+            startXPx = parseInt(bgPos[0]) || 0;
+            startYPx = parseInt(bgPos[1]) || 0;
+            document.body.style.cursor = 'grabbing';
+            e.preventDefault(); // prevent accidental text selection
+          }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          headerPos.x = startXPx + dx;
+          headerPos.y = startYPx + dy;
+          headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+          localStorage.setItem('headerPos', JSON.stringify(headerPos));
+        });
+
+        document.addEventListener('mouseup', () => {
+          if (isDragging) {
+            isDragging = false;
+            document.body.style.cursor = 'default';
+          }
+        });
+      }
+
+      // ---------- FILE UPLOAD TRIGGERS ----------
+      function setupEditMenuTriggers() {
+        const headerEl = document.getElementById('header');
+        const avatarEl = document.getElementById('avatar');
+
+        // header click → file upload
+        headerEl.addEventListener('click', () => {
+          document.getElementById('header-upload').click();
+        });
+
+        document.getElementById('header-upload').onchange = function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              localStorage.setItem('header', event.target.result);
+              headerEl.style.backgroundImage = `url(${event.target.result})`;
+              headerEl.classList.add('loaded');
+              headerPos = { x: 0, y: 0 };
+              localStorage.setItem('headerPos', JSON.stringify(headerPos));
+              headerEl.style.backgroundPosition = '0px 0px';
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+
+        // avatar click → file upload
+        avatarEl.addEventListener('click', () => {
+          document.getElementById('avatar-upload').click();
+        });
+
+        document.getElementById('avatar-upload').onchange = function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              localStorage.setItem('avatar', event.target.result);
+              avatarEl.style.backgroundImage = `url(${event.target.result})`;
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+      }
+
+      function attachGlobalListeners() {
+        document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
+        document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
+        setupDragToPan();
+      }
+
+      // make functions global so onclick attributes work
+      window.setPresetBg = setPresetBg;
+      window.changeTextColor = changeTextColor;
+      window.changePageBg = changePageBg;
+      window.enterEditMode = enterEditMode;
+      window.saveProfile = saveProfile;
+      window.generateInviteCode = generateInviteCode;
+      window.showActiveCodes = showActiveCodes;
+      window.revokeAllCodes = revokeAllCodes;
+      window.activateCreator = activateCreator;
+
+      // start everything
+      window.addEventListener('DOMContentLoaded', init);
+    })();
   </script>
 </body>
 </html>
-```
