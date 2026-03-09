@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS — fixed</title>
+  <title>CRYPTOBROS — profile</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: Arial, sans-serif;
       background-size: cover;
@@ -14,10 +15,12 @@
       color: #ffcc00;
       transition: background-color 0.2s, color 0.2s;
     }
+
     .top-section {
       position: relative;
       height: 300px;
     }
+
     .header {
       width: 100%;
       height: 100%;
@@ -26,9 +29,8 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    .header.loaded {
-      border: none;
-    }
+    .header.loaded { border: none; }
+
     .avatar {
       width: 200px;
       height: 200px;
@@ -42,6 +44,7 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       cursor: pointer;
     }
+
     .main-layout {
       max-width: 1200px;
       margin: 220px auto 0;
@@ -49,29 +52,56 @@
       gap: 20px;
       padding: 0 20px;
     }
-    .theme-switch {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      width: 32px;
-      height: 32px;
-      background: #333;
-      border: 1px solid #666;
-      border-radius: 50%;
-      color: #ffcc00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 100;
-      font-size: 16px;
-    }
+
+    /* ===== BEAUTIFUL GEAR (edit button) ===== */
     .edit-btn {
       position: absolute;
       top: 16px;
       right: 16px;
-      width: 32px;
-      height: 32px;
+      width: 42px;
+      height: 42px;
+      background: #1a1a1a;
+      border: 2px solid #ffcc00;
+      border-radius: 50%;
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      font-size: 22px;
+      transition: transform 0.6s ease-in-out, box-shadow 0.3s ease;
+      animation: gearGlow 20s infinite, spinSlow 10s infinite linear;
+      box-shadow: 0 0 15px #ffcc00;
+    }
+
+    /* spinning gear */
+    @keyframes spinSlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* color glow cycle every 20 seconds */
+    @keyframes gearGlow {
+      0% { box-shadow: 0 0 20px #ffcc00, 0 0 30px #ffaa00; border-color: #ffcc00; color: #ffcc00; }
+      25% { box-shadow: 0 0 20px #00ffff, 0 0 30px #0088ff; border-color: #00ffff; color: #00ffff; }
+      50% { box-shadow: 0 0 20px #ff00ff, 0 0 30px #cc00cc; border-color: #ff00ff; color: #ff00ff; }
+      75% { box-shadow: 0 0 20px #00ffaa, 0 0 30px #00cc88; border-color: #00ffaa; color: #00ffaa; }
+      100% { box-shadow: 0 0 20px #ffcc00, 0 0 30px #ffaa00; border-color: #ffcc00; color: #ffcc00; }
+    }
+
+    /* pause spinning on hover */
+    .edit-btn:hover {
+      animation: gearGlow 20s infinite, none; 
+      transform: scale(1.1);
+    }
+
+    .theme-switch {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 36px;
+      height: 36px;
       background: #333;
       border: 1px solid #666;
       border-radius: 50%;
@@ -81,23 +111,26 @@
       justify-content: center;
       cursor: pointer;
       z-index: 100;
+      font-size: 18px;
     }
+
     .edit-menu {
       position: absolute;
-      top: 50px;
+      top: 60px;
       right: 16px;
       background: #000;
       border: 1px solid #ffcc00;
       border-radius: 6px;
       padding: 10px;
       display: none;
-      z-index: 101; /* higher than buttons */
+      z-index: 101;
       min-width: 180px;
       max-width: 250px;
       max-height: 400px;
       overflow-y: auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
+
     .edit-menu button {
       background: #222;
       color: #ffcc00;
@@ -111,7 +144,9 @@
       width: 100%;
       text-align: left;
     }
+
     .sidebar { width: 200px; }
+
     .nav-item {
       padding: 10px 0;
       color: #ffcc00;
@@ -126,7 +161,9 @@
       opacity: 0.8;
       text-shadow: 0 0 8px #ffcc00;
     }
+
     .main { flex: 1; }
+
     .name { 
       font-size: 28px; 
       font-weight: bold; 
@@ -148,6 +185,7 @@
       margin-bottom: 15px;
       animation: flicker 3s infinite alternate;
     }
+
     input, textarea {
       width: 100%;
       padding: 10px;
@@ -157,6 +195,7 @@
       border: 1px solid #555;
       border-radius: 4px;
     }
+
     .btn {
       background: #4267B2;
       color: white;
@@ -166,7 +205,7 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    /* hidden file inputs + secret field */
+
     #header-upload, #avatar-upload, #bg-upload, #secret-input {
       display: none;
     }
@@ -201,6 +240,8 @@
 
   <div class="main-layout">
     <div class="sidebar">
+      <!-- CRYPTONEWS button added exactly like others -->
+      <a href="news.html" class="nav-item">📰 CryptoNews</a>
       <a href="feed.html" class="nav-item">📰 News Feed</a>
       <a href="messages.html" class="nav-item">💬 Messages</a>
       <a href="groups.html" class="nav-item">👥 My Groups</a>
@@ -220,8 +261,10 @@
     (function() {
       // ---------- DATA & STATE ----------
       const SECRET_WORD = 'CRYPTOBROS';
+      // master password for double‑click gear (visible in code, but safe from localStorage tricks)
+      const CREATOR_PASSWORD = 'SolPhantomX2026'; // change to your strong pass
 
-      // profile data — fixed: single declaration
+      // profile data — fixed
       let profileData = JSON.parse(localStorage.getItem('profileData')) || {
         name: '@cryptobros',
         about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype',
@@ -233,8 +276,8 @@
       let pageBg = localStorage.getItem('pageBg') || '';
       let currentTheme = localStorage.getItem('theme') || 'dark';
 
-      // isCreator — read from storage, default false. (no forced true)
-      let isCreator = localStorage.getItem('isCreator') === 'true';
+      // IMPORTANT: isCreator is NOT stored in localStorage anymore. default false.
+      let isCreator = false;   // only becomes true after correct password (double‑click gear)
 
       const bgPresets = [
         'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png',
@@ -262,11 +305,9 @@
         if (avatarImg) avatarEl.style.backgroundImage = `url(${avatarImg})`;
 
         renderViewMode();
-        setupEditMenuTriggers();   // file uploads + drag-to-pan
+        setupEditMenuTriggers();
         attachGlobalListeners();
-
-        // Build the edit menu content (but keep hidden)
-        buildEditMenuContent();    // fills innerHTML, display stays none
+        buildEditMenuContent();   // fill menu (invite buttons hidden by default)
       }
 
       // ---------- THEME ----------
@@ -296,14 +337,25 @@
         applyTheme();
       }
 
+      // ---------- CREATOR MODE (double‑click gear) ----------
+      function tryActivateCreator() {
+        const pwd = prompt('🔐 Enter creator password:');
+        if (pwd === CREATOR_PASSWORD) {
+          isCreator = true;
+          alert('✅ Creator mode activated for this session. Invite tools are now visible.');
+          buildEditMenuContent();   // rebuild menu to show invite buttons
+        } else {
+          alert('❌ Access denied.');
+        }
+      }
+
       // ---------- EDIT MENU ----------
       function toggleEditMenu() {
         const menu = document.getElementById('editMenu');
         if (menu.style.display === 'block') {
           menu.style.display = 'none';
         } else {
-          // rebuild to reflect latest creator status
-          buildEditMenuContent();
+          buildEditMenuContent();   // refresh content (respects isCreator)
           menu.style.display = 'block';
         }
       }
@@ -314,7 +366,7 @@
           `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
         ).join('');
 
-        // base buttons (always visible)
+        // base buttons (always there)
         let html = `
           <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
           <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
@@ -325,7 +377,7 @@
           <button onclick="enterEditMode()">✏️ Edit Profile</button>
         `;
 
-        // creator-only buttons (only if isCreator == true)
+        // creator-only buttons – only if isCreator === true
         if (isCreator) {
           html += `
             <div style="margin-top:10px;padding-top:10px;border-top:1px solid #555">
@@ -338,35 +390,29 @@
           `;
         }
 
-        // close button (single)
         html += `<button onclick="document.getElementById('editMenu').style.display='none'">❌ Close</button>`;
-
         menu.innerHTML = html;
       }
 
-      // ---------- CREATOR TOOLS (INVITES) ----------
+      // ---------- INVITE FUNCTIONS (only work if isCreator = true) ----------
       function generateInviteCode(tier) {
-        // better 8-char alphanumeric code
+        if (!isCreator) { alert('No permission.'); return; }
         const raw = Math.random().toString(36).substring(2, 10).toUpperCase();
         const fullCode = `${tier.slice(0,3).toUpperCase()}-${raw}`;
 
         let activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
-        activeCodes.push({
-          code: fullCode,
-          tier: tier,
-          generatedAt: Date.now(),
-          used: false
-        });
+        activeCodes.push({ code: fullCode, tier: tier, generatedAt: Date.now(), used: false });
         localStorage.setItem('activeInviteCodes', JSON.stringify(activeCodes));
 
         navigator.clipboard.writeText(fullCode).then(() => {
           alert(`✅ Invite code generated!\n\nCode: ${fullCode}\nTier: ${tier}\n\nCopied to clipboard!`);
         }).catch(() => {
-          alert(`✅ Code: ${fullCode}\nTier: ${tier}\n(manual copy)`);
+          alert(`✅ Code: ${fullCode}\nTier: ${tier}\n(please copy manually)`);
         });
       }
 
       function showActiveCodes() {
+        if (!isCreator) return;
         const codes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
         if (!codes.length) { alert('No active invite codes.'); return; }
         let msg = 'Active Invite Codes:\n\n';
@@ -375,11 +421,10 @@
       }
 
       function revokeAllCodes() {
-        if (confirm('Revoke all active invite codes?')) {
-          localStorage.removeItem('activeInviteCodes');
-          alert('✅ All codes revoked');
-          document.getElementById('editMenu').style.display = 'none';
-        }
+        if (!isCreator || !confirm('Revoke all active invite codes?')) return;
+        localStorage.removeItem('activeInviteCodes');
+        alert('✅ All codes revoked');
+        document.getElementById('editMenu').style.display = 'none';
       }
 
       // ---------- BACKGROUND & COLOR ----------
@@ -432,7 +477,7 @@
           <div class="field-value">${profileData.city || 'Not specified'}</div>
         `;
 
-        // If NOT creator, show activation panel
+        // If NOT creator, show activation panel (but they can also use double‑click gear)
         if (!isCreator) {
           content += `
             <div class="creator-section">
@@ -440,6 +485,7 @@
               <p>Enter secret word to unlock creator tools:</p>
               <input type="text" id="secretWordInput" placeholder="Secret word..." style="width:100%;padding:8px;margin-top:5px">
               <button class="btn" onclick="activateCreator()" style="width:100%;margin-top:5px">ACTIVATE</button>
+              <p style="font-size:12px; margin-top:8px;">(or double‑click ⚙️ gear)</p>
             </div>
           `;
         }
@@ -447,15 +493,16 @@
         document.getElementById('profileContent').innerHTML = content;
       }
 
+      // old secret‑word activation (still works)
       window.activateCreator = function() {
         const input = document.getElementById('secretWordInput');
         if (input && input.value.trim().toUpperCase() === SECRET_WORD) {
           isCreator = true;
-          localStorage.setItem('isCreator', 'true');
-          alert('✅ Creator mode activated!\n\nYou now have access to invite code generation and admin tools.');
-          renderViewMode();           // refresh view (hides the panel)
-          buildEditMenuContent();     // refresh menu (adds creator buttons)
-          document.getElementById('editMenu').style.display = 'none'; // close menu
+          localStorage.setItem('isCreator', 'true'); // we keep for backward compatibility, but buttons rely on isCreator variable
+          alert('✅ Creator mode activated!\n\nYou now have access to invite code generation.');
+          renderViewMode();
+          buildEditMenuContent();
+          document.getElementById('editMenu').style.display = 'none';
         } else {
           alert('❌ Invalid secret word!');
         }
@@ -466,16 +513,12 @@
         document.getElementById('profileContent').innerHTML = `
           <div class="name">${profileData.name}</div>
           <div class="rank">${getTierBadge()}</div>
-
           <div class="field-label">Name</div>
           <input type="text" id="nameInput" value="${profileData.name.replace(/^@/, '')}" placeholder="username without @">
-
           <div class="field-label">About</div>
           <textarea id="aboutInput">${profileData.about}</textarea>
-
           <div class="field-label">City</div>
           <input type="text" id="cityInput" value="${profileData.city}">
-
           <button class="btn" onclick="saveProfile()">💾 SAVE PROFILE</button>
         `;
       };
@@ -485,13 +528,12 @@
         profileData.name = nameRaw ? '@' + nameRaw : '@user';
         profileData.about = document.getElementById('aboutInput').value;
         profileData.city = document.getElementById('cityInput').value;
-
         localStorage.setItem('profileData', JSON.stringify(profileData));
         renderViewMode();
         alert('✅ Profile saved!');
       };
 
-      // ---------- DRAG & DROP HEADER ----------
+      // ---------- DRAG HEADER ----------
       function setupDragToPan() {
         const headerEl = document.getElementById('header');
         let isDragging = false;
@@ -506,7 +548,7 @@
             startXPx = parseInt(bgPos[0]) || 0;
             startYPx = parseInt(bgPos[1]) || 0;
             document.body.style.cursor = 'grabbing';
-            e.preventDefault(); // prevent accidental text selection
+            e.preventDefault();
           }
         });
 
@@ -533,7 +575,6 @@
         const headerEl = document.getElementById('header');
         const avatarEl = document.getElementById('avatar');
 
-        // header click → file upload
         headerEl.addEventListener('click', () => {
           document.getElementById('header-upload').click();
         });
@@ -554,7 +595,6 @@
           }
         };
 
-        // avatar click → file upload
         avatarEl.addEventListener('click', () => {
           document.getElementById('avatar-upload').click();
         });
@@ -575,10 +615,12 @@
       function attachGlobalListeners() {
         document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
         document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
+        // DOUBLE CLICK on gear to become creator
+        document.getElementById('editBtn').addEventListener('dblclick', tryActivateCreator);
         setupDragToPan();
       }
 
-      // make functions global so onclick attributes work
+      // expose functions to global for onclick=
       window.setPresetBg = setPresetBg;
       window.changeTextColor = changeTextColor;
       window.changePageBg = changePageBg;
@@ -589,7 +631,6 @@
       window.revokeAllCodes = revokeAllCodes;
       window.activateCreator = activateCreator;
 
-      // start everything
       window.addEventListener('DOMContentLoaded', init);
     })();
   </script>
