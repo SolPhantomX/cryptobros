@@ -298,6 +298,37 @@
       color: #fff;
     }
 
+    /* ===== GLOWING FOOTER ===== */
+    .price-footer {
+      margin-top: 50px;
+      padding: 30px 20px;
+      text-align: center;
+      background: rgba(0,0,0,0.5);
+      border-radius: 15px;
+      animation: footerGlow 3s ease-in-out infinite;
+      border: 2px solid #ffcc00;
+    }
+
+    .footer-text {
+      font-family: 'Russo One', sans-serif;
+      font-size: 1.8rem;
+      color: #ffcc00;
+      margin-bottom: 15px;
+    }
+
+    .footer-subtext {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.2rem;
+      color: #fff;
+      text-shadow: 0 0 10px #ffcc00;
+    }
+
+    @keyframes footerGlow {
+      0% { box-shadow: 0 0 20px #ffcc00; }
+      50% { box-shadow: 0 0 50px #ffcc00, 0 0 100px #ff8800; }
+      100% { box-shadow: 0 0 20px #ffcc00; }
+    }
+
     .toast {
       position: fixed;
       bottom: 30px;
@@ -353,14 +384,6 @@
         <span class="summary-label">Quantity</span>
         <span class="summary-value" id="quantity">1</span>
       </div>
-      <div class="summary-row">
-        <span class="summary-label">Price per item</span>
-        <span class="summary-value">$29.99</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Subtotal</span>
-        <span class="summary-value" id="subtotal">$29.99</span>
-      </div>
     </div>
 
     <!-- Shipping address -->
@@ -378,13 +401,6 @@
         <label class="form-label">Address</label>
         <input type="text" class="form-input" id="address" placeholder="Street, building, apt">
       </div>
-      <div class="form-group">
-        <label class="form-label">Shipping cost</label>
-        <select class="form-input" id="shipping">
-          <option value="12.50">USA/Europe - $12.50</option>
-          <option value="25.00">Rest of World - $25.00</option>
-        </select>
-      </div>
     </div>
 
     <!-- Payment with QR code -->
@@ -401,13 +417,15 @@
       </div>
       
       <div style="text-align: center; color: #aaa; margin: 10px 0;">
-        Send exact USDT (Solana) to this address
+        Send USDT (Solana) to this address
       </div>
-      
-      <div class="summary-row">
-        <span class="summary-label">Total (with shipping)</span>
-        <span class="summary-value" id="total">$42.49</span>
-      </div>
+    </div>
+
+    <!-- GLOWING FOOTER WITH PRICE INSTRUCTION -->
+    <div class="price-footer">
+      <div class="footer-text">💰 WRITE YOUR ADDRESS — GET SHIPPING PRICE</div>
+      <div class="footer-subtext">Send your full address to @cryptobros on Telegram or DM</div>
+      <div class="footer-subtext" style="font-size: 1rem; margin-top: 15px;">We'll reply with total price within 24h</div>
     </div>
 
     <!-- Place order button -->
@@ -440,11 +458,9 @@
 
       // ===== GENERATE QR CODE =====
       function generateQR() {
-        // Clear previous QR if any
         const qrContainer = document.getElementById('qrcode');
         qrContainer.innerHTML = '';
         
-        // Create new QR code
         new QRCode(qrContainer, {
           text: PAYMENT_WALLET,
           width: 200,
@@ -464,18 +480,6 @@
       document.getElementById('shirtNumber').textContent = shirt;
       document.getElementById('designNumber').textContent = design;
       document.getElementById('quantity').textContent = qty;
-
-      const subtotal = 29.99 * qty;
-      document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
-
-      // Update total when shipping changes
-      function updateTotal() {
-        const shipping = parseFloat(document.getElementById('shipping').value);
-        const total = subtotal + shipping;
-        document.getElementById('total').textContent = '$' + total.toFixed(2);
-      }
-      document.getElementById('shipping').addEventListener('change', updateTotal);
-      updateTotal();
 
       // ===== SECRET DOUBLE-CLICK =====
       secretArea.addEventListener('dblclick', () => {
@@ -506,19 +510,16 @@
           shirt: shirt,
           design: design,
           quantity: qty,
-          subtotal: subtotal,
-          shipping: parseFloat(document.getElementById('shipping').value),
-          total: subtotal + parseFloat(document.getElementById('shipping').value),
           address: `${country}, ${city}, ${address}`,
           wallet: PAYMENT_WALLET,
           timestamp: new Date().toLocaleString(),
-          status: 'pending'
+          status: 'waiting for price'
         };
 
         orders.unshift(order);
         localStorage.setItem('merchOrders', JSON.stringify(orders));
 
-        showToast('✅ Order placed! Send payment to wallet', '#00ff9d');
+        showToast('✅ Order placed! Send your address to @cryptobros on Telegram', '#00ff9d');
         
         if (isCreator) {
           renderOrders();
@@ -538,8 +539,7 @@
           html += `
             <div class="order-item">
               <div>#${order.shirt}+${order.design} x${order.quantity}</div>
-              <div>$${order.total.toFixed(2)}</div>
-              <div style="color: ${order.status === 'paid' ? '#00ff9d' : '#ff3366'}">${order.status}</div>
+              <div>${order.status}</div>
             </div>
           `;
         });
