@@ -52,29 +52,30 @@
       box-shadow: 0 15px 40px rgba(255,204,0,0.5);
     }
 
-    /* Secret area */
+    /* Secret area for double-click */
     #secret-area {
       position: fixed;
       bottom: 20px;
       left: 20px;
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       background: transparent;
       cursor: pointer;
       z-index: 9999;
+      border: 2px dashed rgba(255,204,0,0.3); /* Временно видно для теста */
     }
 
     /* Creator button */
     .creator-btn {
       position: fixed;
-      bottom: 100px;
-      left: 20px;
+      bottom: 120px;
+      left: 30px;
       z-index: 1000;
       background: #ffcc00;
       color: #000;
       border: 2px solid #fff;
       border-radius: 60px;
-      padding: 12px 24px;
+      padding: 15px 30px;
       font-family: 'Montserrat', sans-serif;
       font-weight: 600;
       font-size: 16px;
@@ -91,11 +92,31 @@
       font-family: 'Russo One', sans-serif;
       font-size: 3rem;
       text-align: center;
-      margin: 80px 0 40px;
+      margin: 80px 0 20px;
       text-shadow: 0 0 30px #ffcc00;
     }
 
-    /* Gallery grid */
+    /* Slogan */
+    .slogan {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 50px;
+      opacity: 0.9;
+      animation: fadeSlogan 1s ease;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 20px;
+    }
+
+    @keyframes fadeSlogan {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 0.9; transform: translateY(0); }
+    }
+
+    /* Gallery grid - ONLY DESIGNS */
     .gallery-container {
       max-width: 1200px;
       margin: 0 auto;
@@ -104,7 +125,7 @@
     .section-title {
       font-family: 'Russo One', sans-serif;
       font-size: 2rem;
-      margin: 40px 0 20px;
+      margin: 30px 0 20px;
       color: #ffcc00;
       border-bottom: 2px solid #ffcc00;
       padding-bottom: 10px;
@@ -125,11 +146,12 @@
       border-radius: 10px;
       overflow: hidden;
       transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     .grid-item:hover {
       border-color: #ffcc00;
-      transform: translateY(-5px);
+      transform: translateY(-5px) scale(1.02);
       box-shadow: 0 10px 30px rgba(255,204,0,0.3);
     }
 
@@ -173,13 +195,13 @@
       margin-bottom: 10px;
     }
 
-    /* Upload section (creator only) */
+    /* Upload section - appears only after double-click */
     .upload-section {
       max-width: 1200px;
-      margin: 40px auto;
+      margin: 30px auto;
       padding: 30px;
-      background: rgba(255,204,0,0.05);
-      border: 2px dashed #ffcc00;
+      background: rgba(255,204,0,0.1);
+      border: 2px solid #ffcc00;
       border-radius: 20px;
       text-align: center;
       display: none;
@@ -190,28 +212,22 @@
 
     .upload-title {
       font-family: 'Russo One', sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       margin-bottom: 20px;
-    }
-
-    .upload-buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
+      color: #ffcc00;
     }
 
     .upload-btn {
       background: transparent;
       border: 2px solid #ffcc00;
       color: #ffcc00;
-      padding: 15px 30px;
+      padding: 15px 40px;
       border-radius: 60px;
       cursor: pointer;
       transition: all 0.3s ease;
       font-family: 'Montserrat', sans-serif;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     .upload-btn:hover {
@@ -225,25 +241,67 @@
       display: none;
     }
 
-    .payment-info {
-      margin-top: 30px;
-      padding: 20px;
-      background: rgba(0,0,0,0.5);
-      border-radius: 10px;
-      font-family: 'Montserrat', sans-serif;
+    .upload-note {
       color: #aaa;
+      margin-top: 20px;
+      font-size: 14px;
     }
-    .payment-wallet {
-      color: #ffcc00;
-      font-size: 1.2rem;
-      word-break: break-all;
-      margin-top: 10px;
-      padding: 15px;
-      background: #111;
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 90%;
+      max-height: 80%;
+      object-fit: contain;
+      border: 3px solid #ffcc00;
       border-radius: 10px;
+      box-shadow: 0 0 50px #ffcc00;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      color: #ffcc00;
+      font-size: 3rem;
+      cursor: pointer;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.5);
+      border: 2px solid #ffcc00;
+      border-radius: 50%;
+    }
+    .lightbox-number {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffcc00;
+      font-size: 1.5rem;
+      background: rgba(0,0,0,0.7);
+      padding: 10px 30px;
+      border-radius: 60px;
       border: 1px solid #ffcc00;
     }
 
+    /* Toast */
     .toast {
       position: fixed;
       bottom: 30px;
@@ -256,7 +314,7 @@
       border-radius: 60px;
       font-family: 'Montserrat', sans-serif;
       font-weight: 600;
-      z-index: 10000;
+      z-index: 10001;
       animation: slideUp 0.3s ease;
       box-shadow: 0 0 30px #00ff9d;
     }
@@ -273,85 +331,91 @@
     <span>BACK TO MERCH</span>
   </a>
 
-  <!-- Secret area -->
+  <!-- Secret area (double-click here) -->
   <div id="secret-area"></div>
 
-  <!-- Creator button -->
-  <button class="creator-btn" id="creatorBtn">👑 CREATOR PANEL</button>
+  <!-- Creator button (appears after double-click) -->
+  <button class="creator-btn" id="creatorBtn">👑 UPLOAD DESIGNS</button>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-close" id="lightboxClose">✕</div>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-number" id="lightboxNumber"></div>
+  </div>
 
   <div class="gallery-container">
     <h1 class="page-title">🎨 DESIGN GALLERY</h1>
     
-    <!-- T-Shirts section -->
-    <div class="section-title">👕 T-SHIRTS (1-20)</div>
-    <div class="image-grid" id="shirtsGrid"></div>
+    <!-- Slogan rotates every 30 seconds -->
+    <div class="slogan" id="sloganText">Real ones wear the merch. Fake ones fear the truth.</div>
 
-    <!-- Designs section -->
-    <div class="section-title">🎨 DESIGNS (1-20)</div>
+    <!-- ONLY DESIGNS - NO SHIRTS -->
+    <div class="section-title">🎨 DESIGNS 1-20</div>
     <div class="image-grid" id="designsGrid"></div>
 
-    <!-- Payment info (visible to everyone) -->
-    <div class="payment-info">
-      <div>💳 PAYMENT WALLET FOR MERCH:</div>
-      <div class="payment-wallet" id="paymentWallet">7VCogQuuv2FFurqZu2kegkgGPH6itevv6o4tD4JPYQyr</div>
-      <div style="margin-top: 10px; font-size: 14px;">Send USDT (Solana) to this address after ordering</div>
-    </div>
-
-    <!-- Upload section (creator only) -->
+    <!-- Upload section - hidden by default, appears after double-click -->
     <div class="upload-section" id="uploadSection">
-      <div class="upload-title">📤 UPLOAD IMAGES (Creator Only)</div>
-      <div class="upload-buttons">
-        <div>
-          <input type="file" id="shirtUpload" class="hidden-input" accept="image/*" multiple>
-          <button class="upload-btn" onclick="document.getElementById('shirtUpload').click()">
-            👕 Upload T-Shirts (1-20)
-          </button>
-        </div>
-        <div>
-          <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
-          <button class="upload-btn" onclick="document.getElementById('designUpload').click()">
-            🎨 Upload Designs (1-20)
-          </button>
-        </div>
+      <div class="upload-title">📤 UPLOAD NEW DESIGNS</div>
+      <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
+      <button class="upload-btn" onclick="document.getElementById('designUpload').click()">
+        SELECT IMAGES
+      </button>
+      <div class="upload-note">
+        Files with numbers (e.g. "cool12.jpg") become design #12<br>
+        Files without numbers go to first empty slot
       </div>
-      <p style="color: #aaa; margin-top: 20px; font-size: 14px;">
-        Files are named automatically: shirt1.jpg, design1.jpg etc.<br>
-        Or use numbers in filename: "myimage12.jpg" → number 12
-      </p>
     </div>
   </div>
 
   <script>
     (function() {
-      // ===== YOUR PAYMENT WALLET =====
-      const PAYMENT_WALLET = "7VCogQuuv2FFurqZu2kegkgGPH6itevv6o4tD4JPYQyr";
-      
-      // Creator mode
-      let isCreator = false;
+      // ===== 5 SLOGANS =====
+      const slogans = [
+        "Real ones wear the merch. Fake ones fear the truth.",
+        "CRYPTOBROS Merch – not just clothes, it's a statement.",
+        "Wear the merch. Let them know you're untouchable.",
+        "CRYPTOBROS Merch: Proof you're not a rug-puller.",
+        "Don't just HODL — SHOW it. CRYPTOBROS Merch for the fearless."
+      ];
 
-      // Image storage
-      let shirtImages = JSON.parse(localStorage.getItem('shirtImages')) || {};
+      // ===== DESIGN STORAGE =====
       let designImages = JSON.parse(localStorage.getItem('designImages')) || {};
+
+      // ===== CREATOR MODE =====
+      let isCreator = false;
 
       // DOM elements
       const secretArea = document.getElementById('secret-area');
       const creatorBtn = document.getElementById('creatorBtn');
       const uploadSection = document.getElementById('uploadSection');
+      const sloganEl = document.getElementById('sloganText');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxNumber = document.getElementById('lightboxNumber');
+      const lightboxClose = document.getElementById('lightboxClose');
 
-      // Display payment wallet
-      document.getElementById('paymentWallet').textContent = PAYMENT_WALLET;
-
-      // ===== SECRET DOUBLE-CLICK =====
+      // ===== DOUBLE CLICK ACTIVATION =====
       secretArea.addEventListener('dblclick', () => {
         isCreator = true;
         creatorBtn.classList.add('visible');
         uploadSection.classList.add('visible');
-        showToast('👑 Creator mode activated', '#ffcc00');
+        showToast('👑 Creator mode activated — you can now upload', '#ffcc00');
       });
 
       creatorBtn.addEventListener('click', () => {
-        alert('Creator options:\n- Upload images\n- Manage inventory');
+        uploadSection.classList.toggle('visible');
       });
+
+      // ===== ROTATE SLOGANS =====
+      let sloganIndex = 0;
+      setInterval(() => {
+        sloganIndex = (sloganIndex + 1) % slogans.length;
+        sloganEl.style.animation = 'none';
+        sloganEl.offsetHeight;
+        sloganEl.style.animation = 'fadeSlogan 1s ease';
+        sloganEl.textContent = slogans[sloganIndex];
+      }, 30000);
 
       // ===== EXTRACT NUMBER FROM FILENAME =====
       function extractNumber(filename) {
@@ -359,29 +423,7 @@
         return match ? parseInt(match[0]) : null;
       }
 
-      // ===== RENDER GALLERIES =====
-      function renderShirts() {
-        const grid = document.getElementById('shirtsGrid');
-        let html = '';
-
-        for (let i = 1; i <= 20; i++) {
-          const img = shirtImages[i];
-          html += `
-            <div class="grid-item">
-              <div class="item-number">${i}</div>
-              ${img ? 
-                `<img src="${img}" alt="Shirt ${i}">` : 
-                `<div class="item-placeholder">
-                  <div class="emoji">👕</div>
-                  <div>Empty</div>
-                </div>`
-              }
-            </div>
-          `;
-        }
-        grid.innerHTML = html;
-      }
-
+      // ===== RENDER DESIGNS =====
       function renderDesigns() {
         const grid = document.getElementById('designsGrid');
         let html = '';
@@ -389,7 +431,7 @@
         for (let i = 1; i <= 20; i++) {
           const img = designImages[i];
           html += `
-            <div class="grid-item">
+            <div class="grid-item" onclick="openLightbox(${i})">
               <div class="item-number">${i}</div>
               ${img ? 
                 `<img src="${img}" alt="Design ${i}">` : 
@@ -404,40 +446,32 @@
         grid.innerHTML = html;
       }
 
-      // ===== UPLOAD HANDLERS =====
-      document.getElementById('shirtUpload').addEventListener('change', function(e) {
-        if (!isCreator) {
-          showToast('❌ Creator mode only', '#ff3366');
-          return;
+      // ===== LIGHTBOX =====
+      window.openLightbox = function(num) {
+        if (designImages[num]) {
+          lightboxImg.src = designImages[num];
+          lightboxNumber.textContent = `Design #${num}`;
+          lightbox.classList.add('active');
         }
+      };
 
-        const files = Array.from(e.target.files);
-        files.forEach(file => {
-          let number = extractNumber(file.name);
-          if (!number || number < 1 || number > 20) {
-            // Find first empty slot
-            for (let i = 1; i <= 20; i++) {
-              if (!shirtImages[i]) {
-                number = i;
-                break;
-              }
-            }
-          }
-          
-          if (number && number >= 1 && number <= 20) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-              shirtImages[number] = event.target.result;
-              localStorage.setItem('shirtImages', JSON.stringify(shirtImages));
-              renderShirts();
-              showToast(`✅ Shirt #${number} uploaded`, '#00ff9d');
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-        e.target.value = '';
+      lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active');
       });
 
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          lightbox.classList.remove('active');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          lightbox.classList.remove('active');
+        }
+      });
+
+      // ===== UPLOAD HANDLER =====
       document.getElementById('designUpload').addEventListener('change', function(e) {
         if (!isCreator) {
           showToast('❌ Creator mode only', '#ff3366');
@@ -447,7 +481,9 @@
         const files = Array.from(e.target.files);
         files.forEach(file => {
           let number = extractNumber(file.name);
+          
           if (!number || number < 1 || number > 20) {
+            // Find first empty slot
             for (let i = 1; i <= 20; i++) {
               if (!designImages[i]) {
                 number = i;
@@ -470,7 +506,7 @@
         e.target.value = '';
       });
 
-      // ===== NOTIFICATION =====
+      // ===== TOAST =====
       function showToast(msg, color) {
         const toast = document.createElement('div');
         toast.className = 'toast';
@@ -483,7 +519,6 @@
       }
 
       // ===== INIT =====
-      renderShirts();
       renderDesigns();
     })();
   </script>
