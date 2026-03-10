@@ -12,7 +12,7 @@
     }
 
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       background: #0a0a0a;
       color: #ffcc00;
       min-height: 100vh;
@@ -52,7 +52,7 @@
       box-shadow: 0 15px 40px rgba(255,204,0,0.5);
     }
 
-    /* Secret area for double-click */
+    /* Secret area - NO DASHED BORDER, completely invisible */
     #secret-area {
       position: fixed;
       bottom: 20px;
@@ -62,7 +62,6 @@
       background: transparent;
       cursor: pointer;
       z-index: 9999;
-      border: 2px dashed rgba(255,204,0,0.3); /* Временно видно для теста */
     }
 
     /* Creator button */
@@ -87,19 +86,22 @@
       display: block;
     }
 
-    /* Page title */
+    /* Page title - always gold, no color change */
     .page-title {
       font-family: 'Russo One', sans-serif;
-      font-size: 3rem;
+      font-size: 3.5rem;
       text-align: center;
       margin: 80px 0 20px;
+      color: #ffcc00;
       text-shadow: 0 0 30px #ffcc00;
+      letter-spacing: 2px;
     }
 
-    /* Slogan */
+    /* Slogan - clean and beautiful */
     .slogan {
       font-family: 'Montserrat', sans-serif;
       font-size: 1.3rem;
+      font-weight: 300;
       text-align: center;
       color: #fff;
       margin-bottom: 50px;
@@ -109,6 +111,7 @@
       margin-left: auto;
       margin-right: auto;
       padding: 0 20px;
+      line-height: 1.6;
     }
 
     @keyframes fadeSlogan {
@@ -116,7 +119,7 @@
       to { opacity: 0.9; transform: translateY(0); }
     }
 
-    /* Gallery grid - ONLY DESIGNS */
+    /* Gallery container */
     .gallery-container {
       max-width: 1200px;
       margin: 0 auto;
@@ -124,18 +127,19 @@
 
     .section-title {
       font-family: 'Russo One', sans-serif;
-      font-size: 2rem;
-      margin: 30px 0 20px;
+      font-size: 2.2rem;
+      margin: 40px 0 30px;
       color: #ffcc00;
       border-bottom: 2px solid #ffcc00;
-      padding-bottom: 10px;
+      padding-bottom: 15px;
+      letter-spacing: 1px;
     }
 
     .image-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 20px;
-      margin-bottom: 50px;
+      gap: 25px;
+      margin-bottom: 60px;
     }
 
     .grid-item {
@@ -143,16 +147,17 @@
       aspect-ratio: 1/1;
       background: #1a1a1a;
       border: 2px solid #333;
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
       transition: all 0.3s ease;
       cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
 
     .grid-item:hover {
       border-color: #ffcc00;
-      transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 10px 30px rgba(255,204,0,0.3);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 30px rgba(255,204,0,0.3);
     }
 
     .grid-item img {
@@ -164,11 +169,11 @@
 
     .item-number {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 12px;
+      left: 12px;
       width: 40px;
       height: 40px;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       border: 2px solid #ffcc00;
       border-radius: 50%;
       display: flex;
@@ -178,6 +183,8 @@
       font-size: 18px;
       color: #ffcc00;
       z-index: 2;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 0 15px rgba(255,204,0,0.5);
     }
 
     .item-placeholder {
@@ -191,20 +198,22 @@
     }
 
     .item-placeholder .emoji {
-      font-size: 3rem;
+      font-size: 3.5rem;
       margin-bottom: 10px;
+      opacity: 0.5;
     }
 
-    /* Upload section - appears only after double-click */
+    /* Upload section - beautiful and clean */
     .upload-section {
       max-width: 1200px;
-      margin: 30px auto;
-      padding: 30px;
-      background: rgba(255,204,0,0.1);
+      margin: 40px auto;
+      padding: 40px;
+      background: rgba(255,204,0,0.08);
       border: 2px solid #ffcc00;
       border-radius: 20px;
       text-align: center;
       display: none;
+      backdrop-filter: blur(5px);
     }
     .upload-section.visible {
       display: block;
@@ -212,29 +221,31 @@
 
     .upload-title {
       font-family: 'Russo One', sans-serif;
-      font-size: 1.8rem;
-      margin-bottom: 20px;
+      font-size: 2rem;
+      margin-bottom: 30px;
       color: #ffcc00;
+      letter-spacing: 1px;
     }
 
     .upload-btn {
       background: transparent;
       border: 2px solid #ffcc00;
       color: #ffcc00;
-      padding: 15px 40px;
+      padding: 18px 45px;
       border-radius: 60px;
       cursor: pointer;
       transition: all 0.3s ease;
       font-family: 'Montserrat', sans-serif;
       font-weight: 600;
       font-size: 18px;
+      letter-spacing: 1px;
     }
 
     .upload-btn:hover {
       background: #ffcc00;
       color: #000;
       transform: scale(1.05);
-      box-shadow: 0 0 30px #ffcc00;
+      box-shadow: 0 0 40px #ffcc00;
     }
 
     .hidden-input {
@@ -243,8 +254,9 @@
 
     .upload-note {
       color: #aaa;
-      margin-top: 20px;
-      font-size: 14px;
+      margin-top: 25px;
+      font-size: 15px;
+      font-family: 'Montserrat', sans-serif;
     }
 
     /* Lightbox */
@@ -268,9 +280,9 @@
       max-width: 90%;
       max-height: 80%;
       object-fit: contain;
-      border: 3px solid #ffcc00;
-      border-radius: 10px;
-      box-shadow: 0 0 50px #ffcc00;
+      border: 4px solid #ffcc00;
+      border-radius: 15px;
+      box-shadow: 0 0 60px #ffcc00;
     }
     .lightbox-close {
       position: absolute;
@@ -279,14 +291,21 @@
       color: #ffcc00;
       font-size: 3rem;
       cursor: pointer;
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       border: 2px solid #ffcc00;
       border-radius: 50%;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s ease;
+    }
+    .lightbox-close:hover {
+      background: #ffcc00;
+      color: #000;
+      transform: scale(1.1);
     }
     .lightbox-number {
       position: absolute;
@@ -295,10 +314,12 @@
       transform: translateX(-50%);
       color: #ffcc00;
       font-size: 1.5rem;
-      background: rgba(0,0,0,0.7);
-      padding: 10px 30px;
+      background: rgba(0,0,0,0.8);
+      padding: 12px 35px;
       border-radius: 60px;
-      border: 1px solid #ffcc00;
+      border: 2px solid #ffcc00;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
     }
 
     /* Toast */
@@ -307,16 +328,17 @@
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.95);
       border: 2px solid #00ff9d;
       color: #00ff9d;
-      padding: 15px 30px;
+      padding: 15px 35px;
       border-radius: 60px;
       font-family: 'Montserrat', sans-serif;
       font-weight: 600;
       z-index: 10001;
       animation: slideUp 0.3s ease;
-      box-shadow: 0 0 30px #00ff9d;
+      box-shadow: 0 0 40px #00ff9d;
+      font-size: 16px;
     }
     @keyframes slideUp {
       from { transform: translate(-50%, 100px); opacity: 0; }
@@ -331,10 +353,10 @@
     <span>BACK TO MERCH</span>
   </a>
 
-  <!-- Secret area (double-click here) -->
+  <!-- Secret area - completely invisible, no border -->
   <div id="secret-area"></div>
 
-  <!-- Creator button (appears after double-click) -->
+  <!-- Creator button -->
   <button class="creator-btn" id="creatorBtn">👑 UPLOAD DESIGNS</button>
 
   <!-- Lightbox -->
@@ -347,30 +369,31 @@
   <div class="gallery-container">
     <h1 class="page-title">🎨 DESIGN GALLERY</h1>
     
-    <!-- Slogan rotates every 30 seconds -->
+    <!-- Beautiful rotating slogan -->
     <div class="slogan" id="sloganText">Real ones wear the merch. Fake ones fear the truth.</div>
 
     <!-- ONLY DESIGNS - NO SHIRTS -->
-    <div class="section-title">🎨 DESIGNS 1-20</div>
+    <div class="section-title">DESIGNS 1–20</div>
     <div class="image-grid" id="designsGrid"></div>
 
-    <!-- Upload section - hidden by default, appears after double-click -->
+    <!-- Upload section - hidden by default -->
     <div class="upload-section" id="uploadSection">
       <div class="upload-title">📤 UPLOAD NEW DESIGNS</div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
       <button class="upload-btn" onclick="document.getElementById('designUpload').click()">
-        SELECT IMAGES
+        CHOOSE IMAGES
       </button>
       <div class="upload-note">
-        Files with numbers (e.g. "cool12.jpg") become design #12<br>
-        Files without numbers go to first empty slot
+        Files with numbers (e.g. "design12.jpg") → design #12<br>
+        Files without numbers go to first empty slot<br>
+        Images are compressed automatically
       </div>
     </div>
   </div>
 
   <script>
     (function() {
-      // ===== 5 SLOGANS =====
+      // ===== 5 BEAUTIFUL SLOGANS =====
       const slogans = [
         "Real ones wear the merch. Fake ones fear the truth.",
         "CRYPTOBROS Merch – not just clothes, it's a statement.",
@@ -407,7 +430,7 @@
         uploadSection.classList.toggle('visible');
       });
 
-      // ===== ROTATE SLOGANS =====
+      // ===== ROTATE SLOGANS (every 30 seconds) =====
       let sloganIndex = 0;
       setInterval(() => {
         sloganIndex = (sloganIndex + 1) % slogans.length;
@@ -421,6 +444,46 @@
       function extractNumber(filename) {
         const match = filename.match(/\d+/);
         return match ? parseInt(match[0]) : null;
+      }
+
+      // ===== COMPRESS IMAGE FUNCTION =====
+      function compressImage(dataUrl, maxSize = 100 * 1024) { // 100KB max
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = dataUrl;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            
+            // Resize if too large
+            if (width > 800) {
+              height = (800 / width) * height;
+              width = 800;
+            }
+            if (height > 800) {
+              width = (800 / height) * width;
+              height = 800;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Start with quality 0.8
+            let compressed = canvas.toDataURL('image/jpeg', 0.8);
+            let quality = 0.7;
+            
+            // Reduce quality until size is acceptable
+            while (compressed.length > maxSize && quality > 0.3) {
+              compressed = canvas.toDataURL('image/jpeg', quality);
+              quality -= 0.1;
+            }
+            
+            resolve(compressed);
+          };
+        });
       }
 
       // ===== RENDER DESIGNS =====
@@ -471,15 +534,17 @@
         }
       });
 
-      // ===== UPLOAD HANDLER =====
-      document.getElementById('designUpload').addEventListener('change', function(e) {
+      // ===== UPLOAD HANDLER WITH COMPRESSION =====
+      document.getElementById('designUpload').addEventListener('change', async function(e) {
         if (!isCreator) {
           showToast('❌ Creator mode only', '#ff3366');
           return;
         }
 
         const files = Array.from(e.target.files);
-        files.forEach(file => {
+        showToast(`⏳ Compressing ${files.length} images...`, '#ffcc00');
+        
+        for (const file of files) {
           let number = extractNumber(file.name);
           
           if (!number || number < 1 || number > 20) {
@@ -494,15 +559,17 @@
           
           if (number && number >= 1 && number <= 20) {
             const reader = new FileReader();
-            reader.onload = function(event) {
-              designImages[number] = event.target.result;
+            reader.onload = async function(event) {
+              // Compress the image
+              const compressed = await compressImage(event.target.result);
+              designImages[number] = compressed;
               localStorage.setItem('designImages', JSON.stringify(designImages));
               renderDesigns();
               showToast(`✅ Design #${number} uploaded`, '#00ff9d');
             };
             reader.readAsDataURL(file);
           }
-        });
+        }
         e.target.value = '';
       });
 
@@ -513,7 +580,7 @@
         toast.textContent = msg;
         toast.style.borderColor = color;
         toast.style.color = color;
-        toast.style.boxShadow = `0 0 30px ${color}`;
+        toast.style.boxShadow = `0 0 40px ${color}`;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2000);
       }
