@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS — DESIGN GALLERY</title>
-  <!-- 🔥 TRENDING FONTS 2026: Unbounded + Geist -->
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Geist:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- SOLID FONTS: Syne + Sora -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * { 
       margin: 0; 
@@ -14,7 +14,7 @@
     }
 
     body {
-      font-family: 'Geist', sans-serif;
+      font-family: 'Sora', sans-serif;
       background: #0a0a0a;
       color: #fff;
       min-height: 100vh;
@@ -44,6 +44,34 @@
       50% { opacity: 1; }
     }
 
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      .image-grid { grid-template-columns: repeat(2, 1fr); }
+      .page-title { font-size: 3rem; }
+      .slogan-line1 { font-size: 1.5rem; }
+      .slogan-line2 { font-size: 1rem; }
+      .connect-wallet-btn, .creator-btn { 
+        left: 15px; 
+        padding: 12px 24px; 
+        font-size: 14px;
+      }
+      .back-button { 
+        padding: 12px 24px; 
+        font-size: 14px; 
+        left: 15px;
+        top: 15px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .image-grid { grid-template-columns: 1fr; }
+      .page-title { font-size: 2rem; }
+      .section-title { font-size: 2rem; }
+      .confirm-modal { min-width: 300px; padding: 30px; }
+      .confirm-btn { padding: 12px 30px; font-size: 1.2rem; }
+    }
+
     /* ===== BEAUTIFUL BACK BUTTON ===== */
     .back-button {
       position: fixed;
@@ -62,7 +90,7 @@
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       text-decoration: none;
       color: #ffcc00;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 18px;
       letter-spacing: 1px;
@@ -81,7 +109,7 @@
       transform: translateX(-5px) scale(1.05);
     }
 
-    /* Connect wallet button - for creator mode */
+    /* Connect wallet button */
     .connect-wallet-btn {
       position: fixed;
       bottom: 220px;
@@ -92,7 +120,7 @@
       border: none;
       border-radius: 60px;
       padding: 16px 32px;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-weight: 600;
       font-size: 16px;
       cursor: pointer;
@@ -126,7 +154,7 @@
       border: none;
       border-radius: 60px;
       padding: 18px 35px;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 16px;
       cursor: pointer;
@@ -145,19 +173,19 @@
       box-shadow: 0 0 80px #ffcc00;
     }
 
-    /* ===== TYPOGRAPHY - EACH GLOWS DIFFERENTLY ===== */
+    /* ===== TYPOGRAPHY ===== */
     .page-title {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 5rem;
       text-align: center;
       margin: 80px 0 20px;
-      font-weight: 900;
+      font-weight: 800;
       background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff, #00ff99, #ffcc00, #ff3366);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 400% 400%;
       animation: titleRainbow 8s linear infinite;
-      letter-spacing: 4px;
+      letter-spacing: 2px;
     }
 
     @keyframes titleRainbow {
@@ -175,12 +203,12 @@
     }
 
     .slogan-line1 {
-      font-family: 'Geist', sans-serif;
+      font-family: 'Sora', sans-serif;
       font-weight: 700;
       font-size: 2.2rem;
       color: #ff6600;
       text-shadow: 0 0 20px #ff6600;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       animation: line1Glow 2.5s ease-in-out infinite;
       margin-bottom: 15px;
     }
@@ -192,8 +220,8 @@
     }
 
     .slogan-line2 {
-      font-family: 'Geist', sans-serif;
-      font-weight: 300;
+      font-family: 'Sora', sans-serif;
+      font-weight: 400;
       font-size: 1.3rem;
       color: #00ff00;
       text-shadow: 0 0 15px #00ff00;
@@ -210,14 +238,14 @@
     }
 
     .section-title {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 2.8rem;
       margin: 40px 0 30px;
       color: #ffdd00;
       border-bottom: 4px solid #ffdd00;
       padding-bottom: 15px;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       text-shadow: 0 0 20px #ffdd00;
       animation: sectionGlow 3s ease-in-out infinite;
     }
@@ -233,7 +261,7 @@
       margin: 0 auto;
     }
 
-    /* ===== 4 IMAGES PER ROW - WIDE, NO GAP ===== */
+    /* 4 IMAGES PER ROW */
     .image-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -253,12 +281,11 @@
       cursor: pointer;
     }
 
-    /* Remove borders for last column */
     .grid-item:nth-child(4n) {
       border-right: none;
     }
 
-    /* Remove borders for last row */
+    /* Fix for last row border */
     .grid-item:nth-last-child(-n+4) {
       border-bottom: none;
     }
@@ -294,12 +321,11 @@
       font-size: 18px;
       color: #ffcc00;
       z-index: 2;
-      font-family: 'Geist', sans-serif;
+      font-family: 'Sora', sans-serif;
       box-shadow: 0 0 20px #ffcc00;
       pointer-events: none;
     }
 
-    /* DELETE X BUTTON */
     .delete-btn {
       position: absolute;
       top: 12px;
@@ -347,14 +373,14 @@
       opacity: 0.5;
     }
 
-    /* Upload section - hidden by default */
+    /* Upload section */
     .upload-section {
       max-width: 1200px;
       margin: 40px auto;
       padding: 40px;
       background: rgba(0,0,0,0.9);
       border: 3px solid #00ffff;
-      border-radius: 20px;
+      border-radius: 30px;
       text-align: center;
       backdrop-filter: blur(10px);
       box-shadow: 0 0 60px #00ffff;
@@ -366,7 +392,7 @@
     }
 
     .upload-title {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 2.5rem;
       margin-bottom: 30px;
       color: #ff00ff;
@@ -387,7 +413,7 @@
       border-radius: 60px;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 18px;
       box-shadow: 0 0 30px #00ff00;
     }
@@ -407,7 +433,7 @@
       color: #ffaa00;
       margin-top: 25px;
       font-size: 14px;
-      font-family: 'Geist', sans-serif;
+      font-family: 'Sora', sans-serif;
       text-shadow: 0 0 10px #ffaa00;
     }
 
@@ -460,7 +486,7 @@
       background: rgba(0,0,0,0.6);
       border: 3px solid #ff00ff;
       border-radius: 50%;
-      font-family: 'Geist', sans-serif;
+      font-family: 'Sora', sans-serif;
       transition: all 0.3s ease;
       box-shadow: 0 0 50px #ff00ff;
     }
@@ -482,7 +508,7 @@
       padding: 12px 35px;
       border-radius: 60px;
       border: 3px solid #00ffff;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       box-shadow: 0 0 40px #00ffff;
     }
 
@@ -494,7 +520,7 @@
       transform: translate(-50%, -50%);
       background: #000;
       border: 4px solid #ff0000;
-      border-radius: 20px;
+      border-radius: 30px;
       padding: 40px;
       z-index: 20000;
       text-align: center;
@@ -509,7 +535,7 @@
     }
 
     .confirm-modal h3 {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 2rem;
       color: #ff0000;
       margin-bottom: 30px;
@@ -524,7 +550,7 @@
 
     .confirm-btn {
       padding: 15px 40px;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 1.5rem;
       border: none;
       border-radius: 50px;
@@ -578,7 +604,7 @@
       color: #00ff9d;
       padding: 15px 35px;
       border-radius: 60px;
-      font-family: 'Geist', sans-serif;
+      font-family: 'Sora', sans-serif;
       font-weight: 600;
       z-index: 30000;
       animation: slideUp 0.3s ease;
@@ -592,29 +618,29 @@
   </style>
 </head>
 <body>
-  <!-- BEAUTIFUL BACK BUTTON -->
-  <a href="merch.html" class="back-button" onclick="return checkMerchPage();">
+  <!-- BACK BUTTON - FIXED LINK TO MERCH PAGE -->
+  <a href="https://www.cryptobros.pro/merch.html" class="back-button" target="_blank" rel="noopener noreferrer">
     <span>←</span>
     <span>BACK TO MERCH</span>
   </a>
 
-  <!-- Connect wallet button - for creator mode activation -->
+  <!-- CONNECT WALLET BUTTON -->
   <button class="connect-wallet-btn" id="connectWalletBtn">
     <span>🔮</span>
     <span>CONNECT WALLET</span>
   </button>
 
-  <!-- Creator button - hidden by default -->
+  <!-- CREATOR BUTTON -->
   <button class="creator-btn" id="creatorBtn">👑 UPLOAD DESIGNS</button>
 
-  <!-- Lightbox -->
+  <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
     <div class="lightbox-close" id="lightboxClose">✕</div>
-    <img id="lightboxImg" src="" alt="">
+    <img id="lightboxImg" src="" alt="" loading="lazy">
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
 
-  <!-- Delete confirmation modal -->
+  <!-- DELETE CONFIRMATION MODAL -->
   <div id="confirmModal" style="display: none;">
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="confirm-modal">
@@ -627,20 +653,17 @@
   </div>
 
   <div class="gallery-container">
-    <!-- DESIGN GALLERY title - Unbounded font -->
     <h1 class="page-title">DESIGN GALLERY</h1>
     
-    <!-- Slogan container with Geist font -->
     <div class="slogan-container">
       <div class="slogan-line1" id="sloganLine1">REAL ONES WEAR THE MERCH</div>
       <div class="slogan-line2" id="sloganLine2">FAKE ONES FEAR THE TRUTH</div>
     </div>
 
-    <!-- Section title -->
     <div class="section-title">⚡ DESIGNS 1–20 ⚡</div>
     <div class="image-grid" id="designsGrid"></div>
 
-    <!-- Upload section - hidden by default -->
+    <!-- UPLOAD SECTION -->
     <div class="upload-section" id="uploadSection">
       <div class="upload-title">📤 UPLOAD NEW DESIGNS</div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
@@ -649,24 +672,29 @@
         Files with numbers → design #[number]<br>
         Files without numbers → first empty slot<br>
         Max size: 100KB after compression<br>
-        <span style="color: #ff6666;">⚠️ Same numbers will overwrite without warning</span>
+        PNG transparency preserved
       </div>
     </div>
   </div>
 
   <script>
     (function() {
+      // ===== SAFELY INITIALIZE PHANTOM =====
+      if (typeof window.solana === 'undefined') {
+        window.solana = { isPhantom: false, on: function() {}, disconnect: function() {} };
+      }
+
       // ===== GLOBAL FUNCTION REFERENCES =====
       window.openLightbox = null;
       window.showDeleteConfirm = null;
 
-      // ===== YOUR PHANTOM WALLET (ONLY YOU) =====
+      // ===== YOUR PHANTOM WALLET ADDRESS =====
       const YOUR_WALLET_ADDRESS = '7VCogQuuv2FFurqZu2kegkgGPH6itevv6o4tD4JPYQyr';
       
       // ===== CREATOR MODE =====
       let isCreator = false;
-      let isWalletConnected = false;
       let currentToast = null;
+      let toastTimeout = null;
 
       // ===== SLOGAN LINES =====
       const sloganLines1 = [
@@ -685,14 +713,15 @@
         "SHOW IT — CRYPTOBROS MERCH"
       ];
 
-      // ===== DESIGN STORAGE WITH SIZE CHECK =====
+      // ===== DESIGN STORAGE =====
       let designImages = {};
       try {
         const saved = localStorage.getItem('designImages');
-        if (saved) {
-          designImages = JSON.parse(saved);
-          if (typeof designImages !== 'object' || designImages === null) {
-            designImages = {};
+        if (saved && saved !== 'null' && saved !== 'undefined') {
+          const parsed = JSON.parse(saved);
+          if (typeof parsed === 'object' && parsed !== null) {
+            designImages = parsed;
+          } else {
             localStorage.removeItem('designImages');
           }
         }
@@ -702,7 +731,7 @@
         localStorage.removeItem('designImages');
       }
 
-      // ===== DOM elements =====
+      // ===== DOM ELEMENTS =====
       const connectWalletBtn = document.getElementById('connectWalletBtn');
       const creatorBtn = document.getElementById('creatorBtn');
       const uploadSection = document.getElementById('uploadSection');
@@ -719,78 +748,27 @@
       const confirmYes = document.getElementById('confirmYes');
       const confirmNo = document.getElementById('confirmNo');
 
-      // ===== Delete state =====
+      // ===== DELETE STATE =====
       let pendingDeleteId = null;
 
-      // ===== CHECK IF MERCH PAGE EXISTS =====
-      window.checkMerchPage = function() {
-        // Check if merch.html exists (basic check)
-        fetch('merch.html', { method: 'HEAD' })
-          .then(response => {
-            if (!response.ok) {
-              showToast('⚠️ Merch page not found', '#ffcc00');
-              return false;
-            }
-          })
-          .catch(() => {
-            showToast('⚠️ Merch page not found', '#ffcc00');
-            return false;
-          });
-        return true; // Allow navigation anyway
-      };
-
-      // ===== CONNECT WALLET BUTTON =====
-      if (connectWalletBtn) {
-        connectWalletBtn.addEventListener('click', async () => {
-          try {
-            // Check if Phantom is installed
-            if (!window.solana || !window.solana.isPhantom) {
-              showToast('⚠️ Please install Phantom wallet', '#ffcc00');
-              window.open('https://phantom.app/', '_blank');
-              return;
-            }
-
-            // Request connection
-            const response = await window.solana.connect();
-            const connectedAddress = response.publicKey.toString();
-            
-            // Check if it's YOUR wallet
-            if (connectedAddress === YOUR_WALLET_ADDRESS) {
-              isCreator = true;
-              isWalletConnected = true;
-              
-              // Update UI
-              if (creatorBtn) creatorBtn.classList.add('visible');
-              if (uploadSection) uploadSection.classList.add('visible');
-              if (connectWalletBtn) {
-                connectWalletBtn.classList.add('connected');
-                connectWalletBtn.innerHTML = '<span>✅</span><span>WALLET CONNECTED</span>';
-              }
-              
-              showToast('👑 Creator mode activated', '#00ff00');
-            } else {
-              showToast('❌ This wallet is not authorized', '#ff3366');
-              // Disconnect if possible
-              if (window.solana.disconnect) {
-                await window.solana.disconnect();
-              }
-            }
-          } catch (e) {
-            console.log('Wallet connection cancelled or failed:', e);
-            showToast('❌ Connection failed', '#ff3366');
+      // ===== SAFE DISCONNECT FUNCTION =====
+      async function safeDisconnect() {
+        try {
+          if (window.solana && typeof window.solana.disconnect === 'function') {
+            await window.solana.disconnect();
           }
-        });
+        } catch (e) {
+          console.log('Disconnect not available or failed');
+        }
       }
 
-      // ===== CHECK WALLET CONNECTION ON PAGE LOAD (without prompting) =====
+      // ===== CHECK EXISTING CONNECTION =====
       async function checkExistingConnection() {
         try {
-          if (window.solana?.isPhantom && window.solana.publicKey) {
+          if (window.solana && window.solana.isPhantom && window.solana.publicKey) {
             const connectedAddress = window.solana.publicKey.toString();
             if (connectedAddress === YOUR_WALLET_ADDRESS) {
               isCreator = true;
-              isWalletConnected = true;
-              
               if (creatorBtn) creatorBtn.classList.add('visible');
               if (uploadSection) uploadSection.classList.add('visible');
               if (connectWalletBtn) {
@@ -804,10 +782,62 @@
         }
       }
 
-      // Check on load
+      // ===== LISTEN FOR WALLET DISCONNECT =====
+      if (window.solana && typeof window.solana.on === 'function') {
+        window.solana.on('disconnect', () => {
+          isCreator = false;
+          if (connectWalletBtn) {
+            connectWalletBtn.classList.remove('connected');
+            connectWalletBtn.innerHTML = '<span>🔮</span><span>CONNECT WALLET</span>';
+          }
+          if (creatorBtn) creatorBtn.classList.remove('visible');
+          if (uploadSection) uploadSection.classList.remove('visible');
+          showToast('Wallet disconnected', '#ff9900');
+        });
+      }
+
+      // ===== CONNECT WALLET BUTTON =====
+      if (connectWalletBtn) {
+        connectWalletBtn.addEventListener('click', async () => {
+          try {
+            // Check if Phantom is installed
+            if (!window.solana || !window.solana.isPhantom) {
+              if (confirm('Phantom wallet not found. Install it?')) {
+                window.open('https://phantom.app/', '_blank');
+              }
+              return;
+            }
+
+            // Open Phantom popup
+            const response = await window.solana.connect();
+            const connectedAddress = response.publicKey.toString();
+            
+            // Check if it's YOUR wallet
+            if (connectedAddress === YOUR_WALLET_ADDRESS) {
+              isCreator = true;
+              
+              if (creatorBtn) creatorBtn.classList.add('visible');
+              if (uploadSection) uploadSection.classList.add('visible');
+              if (connectWalletBtn) {
+                connectWalletBtn.classList.add('connected');
+                connectWalletBtn.innerHTML = '<span>✅</span><span>WALLET CONNECTED</span>';
+              }
+              
+              showToast('👑 Creator mode activated', '#00ff00');
+            } else {
+              showToast('❌ This wallet is not authorized', '#ff3366');
+              await safeDisconnect();
+            }
+          } catch (error) {
+            console.log('Connection cancelled or failed');
+          }
+        });
+      }
+
+      // Check existing connection
       checkExistingConnection();
 
-      // ===== CREATOR BUTTON CLICK =====
+      // ===== CREATOR BUTTON =====
       if (creatorBtn) {
         creatorBtn.addEventListener('click', () => {
           if (!isCreator) {
@@ -851,13 +881,20 @@
         }
       }, 20000);
 
+      // ===== SANITIZE URL =====
+      function sanitizeUrl(url) {
+        if (typeof url !== 'string') return '';
+        if (url.startsWith('data:image/')) return url;
+        return '';
+      }
+
       // ===== EXTRACT NUMBER FROM FILENAME =====
       function extractNumber(filename) {
         const match = filename.match(/\d+/);
         return match ? parseInt(match[0]) : null;
       }
 
-      // ===== HELPER: read file as data URL =====
+      // ===== READ FILE AS DATA URL =====
       function readFileAsDataURL(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -872,8 +909,8 @@
         return Math.round((base64str.length * 3) / 4);
       }
 
-      // ===== COMPRESS IMAGE =====
-      async function compressImage(dataUrl, maxSize = 100 * 1024) {
+      // ===== COMPRESS IMAGE WITH FORMAT PRESERVATION =====
+      async function compressImage(dataUrl, fileType, maxSize = 100 * 1024) {
         return new Promise((resolve) => {
           const img = new Image();
           img.src = dataUrl;
@@ -898,12 +935,17 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
+            // Preserve original format
+            const format = fileType === 'image/png' ? 'image/png' : 'image/jpeg';
             let quality = 0.9;
-            let compressed = canvas.toDataURL('image/jpeg', quality);
+            let compressed = canvas.toDataURL(format, quality);
             
-            while (getBase64Size(compressed) > maxSize && quality > 0.2) {
-              quality = Math.max(0.2, quality - 0.1);
-              compressed = canvas.toDataURL('image/jpeg', quality);
+            // For JPEG, try to reduce quality
+            if (format === 'image/jpeg') {
+              while (getBase64Size(compressed) > maxSize && quality > 0.2) {
+                quality = Math.max(0.2, quality - 0.1);
+                compressed = canvas.toDataURL(format, quality);
+              }
             }
             
             resolve(compressed);
@@ -912,11 +954,20 @@
         });
       }
 
-      // ===== SAVE TO LOCALSTORAGE WITH SIZE CHECK =====
+      // ===== SAVE TO LOCALSTORAGE =====
       function saveToLocalStorage() {
         try {
-          const data = JSON.stringify(designImages);
-          // Check size (localStorage limit is ~5-10MB, we'll use 4MB to be safe)
+          // Clean data before saving
+          const safeData = {};
+          for (let key in designImages) {
+            if (designImages[key] && typeof designImages[key] === 'string') {
+              if (designImages[key].startsWith('data:image/')) {
+                safeData[key] = designImages[key];
+              }
+            }
+          }
+          
+          const data = JSON.stringify(safeData);
           if (data.length > 4 * 1024 * 1024) {
             showToast('❌ Storage limit reached (4MB)', '#ff3366');
             return false;
@@ -955,7 +1006,7 @@
         pendingDeleteId = null;
       }
 
-      // ===== RENDER DESIGNS (4 columns) =====
+      // ===== RENDER DESIGNS =====
       function renderDesigns() {
         const grid = document.getElementById('designsGrid');
         if (!grid) return;
@@ -963,7 +1014,7 @@
         let html = '';
 
         for (let i = 1; i <= 20; i++) {
-          const img = designImages[i];
+          const img = designImages[i] ? sanitizeUrl(designImages[i]) : null;
           html += `
             <div class="grid-item" data-design-id="${i}">
               <div class="item-number">${i}</div>
@@ -985,7 +1036,7 @@
       // ===== LIGHTBOX FUNCTIONS =====
       function openLightbox(num) {
         if (designImages[num]) {
-          lightboxImg.src = designImages[num];
+          lightboxImg.src = sanitizeUrl(designImages[num]);
           lightboxImg.alt = `Design #${num}`;
           lightboxNumber.textContent = `DESIGN #${num}`;
           lightbox.classList.add('active');
@@ -1007,12 +1058,6 @@
 
       if (lightbox) {
         lightbox.addEventListener('click', (e) => {
-          if (e.target === lightbox) {
-            closeLightbox();
-          }
-        });
-
-        lightbox.addEventListener('touchstart', (e) => {
           if (e.target === lightbox) {
             closeLightbox();
           }
@@ -1045,7 +1090,7 @@
         modalOverlay.addEventListener('click', hideDeleteConfirm);
       }
 
-      // ===== UPLOAD HANDLER WITH DUPLICATE WARNING =====
+      // ===== UPLOAD HANDLER WITH PROGRESS =====
       if (fileInput) {
         fileInput.addEventListener('change', async function(e) {
           if (!isCreator) {
@@ -1057,15 +1102,27 @@
           const files = Array.from(e.target.files);
           if (files.length === 0) return;
           
-          showToast(`⏳ Processing ${files.length} images...`, '#ffcc00');
+          let processed = 0;
+          showToast(`⏳ Processing 0/${files.length}...`, '#ffcc00');
           
           for (const file of files) {
             try {
+              // Validate file type
+              if (!file.type.startsWith('image/')) {
+                showToast(`❌ ${file.name} is not an image`, '#ff3366');
+                continue;
+              }
+
+              // Check file size (max 10MB before compression)
+              if (file.size > 10 * 1024 * 1024) {
+                showToast(`❌ ${file.name} is too large (>10MB)`, '#ff3366');
+                continue;
+              }
+              
               let number = extractNumber(file.name);
               let willOverwrite = false;
               
               if (!number || number < 1 || number > 20) {
-                // Find first empty slot
                 for (let i = 1; i <= 20; i++) {
                   if (!designImages[i]) {
                     number = i;
@@ -1079,20 +1136,19 @@
               }
               
               if (number >= 1 && number <= 20) {
-                // Check if overwriting
                 if (designImages[number]) {
                   willOverwrite = true;
-                  showToast(`⚠️ Design #${number} will be overwritten`, '#ffcc00');
                 }
                 
                 const dataUrl = await readFileAsDataURL(file);
-                const compressed = await compressImage(dataUrl);
+                const compressed = await compressImage(dataUrl, file.type);
                 designImages[number] = compressed;
+                
+                processed++;
+                showToast(`⏳ Processing ${processed}/${files.length}...`, '#ffcc00');
                 
                 if (saveToLocalStorage()) {
                   renderDesigns();
-                  showToast(`${willOverwrite ? '🔄' : '✅'} Design #${number} ${willOverwrite ? 'updated' : 'uploaded'}`, 
-                           willOverwrite ? '#ffaa00' : '#00ff9d');
                 }
               }
             } catch (error) {
@@ -1100,12 +1156,15 @@
               console.error(error);
             }
           }
+          
+          showToast(`✅ ${processed}/${files.length} images uploaded`, '#00ff9d');
           e.target.value = '';
         });
       }
 
-      // ===== TOAST WITH SINGLE INSTANCE =====
+      // ===== TOAST =====
       function showToast(msg, color) {
+        if (toastTimeout) clearTimeout(toastTimeout);
         if (currentToast) {
           currentToast.remove();
         }
@@ -1120,11 +1179,12 @@
         
         currentToast = toast;
         
-        setTimeout(() => {
+        toastTimeout = setTimeout(() => {
           toast.remove();
           if (currentToast === toast) {
             currentToast = null;
           }
+          toastTimeout = null;
         }, 2000);
       }
 
