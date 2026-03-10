@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS — DESIGN GALLERY</title>
+  <!-- 🔥 TRENDING FONTS 2026: Unbounded + Geist -->
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Geist:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * { 
       margin: 0; 
@@ -12,111 +14,217 @@
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Geist', sans-serif;
       background: #0a0a0a;
-      color: #ffcc00;
+      color: #fff;
       min-height: 100vh;
       padding: 30px;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Russo+One&display=swap');
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 50%, rgba(255,0,255,0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(0,255,255,0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 20%, rgba(255,255,0,0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+      animation: glowPulse 8s ease-in-out infinite;
+    }
 
-    /* Back button */
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* ===== BEAUTIFUL BACK BUTTON ===== */
     .back-button {
       position: fixed;
       top: 30px;
       left: 30px;
       z-index: 1000;
-      background: rgba(20, 20, 20, 0.9);
+      background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(12px);
       border: 2px solid #ffcc00;
       border-radius: 60px;
-      padding: 14px 32px 14px 24px;
+      padding: 16px 36px 16px 28px;
       display: flex;
       align-items: center;
       gap: 12px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       text-decoration: none;
       color: #ffcc00;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
       font-size: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      letter-spacing: 1px;
+      box-shadow: 0 0 30px rgba(255,204,0,0.5);
+      animation: backButtonPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes backButtonPulse {
+      0%, 100% { box-shadow: 0 0 30px #ffcc00; }
+      50% { box-shadow: 0 0 60px #ff6600; }
     }
 
     .back-button:hover {
       background: #ffcc00;
       color: #000;
-      transform: translateX(-5px);
-      box-shadow: 0 15px 40px rgba(255,204,0,0.5);
+      transform: translateX(-5px) scale(1.05);
     }
 
-    /* Secret area - NO DASHED BORDER, completely invisible */
-    #secret-area {
+    /* Connect wallet button - for creator mode */
+    .connect-wallet-btn {
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      width: 80px;
-      height: 80px;
-      background: transparent;
+      bottom: 220px;
+      left: 30px;
+      z-index: 1000;
+      background: #9945FF;
+      color: white;
+      border: none;
+      border-radius: 60px;
+      padding: 16px 32px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
       cursor: pointer;
-      z-index: 9999;
+      box-shadow: 0 0 30px #9945FF;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    /* Creator button */
+    .connect-wallet-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 50px #9945FF;
+    }
+
+    .connect-wallet-btn.connected {
+      background: #00ff00;
+      color: #000;
+      box-shadow: 0 0 30px #00ff00;
+    }
+
+    /* Creator button - hidden by default */
     .creator-btn {
       position: fixed;
-      bottom: 120px;
+      bottom: 140px;
       left: 30px;
       z-index: 1000;
       background: #ffcc00;
       color: #000;
-      border: 2px solid #fff;
+      border: none;
       border-radius: 60px;
-      padding: 15px 30px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
+      padding: 18px 35px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
       font-size: 16px;
       cursor: pointer;
-      box-shadow: 0 0 30px #ffcc00;
+      box-shadow: 0 0 40px #ffcc00;
       display: none;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
     }
+
     .creator-btn.visible {
       display: block;
     }
 
-    /* Page title - always gold, no color change */
-    .page-title {
-      font-family: 'Russo One', sans-serif;
-      font-size: 3.5rem;
-      text-align: center;
-      margin: 80px 0 20px;
-      color: #ffcc00;
-      text-shadow: 0 0 30px #ffcc00;
-      letter-spacing: 2px;
+    .creator-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 80px #ffcc00;
     }
 
-    /* Slogan - clean and beautiful */
-    .slogan {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 300;
+    /* ===== TYPOGRAPHY - EACH GLOWS DIFFERENTLY ===== */
+    .page-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 5rem;
       text-align: center;
-      color: #fff;
+      margin: 80px 0 20px;
+      font-weight: 900;
+      background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff, #00ff99, #ffcc00, #ff3366);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400% 400%;
+      animation: titleRainbow 8s linear infinite;
+      letter-spacing: 4px;
+    }
+
+    @keyframes titleRainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .slogan-container {
+      text-align: center;
       margin-bottom: 50px;
-      opacity: 0.9;
-      animation: fadeSlogan 1s ease;
       max-width: 900px;
       margin-left: auto;
       margin-right: auto;
-      padding: 0 20px;
-      line-height: 1.6;
     }
 
-    @keyframes fadeSlogan {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 0.9; transform: translateY(0); }
+    .slogan-line1 {
+      font-family: 'Geist', sans-serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: #ff6600;
+      text-shadow: 0 0 20px #ff6600;
+      letter-spacing: 2px;
+      animation: line1Glow 2.5s ease-in-out infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes line1Glow {
+      0%, 100% { color: #ff6600; text-shadow: 0 0 20px #ff6600; }
+      33% { color: #ff00ff; text-shadow: 0 0 30px #ff00ff; }
+      66% { color: #ffaa00; text-shadow: 0 0 30px #ffaa00; }
+    }
+
+    .slogan-line2 {
+      font-family: 'Geist', sans-serif;
+      font-weight: 300;
+      font-size: 1.3rem;
+      color: #00ff00;
+      text-shadow: 0 0 15px #00ff00;
+      line-height: 1.8;
+      animation: line2Flicker 3s linear infinite;
+    }
+
+    @keyframes line2Flicker {
+      0%, 100% { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
+      20% { color: #00ffff; text-shadow: 0 0 20px #00ffff; }
+      40% { color: #ffff00; text-shadow: 0 0 20px #ffff00; }
+      60% { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
+      80% { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
+    }
+
+    .section-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: 2.8rem;
+      margin: 40px 0 30px;
+      color: #ffdd00;
+      border-bottom: 4px solid #ffdd00;
+      padding-bottom: 15px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 20px #ffdd00;
+      animation: sectionGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes sectionGlow {
+      0%, 100% { color: #ffdd00; text-shadow: 0 0 20px #ffdd00; }
+      50% { color: #ff00ff; text-shadow: 0 0 30px #ff00ff; }
     }
 
     /* Gallery container */
@@ -125,39 +233,41 @@
       margin: 0 auto;
     }
 
-    .section-title {
-      font-family: 'Russo One', sans-serif;
-      font-size: 2.2rem;
-      margin: 40px 0 30px;
-      color: #ffcc00;
-      border-bottom: 2px solid #ffcc00;
-      padding-bottom: 15px;
-      letter-spacing: 1px;
-    }
-
+    /* ===== 4 IMAGES PER ROW - WIDE, NO GAP ===== */
     .image-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 25px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
       margin-bottom: 60px;
+      border: 2px solid #333;
     }
 
     .grid-item {
       position: relative;
       aspect-ratio: 1/1;
       background: #1a1a1a;
-      border: 2px solid #333;
-      border-radius: 12px;
+      border-right: 2px solid #333;
+      border-bottom: 2px solid #333;
       overflow: hidden;
       transition: all 0.3s ease;
       cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    /* Remove borders for last column */
+    .grid-item:nth-child(4n) {
+      border-right: none;
+    }
+
+    /* Remove borders for last row */
+    .grid-item:nth-last-child(-n+4) {
+      border-bottom: none;
     }
 
     .grid-item:hover {
-      border-color: #ffcc00;
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 15px 30px rgba(255,204,0,0.3);
+      transform: scale(1.02);
+      z-index: 10;
+      box-shadow: 0 0 30px #ffcc00;
+      border: 2px solid #ffcc00;
     }
 
     .grid-item img {
@@ -165,6 +275,7 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      pointer-events: auto;
     }
 
     .item-number {
@@ -173,7 +284,7 @@
       left: 12px;
       width: 40px;
       height: 40px;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.9);
       border: 2px solid #ffcc00;
       border-radius: 50%;
       display: flex;
@@ -183,8 +294,39 @@
       font-size: 18px;
       color: #ffcc00;
       z-index: 2;
-      font-family: 'Montserrat', sans-serif;
-      box-shadow: 0 0 15px rgba(255,204,0,0.5);
+      font-family: 'Geist', sans-serif;
+      box-shadow: 0 0 20px #ffcc00;
+      pointer-events: none;
+    }
+
+    /* DELETE X BUTTON */
+    .delete-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 0, 0, 0.9);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 30px #ff0000;
+      font-family: 'Arial', sans-serif;
+      pointer-events: auto;
+    }
+
+    .delete-btn:hover {
+      background: #ff0000;
+      transform: scale(1.2) rotate(90deg);
+      box-shadow: 0 0 50px #ff0000;
     }
 
     .item-placeholder {
@@ -195,6 +337,8 @@
       align-items: center;
       justify-content: center;
       color: #666;
+      cursor: pointer;
+      background: #0f0f0f;
     }
 
     .item-placeholder .emoji {
@@ -203,49 +347,56 @@
       opacity: 0.5;
     }
 
-    /* Upload section - beautiful and clean */
+    /* Upload section - hidden by default */
     .upload-section {
       max-width: 1200px;
       margin: 40px auto;
       padding: 40px;
-      background: rgba(255,204,0,0.08);
-      border: 2px solid #ffcc00;
+      background: rgba(0,0,0,0.9);
+      border: 3px solid #00ffff;
       border-radius: 20px;
       text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 60px #00ffff;
       display: none;
-      backdrop-filter: blur(5px);
     }
+
     .upload-section.visible {
       display: block;
     }
 
     .upload-title {
-      font-family: 'Russo One', sans-serif;
-      font-size: 2rem;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 2.5rem;
       margin-bottom: 30px;
-      color: #ffcc00;
-      letter-spacing: 1px;
+      color: #ff00ff;
+      text-shadow: 0 0 30px #ff00ff;
+      animation: uploadTitle 4s ease-in-out infinite;
+    }
+
+    @keyframes uploadTitle {
+      0%, 100% { color: #ff00ff; text-shadow: 0 0 30px #ff00ff; }
+      50% { color: #00ffff; text-shadow: 0 0 30px #00ffff; }
     }
 
     .upload-btn {
       background: transparent;
-      border: 2px solid #ffcc00;
-      color: #ffcc00;
+      border: 3px solid #00ff00;
+      color: #00ff00;
       padding: 18px 45px;
       border-radius: 60px;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
+      font-family: 'Unbounded', sans-serif;
       font-size: 18px;
-      letter-spacing: 1px;
+      box-shadow: 0 0 30px #00ff00;
     }
 
     .upload-btn:hover {
-      background: #ffcc00;
+      background: #00ff00;
       color: #000;
-      transform: scale(1.05);
-      box-shadow: 0 0 40px #ffcc00;
+      transform: scale(1.1);
+      box-shadow: 0 0 80px #00ff00;
     }
 
     .hidden-input {
@@ -253,10 +404,11 @@
     }
 
     .upload-note {
-      color: #aaa;
+      color: #ffaa00;
       margin-top: 25px;
-      font-size: 15px;
-      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-family: 'Geist', sans-serif;
+      text-shadow: 0 0 10px #ffaa00;
     }
 
     /* Lightbox */
@@ -267,28 +419,37 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.95);
+      background: rgba(0,0,0,0.98);
       z-index: 10000;
       justify-content: center;
       align-items: center;
       flex-direction: column;
     }
+
     .lightbox.active {
       display: flex;
     }
+
     .lightbox img {
       max-width: 90%;
       max-height: 80%;
       object-fit: contain;
-      border: 4px solid #ffcc00;
+      border: 4px solid #ff00ff;
       border-radius: 15px;
-      box-shadow: 0 0 60px #ffcc00;
+      box-shadow: 0 0 100px #ff00ff;
+      animation: lightboxGlow 2s ease-in-out infinite;
     }
+
+    @keyframes lightboxGlow {
+      0%, 100% { border-color: #ff00ff; box-shadow: 0 0 100px #ff00ff; }
+      50% { border-color: #00ffff; box-shadow: 0 0 100px #00ffff; }
+    }
+
     .lightbox-close {
       position: absolute;
       top: 30px;
       right: 30px;
-      color: #ffcc00;
+      color: #ff00ff;
       font-size: 3rem;
       cursor: pointer;
       width: 65px;
@@ -297,29 +458,113 @@
       align-items: center;
       justify-content: center;
       background: rgba(0,0,0,0.6);
-      border: 2px solid #ffcc00;
+      border: 3px solid #ff00ff;
       border-radius: 50%;
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Geist', sans-serif;
       transition: all 0.3s ease;
+      box-shadow: 0 0 50px #ff00ff;
     }
+
     .lightbox-close:hover {
-      background: #ffcc00;
+      background: #ff00ff;
       color: #000;
-      transform: scale(1.1);
+      transform: scale(1.1) rotate(90deg);
     }
+
     .lightbox-number {
       position: absolute;
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      color: #ffcc00;
+      color: #00ffff;
       font-size: 1.5rem;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.9);
       padding: 12px 35px;
       border-radius: 60px;
-      border: 2px solid #ffcc00;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
+      border: 3px solid #00ffff;
+      font-family: 'Unbounded', sans-serif;
+      box-shadow: 0 0 40px #00ffff;
+    }
+
+    /* Delete confirmation modal */
+    .confirm-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #000;
+      border: 4px solid #ff0000;
+      border-radius: 20px;
+      padding: 40px;
+      z-index: 20000;
+      text-align: center;
+      box-shadow: 0 0 100px #ff0000;
+      min-width: 400px;
+      animation: modalPop 0.3s ease;
+    }
+
+    @keyframes modalPop {
+      from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    .confirm-modal h3 {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 2rem;
+      color: #ff0000;
+      margin-bottom: 30px;
+      text-shadow: 0 0 30px #ff0000;
+    }
+
+    .confirm-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .confirm-btn {
+      padding: 15px 40px;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .confirm-btn.yes {
+      background: #ff0000;
+      color: white;
+      box-shadow: 0 0 40px #ff0000;
+    }
+
+    .confirm-btn.yes:hover {
+      background: #ff4444;
+      transform: scale(1.1);
+      box-shadow: 0 0 80px #ff0000;
+    }
+
+    .confirm-btn.no {
+      background: #00ff00;
+      color: black;
+      box-shadow: 0 0 40px #00ff00;
+    }
+
+    .confirm-btn.no:hover {
+      background: #88ff88;
+      transform: scale(1.1);
+      box-shadow: 0 0 80px #00ff00;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 19999;
+      backdrop-filter: blur(5px);
     }
 
     /* Toast */
@@ -328,18 +573,18 @@
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.95);
-      border: 2px solid #00ff9d;
+      background: rgba(0,0,0,0.98);
+      border: 3px solid #00ff9d;
       color: #00ff9d;
       padding: 15px 35px;
       border-radius: 60px;
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-weight: 600;
-      z-index: 10001;
+      z-index: 30000;
       animation: slideUp 0.3s ease;
-      box-shadow: 0 0 40px #00ff9d;
-      font-size: 16px;
+      box-shadow: 0 0 60px #00ff9d;
     }
+
     @keyframes slideUp {
       from { transform: translate(-50%, 100px); opacity: 0; }
       to { transform: translate(-50%, 0); opacity: 1; }
@@ -347,16 +592,19 @@
   </style>
 </head>
 <body>
-  <!-- Back button -->
-  <a href="merch.html" class="back-button">
+  <!-- BEAUTIFUL BACK BUTTON -->
+  <a href="merch.html" class="back-button" onclick="return checkMerchPage();">
     <span>←</span>
     <span>BACK TO MERCH</span>
   </a>
 
-  <!-- Secret area - completely invisible, no border -->
-  <div id="secret-area"></div>
+  <!-- Connect wallet button - for creator mode activation -->
+  <button class="connect-wallet-btn" id="connectWalletBtn">
+    <span>🔮</span>
+    <span>CONNECT WALLET</span>
+  </button>
 
-  <!-- Creator button -->
+  <!-- Creator button - hidden by default -->
   <button class="creator-btn" id="creatorBtn">👑 UPLOAD DESIGNS</button>
 
   <!-- Lightbox -->
@@ -366,79 +614,242 @@
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
 
-  <div class="gallery-container">
-    <h1 class="page-title">🎨 DESIGN GALLERY</h1>
-    
-    <!-- Beautiful rotating slogan -->
-    <div class="slogan" id="sloganText">Real ones wear the merch. Fake ones fear the truth.</div>
+  <!-- Delete confirmation modal -->
+  <div id="confirmModal" style="display: none;">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="confirm-modal">
+      <h3>⚠️ DELETE DESIGN?</h3>
+      <div class="confirm-buttons">
+        <button class="confirm-btn yes" id="confirmYes">YES</button>
+        <button class="confirm-btn no" id="confirmNo">NO</button>
+      </div>
+    </div>
+  </div>
 
-    <!-- ONLY DESIGNS - NO SHIRTS -->
-    <div class="section-title">DESIGNS 1–20</div>
+  <div class="gallery-container">
+    <!-- DESIGN GALLERY title - Unbounded font -->
+    <h1 class="page-title">DESIGN GALLERY</h1>
+    
+    <!-- Slogan container with Geist font -->
+    <div class="slogan-container">
+      <div class="slogan-line1" id="sloganLine1">REAL ONES WEAR THE MERCH</div>
+      <div class="slogan-line2" id="sloganLine2">FAKE ONES FEAR THE TRUTH</div>
+    </div>
+
+    <!-- Section title -->
+    <div class="section-title">⚡ DESIGNS 1–20 ⚡</div>
     <div class="image-grid" id="designsGrid"></div>
 
     <!-- Upload section - hidden by default -->
     <div class="upload-section" id="uploadSection">
       <div class="upload-title">📤 UPLOAD NEW DESIGNS</div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
-      <button class="upload-btn" onclick="document.getElementById('designUpload').click()">
-        CHOOSE IMAGES
-      </button>
+      <button class="upload-btn" id="uploadButton">CHOOSE IMAGES</button>
       <div class="upload-note">
-        Files with numbers (e.g. "design12.jpg") → design #12<br>
-        Files without numbers go to first empty slot<br>
-        Images are compressed automatically
+        Files with numbers → design #[number]<br>
+        Files without numbers → first empty slot<br>
+        Max size: 100KB after compression<br>
+        <span style="color: #ff6666;">⚠️ Same numbers will overwrite without warning</span>
       </div>
     </div>
   </div>
 
   <script>
     (function() {
-      // ===== 5 BEAUTIFUL SLOGANS =====
-      const slogans = [
-        "Real ones wear the merch. Fake ones fear the truth.",
-        "CRYPTOBROS Merch – not just clothes, it's a statement.",
-        "Wear the merch. Let them know you're untouchable.",
-        "CRYPTOBROS Merch: Proof you're not a rug-puller.",
-        "Don't just HODL — SHOW it. CRYPTOBROS Merch for the fearless."
-      ];
+      // ===== GLOBAL FUNCTION REFERENCES =====
+      window.openLightbox = null;
+      window.showDeleteConfirm = null;
 
-      // ===== DESIGN STORAGE =====
-      let designImages = JSON.parse(localStorage.getItem('designImages')) || {};
-
+      // ===== YOUR PHANTOM WALLET (ONLY YOU) =====
+      const YOUR_WALLET_ADDRESS = '7VCogQuuv2FFurqZu2kegkgGPH6itevv6o4tD4JPYQyr';
+      
       // ===== CREATOR MODE =====
       let isCreator = false;
+      let isWalletConnected = false;
+      let currentToast = null;
 
-      // DOM elements
-      const secretArea = document.getElementById('secret-area');
+      // ===== SLOGAN LINES =====
+      const sloganLines1 = [
+        "REAL ONES WEAR THE MERCH",
+        "CRYPTOBROS MERCH",
+        "WEAR THE MERCH",
+        "PROOF YOU'RE NOT A RUG-PULLER",
+        "DON'T JUST HODL"
+      ];
+
+      const sloganLines2 = [
+        "FAKE ONES FEAR THE TRUTH",
+        "NOT JUST CLOTHES, IT'S A STATEMENT",
+        "LET THEM KNOW YOU'RE UNTOUCHABLE",
+        "CRYPTOBROS FOR THE FEARLESS",
+        "SHOW IT — CRYPTOBROS MERCH"
+      ];
+
+      // ===== DESIGN STORAGE WITH SIZE CHECK =====
+      let designImages = {};
+      try {
+        const saved = localStorage.getItem('designImages');
+        if (saved) {
+          designImages = JSON.parse(saved);
+          if (typeof designImages !== 'object' || designImages === null) {
+            designImages = {};
+            localStorage.removeItem('designImages');
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load from localStorage:', e);
+        designImages = {};
+        localStorage.removeItem('designImages');
+      }
+
+      // ===== DOM elements =====
+      const connectWalletBtn = document.getElementById('connectWalletBtn');
       const creatorBtn = document.getElementById('creatorBtn');
       const uploadSection = document.getElementById('uploadSection');
-      const sloganEl = document.getElementById('sloganText');
+      const uploadButton = document.getElementById('uploadButton');
+      const fileInput = document.getElementById('designUpload');
+      const sloganLine1 = document.getElementById('sloganLine1');
+      const sloganLine2 = document.getElementById('sloganLine2');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxNumber = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
+      const confirmModal = document.getElementById('confirmModal');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const confirmYes = document.getElementById('confirmYes');
+      const confirmNo = document.getElementById('confirmNo');
 
-      // ===== DOUBLE CLICK ACTIVATION =====
-      secretArea.addEventListener('dblclick', () => {
-        isCreator = true;
-        creatorBtn.classList.add('visible');
-        uploadSection.classList.add('visible');
-        showToast('👑 Creator mode activated — you can now upload', '#ffcc00');
-      });
+      // ===== Delete state =====
+      let pendingDeleteId = null;
 
-      creatorBtn.addEventListener('click', () => {
-        uploadSection.classList.toggle('visible');
-      });
+      // ===== CHECK IF MERCH PAGE EXISTS =====
+      window.checkMerchPage = function() {
+        // Check if merch.html exists (basic check)
+        fetch('merch.html', { method: 'HEAD' })
+          .then(response => {
+            if (!response.ok) {
+              showToast('⚠️ Merch page not found', '#ffcc00');
+              return false;
+            }
+          })
+          .catch(() => {
+            showToast('⚠️ Merch page not found', '#ffcc00');
+            return false;
+          });
+        return true; // Allow navigation anyway
+      };
 
-      // ===== ROTATE SLOGANS (every 30 seconds) =====
+      // ===== CONNECT WALLET BUTTON =====
+      if (connectWalletBtn) {
+        connectWalletBtn.addEventListener('click', async () => {
+          try {
+            // Check if Phantom is installed
+            if (!window.solana || !window.solana.isPhantom) {
+              showToast('⚠️ Please install Phantom wallet', '#ffcc00');
+              window.open('https://phantom.app/', '_blank');
+              return;
+            }
+
+            // Request connection
+            const response = await window.solana.connect();
+            const connectedAddress = response.publicKey.toString();
+            
+            // Check if it's YOUR wallet
+            if (connectedAddress === YOUR_WALLET_ADDRESS) {
+              isCreator = true;
+              isWalletConnected = true;
+              
+              // Update UI
+              if (creatorBtn) creatorBtn.classList.add('visible');
+              if (uploadSection) uploadSection.classList.add('visible');
+              if (connectWalletBtn) {
+                connectWalletBtn.classList.add('connected');
+                connectWalletBtn.innerHTML = '<span>✅</span><span>WALLET CONNECTED</span>';
+              }
+              
+              showToast('👑 Creator mode activated', '#00ff00');
+            } else {
+              showToast('❌ This wallet is not authorized', '#ff3366');
+              // Disconnect if possible
+              if (window.solana.disconnect) {
+                await window.solana.disconnect();
+              }
+            }
+          } catch (e) {
+            console.log('Wallet connection cancelled or failed:', e);
+            showToast('❌ Connection failed', '#ff3366');
+          }
+        });
+      }
+
+      // ===== CHECK WALLET CONNECTION ON PAGE LOAD (without prompting) =====
+      async function checkExistingConnection() {
+        try {
+          if (window.solana?.isPhantom && window.solana.publicKey) {
+            const connectedAddress = window.solana.publicKey.toString();
+            if (connectedAddress === YOUR_WALLET_ADDRESS) {
+              isCreator = true;
+              isWalletConnected = true;
+              
+              if (creatorBtn) creatorBtn.classList.add('visible');
+              if (uploadSection) uploadSection.classList.add('visible');
+              if (connectWalletBtn) {
+                connectWalletBtn.classList.add('connected');
+                connectWalletBtn.innerHTML = '<span>✅</span><span>WALLET CONNECTED</span>';
+              }
+            }
+          }
+        } catch (e) {
+          console.log('No existing wallet connection');
+        }
+      }
+
+      // Check on load
+      checkExistingConnection();
+
+      // ===== CREATOR BUTTON CLICK =====
+      if (creatorBtn) {
+        creatorBtn.addEventListener('click', () => {
+          if (!isCreator) {
+            showToast('❌ Creator mode only', '#ff3366');
+            return;
+          }
+          if (uploadSection) {
+            uploadSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      }
+
+      // ===== UPLOAD BUTTON =====
+      if (uploadButton && fileInput) {
+        uploadButton.addEventListener('click', () => {
+          if (!isCreator) {
+            showToast('❌ Creator mode only', '#ff3366');
+            return;
+          }
+          fileInput.click();
+        });
+      }
+
+      // ===== ROTATE SLOGANS =====
       let sloganIndex = 0;
       setInterval(() => {
-        sloganIndex = (sloganIndex + 1) % slogans.length;
-        sloganEl.style.animation = 'none';
-        sloganEl.offsetHeight;
-        sloganEl.style.animation = 'fadeSlogan 1s ease';
-        sloganEl.textContent = slogans[sloganIndex];
-      }, 30000);
+        sloganIndex = (sloganIndex + 1) % Math.min(sloganLines1.length, sloganLines2.length);
+        
+        if (sloganLine1) {
+          sloganLine1.style.animation = 'none';
+          sloganLine1.offsetHeight;
+          sloganLine1.style.animation = 'line1Glow 2.5s ease-in-out infinite';
+          sloganLine1.textContent = sloganLines1[sloganIndex];
+        }
+        
+        if (sloganLine2) {
+          sloganLine2.style.animation = 'none';
+          sloganLine2.offsetHeight;
+          sloganLine2.style.animation = 'line2Flicker 3s linear infinite';
+          sloganLine2.textContent = sloganLines2[sloganIndex];
+        }
+      }, 20000);
 
       // ===== EXTRACT NUMBER FROM FILENAME =====
       function extractNumber(filename) {
@@ -446,8 +857,23 @@
         return match ? parseInt(match[0]) : null;
       }
 
-      // ===== COMPRESS IMAGE FUNCTION =====
-      function compressImage(dataUrl, maxSize = 100 * 1024) { // 100KB max
+      // ===== HELPER: read file as data URL =====
+      function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // ===== GET BASE64 SIZE =====
+      function getBase64Size(base64str) {
+        return Math.round((base64str.length * 3) / 4);
+      }
+
+      // ===== COMPRESS IMAGE =====
+      async function compressImage(dataUrl, maxSize = 100 * 1024) {
         return new Promise((resolve) => {
           const img = new Image();
           img.src = dataUrl;
@@ -456,14 +882,15 @@
             let width = img.width;
             let height = img.height;
             
-            // Resize if too large
-            if (width > 800) {
-              height = (800 / width) * height;
-              width = 800;
-            }
-            if (height > 800) {
-              width = (800 / height) * width;
-              height = 800;
+            const MAX_DIMENSION = 800;
+            if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+              if (width > height) {
+                height = (MAX_DIMENSION / width) * height;
+                width = MAX_DIMENSION;
+              } else {
+                width = (MAX_DIMENSION / height) * width;
+                height = MAX_DIMENSION;
+              }
             }
             
             canvas.width = width;
@@ -471,118 +898,234 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            // Start with quality 0.8
-            let compressed = canvas.toDataURL('image/jpeg', 0.8);
-            let quality = 0.7;
+            let quality = 0.9;
+            let compressed = canvas.toDataURL('image/jpeg', quality);
             
-            // Reduce quality until size is acceptable
-            while (compressed.length > maxSize && quality > 0.3) {
+            while (getBase64Size(compressed) > maxSize && quality > 0.2) {
+              quality = Math.max(0.2, quality - 0.1);
               compressed = canvas.toDataURL('image/jpeg', quality);
-              quality -= 0.1;
             }
             
             resolve(compressed);
           };
+          img.onerror = () => resolve(dataUrl);
         });
       }
 
-      // ===== RENDER DESIGNS =====
+      // ===== SAVE TO LOCALSTORAGE WITH SIZE CHECK =====
+      function saveToLocalStorage() {
+        try {
+          const data = JSON.stringify(designImages);
+          // Check size (localStorage limit is ~5-10MB, we'll use 4MB to be safe)
+          if (data.length > 4 * 1024 * 1024) {
+            showToast('❌ Storage limit reached (4MB)', '#ff3366');
+            return false;
+          }
+          localStorage.setItem('designImages', data);
+          return true;
+        } catch (e) {
+          showToast('❌ Failed to save', '#ff3366');
+          return false;
+        }
+      }
+
+      // ===== DELETE DESIGN =====
+      function deleteDesign(number) {
+        if (designImages[number]) {
+          delete designImages[number];
+          saveToLocalStorage();
+          renderDesigns();
+          showToast(`🗑️ Design #${number} deleted`, '#ff6666');
+        }
+      }
+
+      // ===== SHOW DELETE CONFIRMATION =====
+      function showDeleteConfirm(number) {
+        pendingDeleteId = number;
+        if (confirmModal) {
+          confirmModal.style.display = 'block';
+        }
+      }
+
+      // ===== HIDE DELETE CONFIRMATION =====
+      function hideDeleteConfirm() {
+        if (confirmModal) {
+          confirmModal.style.display = 'none';
+        }
+        pendingDeleteId = null;
+      }
+
+      // ===== RENDER DESIGNS (4 columns) =====
       function renderDesigns() {
         const grid = document.getElementById('designsGrid');
+        if (!grid) return;
+        
         let html = '';
 
         for (let i = 1; i <= 20; i++) {
           const img = designImages[i];
           html += `
-            <div class="grid-item" onclick="openLightbox(${i})">
+            <div class="grid-item" data-design-id="${i}">
               <div class="item-number">${i}</div>
-              ${img ? 
-                `<img src="${img}" alt="Design ${i}">` : 
-                `<div class="item-placeholder">
+              ${img ? `
+                <img src="${img}" alt="Design ${i}" loading="lazy" onclick="window.openLightbox(${i})">
+                <div class="delete-btn" onclick="event.stopPropagation(); window.showDeleteConfirm(${i})">✕</div>
+              ` : `
+                <div class="item-placeholder" onclick="window.openLightbox(${i})">
                   <div class="emoji">🎨</div>
-                  <div>Empty</div>
-                </div>`
-              }
+                  <div>EMPTY</div>
+                </div>
+              `}
             </div>
           `;
         }
         grid.innerHTML = html;
       }
 
-      // ===== LIGHTBOX =====
-      window.openLightbox = function(num) {
+      // ===== LIGHTBOX FUNCTIONS =====
+      function openLightbox(num) {
         if (designImages[num]) {
           lightboxImg.src = designImages[num];
-          lightboxNumber.textContent = `Design #${num}`;
+          lightboxImg.alt = `Design #${num}`;
+          lightboxNumber.textContent = `DESIGN #${num}`;
           lightbox.classList.add('active');
         }
-      };
+      }
 
-      lightboxClose.addEventListener('click', () => {
+      function closeLightbox() {
         lightbox.classList.remove('active');
-      });
+      }
 
-      lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-          lightbox.classList.remove('active');
-        }
-      });
+      // ===== ASSIGN TO WINDOW =====
+      window.openLightbox = openLightbox;
+      window.showDeleteConfirm = showDeleteConfirm;
 
+      // ===== LIGHTBOX EVENT LISTENERS =====
+      if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+      }
+
+      if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) {
+            closeLightbox();
+          }
+        });
+
+        lightbox.addEventListener('touchstart', (e) => {
+          if (e.target === lightbox) {
+            closeLightbox();
+          }
+        });
+      }
+
+      // ===== KEYBOARD SUPPORT =====
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-          lightbox.classList.remove('active');
+        if (e.key === 'Escape') {
+          closeLightbox();
+          hideDeleteConfirm();
         }
       });
 
-      // ===== UPLOAD HANDLER WITH COMPRESSION =====
-      document.getElementById('designUpload').addEventListener('change', async function(e) {
-        if (!isCreator) {
-          showToast('❌ Creator mode only', '#ff3366');
-          return;
-        }
+      // ===== DELETE CONFIRMATION HANDLERS =====
+      if (confirmYes) {
+        confirmYes.addEventListener('click', () => {
+          if (pendingDeleteId) {
+            deleteDesign(pendingDeleteId);
+            hideDeleteConfirm();
+          }
+        });
+      }
 
-        const files = Array.from(e.target.files);
-        showToast(`⏳ Compressing ${files.length} images...`, '#ffcc00');
-        
-        for (const file of files) {
-          let number = extractNumber(file.name);
+      if (confirmNo) {
+        confirmNo.addEventListener('click', hideDeleteConfirm);
+      }
+
+      if (modalOverlay) {
+        modalOverlay.addEventListener('click', hideDeleteConfirm);
+      }
+
+      // ===== UPLOAD HANDLER WITH DUPLICATE WARNING =====
+      if (fileInput) {
+        fileInput.addEventListener('change', async function(e) {
+          if (!isCreator) {
+            showToast('❌ Creator mode only', '#ff3366');
+            e.target.value = '';
+            return;
+          }
+
+          const files = Array.from(e.target.files);
+          if (files.length === 0) return;
           
-          if (!number || number < 1 || number > 20) {
-            // Find first empty slot
-            for (let i = 1; i <= 20; i++) {
-              if (!designImages[i]) {
-                number = i;
-                break;
+          showToast(`⏳ Processing ${files.length} images...`, '#ffcc00');
+          
+          for (const file of files) {
+            try {
+              let number = extractNumber(file.name);
+              let willOverwrite = false;
+              
+              if (!number || number < 1 || number > 20) {
+                // Find first empty slot
+                for (let i = 1; i <= 20; i++) {
+                  if (!designImages[i]) {
+                    number = i;
+                    break;
+                  }
+                }
+                if (!number) {
+                  showToast(`⚠️ No free slots for ${file.name}`, '#ffcc00');
+                  continue;
+                }
               }
+              
+              if (number >= 1 && number <= 20) {
+                // Check if overwriting
+                if (designImages[number]) {
+                  willOverwrite = true;
+                  showToast(`⚠️ Design #${number} will be overwritten`, '#ffcc00');
+                }
+                
+                const dataUrl = await readFileAsDataURL(file);
+                const compressed = await compressImage(dataUrl);
+                designImages[number] = compressed;
+                
+                if (saveToLocalStorage()) {
+                  renderDesigns();
+                  showToast(`${willOverwrite ? '🔄' : '✅'} Design #${number} ${willOverwrite ? 'updated' : 'uploaded'}`, 
+                           willOverwrite ? '#ffaa00' : '#00ff9d');
+                }
+              }
+            } catch (error) {
+              showToast(`❌ Error uploading ${file.name}`, '#ff3366');
+              console.error(error);
             }
           }
-          
-          if (number && number >= 1 && number <= 20) {
-            const reader = new FileReader();
-            reader.onload = async function(event) {
-              // Compress the image
-              const compressed = await compressImage(event.target.result);
-              designImages[number] = compressed;
-              localStorage.setItem('designImages', JSON.stringify(designImages));
-              renderDesigns();
-              showToast(`✅ Design #${number} uploaded`, '#00ff9d');
-            };
-            reader.readAsDataURL(file);
-          }
-        }
-        e.target.value = '';
-      });
+          e.target.value = '';
+        });
+      }
 
-      // ===== TOAST =====
+      // ===== TOAST WITH SINGLE INSTANCE =====
       function showToast(msg, color) {
+        if (currentToast) {
+          currentToast.remove();
+        }
+        
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = msg;
         toast.style.borderColor = color;
         toast.style.color = color;
-        toast.style.boxShadow = `0 0 40px ${color}`;
+        toast.style.boxShadow = `0 0 60px ${color}`;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
+        
+        currentToast = toast;
+        
+        setTimeout(() => {
+          toast.remove();
+          if (currentToast === toast) {
+            currentToast = null;
+          }
+        }, 2000);
       }
 
       // ===== INIT =====
