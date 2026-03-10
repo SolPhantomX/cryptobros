@@ -25,7 +25,7 @@
       filter: brightness(0.9);
     }
     
-    /* === ENTER BUTTON - LIGHT BLUE WITH BLUE TEXT === */
+    /* Main enter button */
     .btn {
       background: linear-gradient(135deg, #66ffff, #00ccff, #0099ff);
       color: #003366;
@@ -38,9 +38,7 @@
       font-family: 'Quicksand', Arial, sans-serif;
       letter-spacing: 2px;
       text-transform: uppercase;
-      box-shadow: 
-        0 0 25px rgba(102, 255, 255, 0.7),
-        0 0 50px rgba(0, 153, 255, 0.4);
+      box-shadow: 0 0 25px rgba(102, 255, 255, 0.7), 0 0 50px rgba(0, 153, 255, 0.4);
       margin-top: auto;
       margin-bottom: 40px;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -62,33 +60,34 @@
     
     .btn:hover {
       transform: translateY(-3px) scale(1.03);
-      box-shadow: 
-        0 0 35px rgba(102, 255, 255, 0.9),
-        0 0 70px rgba(0, 153, 255, 0.6);
+      box-shadow: 0 0 35px rgba(102, 255, 255, 0.9), 0 0 70px rgba(0, 153, 255, 0.6);
       background: linear-gradient(135deg, #00ccff, #66ffff, #00ccff);
     }
-    .btn:active {
-      transform: translateY(1px) scale(0.98);
-    }
     
-    footer {
-      width: 100%;
-      text-align: center;
+    /* Creator button (hidden by default) */
+    .creator-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 204, 0, 0.9);
+      color: #000;
+      border: 2px solid #ffcc00;
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
       font-family: 'Quicksand', Arial, sans-serif;
-      font-weight: 700;
-      padding: 20px 0;
-      animation: colorChange 15s infinite;
-      background: transparent;
+      box-shadow: 0 0 20px #ffcc00;
+      z-index: 100;
+      display: none; /* Hidden by default */
     }
-    
-    @keyframes colorChange {
-      0% { color: #00ff9d; }
-      16.67% { color: #ff00ff; }
-      33.33% { color: #00ffff; }
-      50% { color: #ff9d00; }
-      66.67% { color: #9d00ff; }
-      83.33% { color: #ffff00; }
-      100% { color: #00ff9d; }
+    .creator-btn:hover {
+      transform: scale(1.05);
+      background: #ffcc00;
+    }
+    .creator-btn.visible {
+      display: block; /* Shown only after secret click */
     }
 
     .language-btn {
@@ -143,13 +142,36 @@
       background: rgba(102, 255, 255, 0.3);
       color: #fff;
     }
-    body[dir="rtl"] .language-btn { right: auto; left: 20px; }
-    body[dir="rtl"] .language-menu { right: auto; left: 20px; text-align: left; }
-    body[dir="rtl"] .language-option { text-align: left; }
+    
+    footer {
+      width: 100%;
+      text-align: center;
+      font-family: 'Quicksand', Arial, sans-serif;
+      font-weight: 700;
+      padding: 20px 0;
+      animation: colorChange 15s infinite;
+      background: transparent;
+    }
+    
+    @keyframes colorChange {
+      0% { color: #00ff9d; }
+      16.67% { color: #ff00ff; }
+      33.33% { color: #00ffff; }
+      50% { color: #ff9d00; }
+      66.67% { color: #9d00ff; }
+      83.33% { color: #ffff00; }
+      100% { color: #00ff9d; }
+    }
   </style>
 </head>
 <body>
   <div class="bg"></div>
+
+  <!-- Secret double-click area (bottom left corner) -->
+  <div style="position: fixed; bottom: 0; left: 0; width: 100px; height: 100px; background: transparent; z-index: 9999; cursor: pointer;" id="secretArea"></div>
+
+  <!-- Creator button (appears after double-click) -->
+  <button class="creator-btn" id="creatorBtn">👤 CREATOR LOGIN</button>
 
   <button type="button" class="language-btn" id="languageBtn">LANGUAGE</button>
   <div class="language-menu" id="languageMenu">
@@ -163,11 +185,12 @@
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
   
-  <a href="rules.html" class="btn" id="enterBtn" aria-label="Enter the Cryptobros Club">Enter the Club</a>
+  <a href="#" class="btn" id="enterBtn">Enter the Club</a>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
+    // ===== SIMPLE CREATOR ACCESS =====
     const translations = {
       en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
       fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
@@ -182,12 +205,8 @@
     function applyLanguage(lang) {
       localStorage.setItem('lang', lang);
       const t = translations[lang] || translations.en;
-
-      const btn = document.getElementById('enterBtn');
-      const footer = document.getElementById('footer');
-      
-      if (btn) btn.textContent = t.btn;
-      if (footer) footer.textContent = t.footer;
+      document.getElementById('enterBtn').textContent = t.btn;
+      document.getElementById('footer').textContent = t.footer;
 
       document.querySelectorAll('.language-option').forEach(opt => {
         opt.classList.toggle('active', opt.dataset.lang === lang);
@@ -202,6 +221,44 @@
       }
     }
 
+    // ===== SECRET DOUBLE-CLICK ACTIVATION =====
+    document.getElementById('secretArea').addEventListener('dblclick', function() {
+      // Show creator button
+      document.getElementById('creatorBtn').classList.add('visible');
+      
+      // Optional: show notification
+      const toast = document.createElement('div');
+      toast.textContent = '👑 Creator mode unlocked';
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ffcc00;
+        color: #000;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-family: 'Quicksand', sans-serif;
+        font-weight: bold;
+        z-index: 10000;
+        box-shadow: 0 0 30px #ffcc00;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    });
+
+    // ===== CREATOR BUTTON CLICK =====
+    document.getElementById('creatorBtn').addEventListener('click', function() {
+      window.location.href = 'profile.html';
+    });
+
+    // ===== MAIN ENTER BUTTON (for users) =====
+    document.getElementById('enterBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'rules.html';
+    });
+
+    // ===== LANGUAGE MENU (same as before) =====
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('lang') || 'en';
       applyLanguage(savedLang);
@@ -234,8 +291,6 @@
         languageMenu.classList.remove('active');
       }
     });
-
-    languageMenu.addEventListener('click', e => e.stopPropagation());
   </script>
 </body>
 </html>
