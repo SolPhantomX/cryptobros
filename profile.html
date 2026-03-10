@@ -22,6 +22,7 @@
     }
 
     .header {
+      position: relative;
       width: 100%;
       height: 100%;
       background: center/cover;
@@ -31,18 +32,81 @@
     }
     .header.loaded { border: none; }
 
-    .avatar {
-      width: 200px;
-      height: 200px;
+    /* Camera icon for header */
+    .header-camera-icon {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      width: 36px;
+      height: 36px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #ffcc00;
       border-radius: 50%;
-      border: 4px solid white;
-      background: center/cover;
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+      backdrop-filter: blur(2px);
+    }
+
+    .header-camera-icon:hover {
+      transform: scale(1.15);
+      background: #ffcc00;
+      color: #000;
+      box-shadow: 0 0 25px #ffcc00;
+    }
+
+    .avatar-container {
       position: absolute;
       bottom: -100px;
       left: 50%;
       transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid white;
+      background: center/cover;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       cursor: pointer;
+    }
+
+    /* Camera icon for avatar */
+    .avatar-camera-icon {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #ffcc00;
+      border-radius: 50%;
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+      backdrop-filter: blur(2px);
+    }
+
+    .avatar-camera-icon:hover {
+      transform: scale(1.15);
+      background: #ffcc00;
+      color: #000;
+      box-shadow: 0 0 25px #ffcc00;
     }
 
     .main-layout {
@@ -53,7 +117,7 @@
       padding: 0 20px;
     }
 
-    /* ===== BEAUTIFUL GEAR (edit button) ===== */
+    /* Beautiful gear button */
     .edit-btn {
       position: absolute;
       top: 16px;
@@ -71,22 +135,16 @@
       z-index: 100;
       font-size: 28px;
       transition: transform 0.3s ease;
-      animation: spinSlow 8s infinite linear;
+      animation: spinSlow 8s infinite linear, colorPulse 12s infinite;
       box-shadow: 
         0 0 20px currentColor,
         inset 0 0 15px currentColor;
       text-shadow: 0 0 15px currentColor;
     }
 
-    /* spinning gear */
     @keyframes spinSlow {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
-    }
-
-    /* color change animation - applied to text and shadows */
-    .edit-btn {
-      animation: spinSlow 8s infinite linear, colorPulse 12s infinite;
     }
 
     @keyframes colorPulse {
@@ -98,7 +156,6 @@
       100% { color: #ffcc00; }
     }
 
-    /* pause spinning on hover, but keep color change */
     .edit-btn:hover {
       animation: colorPulse 12s infinite, none;
       transform: scale(1.15);
@@ -232,8 +289,15 @@
 </head>
 <body>
   <div class="top-section">
-    <div class="header" id="header"></div>
-    <div class="avatar" id="avatar"></div>
+    <div class="header" id="header">
+      <!-- Camera icon for header -->
+      <div class="header-camera-icon" id="headerCameraBtn">📷</div>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar" id="avatar"></div>
+      <!-- Camera icon for avatar -->
+      <div class="avatar-camera-icon" id="avatarCameraBtn">📷</div>
+    </div>
     <div class="theme-switch" id="themeSwitch">🌙</div>
     <div class="edit-btn" id="editBtn">⚙️</div>
     <div class="edit-menu" id="editMenu"></div>
@@ -242,6 +306,7 @@
   <div class="main-layout">
     <div class="sidebar">
       <a href="news.html" class="nav-item">📰 CryptoNews</a>
+      <a href="profile.html" class="nav-item">👤 My Profile</a>
       <a href="feed.html" class="nav-item">📰 News Feed</a>
       <a href="messages.html" class="nav-item">💬 Messages</a>
       <a href="groups.html" class="nav-item">👥 My Groups</a>
@@ -465,7 +530,6 @@
           <div class="field-value">${profileData.city || 'Not specified'}</div>
         `;
 
-        // NO CREATOR ACCESS PANEL — only double-click on gear
         document.getElementById('profileContent').innerHTML = content;
       }
 
@@ -534,10 +598,30 @@
         const headerEl = document.getElementById('header');
         const avatarEl = document.getElementById('avatar');
 
-        headerEl.addEventListener('click', () => {
+        // Old clicks still work (click on image itself)
+        headerEl.addEventListener('click', (e) => {
+          // Don't trigger if clicking the camera icon
+          if (e.target.classList.contains('header-camera-icon')) return;
           document.getElementById('header-upload').click();
         });
 
+        avatarEl.addEventListener('click', (e) => {
+          if (e.target.classList.contains('avatar-camera-icon')) return;
+          document.getElementById('avatar-upload').click();
+        });
+
+        // Camera icon triggers
+        document.getElementById('headerCameraBtn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          document.getElementById('header-upload').click();
+        });
+
+        document.getElementById('avatarCameraBtn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          document.getElementById('avatar-upload').click();
+        });
+
+        // File upload handlers
         document.getElementById('header-upload').onchange = function(e) {
           const file = e.target.files[0];
           if (file) {
@@ -553,10 +637,6 @@
             reader.readAsDataURL(file);
           }
         };
-
-        avatarEl.addEventListener('click', () => {
-          document.getElementById('avatar-upload').click();
-        });
 
         document.getElementById('avatar-upload').onchange = function(e) {
           const file = e.target.files[0];
