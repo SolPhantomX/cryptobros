@@ -2,17 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>CRYPTOBROS — DESIGN GALLERY</title>
-  <!-- SOLID FONTS: Syne + Sora -->
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Sora', sans-serif;
       background: #0a0a0a;
@@ -22,8 +16,6 @@
       position: relative;
       overflow-x: hidden;
     }
-
-    /* Animated background */
     body::before {
       content: '';
       position: fixed;
@@ -38,47 +30,32 @@
       z-index: -1;
       animation: glowPulse 8s ease-in-out infinite;
     }
-
-    @keyframes glowPulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
-
-    /* Responsive styles */
+    @keyframes glowPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+    
+    /* мобильная адаптация — кнопки больше не перекрываются */
     @media (max-width: 768px) {
       body { padding: 15px; }
       .image-grid { grid-template-columns: repeat(2, 1fr); }
       .page-title { font-size: 3rem; }
-      .slogan-line1 { font-size: 1.5rem; }
-      .slogan-line2 { font-size: 1rem; }
-      .connect-wallet-btn, .creator-btn { 
-        left: 15px; 
-        padding: 12px 24px; 
-        font-size: 14px;
-      }
-      .back-button { 
-        padding: 12px 24px; 
-        font-size: 14px; 
-        left: 15px;
-        top: 15px;
-      }
+      .back-button { top: 15px; left: 15px; padding: 12px 24px; font-size: 14px; }
+      .connect-wallet-btn { bottom: 20px; left: 15px; padding: 12px 24px; font-size: 14px; }
+      .creator-btn { bottom: 90px; left: 15px; padding: 12px 24px; font-size: 14px; } /* поднял выше */
     }
-    
     @media (max-width: 480px) {
       .image-grid { grid-template-columns: 1fr; }
       .page-title { font-size: 2rem; }
-      .section-title { font-size: 2rem; }
-      .confirm-modal { min-width: 300px; padding: 30px; }
-      .confirm-btn { padding: 12px 30px; font-size: 1.2rem; }
+      .back-button { padding: 10px 18px; font-size: 13px; }
+      .connect-wallet-btn { bottom: 20px; padding: 10px 18px; }
+      .creator-btn { bottom: 85px; padding: 10px 18px; }
     }
 
-    /* ===== BEAUTIFUL BACK BUTTON ===== */
     .back-button {
       position: fixed;
       top: 30px;
       left: 30px;
       z-index: 1000;
       background: rgba(0, 0, 0, 0.7);
+      -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
       border: 2px solid #ffcc00;
       border-radius: 60px;
@@ -96,20 +73,19 @@
       letter-spacing: 1px;
       box-shadow: 0 0 30px rgba(255,204,0,0.5);
       animation: backButtonPulse 3s ease-in-out infinite;
+      will-change: transform; /* оптимизация производительности */
     }
-
-    @keyframes backButtonPulse {
-      0%, 100% { box-shadow: 0 0 30px #ffcc00; }
-      50% { box-shadow: 0 0 60px #ff6600; }
+    /* fallback для старых браузеров без backdrop-filter */
+    @supports not (backdrop-filter: blur()) {
+      .back-button { background: rgba(0, 0, 0, 0.95); }
     }
-
+    @keyframes backButtonPulse { 0%,100%{box-shadow:0 0 30px #ffcc00} 50%{box-shadow:0 0 60px #ff6600} }
     .back-button:hover {
       background: #ffcc00;
       color: #000;
       transform: translateX(-5px) scale(1.05);
     }
 
-    /* Connect wallet button */
     .connect-wallet-btn {
       position: fixed;
       bottom: 220px;
@@ -131,19 +107,16 @@
       align-items: center;
       gap: 10px;
     }
-
     .connect-wallet-btn:hover {
       transform: scale(1.05);
       box-shadow: 0 0 50px #9945FF;
     }
-
     .connect-wallet-btn.connected {
       background: #00ff00;
       color: #000;
       box-shadow: 0 0 30px #00ff00;
     }
 
-    /* Creator button - hidden by default */
     .creator-btn {
       position: fixed;
       bottom: 140px;
@@ -163,17 +136,12 @@
       letter-spacing: 1px;
       transition: all 0.3s ease;
     }
-
-    .creator-btn.visible {
-      display: block;
-    }
-
+    .creator-btn.visible { display: block; }
     .creator-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 0 80px #ffcc00;
     }
 
-    /* ===== TYPOGRAPHY ===== */
     .page-title {
       font-family: 'Syne', sans-serif;
       font-size: 5rem;
@@ -182,17 +150,13 @@
       font-weight: 800;
       background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff, #00ff99, #ffcc00, #ff3366);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 400% 400%;
       animation: titleRainbow 8s linear infinite;
       letter-spacing: 2px;
     }
-
-    @keyframes titleRainbow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    @keyframes titleRainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
     .slogan-container {
       text-align: center;
@@ -201,7 +165,6 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     .slogan-line1 {
       font-family: 'Sora', sans-serif;
       font-weight: 700;
@@ -212,13 +175,7 @@
       animation: line1Glow 2.5s ease-in-out infinite;
       margin-bottom: 15px;
     }
-
-    @keyframes line1Glow {
-      0%, 100% { color: #ff6600; text-shadow: 0 0 20px #ff6600; }
-      33% { color: #ff00ff; text-shadow: 0 0 30px #ff00ff; }
-      66% { color: #ffaa00; text-shadow: 0 0 30px #ffaa00; }
-    }
-
+    @keyframes line1Glow { 0%,100%{color:#ff6600;text-shadow:0 0 20px #ff6600} 33%{color:#ff00ff;text-shadow:0 0 30px #ff00ff} 66%{color:#ffaa00;text-shadow:0 0 30px #ffaa00} }
     .slogan-line2 {
       font-family: 'Sora', sans-serif;
       font-weight: 400;
@@ -228,14 +185,7 @@
       line-height: 1.8;
       animation: line2Flicker 3s linear infinite;
     }
-
-    @keyframes line2Flicker {
-      0%, 100% { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
-      20% { color: #00ffff; text-shadow: 0 0 20px #00ffff; }
-      40% { color: #ffff00; text-shadow: 0 0 20px #ffff00; }
-      60% { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
-      80% { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
-    }
+    @keyframes line2Flicker { 0%,100%{color:#00ff00;text-shadow:0 0 15px #00ff00} 20%{color:#00ffff;text-shadow:0 0 20px #00ffff} 40%{color:#ffff00;text-shadow:0 0 20px #ffff00} 60%{color:#ff00ff;text-shadow:0 0 20px #ff00ff} 80%{color:#00ff00;text-shadow:0 0 15px #00ff00} }
 
     .section-title {
       font-family: 'Syne', sans-serif;
@@ -249,19 +199,9 @@
       text-shadow: 0 0 20px #ffdd00;
       animation: sectionGlow 3s ease-in-out infinite;
     }
+    @keyframes sectionGlow { 0%,100%{color:#ffdd00;text-shadow:0 0 20px #ffdd00} 50%{color:#ff00ff;text-shadow:0 0 30px #ff00ff} }
 
-    @keyframes sectionGlow {
-      0%, 100% { color: #ffdd00; text-shadow: 0 0 20px #ffdd00; }
-      50% { color: #ff00ff; text-shadow: 0 0 30px #ff00ff; }
-    }
-
-    /* Gallery container */
-    .gallery-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* 4 IMAGES PER ROW */
+    .gallery-container { max-width: 1200px; margin: 0 auto; }
     .image-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -269,7 +209,6 @@
       margin-bottom: 60px;
       border: 2px solid #333;
     }
-
     .grid-item {
       position: relative;
       aspect-ratio: 1/1;
@@ -280,23 +219,14 @@
       transition: all 0.3s ease;
       cursor: pointer;
     }
-
-    .grid-item:nth-child(4n) {
-      border-right: none;
-    }
-
-    /* Fix for last row border */
-    .grid-item:nth-last-child(-n+4) {
-      border-bottom: none;
-    }
-
+    .grid-item:nth-child(4n) { border-right: none; }
+    .grid-item:nth-last-child(-n+4) { border-bottom: none; }
     .grid-item:hover {
       transform: scale(1.02);
       z-index: 10;
       box-shadow: 0 0 30px #ffcc00;
       border: 2px solid #ffcc00;
     }
-
     .grid-item img {
       width: 100%;
       height: 100%;
@@ -304,7 +234,6 @@
       display: block;
       pointer-events: auto;
     }
-
     .item-number {
       position: absolute;
       top: 12px;
@@ -325,7 +254,6 @@
       box-shadow: 0 0 20px #ffcc00;
       pointer-events: none;
     }
-
     .delete-btn {
       position: absolute;
       top: 12px;
@@ -348,13 +276,11 @@
       font-family: 'Arial', sans-serif;
       pointer-events: auto;
     }
-
     .delete-btn:hover {
       background: #ff0000;
       transform: scale(1.2) rotate(90deg);
       box-shadow: 0 0 50px #ff0000;
     }
-
     .item-placeholder {
       width: 100%;
       height: 100%;
@@ -366,31 +292,25 @@
       cursor: pointer;
       background: #0f0f0f;
     }
+    .item-placeholder .emoji { font-size: 3.5rem; margin-bottom: 10px; opacity: 0.5; }
 
-    .item-placeholder .emoji {
-      font-size: 3.5rem;
-      margin-bottom: 10px;
-      opacity: 0.5;
-    }
-
-    /* Upload section */
     .upload-section {
       max-width: 1200px;
       margin: 40px auto;
       padding: 40px;
       background: rgba(0,0,0,0.9);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
       border: 3px solid #00ffff;
       border-radius: 30px;
       text-align: center;
-      backdrop-filter: blur(10px);
       box-shadow: 0 0 60px #00ffff;
       display: none;
     }
-
-    .upload-section.visible {
-      display: block;
+    @supports not (backdrop-filter: blur()) {
+      .upload-section { background: rgba(0, 0, 0, 0.98); }
     }
-
+    .upload-section.visible { display: block; }
     .upload-title {
       font-family: 'Syne', sans-serif;
       font-size: 2.5rem;
@@ -399,12 +319,7 @@
       text-shadow: 0 0 30px #ff00ff;
       animation: uploadTitle 4s ease-in-out infinite;
     }
-
-    @keyframes uploadTitle {
-      0%, 100% { color: #ff00ff; text-shadow: 0 0 30px #ff00ff; }
-      50% { color: #00ffff; text-shadow: 0 0 30px #00ffff; }
-    }
-
+    @keyframes uploadTitle { 0%,100%{color:#ff00ff;text-shadow:0 0 30px #ff00ff} 50%{color:#00ffff;text-shadow:0 0 30px #00ffff} }
     .upload-btn {
       background: transparent;
       border: 3px solid #00ff00;
@@ -417,18 +332,13 @@
       font-size: 18px;
       box-shadow: 0 0 30px #00ff00;
     }
-
     .upload-btn:hover {
       background: #00ff00;
       color: #000;
       transform: scale(1.1);
       box-shadow: 0 0 80px #00ff00;
     }
-
-    .hidden-input {
-      display: none;
-    }
-
+    .hidden-input { display: none; }
     .upload-note {
       color: #ffaa00;
       margin-top: 25px;
@@ -437,7 +347,6 @@
       text-shadow: 0 0 10px #ffaa00;
     }
 
-    /* Lightbox */
     .lightbox {
       display: none;
       position: fixed;
@@ -451,11 +360,7 @@
       align-items: center;
       flex-direction: column;
     }
-
-    .lightbox.active {
-      display: flex;
-    }
-
+    .lightbox.active { display: flex; }
     .lightbox img {
       max-width: 90%;
       max-height: 80%;
@@ -465,12 +370,7 @@
       box-shadow: 0 0 100px #ff00ff;
       animation: lightboxGlow 2s ease-in-out infinite;
     }
-
-    @keyframes lightboxGlow {
-      0%, 100% { border-color: #ff00ff; box-shadow: 0 0 100px #ff00ff; }
-      50% { border-color: #00ffff; box-shadow: 0 0 100px #00ffff; }
-    }
-
+    @keyframes lightboxGlow { 0%,100%{border-color:#ff00ff;box-shadow:0 0 100px #ff00ff} 50%{border-color:#00ffff;box-shadow:0 0 100px #00ffff} }
     .lightbox-close {
       position: absolute;
       top: 30px;
@@ -490,13 +390,11 @@
       transition: all 0.3s ease;
       box-shadow: 0 0 50px #ff00ff;
     }
-
     .lightbox-close:hover {
       background: #ff00ff;
       color: #000;
       transform: scale(1.1) rotate(90deg);
     }
-
     .lightbox-number {
       position: absolute;
       bottom: 30px;
@@ -512,7 +410,6 @@
       box-shadow: 0 0 40px #00ffff;
     }
 
-    /* Delete confirmation modal */
     .confirm-modal {
       position: fixed;
       top: 50%;
@@ -528,12 +425,7 @@
       min-width: 400px;
       animation: modalPop 0.3s ease;
     }
-
-    @keyframes modalPop {
-      from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    }
-
+    @keyframes modalPop { from{transform:translate(-50%,-50%) scale(0.8);opacity:0} to{transform:translate(-50%,-50%) scale(1);opacity:1} }
     .confirm-modal h3 {
       font-family: 'Syne', sans-serif;
       font-size: 2rem;
@@ -541,13 +433,7 @@
       margin-bottom: 30px;
       text-shadow: 0 0 30px #ff0000;
     }
-
-    .confirm-buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-    }
-
+    .confirm-buttons { display: flex; gap: 20px; justify-content: center; }
     .confirm-btn {
       padding: 15px 40px;
       font-family: 'Syne', sans-serif;
@@ -557,31 +443,26 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
     .confirm-btn.yes {
       background: #ff0000;
       color: white;
       box-shadow: 0 0 40px #ff0000;
     }
-
     .confirm-btn.yes:hover {
       background: #ff4444;
       transform: scale(1.1);
       box-shadow: 0 0 80px #ff0000;
     }
-
     .confirm-btn.no {
       background: #00ff00;
       color: black;
       box-shadow: 0 0 40px #00ff00;
     }
-
     .confirm-btn.no:hover {
       background: #88ff88;
       transform: scale(1.1);
       box-shadow: 0 0 80px #00ff00;
     }
-
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -593,7 +474,6 @@
       backdrop-filter: blur(5px);
     }
 
-    /* Toast */
     .toast {
       position: fixed;
       bottom: 30px;
@@ -610,37 +490,28 @@
       animation: slideUp 0.3s ease;
       box-shadow: 0 0 60px #00ff9d;
     }
-
-    @keyframes slideUp {
-      from { transform: translate(-50%, 100px); opacity: 0; }
-      to { transform: translate(-50%, 0); opacity: 1; }
-    }
+    @keyframes slideUp { from{transform:translate(-50%,100px);opacity:0} to{transform:translate(-50%,0);opacity:1} }
   </style>
 </head>
 <body>
-  <!-- BACK BUTTON - FIXED LINK TO MERCH PAGE -->
-  <a href="https://www.cryptobros.pro/merch.html" class="back-button" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.cryptobros.pro/merch.html" class="back-button" target="_blank">
     <span>←</span>
     <span>BACK TO MERCH</span>
   </a>
 
-  <!-- CONNECT WALLET BUTTON -->
   <button class="connect-wallet-btn" id="connectWalletBtn">
     <span>🔮</span>
     <span>CONNECT WALLET</span>
   </button>
 
-  <!-- CREATOR BUTTON -->
   <button class="creator-btn" id="creatorBtn">👑 UPLOAD DESIGNS</button>
 
-  <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
     <div class="lightbox-close" id="lightboxClose">✕</div>
     <img id="lightboxImg" src="" alt="" loading="lazy">
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
 
-  <!-- DELETE CONFIRMATION MODAL -->
   <div id="confirmModal" style="display: none;">
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="confirm-modal">
@@ -663,75 +534,42 @@
     <div class="section-title">⚡ DESIGNS 1–20 ⚡</div>
     <div class="image-grid" id="designsGrid"></div>
 
-    <!-- UPLOAD SECTION -->
     <div class="upload-section" id="uploadSection">
       <div class="upload-title">📤 UPLOAD NEW DESIGNS</div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
       <button class="upload-btn" id="uploadButton">CHOOSE IMAGES</button>
       <div class="upload-note">
         Files with numbers → design #[number]<br>
-        Files without numbers → first empty slot<br>
-        Max size: 100KB after compression<br>
-        PNG transparency preserved
+        Files without numbers → first empty slot
       </div>
     </div>
   </div>
 
   <script>
     (function() {
-      // ===== SAFELY INITIALIZE PHANTOM =====
-      if (typeof window.solana === 'undefined') {
-        window.solana = { isPhantom: false, on: function() {}, disconnect: function() {} };
-      }
-
-      // ===== GLOBAL FUNCTION REFERENCES =====
-      window.openLightbox = null;
-      window.showDeleteConfirm = null;
-
-      // ===== YOUR PHANTOM WALLET ADDRESS =====
+      // ===== YOUR WALLET ADDRESS =====
       const YOUR_WALLET_ADDRESS = '7VCogQuuv2FFurqZu2kegkgGPH6itevv6o4tD4JPYQyr';
       
-      // ===== CREATOR MODE =====
       let isCreator = false;
-      let currentToast = null;
-      let toastTimeout = null;
-
-      // ===== SLOGAN LINES =====
-      const sloganLines1 = [
-        "REAL ONES WEAR THE MERCH",
-        "CRYPTOBROS MERCH",
-        "WEAR THE MERCH",
-        "PROOF YOU'RE NOT A RUG-PULLER",
-        "DON'T JUST HODL"
-      ];
-
-      const sloganLines2 = [
-        "FAKE ONES FEAR THE TRUTH",
-        "NOT JUST CLOTHES, IT'S A STATEMENT",
-        "LET THEM KNOW YOU'RE UNTOUCHABLE",
-        "CRYPTOBROS FOR THE FEARLESS",
-        "SHOW IT — CRYPTOBROS MERCH"
-      ];
-
-      // ===== DESIGN STORAGE =====
       let designImages = {};
+      
+      // ===== Безопасная загрузка из localStorage =====
       try {
         const saved = localStorage.getItem('designImages');
         if (saved && saved !== 'null' && saved !== 'undefined') {
           const parsed = JSON.parse(saved);
-          if (typeof parsed === 'object' && parsed !== null) {
+          if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
             designImages = parsed;
           } else {
-            localStorage.removeItem('designImages');
+            designImages = {};
           }
         }
       } catch (e) {
-        console.error('Failed to load from localStorage:', e);
+        console.warn('localStorage read failed, starting fresh');
         designImages = {};
-        localStorage.removeItem('designImages');
       }
 
-      // ===== DOM ELEMENTS =====
+      // DOM elements
       const connectWalletBtn = document.getElementById('connectWalletBtn');
       const creatorBtn = document.getElementById('creatorBtn');
       const uploadSection = document.getElementById('uploadSection');
@@ -744,429 +582,18 @@
       const lightboxNumber = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
       const confirmModal = document.getElementById('confirmModal');
-      const modalOverlay = document.getElementById('modalOverlay');
       const confirmYes = document.getElementById('confirmYes');
       const confirmNo = document.getElementById('confirmNo');
+      const modalOverlay = document.getElementById('modalOverlay');
 
-      // ===== DELETE STATE =====
       let pendingDeleteId = null;
+      let currentToast = null;
 
-      // ===== SAFE DISCONNECT FUNCTION =====
-      async function safeDisconnect() {
-        try {
-          if (window.solana && typeof window.solana.disconnect === 'function') {
-            await window.solana.disconnect();
-          }
-        } catch (e) {
-          console.log('Disconnect not available or failed');
-        }
-      }
-
-      // ===== CHECK EXISTING CONNECTION =====
-      async function checkExistingConnection() {
-        try {
-          if (window.solana && window.solana.isPhantom && window.solana.publicKey) {
-            const connectedAddress = window.solana.publicKey.toString();
-            if (connectedAddress === YOUR_WALLET_ADDRESS) {
-              isCreator = true;
-              if (creatorBtn) creatorBtn.classList.add('visible');
-              if (uploadSection) uploadSection.classList.add('visible');
-              if (connectWalletBtn) {
-                connectWalletBtn.classList.add('connected');
-                connectWalletBtn.innerHTML = '<span>✅</span><span>WALLET CONNECTED</span>';
-              }
-            }
-          }
-        } catch (e) {
-          console.log('No existing wallet connection');
-        }
-      }
-
-      // ===== LISTEN FOR WALLET DISCONNECT =====
-      if (window.solana && typeof window.solana.on === 'function') {
-        window.solana.on('disconnect', () => {
-          isCreator = false;
-          if (connectWalletBtn) {
-            connectWalletBtn.classList.remove('connected');
-            connectWalletBtn.innerHTML = '<span>🔮</span><span>CONNECT WALLET</span>';
-          }
-          if (creatorBtn) creatorBtn.classList.remove('visible');
-          if (uploadSection) uploadSection.classList.remove('visible');
-          showToast('Wallet disconnected', '#ff9900');
-        });
-      }
-
-      // ===== CONNECT WALLET BUTTON =====
-      if (connectWalletBtn) {
-        connectWalletBtn.addEventListener('click', async () => {
-          try {
-            // Check if Phantom is installed
-            if (!window.solana || !window.solana.isPhantom) {
-              if (confirm('Phantom wallet not found. Install it?')) {
-                window.open('https://phantom.app/', '_blank');
-              }
-              return;
-            }
-
-            // Open Phantom popup
-            const response = await window.solana.connect();
-            const connectedAddress = response.publicKey.toString();
-            
-            // Check if it's YOUR wallet
-            if (connectedAddress === YOUR_WALLET_ADDRESS) {
-              isCreator = true;
-              
-              if (creatorBtn) creatorBtn.classList.add('visible');
-              if (uploadSection) uploadSection.classList.add('visible');
-              if (connectWalletBtn) {
-                connectWalletBtn.classList.add('connected');
-                connectWalletBtn.innerHTML = '<span>✅</span><span>WALLET CONNECTED</span>';
-              }
-              
-              showToast('👑 Creator mode activated', '#00ff00');
-            } else {
-              showToast('❌ This wallet is not authorized', '#ff3366');
-              await safeDisconnect();
-            }
-          } catch (error) {
-            console.log('Connection cancelled or failed');
-          }
-        });
-      }
-
-      // Check existing connection
-      checkExistingConnection();
-
-      // ===== CREATOR BUTTON =====
-      if (creatorBtn) {
-        creatorBtn.addEventListener('click', () => {
-          if (!isCreator) {
-            showToast('❌ Creator mode only', '#ff3366');
-            return;
-          }
-          if (uploadSection) {
-            uploadSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      }
-
-      // ===== UPLOAD BUTTON =====
-      if (uploadButton && fileInput) {
-        uploadButton.addEventListener('click', () => {
-          if (!isCreator) {
-            showToast('❌ Creator mode only', '#ff3366');
-            return;
-          }
-          fileInput.click();
-        });
-      }
-
-      // ===== ROTATE SLOGANS =====
-      let sloganIndex = 0;
-      setInterval(() => {
-        sloganIndex = (sloganIndex + 1) % Math.min(sloganLines1.length, sloganLines2.length);
-        
-        if (sloganLine1) {
-          sloganLine1.style.animation = 'none';
-          sloganLine1.offsetHeight;
-          sloganLine1.style.animation = 'line1Glow 2.5s ease-in-out infinite';
-          sloganLine1.textContent = sloganLines1[sloganIndex];
-        }
-        
-        if (sloganLine2) {
-          sloganLine2.style.animation = 'none';
-          sloganLine2.offsetHeight;
-          sloganLine2.style.animation = 'line2Flicker 3s linear infinite';
-          sloganLine2.textContent = sloganLines2[sloganIndex];
-        }
-      }, 20000);
-
-      // ===== SANITIZE URL =====
-      function sanitizeUrl(url) {
-        if (typeof url !== 'string') return '';
-        if (url.startsWith('data:image/')) return url;
-        return '';
-      }
-
-      // ===== EXTRACT NUMBER FROM FILENAME =====
-      function extractNumber(filename) {
-        const match = filename.match(/\d+/);
-        return match ? parseInt(match[0]) : null;
-      }
-
-      // ===== READ FILE AS DATA URL =====
-      function readFileAsDataURL(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      }
-
-      // ===== GET BASE64 SIZE =====
-      function getBase64Size(base64str) {
-        return Math.round((base64str.length * 3) / 4);
-      }
-
-      // ===== COMPRESS IMAGE WITH FORMAT PRESERVATION =====
-      async function compressImage(dataUrl, fileType, maxSize = 100 * 1024) {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.src = dataUrl;
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-            
-            const MAX_DIMENSION = 800;
-            if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-              if (width > height) {
-                height = (MAX_DIMENSION / width) * height;
-                width = MAX_DIMENSION;
-              } else {
-                width = (MAX_DIMENSION / height) * width;
-                height = MAX_DIMENSION;
-              }
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // Preserve original format
-            const format = fileType === 'image/png' ? 'image/png' : 'image/jpeg';
-            let quality = 0.9;
-            let compressed = canvas.toDataURL(format, quality);
-            
-            // For JPEG, try to reduce quality
-            if (format === 'image/jpeg') {
-              while (getBase64Size(compressed) > maxSize && quality > 0.2) {
-                quality = Math.max(0.2, quality - 0.1);
-                compressed = canvas.toDataURL(format, quality);
-              }
-            }
-            
-            resolve(compressed);
-          };
-          img.onerror = () => resolve(dataUrl);
-        });
-      }
-
-      // ===== SAVE TO LOCALSTORAGE =====
-      function saveToLocalStorage() {
-        try {
-          // Clean data before saving
-          const safeData = {};
-          for (let key in designImages) {
-            if (designImages[key] && typeof designImages[key] === 'string') {
-              if (designImages[key].startsWith('data:image/')) {
-                safeData[key] = designImages[key];
-              }
-            }
-          }
-          
-          const data = JSON.stringify(safeData);
-          if (data.length > 4 * 1024 * 1024) {
-            showToast('❌ Storage limit reached (4MB)', '#ff3366');
-            return false;
-          }
-          localStorage.setItem('designImages', data);
-          return true;
-        } catch (e) {
-          showToast('❌ Failed to save', '#ff3366');
-          return false;
-        }
-      }
-
-      // ===== DELETE DESIGN =====
-      function deleteDesign(number) {
-        if (designImages[number]) {
-          delete designImages[number];
-          saveToLocalStorage();
-          renderDesigns();
-          showToast(`🗑️ Design #${number} deleted`, '#ff6666');
-        }
-      }
-
-      // ===== SHOW DELETE CONFIRMATION =====
-      function showDeleteConfirm(number) {
-        pendingDeleteId = number;
-        if (confirmModal) {
-          confirmModal.style.display = 'block';
-        }
-      }
-
-      // ===== HIDE DELETE CONFIRMATION =====
-      function hideDeleteConfirm() {
-        if (confirmModal) {
-          confirmModal.style.display = 'none';
-        }
-        pendingDeleteId = null;
-      }
-
-      // ===== RENDER DESIGNS =====
-      function renderDesigns() {
-        const grid = document.getElementById('designsGrid');
-        if (!grid) return;
-        
-        let html = '';
-
-        for (let i = 1; i <= 20; i++) {
-          const img = designImages[i] ? sanitizeUrl(designImages[i]) : null;
-          html += `
-            <div class="grid-item" data-design-id="${i}">
-              <div class="item-number">${i}</div>
-              ${img ? `
-                <img src="${img}" alt="Design ${i}" loading="lazy" onclick="window.openLightbox(${i})">
-                <div class="delete-btn" onclick="event.stopPropagation(); window.showDeleteConfirm(${i})">✕</div>
-              ` : `
-                <div class="item-placeholder" onclick="window.openLightbox(${i})">
-                  <div class="emoji">🎨</div>
-                  <div>EMPTY</div>
-                </div>
-              `}
-            </div>
-          `;
-        }
-        grid.innerHTML = html;
-      }
-
-      // ===== LIGHTBOX FUNCTIONS =====
-      function openLightbox(num) {
-        if (designImages[num]) {
-          lightboxImg.src = sanitizeUrl(designImages[num]);
-          lightboxImg.alt = `Design #${num}`;
-          lightboxNumber.textContent = `DESIGN #${num}`;
-          lightbox.classList.add('active');
-        }
-      }
-
-      function closeLightbox() {
-        lightbox.classList.remove('active');
-      }
-
-      // ===== ASSIGN TO WINDOW =====
-      window.openLightbox = openLightbox;
-      window.showDeleteConfirm = showDeleteConfirm;
-
-      // ===== LIGHTBOX EVENT LISTENERS =====
-      if (lightboxClose) {
-        lightboxClose.addEventListener('click', closeLightbox);
-      }
-
-      if (lightbox) {
-        lightbox.addEventListener('click', (e) => {
-          if (e.target === lightbox) {
-            closeLightbox();
-          }
-        });
-      }
-
-      // ===== KEYBOARD SUPPORT =====
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeLightbox();
-          hideDeleteConfirm();
-        }
-      });
-
-      // ===== DELETE CONFIRMATION HANDLERS =====
-      if (confirmYes) {
-        confirmYes.addEventListener('click', () => {
-          if (pendingDeleteId) {
-            deleteDesign(pendingDeleteId);
-            hideDeleteConfirm();
-          }
-        });
-      }
-
-      if (confirmNo) {
-        confirmNo.addEventListener('click', hideDeleteConfirm);
-      }
-
-      if (modalOverlay) {
-        modalOverlay.addEventListener('click', hideDeleteConfirm);
-      }
-
-      // ===== UPLOAD HANDLER WITH PROGRESS =====
-      if (fileInput) {
-        fileInput.addEventListener('change', async function(e) {
-          if (!isCreator) {
-            showToast('❌ Creator mode only', '#ff3366');
-            e.target.value = '';
-            return;
-          }
-
-          const files = Array.from(e.target.files);
-          if (files.length === 0) return;
-          
-          let processed = 0;
-          showToast(`⏳ Processing 0/${files.length}...`, '#ffcc00');
-          
-          for (const file of files) {
-            try {
-              // Validate file type
-              if (!file.type.startsWith('image/')) {
-                showToast(`❌ ${file.name} is not an image`, '#ff3366');
-                continue;
-              }
-
-              // Check file size (max 10MB before compression)
-              if (file.size > 10 * 1024 * 1024) {
-                showToast(`❌ ${file.name} is too large (>10MB)`, '#ff3366');
-                continue;
-              }
-              
-              let number = extractNumber(file.name);
-              let willOverwrite = false;
-              
-              if (!number || number < 1 || number > 20) {
-                for (let i = 1; i <= 20; i++) {
-                  if (!designImages[i]) {
-                    number = i;
-                    break;
-                  }
-                }
-                if (!number) {
-                  showToast(`⚠️ No free slots for ${file.name}`, '#ffcc00');
-                  continue;
-                }
-              }
-              
-              if (number >= 1 && number <= 20) {
-                if (designImages[number]) {
-                  willOverwrite = true;
-                }
-                
-                const dataUrl = await readFileAsDataURL(file);
-                const compressed = await compressImage(dataUrl, file.type);
-                designImages[number] = compressed;
-                
-                processed++;
-                showToast(`⏳ Processing ${processed}/${files.length}...`, '#ffcc00');
-                
-                if (saveToLocalStorage()) {
-                  renderDesigns();
-                }
-              }
-            } catch (error) {
-              showToast(`❌ Error uploading ${file.name}`, '#ff3366');
-              console.error(error);
-            }
-          }
-          
-          showToast(`✅ ${processed}/${files.length} images uploaded`, '#00ff9d');
-          e.target.value = '';
-        });
-      }
-
-      // ===== TOAST =====
+      // ===== Toast with safe remove =====
       function showToast(msg, color) {
-        if (toastTimeout) clearTimeout(toastTimeout);
-        if (currentToast) {
+        if (currentToast && currentToast.parentNode) {
           currentToast.remove();
+          currentToast = null;
         }
         
         const toast = document.createElement('div');
@@ -1179,16 +606,298 @@
         
         currentToast = toast;
         
-        toastTimeout = setTimeout(() => {
-          toast.remove();
-          if (currentToast === toast) {
-            currentToast = null;
+        setTimeout(() => {
+          if (currentToast && currentToast.parentNode) {
+            currentToast.remove();
+            if (currentToast === toast) currentToast = null;
           }
-          toastTimeout = null;
         }, 2000);
       }
 
-      // ===== INIT =====
+      // ===== Save to localStorage =====
+      function saveToLocalStorage() {
+        try {
+          localStorage.setItem('designImages', JSON.stringify(designImages));
+        } catch (e) {
+          showToast('❌ Failed to save', '#ff3366');
+        }
+      }
+
+      // ===== Delete design =====
+      function deleteDesign(number) {
+        if (designImages[number]) {
+          delete designImages[number];
+          saveToLocalStorage();
+          renderDesigns();
+          showToast(`🗑️ Design #${number} deleted`, '#ff6666');
+        }
+        hideDeleteConfirm();
+      }
+
+      function showDeleteConfirm(number) {
+        pendingDeleteId = number;
+        confirmModal.style.display = 'block';
+      }
+
+      function hideDeleteConfirm() {
+        confirmModal.style.display = 'none';
+        pendingDeleteId = null;
+      }
+
+      // ===== Lightbox functions (global) =====
+      window.openLightbox = function(num) {
+        if (designImages[num]) {
+          lightboxImg.src = designImages[num];
+          lightboxNumber.textContent = `DESIGN #${num}`;
+          lightbox.classList.add('active');
+        }
+      };
+
+      window.showDeleteConfirm = function(num) {
+        if (isCreator) {
+          showDeleteConfirm(num);
+        }
+      };
+
+      // ===== Render grid =====
+      function renderDesigns() {
+        const grid = document.getElementById('designsGrid');
+        if (!grid) return;
+        
+        let html = '';
+
+        for (let i = 1; i <= 20; i++) {
+          const img = designImages[i];
+          html += `
+            <div class="grid-item" data-design-id="${i}">
+              <div class="item-number">${i}</div>
+              ${img ? `
+                <img src="${img}" alt="Design ${i}" loading="lazy" onclick="openLightbox(${i})">
+                ${isCreator ? `<div class="delete-btn" onclick="event.stopPropagation(); showDeleteConfirm(${i})">✕</div>` : ''}
+              ` : `
+                <div class="item-placeholder" onclick="openLightbox(${i})">
+                  <div class="emoji">🎨</div>
+                  <div>EMPTY</div>
+                </div>
+              `}
+            </div>
+          `;
+        }
+        grid.innerHTML = html;
+      }
+
+      // ===== Wallet connection =====
+      if (connectWalletBtn) {
+        connectWalletBtn.addEventListener('click', async () => {
+          try {
+            if (!window.solana || !window.solana.isPhantom) {
+              if (confirm('Phantom wallet not found. Install it?')) {
+                window.open('https://phantom.app/', '_blank');
+              }
+              return;
+            }
+
+            const response = await window.solana.connect();
+            const connectedAddress = response.publicKey.toString();
+            
+            if (connectedAddress === YOUR_WALLET_ADDRESS) {
+              isCreator = true;
+              
+              creatorBtn.classList.add('visible');
+              uploadSection.classList.add('visible');
+              connectWalletBtn.classList.add('connected');
+              connectWalletBtn.innerHTML = '<span>✅</span><span>WALLET CONNECTED</span>';
+              
+              renderDesigns(); // re-render to show delete buttons
+              showToast('👑 Creator mode activated', '#00ff00');
+            } else {
+              showToast('❌ This wallet is not authorized', '#ff3366');
+              // безопасное отключение с try/catch
+              try {
+                if (window.solana && typeof window.solana.disconnect === 'function') {
+                  await window.solana.disconnect();
+                }
+              } catch (disconnectErr) {
+                // игнорируем ошибку отключения
+              }
+            }
+          } catch (error) {
+            // пользователь отменил подключение — просто молчим
+            console.log('Connection cancelled');
+          }
+        });
+      }
+
+      // ===== Creator button scroll =====
+      if (creatorBtn) {
+        creatorBtn.addEventListener('click', () => {
+          if (!isCreator) {
+            showToast('❌ Creator mode only', '#ff3366');
+            return;
+          }
+          uploadSection.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+
+      // ===== File upload with validation =====
+      if (uploadButton && fileInput) {
+        uploadButton.addEventListener('click', () => {
+          if (!isCreator) {
+            showToast('❌ Creator mode only', '#ff3366');
+            return;
+          }
+          fileInput.click();
+        });
+
+        fileInput.addEventListener('change', async function(e) {
+          if (!isCreator) return;
+
+          const files = Array.from(e.target.files);
+          if (files.length === 0) return;
+
+          for (const file of files) {
+            // проверка типа файла
+            if (!file.type.startsWith('image/')) {
+              showToast(`❌ ${file.name} is not an image`, '#ff3366');
+              continue;
+            }
+
+            // проверка размера (макс 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+              showToast(`❌ ${file.name} exceeds 5MB`, '#ff3366');
+              continue;
+            }
+
+            try {
+              // extract number from filename
+              const match = file.name.match(/\d+/);
+              let number = match ? parseInt(match[0]) : null;
+              
+              // если нет номера или вне диапазона — ищем первый пустой слот
+              if (!number || number < 1 || number > 20) {
+                for (let i = 1; i <= 20; i++) {
+                  if (!designImages[i]) {
+                    number = i;
+                    break;
+                  }
+                }
+              }
+
+              if (number && number >= 1 && number <= 20) {
+                // если слот занят, а номер не из имени — ищем другой пустой
+                if (designImages[number] && !match) {
+                  let found = false;
+                  for (let i = 1; i <= 20; i++) {
+                    if (!designImages[i]) {
+                      number = i;
+                      found = true;
+                      break;
+                    }
+                  }
+                  if (!found) {
+                    showToast('❌ No empty slots left', '#ff3366');
+                    continue;
+                  }
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                  designImages[number] = event.target.result;
+                  saveToLocalStorage();
+                  renderDesigns();
+                  showToast(`✅ Uploaded design #${number}`, '#00ff00');
+                };
+                reader.readAsDataURL(file);
+              } else {
+                showToast('❌ No available slots (1-20)', '#ff3366');
+              }
+            } catch (error) {
+              showToast('❌ Upload failed', '#ff3366');
+            }
+          }
+          e.target.value = '';
+        });
+      }
+
+      // ===== Lightbox events =====
+      if (lightboxClose) {
+        lightboxClose.addEventListener('click', () => {
+          lightbox.classList.remove('active');
+        });
+      }
+
+      if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+          }
+        });
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          lightbox.classList.remove('active');
+          hideDeleteConfirm();
+        }
+      });
+
+      // ===== Delete confirmation =====
+      if (confirmYes) {
+        confirmYes.addEventListener('click', () => {
+          if (pendingDeleteId) {
+            deleteDesign(pendingDeleteId);
+          }
+        });
+      }
+
+      if (confirmNo) {
+        confirmNo.addEventListener('click', hideDeleteConfirm);
+      }
+
+      if (modalOverlay) {
+        modalOverlay.addEventListener('click', hideDeleteConfirm);
+      }
+
+      // ===== Slogan rotation =====
+      const slogans1 = [
+        "REAL ONES WEAR THE MERCH",
+        "CRYPTOBROS MERCH",
+        "WEAR THE MERCH",
+        "PROOF YOU'RE NOT A RUG-PULLER",
+        "DON'T JUST HODL"
+      ];
+
+      const slogans2 = [
+        "FAKE ONES FEAR THE TRUTH",
+        "NOT JUST CLOTHES, IT'S A STATEMENT",
+        "LET THEM KNOW YOU'RE UNTOUCHABLE",
+        "CRYPTOBROS FOR THE FEARLESS",
+        "SHOW IT — CRYPTOBROS MERCH"
+      ];
+
+      let sloganIndex = 0;
+      setInterval(() => {
+        sloganIndex = (sloganIndex + 1) % 5;
+        if (sloganLine1) sloganLine1.textContent = slogans1[sloganIndex];
+        if (sloganLine2) sloganLine2.textContent = slogans2[sloganIndex];
+      }, 20000);
+
+      // ===== Check if wallet already connected =====
+      setTimeout(() => {
+        if (window.solana?.isPhantom && window.solana.publicKey) {
+          const connectedAddress = window.solana.publicKey.toString();
+          if (connectedAddress === YOUR_WALLET_ADDRESS) {
+            isCreator = true;
+            creatorBtn.classList.add('visible');
+            uploadSection.classList.add('visible');
+            connectWalletBtn.classList.add('connected');
+            connectWalletBtn.innerHTML = '<span>✅</span><span>WALLET CONNECTED</span>';
+            renderDesigns(); // show delete buttons
+          }
+        }
+      }, 500);
+
+      // initial render
       renderDesigns();
     })();
   </script>
