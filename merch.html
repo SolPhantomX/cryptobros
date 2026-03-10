@@ -83,40 +83,6 @@
       box-shadow: 0 15px 40px rgba(255,204,0,0.5);
     }
 
-    /* Secret area for creator mode */
-    #secret-area {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      width: 60px;
-      height: 60px;
-      background: transparent;
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    /* Creator button (hidden by default) */
-    .creator-btn {
-      position: fixed;
-      bottom: 100px;
-      left: 20px;
-      z-index: 1000;
-      background: #ffcc00;
-      color: #000;
-      border: 2px solid #fff;
-      border-radius: 60px;
-      padding: 12px 24px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 0 30px #ffcc00;
-      display: none;
-    }
-    .creator-btn.visible {
-      display: block;
-    }
-
     /* Text block */
     .text-block {
       position: fixed;
@@ -151,7 +117,7 @@
       color: #ffffff;
     }
 
-    /* Image */
+    /* Image container */
     .image-container {
       position: fixed;
       top: 0;
@@ -180,45 +146,7 @@
       pointer-events: none;
     }
 
-    /* Upload section (creator only) */
-    .upload-section {
-      position: fixed;
-      bottom: 40px;
-      right: 40px;
-      z-index: 1000;
-      display: none;
-    }
-    .upload-section.visible {
-      display: block;
-    }
-
-    .upload-btn {
-      background: rgba(20, 20, 20, 0.9);
-      backdrop-filter: blur(12px);
-      border: 2px solid #ffcc00;
-      border-radius: 60px;
-      padding: 14px 32px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      color: #ffcc00;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      font-size: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .upload-btn:hover {
-      background: #ffcc00;
-      color: #000;
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(255,204,0,0.4);
-    }
-
-    .hidden-input {
-      display: none;
-    }
-
-    /* Toast notifications */
+    /* Toast */
     .toast {
       position: fixed;
       bottom: 30px;
@@ -254,12 +182,6 @@
     <span>DESIGN GALLERY</span>
   </a>
 
-  <!-- Secret area for double-click -->
-  <div id="secret-area"></div>
-
-  <!-- Creator button (appears after double-click) -->
-  <button class="creator-btn" id="creatorBtn">👑 CREATOR PANEL</button>
-
   <!-- Text block -->
   <div class="text-block">
     <div class="main-title" id="changingTitle">TRIBUNAL GEAR</div>
@@ -272,23 +194,9 @@
   </div>
   <div class="overlay"></div>
 
-  <!-- Upload section (hidden by default) -->
-  <div class="upload-section" id="uploadSection">
-    <input type="file" id="bgUpload" class="hidden-input" accept="image/*">
-    <button class="upload-btn" onclick="document.getElementById('bgUpload').click()">
-      📸 CHANGE BACKGROUND
-    </button>
-  </div>
-
   <script>
     (function() {
-      // ===== YOUR PAYMENT WALLET FOR MERCH =====
-      const PAYMENT_WALLET = "7VCogQuuv2FFurqZu2kegkgGPH6itevv6o4tD4JPYQyr";
-      
-      // Creator mode state
-      let isCreator = false;
-
-      // Titles and slogans
+      // ===== TITLES AND SLOGANS =====
       const titles = [
         "TRIBUNAL GEAR",
         "HONEST CREW ARMOR",
@@ -298,64 +206,46 @@
       ];
 
       const slogans = [
-        "Real ones wear the merch. Fake ones fear the truth. Suit up – show the world you're built different. Family pack recommended.",
-        "CRYPTOBROS Merch – not just clothes, it's a statement. Wear it loud, wear it proud. Only honest degens qualify. Buy for the squad.",
-        "Wear the merch. Let them know you're untouchable. Honest crypto fam only. One shirt today = whole crew tomorrow. Stack the squad.",
-        "CRYPTOBROS Merch: Proof you're not a rug-puller. Wear it, spread it, own it. Real enthusiasts gear up the whole circle. No fakes allowed.",
-        "Don't just HODL — SHOW it. CRYPTOBROS Merch for the fearless. Honest only. Buy for you, your wife, your mates, your kids. Let the world see the tribe."
+        "Real ones wear the merch. Fake ones fear the truth.",
+        "CRYPTOBROS Merch – not just clothes, it's a statement.",
+        "Wear the merch. Let them know you're untouchable.",
+        "CRYPTOBROS Merch: Proof you're not a rug-puller.",
+        "Don't just HODL — SHOW it. CRYPTOBROS Merch for the fearless."
       ];
 
       const colors = [
         '#ffcc00', '#ff3366', '#33ccff', '#aa66ff', '#00ffaa', '#ff8800', '#ff00ff', '#66ff66'
       ];
 
-      // DOM elements
       const titleEl = document.getElementById('changingTitle');
       const sloganEl = document.getElementById('changingSlogan');
       const mainImage = document.getElementById('mainImage');
-      const secretArea = document.getElementById('secret-area');
-      const creatorBtn = document.getElementById('creatorBtn');
-      const uploadSection = document.getElementById('uploadSection');
 
-      // ===== SECRET DOUBLE-CLICK ACTIVATION =====
-      secretArea.addEventListener('dblclick', () => {
-        isCreator = true;
-        creatorBtn.classList.add('visible');
-        uploadSection.classList.add('visible');
-        showToast('👑 Creator mode activated', '#ffcc00');
-      });
+      // ===== GET DESIGNS FROM LOCALSTORAGE =====
+      let designImages = JSON.parse(localStorage.getItem('designImages')) || {};
 
-      // ===== CREATOR BUTTON CLICK =====
-      creatorBtn.addEventListener('click', () => {
-        // Show creator menu or go to admin page
-        alert('Creator options:\n- Upload images\n- Manage orders\n- View payments to: ' + PAYMENT_WALLET);
-      });
-
-      // ===== IMAGE UPLOAD (creator only) =====
-      document.getElementById('bgUpload').addEventListener('change', function(e) {
-        if (!isCreator) {
-          showToast('❌ Creator mode only', '#ff3366');
-          return;
+      // ===== ROTATE BACKGROUND EVERY 15 SECONDS =====
+      function rotateBackground() {
+        // Get all uploaded designs as array
+        const designs = [];
+        for (let i = 1; i <= 20; i++) {
+          if (designImages[i]) {
+            designs.push(designImages[i]);
+          }
         }
 
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(event) {
-            mainImage.src = event.target.result;
-            localStorage.setItem('merchBackground', event.target.result);
-            showToast('✅ Background updated', '#00ff9d');
-          };
-          reader.readAsDataURL(file);
+        if (designs.length > 0) {
+          // Random design
+          const randomIndex = Math.floor(Math.random() * designs.length);
+          mainImage.src = designs[randomIndex];
+        } else {
+          // Fallback to merch-bg.jpg
+          mainImage.src = 'merch-bg.jpg';
         }
-        e.target.value = '';
-      });
-
-      // Load saved background
-      const savedImage = localStorage.getItem('merchBackground');
-      if (savedImage) {
-        mainImage.src = savedImage;
       }
+
+      // Rotate every 15 seconds
+      setInterval(rotateBackground, 15000);
 
       // ===== TITLE/SLOGAN ROTATION =====
       setInterval(() => {
@@ -378,21 +268,9 @@
         sloganEl.textContent = slogans[sloganIndex];
       }, 30000);
 
-      // Initial random colors
+      // Initial colors
       titleEl.style.color = colors[Math.floor(Math.random() * colors.length)];
       sloganEl.style.color = colors[Math.floor(Math.random() * colors.length)];
-
-      // Toast helper
-      function showToast(msg, color) {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = msg;
-        toast.style.borderColor = color;
-        toast.style.color = color;
-        toast.style.boxShadow = `0 0 30px ${color}`;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-      }
     })();
   </script>
 </body>
