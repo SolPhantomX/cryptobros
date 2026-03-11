@@ -6,18 +6,51 @@
   <title>CRYPTOBROS — DESIGN GALLERY</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- ТОЛЬКО ОДИН ШРИФТ - SYNE (толстый) -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      font-family: 'Sora', sans-serif;
+      font-family: 'Syne', sans-serif; /* Только Syne */
       background: #0a0a0a;
       color: #fff;
       min-height: 100vh;
       padding: 30px;
       position: relative;
       overflow-x: hidden;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+    
+    /* ДНЕВНОЙ РЕЖИМ */
+    body.light-mode {
+      background: #f0f0f0;
+      color: #222;
+    }
+    
+    body.light-mode .grid-item {
+      background: #ddd;
+      border-color: #aaa;
+    }
+    
+    body.light-mode .item-number {
+      background: rgba(255,255,255,0.9);
+      color: #000;
+      border-color: #000;
+    }
+    
+    body.light-mode .item-placeholder {
+      background: #ccc;
+      color: #333;
+    }
+    
+    body.light-mode .section-title {
+      color: #ff5500;
+      border-bottom-color: #ff5500;
+    }
+    
+    body.light-mode .freeze-overlay {
+      background: rgba(255, 255, 255, 0.3);
     }
     
     body::before {
@@ -41,9 +74,7 @@
       body { padding: 15px; }
       .page-title { font-size: 3rem; }
       .back-button { top: 15px; left: 15px; padding: 12px 24px; }
-      .admin-button { bottom: 20px; right: 15px; padding: 12px 20px; }
-      .freeze-button { bottom: 90px; right: 15px; padding: 12px 20px; }
-      .clear-button { bottom: 160px; right: 15px; padding: 12px 20px; }
+      .theme-toggle { top: 15px; right: 15px; width: 50px; height: 50px; }
     }
 
     /* ===== BACK BUTTON ===== */
@@ -64,7 +95,6 @@
       transition: all 0.4s ease;
       text-decoration: none;
       color: #ffcc00;
-      font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 18px;
       box-shadow: 0 0 30px rgba(255,204,0,0.5);
@@ -75,95 +105,40 @@
       transform: translateX(-5px) scale(1.05);
     }
 
-    /* ===== UPLOAD BUTTON ===== */
-    .admin-button {
+    /* ===== THEME TOGGLE (ДЕНЬ/НОЧЬ) ===== */
+    .theme-toggle {
       position: fixed;
-      bottom: 100px;
+      top: 30px;
       right: 30px;
       z-index: 1000;
-      background: #9945FF;
-      color: white;
-      border: none;
-      border-radius: 60px;
-      padding: 16px 32px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      font-size: 16px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #333;
+      border: 3px solid #ffcc00;
       cursor: pointer;
-      box-shadow: 0 0 30px #9945FF;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 0 30px #ffcc00;
       transition: all 0.3s ease;
     }
-    .admin-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 50px #9945FF;
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
     }
-
-    /* ===== FREEZE BUTTON ===== */
-    .freeze-button {
-      position: fixed;
-      bottom: 180px;
-      right: 30px;
-      z-index: 1000;
-      background: #ff3366;
-      color: white;
-      border: none;
-      border-radius: 60px;
-      padding: 16px 32px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 0 30px #ff3366;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.3s ease;
-    }
-    .freeze-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 60px #ff3366;
-    }
-    .freeze-button.frozen {
-      background: #00ff00;
+    .theme-toggle.light {
+      background: #ffcc00;
       color: #000;
-      box-shadow: 0 0 30px #00ff00;
     }
 
-    /* ===== CLEAR BUTTON (NEW) ===== */
-    .clear-button {
-      position: fixed;
-      bottom: 260px;
-      right: 30px;
-      z-index: 1000;
-      background: #ff8800;
-      color: white;
-      border: none;
-      border-radius: 60px;
-      padding: 16px 32px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 0 30px #ff8800;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.3s ease;
-    }
-    .clear-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 60px #ff8800;
-    }
+    /* УБРАНЫ ВСЕ ЛИШНИЕ КНОПКИ: admin, freeze, clear */
 
     .page-title {
-      font-family: 'Syne', sans-serif;
+      font-weight: 800;
       font-size: 5rem;
       text-align: center;
       margin: 80px 0 20px;
-      font-weight: 800;
       background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff, #00ff99, #ffcc00, #ff3366);
       -webkit-background-clip: text;
       background-clip: text;
@@ -179,7 +154,6 @@
       margin-bottom: 50px;
     }
     .slogan-line1 {
-      font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 2.2rem;
       color: #ff6600;
@@ -189,7 +163,6 @@
     }
     @keyframes line1Glow { 0%,100%{color:#ff6600} 33%{color:#ff00ff} 66%{color:#ffaa00} }
     .slogan-line2 {
-      font-family: 'Syne', sans-serif;
       font-size: 1.3rem;
       color: #00ff00;
       text-shadow: 0 0 15px #00ff00;
@@ -198,7 +171,6 @@
     @keyframes line2Flicker { 0%,100%{color:#00ff00} 20%{color:#00ffff} 40%{color:#ffff00} 60%{color:#ff00ff} 80%{color:#00ff00} }
 
     .section-title {
-      font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 2.8rem;
       margin: 40px 0 30px;
@@ -227,6 +199,7 @@
       border-bottom: 2px solid #333;
       overflow: hidden;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
     .grid-item:nth-child(4n) { border-right: none; }
     .grid-item:nth-last-child(-n+4) { border-bottom: none; }
@@ -243,6 +216,11 @@
       object-fit: contain;
       background: #0a0a0a;
       display: block;
+      transition: background 0.5s ease;
+    }
+    
+    body.light-mode .grid-item img {
+      background: #fff;
     }
     
     .item-number {
@@ -258,9 +236,10 @@
       align-items: center;
       justify-content: center;
       color: #ffcc00;
-      font-family: 'Syne', sans-serif;
+      font-weight: 700;
       box-shadow: 0 0 20px #ffcc00;
       z-index: 2;
+      transition: all 0.5s ease;
     }
     
     .item-placeholder {
@@ -272,49 +251,9 @@
       justify-content: center;
       color: #666;
       background: #0f0f0f;
+      font-weight: 400;
     }
     .item-placeholder .emoji { font-size: 3.5rem; opacity: 0.5; }
-
-    /* ===== UPLOAD SECTION ===== */
-    .upload-section {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 40px;
-      background: rgba(0,0,0,0.9);
-      border: 3px solid #00ffff;
-      border-radius: 30px;
-      text-align: center;
-      box-shadow: 0 0 60px #00ffff;
-    }
-    .upload-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 2.5rem;
-      margin-bottom: 30px;
-      color: #ff00ff;
-      text-shadow: 0 0 30px #ff00ff;
-    }
-    .upload-btn {
-      background: transparent;
-      border: 3px solid #00ff00;
-      color: #00ff00;
-      padding: 18px 45px;
-      border-radius: 60px;
-      cursor: pointer;
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      box-shadow: 0 0 30px #00ff00;
-    }
-    .upload-btn:hover {
-      background: #00ff00;
-      color: #000;
-      transform: scale(1.1);
-    }
-    .hidden-input { display: none; }
-    .upload-note {
-      color: #ffaa00;
-      margin-top: 25px;
-      font-size: 14px;
-    }
 
     /* ===== LIGHTBOX ===== */
     .lightbox {
@@ -354,6 +293,7 @@
       border: 3px solid #ff00ff;
       border-radius: 50%;
       z-index: 10001;
+      font-weight: 400;
     }
     .lightbox-number {
       position: absolute;
@@ -366,10 +306,10 @@
       padding: 12px 35px;
       border-radius: 60px;
       border: 3px solid #00ffff;
-      font-family: 'Syne', sans-serif;
+      font-weight: 700;
     }
 
-    /* ===== FREEZE OVERLAY - FIXED ===== */
+    /* ===== FREEZE OVERLAY ===== */
     .freeze-overlay {
       position: fixed;
       top: 0;
@@ -379,28 +319,12 @@
       background: rgba(0, 0, 0, 0.3);
       z-index: 9999;
       display: none;
-      pointer-events: all; /* FIXED: теперь блокирует клики */
+      pointer-events: all;
+      transition: background 0.5s ease;
     }
     .freeze-overlay.active { display: block; }
 
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: #333;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10001;
-      display: none;
-    }
-    .progress-bar.active { display: block; }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #00ff00, #00ffff, #ff00ff);
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
+    /* ===== LOADING ===== */
     .loading-indicator {
       position: fixed;
       top: 50%;
@@ -408,7 +332,7 @@
       transform: translate(-50%, -50%);
       color: #00ffff;
       font-size: 2rem;
-      font-family: 'Syne', sans-serif;
+      font-weight: 700;
       text-shadow: 0 0 30px #00ffff;
       z-index: 40000;
       background: rgba(0,0,0,0.9);
@@ -421,9 +345,8 @@
   </style>
 </head>
 <body>
-  <div class="progress-bar" id="progressBar">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
+  <!-- КНОПКА ДЕНЬ/НОЧЬ (ВМЕСТО ВСЕХ ЛИШНИХ) -->
+  <div class="theme-toggle" id="themeToggle">🌙</div>
   
   <div class="loading-indicator" id="loadingIndicator">⏳ LOADING...</div>
 
@@ -432,21 +355,7 @@
     <span>BACK TO MERCH</span>
   </a>
 
-  <button class="admin-button" id="adminButton">
-    <span>📤</span>
-    <span>UPLOAD DESIGNS</span>
-  </button>
-
-  <button class="freeze-button" id="freezeButton">
-    <span>🔒</span>
-    <span>FREEZE GALLERY</span>
-  </button>
-
-  <!-- NEW: Clear button -->
-  <button class="clear-button" id="clearButton">
-    <span>🗑️</span>
-    <span>CLEAR ALL</span>
-  </button>
+  <!-- ВСЕ ЛИШНИЕ КНОПКИ УДАЛЕНЫ: admin, freeze, clear -->
 
   <div class="freeze-overlay" id="freezeOverlay"></div>
 
@@ -467,16 +376,7 @@
     <div class="section-title">⚡ DESIGNS 1–20 ⚡</div>
     <div class="image-grid" id="designsGrid"></div>
 
-    <div class="upload-section" id="uploadSection">
-      <div class="upload-title">📤 UPLOAD DESIGNS</div>
-      <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
-      <button class="upload-btn" id="uploadButton">CHOOSE IMAGES</button>
-      <div class="upload-note">
-        Files with numbers (design5.jpg) → slot #5<br>
-        Files without numbers → fill empty slots in order<br>
-        Max file size: 5MB | Max files: 20
-      </div>
-    </div>
+    <!-- Секция загрузки ТОЖЕ УДАЛЕНА -->
   </div>
 
   <script>
@@ -484,28 +384,20 @@
       'use strict';
       
       let designImages = {};
-      let isFrozen = false;
-      let processingFiles = false; // NEW: prevent concurrent uploads
+      let isFrozen = false; // Оставляем для совместимости
 
       // DOM elements
-      const adminButton = document.getElementById('adminButton');
-      const freezeButton = document.getElementById('freezeButton');
-      const clearButton = document.getElementById('clearButton'); // NEW
+      const themeToggle = document.getElementById('themeToggle');
       const freezeOverlay = document.getElementById('freezeOverlay');
-      const uploadSection = document.getElementById('uploadSection');
-      const uploadButton = document.getElementById('uploadButton');
-      const fileInput = document.getElementById('designUpload');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxNumber = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
       const designsGrid = document.getElementById('designsGrid');
-      const progressBar = document.getElementById('progressBar');
-      const progressFill = document.getElementById('progressFill');
       const loadingIndicator = document.getElementById('loadingIndicator');
 
-      // ===== Toast =====
-      function showToast(msg, color, duration = 2000) {
+      // ===== Toast (упрощенный) =====
+      function showToast(msg, color) {
         const toast = document.createElement('div');
         toast.textContent = msg;
         toast.style.cssText = `
@@ -518,51 +410,38 @@
           color: ${color};
           padding: 15px 35px;
           border-radius: 60px;
-          font-family: 'Sora', sans-serif;
+          font-weight: 700;
           z-index: 30000;
-          animation: fadeInOut ${duration}ms ease;
         `;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), duration);
+        setTimeout(() => toast.remove(), 2000);
       }
 
-      // ===== Loading Indicator =====
-      function showLoading() {
-        if (loadingIndicator) loadingIndicator.classList.add('active');
-      }
-      
-      function hideLoading() {
-        if (loadingIndicator) loadingIndicator.classList.remove('active');
-      }
-
-      // ===== Progress Bar =====
-      function updateProgress(percent) {
-        if (progressFill) progressFill.style.width = percent + '%';
-      }
-      
-      function showProgress() {
-        if (progressBar) progressBar.classList.add('active');
-      }
-      
-      function hideProgress() {
-        if (progressBar) progressBar.classList.remove('active');
-        updateProgress(0);
-      }
-
-      // ===== Check localStorage size =====
-      function isStorageAvailable() {
-        try {
-          const test = 'test';
-          localStorage.setItem(test, test);
-          localStorage.removeItem(test);
-          return true;
-        } catch(e) {
-          return false;
+      // ===== THEME TOGGLE (ДЕНЬ/НОЧЬ) =====
+      function toggleTheme() {
+        const body = document.body;
+        body.classList.toggle('light-mode');
+        
+        if (body.classList.contains('light-mode')) {
+          themeToggle.textContent = '☀️';
+          themeToggle.classList.add('light');
+          localStorage.setItem('cryptobros_theme', 'light');
+        } else {
+          themeToggle.textContent = '🌙';
+          themeToggle.classList.remove('light');
+          localStorage.setItem('cryptobros_theme', 'dark');
         }
       }
 
-      function getStorageSize(data) {
-        return new Blob([data]).size;
+      function loadTheme() {
+        const savedTheme = localStorage.getItem('cryptobros_theme');
+        if (savedTheme === 'light') {
+          document.body.classList.add('light-mode');
+          themeToggle.textContent = '☀️';
+          themeToggle.classList.add('light');
+        } else {
+          themeToggle.textContent = '🌙';
+        }
       }
 
       // ===== Render Grid =====
@@ -605,130 +484,11 @@
       function closeLightbox() {
         lightbox.classList.remove('active');
         lightboxImg.src = '';
-        lightboxImg.alt = '';
         document.body.style.overflow = '';
       }
 
-      // ===== File Processing =====
-      async function processFiles(files) {
-        if (isFrozen) {
-          showToast('🔒 Gallery is frozen', '#ff3366');
-          return 0;
-        }
-
-        if (processingFiles) {
-          showToast('⏳ Already uploading...', '#ffaa00');
-          return 0;
-        }
-
-        if (files.length > 20) {
-          showToast('⚠️ Maximum 20 files at once', '#ffaa00');
-          files = files.slice(0, 20);
-        }
-        
-        processingFiles = true;
-        let successCount = 0;
-        let errorCount = 0;
-        const totalFiles = files.length;
-        
-        showLoading();
-        showProgress();
-        
-        for (let index = 0; index < files.length; index++) {
-          const file = files[index];
-          
-          const progress = Math.round((index / totalFiles) * 100);
-          updateProgress(progress);
-          
-          const match = file.name.match(/\d+/);
-          let slot = null;
-          
-          if (match) {
-            slot = parseInt(match[0]);
-            if (slot < 1 || slot > 20) slot = null;
-          }
-          
-          if (!slot) {
-            for (let i = 1; i <= 20; i++) {
-              if (!designImages[i]) {
-                slot = i;
-                break;
-              }
-            }
-          }
-          
-          if (slot && !designImages[slot]) {
-            try {
-              const dataUrl = await readFileAsDataURL(file);
-              designImages[slot] = dataUrl;
-              successCount++;
-            } catch (error) {
-              console.error('Error reading file:', file.name, error);
-              errorCount++;
-              showToast(`❌ Failed to load ${file.name}`, '#ff3366', 1500);
-            }
-          } else if (slot && designImages[slot]) {
-            showToast(`⚠️ Slot ${slot} already occupied`, '#ffaa00', 1000);
-          }
-        }
-        
-        updateProgress(100);
-        
-        // Save if successful
-        if (successCount > 0) {
-          saveDesigns();
-          renderDesigns();
-        }
-        
-        setTimeout(() => {
-          hideProgress();
-          hideLoading();
-          processingFiles = false;
-        }, 500);
-        
-        if (successCount > 0) {
-          showToast(`✅ Uploaded ${successCount} files${errorCount ? `, ${errorCount} failed` : ''}`, '#00ff00');
-        } else if (errorCount > 0) {
-          showToast(`❌ All ${errorCount} files failed`, '#ff3366');
-        }
-        
-        return successCount;
-      }
-
-      function readFileAsDataURL(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = e => resolve(e.target.result);
-          reader.onerror = () => reject(new Error('FileReader failed'));
-          reader.readAsDataURL(file);
-        });
-      }
-
-      function saveDesigns() {
-        if (!isStorageAvailable()) {
-          showToast('⚠️ localStorage not available', '#ffaa00');
-          return;
-        }
-
-        try {
-          const data = JSON.stringify(designImages);
-          const sizeMB = getStorageSize(data) / (1024 * 1024);
-          
-          if (sizeMB > 4.5) { // Leave some margin (5MB limit)
-            showToast('⚠️ Data too large for storage', '#ffaa00');
-            return;
-          }
-          
-          localStorage.setItem('cryptobros_designs', data);
-        } catch (e) {
-          console.error('Failed to save designs', e);
-          showToast('❌ Failed to save to localStorage', '#ff3366');
-        }
-      }
-
+      // ===== Load designs from localStorage =====
       function loadDesigns() {
-        if (!isStorageAvailable()) return;
-        
         const saved = localStorage.getItem('cryptobros_designs');
         if (saved) {
           try {
@@ -736,55 +496,24 @@
           } catch (e) {
             console.error('Failed to parse saved designs', e);
             designImages = {};
-            localStorage.removeItem('cryptobros_designs');
           }
         }
       }
 
-      // ===== CLEAR ALL DESIGNS (NEW) =====
-      function clearAllDesigns() {
-        if (isFrozen) {
-          showToast('🔒 Gallery is frozen - cannot clear', '#ff3366');
-          return;
-        }
-
-        if (confirm('⚠️ CLEAR ALL DESIGNS? This cannot be undone!')) {
-          designImages = {};
-          localStorage.removeItem('cryptobros_designs');
-          renderDesigns();
-          showToast('🗑️ All designs cleared', '#ff8800');
-        }
-      }
-
-      // ===== FREEZE =====
-      function freezeGallery() {
-        if (isFrozen) return;
-        isFrozen = true;
-        
-        localStorage.setItem('cryptobros_frozen', 'true');
-        
-        if (freezeButton) {
-          freezeButton.classList.add('frozen');
-          freezeButton.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
-        }
-        if (freezeOverlay) freezeOverlay.classList.add('active');
-        
-        showToast('🔒 Gallery frozen', '#00ff00');
-      }
-
+      // ===== Check frozen state =====
       function checkFrozen() {
         if (localStorage.getItem('cryptobros_frozen') === 'true') {
           isFrozen = true;
-          
-          if (freezeButton) {
-            freezeButton.classList.add('frozen');
-            freezeButton.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
-          }
           if (freezeOverlay) freezeOverlay.classList.add('active');
         }
       }
 
       // ===== Event Listeners =====
+      
+      // Theme toggle
+      if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+      }
       
       // Клик по сетке
       if (designsGrid) {
@@ -795,57 +524,6 @@
             openLightbox(id);
           }
         });
-      }
-
-      // Admin button - scroll to upload
-      if (adminButton) {
-        adminButton.addEventListener('click', () => {
-          if (uploadSection) {
-            uploadSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      }
-
-      // UPLOAD кнопка
-      if (uploadButton && fileInput) {
-        uploadButton.addEventListener('click', () => {
-          if (isFrozen) {
-            showToast('🔒 Gallery is frozen', '#ff3366');
-            return;
-          }
-          fileInput.click();
-        });
-
-        fileInput.addEventListener('change', async function(e) {
-          const files = Array.from(e.target.files)
-            .filter(f => f.type.startsWith('image/'))
-            .filter(f => f.size <= 5 * 1024 * 1024);
-          
-          const invalidFiles = e.target.files.length - files.length;
-          if (invalidFiles > 0) {
-            showToast(`⚠️ ${invalidFiles} files were too large (max 5MB)`, '#ffaa00');
-          }
-          
-          if (files.length) {
-            await processFiles(files);
-          }
-          
-          e.target.value = '';
-        });
-      }
-
-      // FREEZE кнопка
-      if (freezeButton) {
-        freezeButton.addEventListener('click', () => {
-          if (!isFrozen && confirm('FREEZE GALLERY? This cannot be undone!')) {
-            freezeGallery();
-          }
-        });
-      }
-
-      // CLEAR кнопка (NEW)
-      if (clearButton) {
-        clearButton.addEventListener('click', clearAllDesigns);
       }
 
       // Lightbox
@@ -869,6 +547,7 @@
       loadDesigns();
       checkFrozen();
       renderDesigns();
+      loadTheme(); // Загружаем сохраненную тему
     })();
   </script>
 </body>
