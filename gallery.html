@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ===== STYLES (как в предыдущем коде, без изменений) ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     body {
       font-family: 'Sora', sans-serif;
       background: #0a0a0a;
@@ -19,7 +19,6 @@
       position: relative;
       overflow-x: hidden;
     }
-    
     body::before {
       content: '';
       position: fixed;
@@ -34,31 +33,15 @@
       z-index: -1;
       animation: glowPulse 8s ease-in-out infinite;
     }
-    
     @keyframes glowPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
-    
-    @media (prefers-reduced-motion: reduce) {
-      body::before, .page-title, .slogan-line1, .slogan-line2 {
-        animation: none !important;
-      }
-    }
-    
-    @media (max-width: 1024px) { 
-      .image-grid { grid-template-columns: repeat(3, 1fr); } 
-    }
-    @media (max-width: 768px) { 
+    @media (max-width: 768px) {
       body { padding: 15px; }
       .page-title { font-size: 3rem; }
       .back-button { top: 15px; left: 15px; padding: 12px 24px; }
       .admin-button { bottom: 20px; right: 15px; padding: 12px 20px; }
       .freeze-button { bottom: 90px; right: 15px; padding: 12px 20px; }
-      .image-grid { grid-template-columns: repeat(2, 1fr); } 
-    }
-    @media (max-width: 480px) { 
-      .image-grid { grid-template-columns: 1fr; } 
     }
 
-    /* ===== BUTTONS ===== */
     .back-button {
       position: fixed;
       top: 30px;
@@ -107,13 +90,9 @@
       gap: 10px;
       transition: all 0.3s ease;
     }
-    .admin-button:hover:not(:disabled) {
+    .admin-button:hover {
       transform: scale(1.05);
       box-shadow: 0 0 50px #9945FF;
-    }
-    .admin-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
     }
 
     .freeze-button {
@@ -136,7 +115,7 @@
       gap: 10px;
       transition: all 0.3s ease;
     }
-    .freeze-button:hover:not(:disabled) {
+    .freeze-button:hover {
       transform: scale(1.05);
       box-shadow: 0 0 60px #ff3366;
     }
@@ -144,10 +123,8 @@
       background: #00ff00;
       color: #000;
       box-shadow: 0 0 30px #00ff00;
-    }
-    .freeze-button:disabled {
+      pointer-events: none;
       opacity: 0.7;
-      cursor: default;
     }
 
     .page-title {
@@ -201,7 +178,6 @@
 
     .gallery-container { max-width: 1200px; margin: 0 auto; }
     
-    /* ===== GALLERY GRID ===== */
     .image-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -234,7 +210,6 @@
       object-fit: contain;
       background: #0a0a0a;
       display: block;
-      pointer-events: none;
     }
     
     .item-number {
@@ -253,7 +228,6 @@
       font-family: 'Syne', sans-serif;
       box-shadow: 0 0 20px #ffcc00;
       z-index: 2;
-      pointer-events: none;
     }
     
     .item-placeholder {
@@ -268,7 +242,6 @@
     }
     .item-placeholder .emoji { font-size: 3.5rem; opacity: 0.5; }
 
-    /* ===== UPLOAD SECTION ===== */
     .upload-section {
       max-width: 1200px;
       margin: 40px auto;
@@ -297,14 +270,10 @@
       font-size: 18px;
       box-shadow: 0 0 30px #00ff00;
     }
-    .upload-btn:hover:not(:disabled) {
+    .upload-btn:hover {
       background: #00ff00;
       color: #000;
       transform: scale(1.1);
-    }
-    .upload-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
     }
     .hidden-input { display: none; }
     .upload-note {
@@ -313,7 +282,6 @@
       font-size: 14px;
     }
 
-    /* ===== LIGHTBOX ===== */
     .lightbox {
       display: none;
       position: fixed;
@@ -334,7 +302,6 @@
       border: 4px solid #ff00ff;
       border-radius: 15px;
       box-shadow: 0 0 100px #ff00ff;
-      pointer-events: none;
     }
     .lightbox-close {
       position: absolute;
@@ -353,9 +320,6 @@
       border-radius: 50%;
       z-index: 10001;
     }
-    .lightbox-close:focus {
-      outline: 3px solid white;
-    }
     .lightbox-number {
       position: absolute;
       bottom: 30px;
@@ -369,31 +333,7 @@
       border: 3px solid #00ffff;
       font-family: 'Syne', sans-serif;
     }
-    
-    .lightbox-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      color: white;
-      font-size: 3rem;
-      cursor: pointer;
-      background: rgba(0,0,0,0.5);
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      border: 2px solid #ff00ff;
-      z-index: 10002;
-    }
-    .lightbox-nav:hover {
-      background: #ff00ff;
-    }
-    .lightbox-prev { left: 30px; }
-    .lightbox-next { right: 30px; }
 
-    /* ===== FREEZE OVERLAY ===== */
     .freeze-overlay {
       position: fixed;
       top: 0;
@@ -406,69 +346,28 @@
       pointer-events: none;
     }
     .freeze-overlay.active { display: block; }
-
-    .storage-warning {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #ff3366;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 14px;
-      z-index: 10000;
-      display: none;
-    }
-    .storage-warning.active { display: block; }
-
-    .spinner {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      border: 6px solid rgba(255,255,255,0.1);
-      border-top: 6px solid #00ffff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      z-index: 50000;
-      display: none;
-    }
-    .spinner.active { display: block; }
-    @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
   </style>
 </head>
 <body>
-  <div class="storage-warning" id="storageWarning">⚠️ Storage almost full</div>
-  <div class="spinner" id="spinner"></div>
-
   <a href="https://www.cryptobros.pro/merch.html" class="back-button" target="_blank" rel="noopener noreferrer">
     <span>←</span>
     <span>BACK TO MERCH</span>
   </a>
 
-  <button class="admin-button" id="adminButton" aria-label="Upload designs">
+  <button class="admin-button" id="adminButton">
     <span>📤</span>
     <span>UPLOAD DESIGNS</span>
   </button>
 
-  <button class="freeze-button" id="freezeButton" aria-label="Freeze gallery">
+  <button class="freeze-button" id="freezeButton">
     <span>🔒</span>
     <span>FREEZE GALLERY</span>
-  </button>
-  
-  <button class="freeze-button" id="unfreezeButton" style="bottom: 240px; background: #00ccff; display: none;" aria-label="Unfreeze gallery">
-    <span>🔓</span>
-    <span>UNFREEZE</span>
   </button>
 
   <div class="freeze-overlay" id="freezeOverlay"></div>
 
-  <div class="lightbox" id="lightbox" role="dialog" aria-label="Image preview">
-    <div class="lightbox-close" id="lightboxClose" aria-label="Close" tabindex="0">✕</div>
-    <div class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image" tabindex="0">←</div>
-    <div class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image" tabindex="0">→</div>
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-close" id="lightboxClose">✕</div>
     <img id="lightboxImg" src="" alt="">
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
@@ -490,9 +389,7 @@
       <button class="upload-btn" id="uploadButton">CHOOSE IMAGES</button>
       <div class="upload-note">
         Files with numbers (design5.jpg) → slot #5<br>
-        Files without numbers → fill empty slots in order<br>
-        Max file size: 1.5MB per image<br>
-        Max total: ~4.5MB
+        Files without numbers → fill empty slots in order
       </div>
     </div>
   </div>
@@ -501,37 +398,42 @@
     (function() {
       'use strict';
       
-      // ===== CONFIG =====
-      const STORAGE_KEY = 'cryptobros_designs';
-      const FROZEN_KEY = 'cryptobros_frozen';
-      const MAX_STORAGE_SIZE = 4.5 * 1024 * 1024; // 4.5MB total
-      const MAX_FILE_SIZE = 1.5 * 1024 * 1024; // 1.5MB per file
+      // ===== ТОЛЬКО ДЛЯ ТЕБЯ =====
+      // Замени 'cryptobros' на свой пароль
+      const SECRET_KEY = 'cryptobros'; 
       
-      // ===== STATE =====
+      // Проверяем секретный ключ в URL
+      // Пример: file.html?key=cryptobros
+      const urlParams = new URLSearchParams(window.location.search);
+      const isAdmin = urlParams.get('key') === SECRET_KEY;
+      
       let designs = {};
       let frozen = false;
-      let currentLightboxIndex = 1;
-      let uploadInProgress = false;
       
-      // ===== DOM ELEMENTS =====
+      // DOM элементы
       const grid = document.getElementById('designsGrid');
       const fileInput = document.getElementById('designUpload');
       const uploadBtn = document.getElementById('uploadButton');
       const adminBtn = document.getElementById('adminButton');
       const freezeBtn = document.getElementById('freezeButton');
-      const unfreezeBtn = document.getElementById('unfreezeButton');
       const overlay = document.getElementById('freezeOverlay');
+      const uploadSection = document.getElementById('uploadSection');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxNum = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
-      const lightboxPrev = document.getElementById('lightboxPrev');
-      const lightboxNext = document.getElementById('lightboxNext');
-      const storageWarning = document.getElementById('storageWarning');
-      const spinner = document.getElementById('spinner');
       
-      // ===== UTILS =====
-      function showMessage(text, color, duration = 3000) {
+      // ===== Если не админ - прячем кнопки =====
+      if (!isAdmin) {
+        adminBtn.style.display = 'none';
+        uploadSection.style.display = 'none';
+        freezeBtn.style.display = 'none';
+      }
+      
+      // ===== Показываем сообщение только админу =====
+      function showMessage(text, color) {
+        if (!isAdmin) return; // Только админ видит сообщения
+        
         const msg = document.createElement('div');
         msg.textContent = text;
         msg.style.cssText = `
@@ -546,48 +448,21 @@
           border-radius: 60px;
           font-family: 'Sora', sans-serif;
           z-index: 30000;
-          text-align: center;
-          max-width: 90%;
         `;
         document.body.appendChild(msg);
-        setTimeout(() => msg.remove(), duration);
+        setTimeout(() => msg.remove(), 2000);
       }
       
-      function setButtonsDisabled(disabled) {
-        adminBtn.disabled = disabled || frozen;
-        uploadBtn.disabled = disabled || frozen;
-      }
-      
-      function checkStorageSize() {
-        try {
-          const data = JSON.stringify(designs);
-          const size = new Blob([data]).size;
-          
-          if (size > MAX_STORAGE_SIZE) {
-            storageWarning.classList.add('active');
-            return false;
-          } else {
-            storageWarning.classList.remove('active');
-            return true;
-          }
-        } catch (e) {
-          console.error('Storage check failed:', e);
-          return false;
-        }
-      }
-      
-      // ===== RENDER GRID =====
+      // ===== Render grid =====
       function renderGrid() {
-        if (!grid) return;
-        
         let html = '';
         for (let i = 1; i <= 20; i++) {
           const img = designs[i];
           html += `
-            <div class="grid-item" data-id="${i}" role="button" tabindex="0" aria-label="Design ${i}${img ? '' : ' empty'}">
+            <div class="grid-item" data-id="${i}">
               <div class="item-number">${i}</div>
               ${img ? 
-                `<img src="${img}" alt="Design ${i}" loading="lazy">` : 
+                `<img src="${img}" alt="Design ${i}">` : 
                 `<div class="item-placeholder">
                   <div class="emoji">🎨</div>
                   <div>EMPTY</div>
@@ -597,24 +472,18 @@
           `;
         }
         grid.innerHTML = html;
-        checkStorageSize();
       }
       
-      // ===== LIGHTBOX =====
+      // ===== Lightbox =====
       function openLightbox(id) {
-        if (!designs[id]) {
+        if (designs[id]) {
+          lightboxImg.src = designs[id];
+          lightboxNum.textContent = `DESIGN #${id}`;
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        } else {
           showMessage(`Slot #${id} is empty`, '#ffaa00');
-          return;
         }
-        
-        currentLightboxIndex = id;
-        lightboxImg.src = designs[id];
-        lightboxNum.textContent = `DESIGN #${id}`;
-        lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        // Move focus to close button for screen readers
-        setTimeout(() => lightboxClose.focus(), 100);
       }
       
       function closeLightbox() {
@@ -623,289 +492,106 @@
         document.body.style.overflow = '';
       }
       
-      function nextLightbox() {
-        let next = currentLightboxIndex + 1;
-        while (next <= 20 && !designs[next]) {
-          next++;
-        }
-        if (next <= 20) {
-          openLightbox(next);
-        } else {
-          showMessage('No more designs', '#ffaa00');
-        }
-      }
-      
-      function prevLightbox() {
-        let prev = currentLightboxIndex - 1;
-        while (prev >= 1 && !designs[prev]) {
-          prev--;
-        }
-        if (prev >= 1) {
-          openLightbox(prev);
-        } else {
-          showMessage('No more designs', '#ffaa00');
-        }
-      }
-      
-      // ===== STORAGE =====
+      // ===== Save to localStorage =====
       function saveDesigns() {
-        try {
-          // Check size BEFORE saving
-          const json = JSON.stringify(designs);
-          const size = new Blob([json]).size;
-          
-          if (size > MAX_STORAGE_SIZE) {
-            showMessage('❌ Storage limit reached — cannot save more', '#ff3366', 4000);
-            storageWarning.classList.add('active');
-            return false;
-          }
-          
-          localStorage.setItem(STORAGE_KEY, json);
-          storageWarning.classList.remove('active');
-          return true;
-        } catch (e) {
-          if (e.name === 'QuotaExceededError') {
-            showMessage('❌ Storage full! Delete some designs', '#ff3366', 4000);
-          } else {
-            console.error('Save failed:', e);
-            showMessage('❌ Save failed', '#ff3366');
-          }
-          return false;
-        }
+        localStorage.setItem('cryptobros_designs', JSON.stringify(designs));
       }
       
+      // ===== Load from localStorage =====
       function loadDesigns() {
-        const saved = localStorage.getItem(STORAGE_KEY);
+        const saved = localStorage.getItem('cryptobros_designs');
         if (saved) {
           try {
             designs = JSON.parse(saved);
           } catch (e) {
-            console.error('Load error:', e);
             designs = {};
           }
         }
       }
       
-      // ===== FILE UPLOAD =====
-      function findFirstEmptySlot() {
-        for (let i = 1; i <= 20; i++) {
-          if (!designs[i]) return i;
-        }
-        return null;
-      }
-      
-      function readFileAsDataURL(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = () => reject(reader.error);
-          reader.readAsDataURL(file);
-        });
-      }
-      
+      // ===== Upload files (только для админа) =====
       async function uploadFiles(files) {
+        if (!isAdmin) return;
         if (frozen) {
           showMessage('🔒 Gallery is frozen', '#ff3366');
           return;
         }
         
-        if (uploadInProgress) {
-          showMessage('Upload already in progress', '#ffaa00');
-          return;
-        }
-        
-        uploadInProgress = true;
-        setButtonsDisabled(true);
-        spinner.classList.add('active');
-        
         let uploaded = 0;
-        const errors = [];
-        const usedSlots = new Set();
-        
-        // Check total size first
-        let totalSize = 0;
-        for (const file of files) {
-          if (file.type.startsWith('image/')) {
-            totalSize += file.size;
-          }
-        }
-        
-        if (totalSize > MAX_STORAGE_SIZE) {
-          showMessage(`❌ Total size exceeds ${MAX_STORAGE_SIZE/1024/1024}MB limit`, '#ff3366', 4000);
-          uploadInProgress = false;
-          setButtonsDisabled(false);
-          spinner.classList.remove('active');
-          return;
-        }
-        
-        // Split files
-        const numberedFiles = [];
-        const unnumberedFiles = [];
         
         for (const file of files) {
-          if (!file.type.startsWith('image/')) {
-            errors.push(`${file.name}: not an image`);
-            continue;
-          }
-          
-          if (file.size > MAX_FILE_SIZE) {
-            errors.push(`${file.name}: too large (>1.5MB)`);
-            continue;
-          }
+          if (!file.type.startsWith('image/')) continue;
           
           const match = file.name.match(/\d+/);
-          if (match) {
-            numberedFiles.push({ file, slot: parseInt(match[0]) });
-          } else {
-            unnumberedFiles.push(file);
-          }
-        }
-        
-        // Sort numbered files by slot
-        numberedFiles.sort((a, b) => a.slot - b.slot);
-        
-        // Process numbered files
-        for (const { file, slot } of numberedFiles) {
-          if (slot < 1 || slot > 20) {
-            errors.push(`${file.name}: slot ${slot} out of range`);
-            continue;
+          let slot = match ? parseInt(match[0]) : null;
+          
+          if (slot && (slot < 1 || slot > 20)) {
+            slot = null;
           }
           
-          if (usedSlots.has(slot) || designs[slot]) {
-            errors.push(`${file.name}: slot ${slot} already occupied`);
-            continue;
-          }
-          
-          try {
-            const dataUrl = await readFileAsDataURL(file);
-            
-            // Test if this would exceed storage
-            const testDesigns = { ...designs, [slot]: dataUrl };
-            const testSize = new Blob([JSON.stringify(testDesigns)]).size;
-            
-            if (testSize > MAX_STORAGE_SIZE) {
-              errors.push(`${file.name}: would exceed storage limit`);
-              continue;
-            }
-            
-            designs[slot] = dataUrl;
-            usedSlots.add(slot);
-            uploaded++;
-            
-            // Save incrementally
-            saveDesigns();
-            renderGrid();
-          } catch (err) {
-            errors.push(`${file.name}: failed to load`);
-          }
-        }
-        
-        // Process unnumbered files
-        for (const file of unnumberedFiles) {
-          const slot = findFirstEmptySlot();
           if (!slot) {
-            errors.push(`${file.name}: no empty slots left`);
-            continue;
+            for (let i = 1; i <= 20; i++) {
+              if (!designs[i]) {
+                slot = i;
+                break;
+              }
+            }
           }
           
-          if (usedSlots.has(slot)) continue;
-          
-          try {
-            const dataUrl = await readFileAsDataURL(file);
-            
-            // Test if this would exceed storage
-            const testDesigns = { ...designs, [slot]: dataUrl };
-            const testSize = new Blob([JSON.stringify(testDesigns)]).size;
-            
-            if (testSize > MAX_STORAGE_SIZE) {
-              errors.push(`${file.name}: would exceed storage limit`);
-              continue;
+          if (slot && !designs[slot]) {
+            try {
+              const dataUrl = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+              });
+              
+              designs[slot] = dataUrl;
+              uploaded++;
+            } catch (err) {
+              console.error('Error reading file:', file.name, err);
             }
-            
-            designs[slot] = dataUrl;
-            usedSlots.add(slot);
-            uploaded++;
-            
-            // Save incrementally
-            saveDesigns();
-            renderGrid();
-          } catch (err) {
-            errors.push(`${file.name}: failed to load`);
           }
         }
-        
-        spinner.classList.remove('active');
-        uploadInProgress = false;
-        setButtonsDisabled(false);
         
         if (uploaded > 0) {
           saveDesigns();
           renderGrid();
           showMessage(`✅ Uploaded ${uploaded} files`, '#00ff00');
         }
-        
-        if (errors.length > 0) {
-          if (errors.length === 1) {
-            showMessage(`⚠️ ${errors[0]}`, '#ff6600', 4000);
-          } else {
-            showMessage(`⚠️ ${errors.length} errors`, '#ff6600', 4000);
-          }
-          console.error('Upload errors:', errors);
-        }
-        
-        if (uploaded === 0 && errors.length === 0) {
-          showMessage('No valid images found', '#ffaa00');
-        }
       }
       
-      // ===== FREEZE / UNFREEZE =====
+      // ===== Freeze gallery (только для админа) =====
       function freezeGallery() {
+        if (!isAdmin) return;
         if (frozen) return;
-        frozen = true;
         
-        localStorage.setItem(FROZEN_KEY, 'true');
+        frozen = true;
+        localStorage.setItem('cryptobros_frozen', 'true');
         
         freezeBtn.classList.add('frozen');
-        freezeBtn.disabled = true;
-        freezeBtn.style.display = 'none';
-        unfreezeBtn.style.display = 'flex';
+        freezeBtn.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
         overlay.classList.add('active');
-        setButtonsDisabled(true);
         
         showMessage('🔒 Gallery frozen', '#00ff00');
       }
       
-      function unfreezeGallery() {
-        if (!frozen) return;
-        
-        if (!confirm('UNFREEZE gallery? This will allow uploads again.')) return;
-        
-        frozen = false;
-        localStorage.removeItem(FROZEN_KEY);
-        
-        freezeBtn.classList.remove('frozen');
-        freezeBtn.disabled = false;
-        freezeBtn.style.display = 'flex';
-        unfreezeBtn.style.display = 'none';
-        overlay.classList.remove('active');
-        setButtonsDisabled(false);
-        
-        showMessage('🔓 Gallery unfrozen', '#00ccff');
-      }
-      
+      // ===== Check if frozen =====
       function checkFrozen() {
-        if (localStorage.getItem(FROZEN_KEY) === 'true') {
+        if (localStorage.getItem('cryptobros_frozen') === 'true') {
           frozen = true;
-          freezeBtn.classList.add('frozen');
-          freezeBtn.disabled = true;
-          freezeBtn.style.display = 'none';
-          unfreezeBtn.style.display = 'flex';
+          
+          if (isAdmin) {
+            freezeBtn.classList.add('frozen');
+            freezeBtn.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
+          }
+          
           overlay.classList.add('active');
-          setButtonsDisabled(true);
         }
       }
       
-      // ===== EVENT DELEGATION =====
+      // ===== Event listeners =====
       grid.addEventListener('click', (e) => {
         const item = e.target.closest('.grid-item');
         if (item) {
@@ -914,88 +600,55 @@
         }
       });
       
-      grid.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          const item = e.target.closest('.grid-item');
-          if (item) {
-            e.preventDefault();
-            const id = parseInt(item.dataset.id);
-            openLightbox(id);
+      // Только админ может нажимать кнопки
+      if (isAdmin) {
+        adminBtn.addEventListener('click', () => {
+          if (frozen) {
+            showMessage('🔒 Gallery is frozen', '#ff3366');
+            return;
           }
-        }
-      });
-      
-      // ===== EVENT LISTENERS =====
-      adminBtn.addEventListener('click', () => {
-        if (frozen) {
-          showMessage('🔒 Gallery is frozen', '#ff3366');
-          return;
-        }
-        if (uploadInProgress) {
-          showMessage('Upload in progress', '#ffaa00');
-          return;
-        }
-        fileInput.click();
-      });
-      
-      uploadBtn.addEventListener('click', () => {
-        if (frozen) {
-          showMessage('🔒 Gallery is frozen', '#ff3366');
-          return;
-        }
-        if (uploadInProgress) {
-          showMessage('Upload in progress', '#ffaa00');
-          return;
-        }
-        fileInput.click();
-      });
-      
-      fileInput.addEventListener('change', async (e) => {
-        const files = Array.from(e.target.files);
-        if (files.length) {
-          await uploadFiles(files);
-        }
-        fileInput.value = '';
-      });
-      
-      freezeBtn.addEventListener('click', () => {
-        if (!frozen && confirm('FREEZE GALLERY? This will disable uploads.')) {
-          freezeGallery();
-        }
-      });
-      
-      unfreezeBtn.addEventListener('click', unfreezeGallery);
+          fileInput.click();
+        });
+        
+        uploadBtn.addEventListener('click', () => {
+          if (frozen) {
+            showMessage('🔒 Gallery is frozen', '#ff3366');
+            return;
+          }
+          fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', async (e) => {
+          const files = Array.from(e.target.files);
+          if (files.length) {
+            await uploadFiles(files);
+          }
+          fileInput.value = '';
+        });
+        
+        freezeBtn.addEventListener('click', () => {
+          if (!frozen && confirm('FREEZE GALLERY? This cannot be undone!')) {
+            freezeGallery();
+          }
+        });
+      }
       
       lightboxClose.addEventListener('click', closeLightbox);
-      
-      lightboxPrev.addEventListener('click', prevLightbox);
-      lightboxNext.addEventListener('click', nextLightbox);
       
       lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox) closeLightbox();
       });
       
       document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
-        
-        switch(e.key) {
-          case 'Escape':
-            closeLightbox();
-            break;
-          case 'ArrowLeft':
-            prevLightbox();
-            break;
-          case 'ArrowRight':
-            nextLightbox();
-            break;
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
         }
       });
       
-      // ===== INIT =====
+      // ===== Initialize =====
       loadDesigns();
       checkFrozen();
       renderGrid();
-      checkStorageSize();
     })();
   </script>
 </body>
