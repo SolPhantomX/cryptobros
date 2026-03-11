@@ -28,9 +28,10 @@
       z-index: -1;
       transition: background-image 1.5s ease-in-out;
       filter: brightness(0.9);
+      background-color: #000;
+      background-image: url('backgrounds/fallback.jpg'); /* Fallback image */
     }
 
-    /* Language button - PLATINUM */
     .language-btn {
       position: absolute;
       top: 20px;
@@ -56,8 +57,11 @@
       background: linear-gradient(145deg, #d1d5db, #e5e7eb, #c0c5cc);
       border-color: #6b7280;
     }
+    .language-btn:focus-visible {
+      outline: 3px solid #00ff9d;
+      outline-offset: 2px;
+    }
 
-    /* ENTER button - GOLD */
     .enter-btn {
       position: absolute;
       top: 90px;
@@ -85,8 +89,11 @@
       background: linear-gradient(145deg, #e6c87c, #f5e6b0, #e6c87c);
       border-color: #b8860b;
     }
+    .enter-btn:focus-visible {
+      outline: 3px solid #00ff9d;
+      outline-offset: 2px;
+    }
     
-    /* Creator button */
     .creator-btn {
       position: absolute;
       top: 20px;
@@ -103,10 +110,15 @@
       box-shadow: 0 0 20px #ffcc00;
       z-index: 100;
       display: none;
+      transition: all 0.3s ease;
     }
     .creator-btn:hover {
       transform: scale(1.05);
       background: #ffcc00;
+    }
+    .creator-btn:focus-visible {
+      outline: 3px solid #00ff9d;
+      outline-offset: 2px;
     }
     .creator-btn.visible {
       display: block;
@@ -140,6 +152,11 @@
       background: rgba(102, 255, 255, 0.2);
       color: #fff;
     }
+    .language-option:focus-visible {
+      outline: 3px solid #00ff9d;
+      outline-offset: -2px;
+      background: rgba(102, 255, 255, 0.3);
+    }
     .language-option.active {
       background: rgba(102, 255, 255, 0.3);
       color: #fff;
@@ -167,28 +184,35 @@
       100% { color: #00ff9d; }
     }
 
-    /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
     @media (max-width: 768px) {
       .language-btn {
-        top: 60px;
+        top: 30px;
         right: 50%;
         transform: translateX(50%);
-        padding: 1.2rem 3rem;
-        font-size: 1.5rem;
+        padding: 1rem 2rem;
+        font-size: 1.3rem;
         width: 80%;
-        max-width: 350px;
+        max-width: 300px;
         text-align: center;
       }
       
+      .language-btn:hover {
+        transform: translateX(50%) scale(1.05);
+      }
+      
       .enter-btn {
-        top: 160px;
+        top: 110px;
         right: 50%;
         transform: translateX(50%);
-        padding: 1.2rem 3rem;
-        font-size: 1.6rem;
+        padding: 1rem 2rem;
+        font-size: 1.4rem;
         width: 80%;
-        max-width: 350px;
+        max-width: 300px;
         text-align: center;
+      }
+      
+      .enter-btn:hover {
+        transform: translateX(50%) scale(1.05);
       }
       
       .creator-btn {
@@ -196,11 +220,15 @@
         bottom: 100px;
         left: 50%;
         transform: translateX(-50%);
-        padding: 1.2rem 2.5rem;
-        font-size: 1.3rem;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
         width: 70%;
-        max-width: 300px;
+        max-width: 280px;
         text-align: center;
+      }
+      
+      .creator-btn:hover {
+        transform: translateX(-50%) scale(1.05);
       }
       
       .language-menu {
@@ -208,12 +236,12 @@
         right: 50%;
         transform: translateX(50%);
         width: 80%;
-        max-width: 350px;
+        max-width: 300px;
       }
       
       .language-option {
-        padding: 18px 25px;
-        font-size: 1.3rem;
+        padding: 15px 20px;
+        font-size: 1.2rem;
         text-align: center;
       }
       
@@ -223,171 +251,377 @@
       }
     }
 
-    /* Для очень маленьких экранов */
-    @media (max-width: 480px) {
-      .language-btn {
-        top: 40px;
-        padding: 1rem 2rem;
-        font-size: 1.3rem;
-      }
-      
-      .enter-btn {
-        top: 130px;
-        padding: 1rem 2rem;
-        font-size: 1.4rem;
-      }
-      
-      .creator-btn {
-        bottom: 80px;
-        padding: 1rem 2rem;
-        font-size: 1.2rem;
+    /* Toast notification animation */
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* Accessibility - reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .bg, .language-btn, .enter-btn, .creator-btn, footer {
+        animation: none;
+        transition: none;
       }
     }
   </style>
 </head>
 <body>
-  <div class="bg" id="dynamicBg"></div>
+  <div class="bg" id="dynamicBg" role="img" aria-label="Background image"></div>
 
-  <!-- Secret double-click area (larger on mobile) -->
-  <div style="position: fixed; bottom: 0; left: 0; width: 100px; height: 100px; background: transparent; z-index: 9999; cursor: pointer;" id="secretArea"></div>
+  <!-- Secret double-click area -->
+  <div style="position: fixed; bottom: 0; left: 0; width: 100px; height: 100px; background: transparent; z-index: 9999; cursor: pointer;" 
+       id="secretArea" 
+       role="button" 
+       aria-label="Secret area - double click to unlock creator mode"
+       tabindex="0"></div>
 
-  <!-- Creator button -->
-  <button class="creator-btn" id="creatorBtn">👤 CREATOR LOGIN</button>
+  <button class="creator-btn" id="creatorBtn" aria-label="Creator login">👤 CREATOR LOGIN</button>
+  <button type="button" class="language-btn" id="languageBtn" aria-label="Select language" aria-haspopup="true" aria-expanded="false">LANGUAGE</button>
+  <a href="#" class="enter-btn" id="enterBtn" aria-label="Enter the club">ENTER THE CLUB</a>
 
-  <!-- LANGUAGE button -->
-  <button type="button" class="language-btn" id="languageBtn">LANGUAGE</button>
-  
-  <!-- ENTER button -->
-  <a href="#" class="enter-btn" id="enterBtn">ENTER THE CLUB</a>
-
-  <div class="language-menu" id="languageMenu">
-    <div class="language-option active" data-lang="en">English</div>
-    <div class="language-option" data-lang="fr">Français</div>
-    <div class="language-option" data-lang="es">Español</div>
-    <div class="language-option" data-lang="pt">Português</div>
-    <div class="language-option" data-lang="zh">简体中文</div>
-    <div class="language-option" data-lang="ar">العربية</div>
-    <div class="language-option" data-lang="he">עברית</div>
-    <div class="language-option" data-lang="ru">Русский</div>
+  <div class="language-menu" id="languageMenu" role="menu" aria-label="Language selection menu">
+    <div class="language-option active" data-lang="en" role="menuitem" tabindex="0">English</div>
+    <div class="language-option" data-lang="fr" role="menuitem" tabindex="0">Français</div>
+    <div class="language-option" data-lang="es" role="menuitem" tabindex="0">Español</div>
+    <div class="language-option" data-lang="pt" role="menuitem" tabindex="0">Português</div>
+    <div class="language-option" data-lang="zh" role="menuitem" tabindex="0">简体中文</div>
+    <div class="language-option" data-lang="ar" role="menuitem" tabindex="0">العربية</div>
+    <div class="language-option" data-lang="he" role="menuitem" tabindex="0">עברית</div>
+    <div class="language-option" data-lang="ru" role="menuitem" tabindex="0">Русский</div>
   </div>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
-    // ===== BACKGROUND ROTATION =====
     (function() {
-        const backgrounds = [
-            'url("backgrounds/1fon.png")',
-            'url("backgrounds/2fon.png")',
-            'url("backgrounds/3fon.png")',
-            'url("backgrounds/4fon.png")',
-            'url("backgrounds/5fon.png")',
-            'url("backgrounds/6fon.png")',
-            'url("backgrounds/7fon.png")',
-            'url("backgrounds/8fon.png")'
-        ];
+      'use strict';
+
+      // ===== BACKGROUND ROTATION =====
+      const desktopBackgrounds = [
+        'url("backgrounds/1fon.png")',
+        'url("backgrounds/2fon.png")',
+        'url("backgrounds/3fon.png")',
+        'url("backgrounds/4fon.png")',
+        'url("backgrounds/5fon.png")',
+        'url("backgrounds/6fon.png")',
+        'url("backgrounds/7fon.png")',
+        'url("backgrounds/8fon.png")',
+        'url("backgrounds/10fon.png")',
+        'url("backgrounds/11fon.png")',
+        'url("backgrounds/13fon.png")',
+        'url("backgrounds/14fon.png")'
+      ];
+      
+      const mobileBackgrounds = [
+        'url("backgrounds/1mob.png")',
+        'url("backgrounds/2mob.png")'
+      ];
+      
+      // DOM elements
+      const bgElement = document.getElementById('dynamicBg');
+      const secretArea = document.getElementById('secretArea');
+      const creatorBtn = document.getElementById('creatorBtn');
+      const languageBtn = document.getElementById('languageBtn');
+      const languageMenu = document.getElementById('languageMenu');
+      const enterBtn = document.getElementById('enterBtn');
+      const footer = document.getElementById('footer');
+      
+      // State variables
+      let currentSet = window.innerWidth <= 768 ? mobileBackgrounds : desktopBackgrounds;
+      let currentIndex = 0;
+      let rotationInterval;
+      let isRotating = false;
+      
+      // Check if critical elements exist
+      if (!bgElement) {
+        console.error('Background element not found');
+        return;
+      }
+
+      // ===== BACKGROUND FUNCTIONS =====
+      function rotateBackground() {
+        // Prevent multiple simultaneous rotations
+        if (isRotating) return;
         
-        let currentIndex = 0;
-        const bgElement = document.getElementById('dynamicBg');
-        
-        function rotateBackground() {
-            bgElement.style.backgroundImage = backgrounds[currentIndex];
-            currentIndex = (currentIndex + 1) % backgrounds.length;
+        if (!bgElement || !currentSet || currentSet.length === 0) {
+          console.warn('No backgrounds available');
+          return;
         }
         
-        rotateBackground();
-        setInterval(rotateBackground, 15000);
-    })();
-
-    // ===== TRANSLATIONS =====
-    const translations = {
-      en: { btn: "ENTER THE CLUB", footer: "Cryptobros 2026 ©" },
-      fr: { btn: "ENTRER DANS LE CLUB", footer: "Cryptobros 2026 ©" },
-      es: { btn: "ENTRAR AL CLUB", footer: "Cryptobros 2026 ©" },
-      pt: { btn: "ENTRAR NO CLUBE", footer: "Cryptobros 2026 ©" },
-      zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
-      ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
-      he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
-      ru: { btn: "ВОЙТИ В КЛУБ", footer: "Cryptobros 2026 ©" }
-    };
-
-    function applyLanguage(lang) {
-      localStorage.setItem('lang', lang);
-      const t = translations[lang] || translations.en;
-      document.getElementById('enterBtn').textContent = t.btn;
-      document.getElementById('footer').textContent = t.footer;
-
-      document.querySelectorAll('.language-option').forEach(opt => {
-        opt.classList.toggle('active', opt.dataset.lang === lang);
-      });
-    }
-
-    // ===== SECRET AREA =====
-    document.getElementById('secretArea').addEventListener('dblclick', function() {
-      document.getElementById('creatorBtn').classList.add('visible');
+        isRotating = true;
+        
+        const img = new Image();
+        const imgUrl = currentSet[currentIndex].replace('url("', '').replace('")', '');
+        
+        img.onload = function() {
+          bgElement.style.backgroundImage = currentSet[currentIndex];
+          currentIndex = (currentIndex + 1) % currentSet.length;
+          isRotating = false;
+        };
+        
+        img.onerror = function() {
+          console.warn('Background image not found, skipping:', imgUrl);
+          currentIndex = (currentIndex + 1) % currentSet.length;
+          isRotating = false;
+          
+          // Try next background after a short delay
+          setTimeout(rotateBackground, 100);
+        };
+        
+        img.src = imgUrl;
+      }
       
-      const toast = document.createElement('div');
-      toast.textContent = '👑 Creator mode unlocked';
-      toast.style.cssText = `
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #ffcc00;
-        color: #000;
-        padding: 10px 20px;
-        border-radius: 30px;
-        font-family: 'Poppins', 'Montserrat', sans-serif;
-        font-weight: bold;
-        z-index: 10000;
-        box-shadow: 0 0 30px #ffcc00;
-      `;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 2000);
-    });
-
-    document.getElementById('creatorBtn').addEventListener('click', function() {
-      window.location.href = 'profile.html';
-    });
-
-    document.getElementById('enterBtn').addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.href = 'rules.html';
-    });
-
-    // ===== LANGUAGE MENU =====
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedLang = localStorage.getItem('lang') || 'en';
-      applyLanguage(savedLang);
-    });
-
-    const languageBtn = document.getElementById('languageBtn');
-    const languageMenu = document.getElementById('languageMenu');
-
-    languageBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      languageMenu.classList.toggle('active');
-    });
-
-    document.querySelectorAll('.language-option').forEach(opt => {
-      opt.addEventListener('click', (e) => {
-        e.stopPropagation();
-        applyLanguage(opt.dataset.lang);
-        languageMenu.classList.remove('active');
-      });
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
-        languageMenu.classList.remove('active');
+      function updateBackgroundSet() {
+        const newSet = window.innerWidth <= 768 ? mobileBackgrounds : desktopBackgrounds;
+        
+        // Check if set changed
+        if (JSON.stringify(currentSet) !== JSON.stringify(newSet)) {
+          currentSet = newSet;
+          currentIndex = 0;
+          
+          // Restart rotation
+          if (rotationInterval) {
+            clearInterval(rotationInterval);
+          }
+          
+          rotateBackground();
+          rotationInterval = setInterval(rotateBackground, 15000);
+        }
       }
-    });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && languageMenu.classList.contains('active')) {
-        languageMenu.classList.remove('active');
+      // ===== LANGUAGE FUNCTIONS =====
+      const translations = {
+        en: { btn: "ENTER THE CLUB", footer: "Cryptobros 2026 ©" },
+        fr: { btn: "ENTRER DANS LE CLUB", footer: "Cryptobros 2026 ©" },
+        es: { btn: "ENTRAR AL CLUB", footer: "Cryptobros 2026 ©" },
+        pt: { btn: "ENTRAR NO CLUBE", footer: "Cryptobros 2026 ©" },
+        zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
+        ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
+        he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
+        ru: { btn: "ВОЙТИ В КЛУБ", footer: "Cryptobros 2026 ©" }
+      };
+
+      function applyLanguage(lang) {
+        try {
+          // Validate language
+          if (!translations[lang]) {
+            console.warn('Unsupported language:', lang);
+            lang = 'en';
+          }
+          
+          localStorage.setItem('lang', lang);
+          const t = translations[lang];
+          
+          if (enterBtn) enterBtn.textContent = t.btn;
+          if (footer) footer.textContent = t.footer;
+
+          // Update active state in menu
+          document.querySelectorAll('.language-option').forEach(opt => {
+            const isActive = opt.dataset.lang === lang;
+            opt.classList.toggle('active', isActive);
+            opt.setAttribute('aria-selected', isActive);
+          });
+          
+          // Update HTML lang attribute
+          document.documentElement.lang = lang;
+          
+        } catch (error) {
+          console.warn('Error applying language:', error);
+        }
       }
-    });
+
+      // ===== SECRET AREA FUNCTIONS =====
+      function showCreatorButton() {
+        if (!creatorBtn) return;
+        
+        creatorBtn.classList.add('visible');
+        creatorBtn.focus();
+        
+        // Show toast notification
+        const toast = document.createElement('div');
+        toast.textContent = '👑 Creator mode unlocked';
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #ffcc00;
+          color: #000;
+          padding: 10px 20px;
+          border-radius: 30px;
+          font-family: 'Poppins', 'Montserrat', sans-serif;
+          font-weight: bold;
+          z-index: 10000;
+          box-shadow: 0 0 30px #ffcc00;
+          animation: fadeOut 2s forwards;
+        `;
+        
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          if (toast && toast.parentNode) {
+            toast.remove();
+          }
+        }, 2000);
+      }
+
+      // ===== INITIALIZATION =====
+      function init() {
+        try {
+          // Load saved language
+          const savedLang = localStorage.getItem('lang') || 'en';
+          applyLanguage(savedLang);
+        } catch (error) {
+          applyLanguage('en');
+        }
+        
+        // Start background rotation
+        rotateBackground();
+        rotationInterval = setInterval(rotateBackground, 15000);
+        
+        // Setup event listeners
+        setupEventListeners();
+      }
+
+      // ===== EVENT LISTENERS =====
+      function setupEventListeners() {
+        // Secret area detection
+        if (secretArea) {
+          // Desktop: double click
+          secretArea.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            showCreatorButton();
+          });
+          
+          // Mobile: double tap
+          let lastTap = 0;
+          secretArea.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 500 && tapLength > 0) {
+              showCreatorButton();
+              lastTap = 0;
+            } else {
+              lastTap = currentTime;
+            }
+          });
+          
+          // Keyboard support for accessibility
+          secretArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              showCreatorButton();
+            }
+          });
+        }
+
+        // Language menu
+        if (languageBtn && languageMenu) {
+          languageBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            const isActive = languageMenu.classList.toggle('active');
+            languageBtn.setAttribute('aria-expanded', isActive);
+          });
+
+          // Language options
+          document.querySelectorAll('.language-option').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+              e.stopPropagation();
+              applyLanguage(opt.dataset.lang);
+              languageMenu.classList.remove('active');
+              languageBtn.setAttribute('aria-expanded', 'false');
+              languageBtn.focus();
+            });
+            
+            // Keyboard support
+            opt.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                applyLanguage(opt.dataset.lang);
+                languageMenu.classList.remove('active');
+                languageBtn.setAttribute('aria-expanded', 'false');
+                languageBtn.focus();
+              }
+            });
+          });
+
+          // Close menu when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
+              languageMenu.classList.remove('active');
+              languageBtn.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          // Close menu with Escape key
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && languageMenu.classList.contains('active')) {
+              languageMenu.classList.remove('active');
+              languageBtn.setAttribute('aria-expanded', 'false');
+              languageBtn.focus();
+            }
+          });
+        }
+
+        // Navigation
+        if (creatorBtn) {
+          creatorBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'profile.html';
+          });
+        }
+
+        if (enterBtn) {
+          enterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'rules.html';
+          });
+        }
+
+        // Window resize with debounce
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            updateBackgroundSet();
+          }, 250);
+        });
+
+        // Orientation change for mobile
+        window.addEventListener('orientationchange', () => {
+          setTimeout(updateBackgroundSet, 100);
+        });
+
+        // Visibility change - pause rotation when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            if (rotationInterval) {
+              clearInterval(rotationInterval);
+              rotationInterval = null;
+            }
+          } else {
+            if (!rotationInterval) {
+              rotateBackground();
+              rotationInterval = setInterval(rotateBackground, 15000);
+            }
+          }
+        });
+      }
+
+      // Start everything when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
   </script>
 </body>
 </html>
