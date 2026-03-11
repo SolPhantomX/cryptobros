@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS — DESIGN GALLERY</title>
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -46,6 +45,7 @@
       .freeze-button { bottom: 90px; right: 15px; padding: 12px 20px; }
     }
 
+    /* ===== BACK BUTTON ===== */
     .back-button {
       position: fixed;
       top: 30px;
@@ -74,6 +74,7 @@
       transform: translateX(-5px) scale(1.05);
     }
 
+    /* ===== UPLOAD BUTTON ===== */
     .admin-button {
       position: fixed;
       bottom: 100px;
@@ -99,6 +100,7 @@
       box-shadow: 0 0 50px #9945FF;
     }
 
+    /* ===== FREEZE BUTTON ===== */
     .freeze-button {
       position: fixed;
       bottom: 180px;
@@ -143,16 +145,12 @@
       -webkit-text-fill-color: transparent;
       background-size: 400% 400%;
       animation: titleRainbow 8s linear infinite;
-      letter-spacing: 2px;
     }
     @keyframes titleRainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
     .slogan-container {
       text-align: center;
       margin-bottom: 50px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
     }
     .slogan-line1 {
       font-family: 'Syne', sans-serif;
@@ -160,21 +158,18 @@
       font-size: 2.2rem;
       color: #ff6600;
       text-shadow: 0 0 20px #ff6600;
-      letter-spacing: 1px;
       animation: line1Glow 2.5s ease-in-out infinite;
       margin-bottom: 15px;
     }
-    @keyframes line1Glow { 0%,100%{color:#ff6600;text-shadow:0 0 20px #ff6600} 33%{color:#ff00ff;text-shadow:0 0 30px #ff00ff} 66%{color:#ffaa00;text-shadow:0 0 30px #ffaa00} }
+    @keyframes line1Glow { 0%,100%{color:#ff6600} 33%{color:#ff00ff} 66%{color:#ffaa00} }
     .slogan-line2 {
       font-family: 'Syne', sans-serif;
-      font-weight: 400;
       font-size: 1.3rem;
       color: #00ff00;
       text-shadow: 0 0 15px #00ff00;
-      line-height: 1.8;
       animation: line2Flicker 3s linear infinite;
     }
-    @keyframes line2Flicker { 0%,100%{color:#00ff00;text-shadow:0 0 15px #00ff00} 20%{color:#00ffff;text-shadow:0 0 20px #00ffff} 40%{color:#ffff00;text-shadow:0 0 20px #ffff00} 60%{color:#ff00ff;text-shadow:0 0 20px #ff00ff} 80%{color:#00ff00;text-shadow:0 0 15px #00ff00} }
+    @keyframes line2Flicker { 0%,100%{color:#00ff00} 20%{color:#00ffff} 40%{color:#ffff00} 60%{color:#ff00ff} 80%{color:#00ff00} }
 
     .section-title {
       font-family: 'Syne', sans-serif;
@@ -184,13 +179,12 @@
       color: #ffdd00;
       border-bottom: 4px solid #ffdd00;
       padding-bottom: 15px;
-      letter-spacing: 1px;
       text-shadow: 0 0 20px #ffdd00;
-      animation: sectionGlow 3s ease-in-out infinite;
     }
-    @keyframes sectionGlow { 0%,100%{color:#ffdd00;text-shadow:0 0 20px #ffdd00} 50%{color:#ff00ff;text-shadow:0 0 30px #ff00ff} }
 
     .gallery-container { max-width: 1200px; margin: 0 auto; }
+    
+    /* ===== GALLERY GRID ===== */
     .image-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -198,6 +192,7 @@
       margin-bottom: 60px;
       border: 2px solid #333;
     }
+    
     .grid-item {
       position: relative;
       aspect-ratio: 1/1;
@@ -205,7 +200,6 @@
       border-right: 2px solid #333;
       border-bottom: 2px solid #333;
       overflow: hidden;
-      transition: all 0.3s ease;
       cursor: pointer;
     }
     .grid-item:nth-child(4n) { border-right: none; }
@@ -216,12 +210,16 @@
       box-shadow: 0 0 30px #ffcc00;
       border: 2px solid #ffcc00;
     }
+    
+    /* FIXED: images don't crop */
     .grid-item img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      background: #0a0a0a;
       display: block;
     }
+    
     .item-number {
       position: absolute;
       top: 12px;
@@ -234,14 +232,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 18px;
       color: #ffcc00;
-      z-index: 2;
       font-family: 'Syne', sans-serif;
       box-shadow: 0 0 20px #ffcc00;
-      pointer-events: none;
+      z-index: 2;
     }
+    
     .item-placeholder {
       width: 100%;
       height: 100%;
@@ -250,17 +246,16 @@
       align-items: center;
       justify-content: center;
       color: #666;
-      cursor: pointer;
       background: #0f0f0f;
     }
-    .item-placeholder .emoji { font-size: 3.5rem; margin-bottom: 10px; opacity: 0.5; }
+    .item-placeholder .emoji { font-size: 3.5rem; opacity: 0.5; }
 
+    /* ===== UPLOAD SECTION ===== */
     .upload-section {
       max-width: 1200px;
       margin: 40px auto;
       padding: 40px;
       background: rgba(0,0,0,0.9);
-      backdrop-filter: blur(10px);
       border: 3px solid #00ffff;
       border-radius: 30px;
       text-align: center;
@@ -272,9 +267,7 @@
       margin-bottom: 30px;
       color: #ff00ff;
       text-shadow: 0 0 30px #ff00ff;
-      animation: uploadTitle 4s ease-in-out infinite;
     }
-    @keyframes uploadTitle { 0%,100%{color:#ff00ff;text-shadow:0 0 30px #ff00ff} 50%{color:#00ffff;text-shadow:0 0 30px #00ffff} }
     .upload-btn {
       background: transparent;
       border: 3px solid #00ff00;
@@ -282,7 +275,6 @@
       padding: 18px 45px;
       border-radius: 60px;
       cursor: pointer;
-      transition: all 0.3s ease;
       font-family: 'Syne', sans-serif;
       font-size: 18px;
       box-shadow: 0 0 30px #00ff00;
@@ -291,18 +283,15 @@
       background: #00ff00;
       color: #000;
       transform: scale(1.1);
-      box-shadow: 0 0 80px #00ff00;
     }
     .hidden-input { display: none; }
     .upload-note {
       color: #ffaa00;
       margin-top: 25px;
       font-size: 14px;
-      font-family: 'Sora', sans-serif;
-      text-shadow: 0 0 10px #ffaa00;
     }
 
-    /* LIGHTBOX - ИСПРАВЛЕНО */
+    /* ===== LIGHTBOX ===== */
     .lightbox {
       display: none;
       position: fixed;
@@ -314,11 +303,8 @@
       z-index: 10000;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
     }
-    .lightbox.active { 
-      display: flex !important; 
-    }
+    .lightbox.active { display: flex; }
     .lightbox img {
       max-width: 90%;
       max-height: 80%;
@@ -342,15 +328,7 @@
       background: rgba(0,0,0,0.6);
       border: 3px solid #ff00ff;
       border-radius: 50%;
-      font-family: 'Sora', sans-serif;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 50px #ff00ff;
       z-index: 10001;
-    }
-    .lightbox-close:hover {
-      background: #ff00ff;
-      color: #000;
-      transform: scale(1.1) rotate(90deg);
     }
     .lightbox-number {
       position: absolute;
@@ -364,9 +342,9 @@
       border-radius: 60px;
       border: 3px solid #00ffff;
       font-family: 'Syne', sans-serif;
-      box-shadow: 0 0 40px #00ffff;
     }
 
+    /* ===== FREEZE OVERLAY ===== */
     .freeze-overlay {
       position: fixed;
       top: 0;
@@ -376,7 +354,7 @@
       background: rgba(0,0,0,0.5);
       z-index: 9999;
       display: none;
-      backdrop-filter: blur(3px);
+      /* backdrop-filter: blur(3px); <-- REMOVED! No more screen blur */
     }
     .freeze-overlay.active { display: block; }
 
@@ -396,19 +374,39 @@
       background: linear-gradient(90deg, #00ff00, #00ffff, #ff00ff);
       width: 0%;
       transition: width 0.3s ease;
-      box-shadow: 0 0 20px #00ff00;
     }
+
+    /* ===== LOADING INDICATOR ===== */
+    .loading-indicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #00ffff;
+      font-size: 2rem;
+      font-family: 'Syne', sans-serif;
+      text-shadow: 0 0 30px #00ffff;
+      z-index: 40000;
+      background: rgba(0,0,0,0.9);
+      padding: 20px 40px;
+      border-radius: 60px;
+      border: 3px solid #00ffff;
+      display: none;
+    }
+    .loading-indicator.active { display: block; }
   </style>
 </head>
 <body>
   <div class="progress-bar" id="progressBar">
     <div class="progress-fill" id="progressFill"></div>
   </div>
+  
+  <div class="loading-indicator" id="loadingIndicator">⏳ LOADING...</div>
 
-  <!-- ИСПРАВЛЕНО: ссылка на главную страницу -->
-  <a href="https://www.cryptobros.pro" class="back-button" target="_blank">
+  <!-- FIXED: correct merch link with security attributes -->
+  <a href="https://www.cryptobros.pro/merch.html" class="back-button" target="_blank" rel="noopener noreferrer">
     <span>←</span>
-    <span>BACK TO MAIN</span>
+    <span>BACK TO MERCH</span>
   </a>
 
   <button class="admin-button" id="adminButton">
@@ -423,7 +421,6 @@
 
   <div class="freeze-overlay" id="freezeOverlay"></div>
 
-  <!-- LIGHTBOX - ИСПРАВЛЕНО -->
   <div class="lightbox" id="lightbox">
     <div class="lightbox-close" id="lightboxClose">✕</div>
     <img id="lightboxImg" src="" alt="">
@@ -442,14 +439,13 @@
     <div class="image-grid" id="designsGrid"></div>
 
     <div class="upload-section" id="uploadSection">
-      <div class="upload-title">📤 UPLOAD DESIGNS (BATCH MODE)</div>
+      <div class="upload-title">📤 UPLOAD DESIGNS</div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
       <button class="upload-btn" id="uploadButton">CHOOSE IMAGES</button>
       <div class="upload-note">
-        ✅ Files with numbers (e.g., "design5.jpg") → go to slot #5<br>
-        ✅ Files without numbers → fill empty slots in order (1 to 20)<br>
-        ✅ You can upload all 20 at once!<br>
-        ✅ Already occupied slots are skipped
+        Files with numbers (design5.jpg) → slot #5<br>
+        Files without numbers → fill empty slots in order<br>
+        Max file size: 5MB
       </div>
     </div>
   </div>
@@ -458,36 +454,27 @@
     (function() {
       'use strict';
       
-      // ===== STATE =====
       let designImages = {};
       let isFrozen = false;
 
-      // ===== DOM Elements =====
+      // DOM elements
       const adminButton = document.getElementById('adminButton');
       const freezeButton = document.getElementById('freezeButton');
       const freezeOverlay = document.getElementById('freezeOverlay');
       const uploadSection = document.getElementById('uploadSection');
       const uploadButton = document.getElementById('uploadButton');
       const fileInput = document.getElementById('designUpload');
-      const sloganLine1 = document.getElementById('sloganLine1');
-      const sloganLine2 = document.getElementById('sloganLine2');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxNumber = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
+      const designsGrid = document.getElementById('designsGrid');
       const progressBar = document.getElementById('progressBar');
       const progressFill = document.getElementById('progressFill');
-      const designsGrid = document.getElementById('designsGrid');
-
-      let currentToast = null;
+      const loadingIndicator = document.getElementById('loadingIndicator');
 
       // ===== Toast =====
       function showToast(msg, color) {
-        if (currentToast) {
-          currentToast.remove();
-          currentToast = null;
-        }
-        
         const toast = document.createElement('div');
         toast.textContent = msg;
         toast.style.cssText = `
@@ -495,30 +482,42 @@
           bottom: 30px;
           left: 50%;
           transform: translateX(-50%);
-          background: rgba(0,0,0,0.98);
+          background: black;
           border: 3px solid ${color};
           color: ${color};
           padding: 15px 35px;
           border-radius: 60px;
           font-family: 'Sora', sans-serif;
-          font-weight: 600;
           z-index: 30000;
-          animation: slideUp 0.3s ease;
-          box-shadow: 0 0 60px ${color};
         `;
-        
         document.body.appendChild(toast);
-        currentToast = toast;
-        
-        setTimeout(() => {
-          if (currentToast === toast) {
-            toast.remove();
-            currentToast = null;
-          }
-        }, 2000);
+        setTimeout(() => toast.remove(), 2000);
       }
 
-      // ===== Render grid =====
+      // ===== Loading Indicator =====
+      function showLoading() {
+        if (loadingIndicator) loadingIndicator.classList.add('active');
+      }
+      
+      function hideLoading() {
+        if (loadingIndicator) loadingIndicator.classList.remove('active');
+      }
+
+      // ===== Progress Bar =====
+      function updateProgress(percent) {
+        if (progressFill) progressFill.style.width = percent + '%';
+      }
+      
+      function showProgress() {
+        if (progressBar) progressBar.classList.add('active');
+      }
+      
+      function hideProgress() {
+        if (progressBar) progressBar.classList.remove('active');
+        updateProgress(0);
+      }
+
+      // ===== Render Grid =====
       function renderDesigns() {
         if (!designsGrid) return;
         
@@ -529,9 +528,9 @@
             <div class="grid-item" data-design-id="${i}">
               <div class="item-number">${i}</div>
               ${img ? `
-                <img src="${img}" alt="Design ${i}" onclick="openLightbox(${i})">
+                <img src="${img}" alt="Design ${i}" onclick="window.openLightbox(${i})">
               ` : `
-                <div class="item-placeholder" onclick="openLightbox(${i})">
+                <div class="item-placeholder" onclick="window.openLightbox(${i})">
                   <div class="emoji">🎨</div>
                   <div>EMPTY</div>
                 </div>
@@ -542,146 +541,117 @@
         designsGrid.innerHTML = html;
       }
 
-      // ===== Lightbox - ИСПРАВЛЕНО =====
-      window.openLightbox = function(num) {
-        if (!lightbox || !lightboxImg || !lightboxNumber) return;
-        
+      // ===== Lightbox Functions =====
+      function openLightbox(num) {
         if (designImages[num]) {
           lightboxImg.src = designImages[num];
           lightboxNumber.textContent = `DESIGN #${num}`;
           lightbox.classList.add('active');
-          document.body.style.overflow = 'hidden'; // блокируем скролл
+          document.body.style.overflow = 'hidden';
         } else {
           showToast(`Slot #${num} is empty`, '#ffaa00');
         }
-      };
+      }
 
       function closeLightbox() {
-        if (lightbox) {
-          lightbox.classList.remove('active');
-          lightboxImg.src = '';
-          document.body.style.overflow = ''; // возвращаем скролл
-        }
+        lightbox.classList.remove('active');
+        lightboxImg.src = '';
+        document.body.style.overflow = '';
       }
 
-      // ===== File processing =====
-      function readFileAsDataURL(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      }
+      // Make lightbox functions globally available
+      window.openLightbox = openLightbox;
+      window.closeLightbox = closeLightbox;
 
+      // ===== File Processing =====
       async function processFiles(files) {
-        const numberedFiles = [];
-        const unnamedFiles = [];
-        const usedNumbers = new Set();
-        
-        for (const file of files) {
-          const match = file.name.match(/\d+/);
-          if (match) {
-            const num = parseInt(match[0]);
-            if (num >= 1 && num <= 20 && !usedNumbers.has(num)) {
-              numberedFiles.push({ file, number: num });
-              usedNumbers.add(num);
-            } else {
-              unnamedFiles.push(file);
-            }
-          } else {
-            unnamedFiles.push(file);
-          }
+        // Check if frozen
+        if (isFrozen) {
+          showToast('🔒 Gallery is frozen', '#ff3366');
+          return 0;
         }
-
-        numberedFiles.sort((a, b) => a.number - b.number);
         
         let successCount = 0;
-        let failCount = 0;
-        const totalFiles = numberedFiles.length + unnamedFiles.length;
+        const totalFiles = files.length;
         
-        if (progressBar) progressBar.classList.add('active');
-        if (progressFill) progressFill.style.width = '0%';
-
-        // Process numbered files
-        for (const item of numberedFiles) {
-          if (designImages[item.number]) {
-            failCount++;
-            if (progressFill) {
-              progressFill.style.width = `${((successCount + failCount) / totalFiles) * 100}%`;
-            }
-            continue;
-          }
-
-          try {
-            const dataUrl = await readFileAsDataURL(item.file);
-            designImages[item.number] = dataUrl;
-            successCount++;
-            if (progressFill) {
-              progressFill.style.width = `${((successCount + failCount) / totalFiles) * 100}%`;
-            }
-          } catch {
-            failCount++;
-          }
-        }
-
-        // Process unnamed files
-        let nextSlot = 1;
-        for (const file of unnamedFiles) {
-          while (nextSlot <= 20 && designImages[nextSlot]) {
-            nextSlot++;
+        showLoading();
+        showProgress();
+        
+        for (let index = 0; index < files.length; index++) {
+          const file = files[index];
+          
+          // Update progress
+          const progress = Math.round((index / totalFiles) * 100);
+          updateProgress(progress);
+          
+          const match = file.name.match(/\d+/);
+          let slot = null;
+          
+          if (match) {
+            slot = parseInt(match[0]);
+            if (slot < 1 || slot > 20) slot = null;
           }
           
-          if (nextSlot > 20) break;
-
-          try {
-            const dataUrl = await readFileAsDataURL(file);
-            designImages[nextSlot] = dataUrl;
-            successCount++;
-            if (progressFill) {
-              progressFill.style.width = `${((successCount + failCount) / totalFiles) * 100}%`;
+          if (!slot) {
+            for (let i = 1; i <= 20; i++) {
+              if (!designImages[i]) {
+                slot = i;
+                break;
+              }
             }
-            nextSlot++;
-          } catch {
-            failCount++;
+          }
+          
+          if (slot && !designImages[slot]) {
+            const reader = new FileReader();
+            await new Promise(resolve => {
+              reader.onload = e => {
+                designImages[slot] = e.target.result;
+                successCount++;
+                resolve();
+              };
+              reader.readAsDataURL(file);
+            });
           }
         }
-
-        setTimeout(() => {
-          if (progressBar) progressBar.classList.remove('active');
-        }, 500);
-
+        
+        updateProgress(100);
+        
         saveDesigns();
         renderDesigns();
-        showToast(`✅ Uploaded: ${successCount}`, '#00ff00');
+        
+        setTimeout(() => {
+          hideProgress();
+          hideLoading();
+        }, 500);
+        
+        showToast(`✅ Uploaded ${successCount} files`, '#00ff00');
+        return successCount;
       }
 
-      // ===== Storage =====
       function saveDesigns() {
-        try {
-          localStorage.setItem('cryptobros_designs', JSON.stringify(designImages));
-        } catch (e) {}
+        localStorage.setItem('cryptobros_designs', JSON.stringify(designImages));
       }
 
-      function loadSavedDesigns() {
-        try {
-          const saved = localStorage.getItem('cryptobros_designs');
-          if (saved) designImages = JSON.parse(saved) || {};
-        } catch {
-          designImages = {};
+      function loadDesigns() {
+        const saved = localStorage.getItem('cryptobros_designs');
+        if (saved) {
+          try {
+            designImages = JSON.parse(saved);
+          } catch (e) {
+            console.error('Failed to parse saved designs', e);
+            designImages = {};
+            localStorage.removeItem('cryptobros_designs');
+          }
         }
       }
 
-      // ===== Freeze - ИСПРАВЛЕНО =====
+      // ===== FREEZE =====
       function freezeGallery() {
         if (isFrozen) return;
         isFrozen = true;
         
-        try {
-          localStorage.setItem('cryptobros_frozen', 'true');
-        } catch (e) {}
+        localStorage.setItem('cryptobros_frozen', 'true');
         
-        // Просто скрываем кнопки, ничего не ломаем
         if (adminButton) adminButton.style.display = 'none';
         if (freezeButton) {
           freezeButton.classList.add('frozen');
@@ -694,19 +664,16 @@
       }
 
       function checkFrozen() {
-        try {
-          const frozen = localStorage.getItem('cryptobros_frozen');
-          if (frozen === 'true') {
-            isFrozen = true;
-            if (adminButton) adminButton.style.display = 'none';
-            if (freezeButton) {
-              freezeButton.classList.add('frozen');
-              freezeButton.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
-            }
-            if (uploadSection) uploadSection.style.display = 'none';
-            if (freezeOverlay) freezeOverlay.classList.add('active');
+        if (localStorage.getItem('cryptobros_frozen') === 'true') {
+          isFrozen = true;
+          if (adminButton) adminButton.style.display = 'none';
+          if (freezeButton) {
+            freezeButton.classList.add('frozen');
+            freezeButton.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
           }
-        } catch (e) {}
+          if (uploadSection) uploadSection.style.display = 'none';
+          if (freezeOverlay) freezeOverlay.classList.add('active');
+        }
       }
 
       // ===== Event Listeners =====
@@ -720,53 +687,37 @@
         });
 
         fileInput.addEventListener('change', async function(e) {
-          if (isFrozen) {
-            showToast('🔒 Gallery is frozen', '#ff3366');
-            return;
+          const files = Array.from(e.target.files)
+            .filter(f => f.type.startsWith('image/'))
+            .filter(f => f.size <= 5 * 1024 * 1024); // 5MB limit
+          
+          if (files.length !== e.target.files.length) {
+            showToast('⚠️ Some files were too large (max 5MB)', '#ffaa00');
           }
-
-          const files = Array.from(e.target.files).filter(file => 
-            file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024
-          );
-
-          if (files.length > 0) {
+          
+          if (files.length) {
             await processFiles(files);
           }
+          
           e.target.value = '';
-        });
-      }
-
-      if (adminButton) {
-        adminButton.addEventListener('click', () => {
-          if (isFrozen) {
-            showToast('🔒 Gallery is frozen', '#ff3366');
-            return;
-          }
-          if (uploadSection) {
-            uploadSection.scrollIntoView({ behavior: 'smooth' });
-          }
         });
       }
 
       if (freezeButton) {
         freezeButton.addEventListener('click', () => {
-          if (isFrozen) return;
-          if (confirm('⚠️ FREEZE GALLERY?\n\nAfter freezing, no more changes can be made.')) {
+          if (!isFrozen && confirm('FREEZE GALLERY? This cannot be undone!')) {
             freezeGallery();
           }
         });
       }
 
-      // Lightbox events - ИСПРАВЛЕНО
       if (lightboxClose) {
         lightboxClose.addEventListener('click', closeLightbox);
       }
 
       if (lightbox) {
         lightbox.addEventListener('click', (e) => {
-          if (e.target === lightbox) {
-            closeLightbox();
-          }
+          if (e.target === lightbox) closeLightbox();
         });
       }
 
@@ -776,46 +727,10 @@
         }
       });
 
-      // ===== Slogan rotation =====
-      const slogans1 = [
-        "REAL ONES WEAR THE MERCH",
-        "CRYPTOBROS MERCH",
-        "WEAR THE MERCH",
-        "PROOF YOU'RE NOT A RUG-PULLER",
-        "DON'T JUST HODL"
-      ];
-
-      const slogans2 = [
-        "FAKE ONES FEAR THE TRUTH",
-        "NOT JUST CLOTHES, IT'S A STATEMENT",
-        "LET THEM KNOW YOU'RE UNTOUCHABLE",
-        "CRYPTOBROS FOR THE FEARLESS",
-        "SHOW IT — CRYPTOBROS MERCH"
-      ];
-
-      if (sloganLine1 && sloganLine2) {
-        let sloganIndex = 0;
-        setInterval(() => {
-          sloganIndex = (sloganIndex + 1) % 5;
-          sloganLine1.textContent = slogans1[sloganIndex];
-          sloganLine2.textContent = slogans2[sloganIndex];
-        }, 20000);
-      }
-
       // ===== Initialize =====
-      loadSavedDesigns();
+      loadDesigns();
       checkFrozen();
       renderDesigns();
-
-      // Add keyframes for toast
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes slideUp { 
-          from { transform: translate(-50%, 100px); opacity: 0; } 
-          to { transform: translate(-50%, 0); opacity: 1; } 
-        }
-      `;
-      document.head.appendChild(style);
     })();
   </script>
 </body>
