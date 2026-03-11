@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <!-- New attractive fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -14,38 +15,37 @@
       flex-direction: column;
       align-items: center;
       position: relative;
-      font-family: 'Quicksand', Arial, sans-serif;
+      font-family: 'Poppins', 'Montserrat', 'Quicksand', Arial, sans-serif;
     }
-    /* Background container - old background REMOVED, new one will be set via JS */
     .bg {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      /* background: url('logo.jpg') center/cover no-repeat; */ /* ---> DELETED <--- */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       z-index: -1;
+      transition: background-image 1.5s ease-in-out;
       filter: brightness(0.9);
-      transition: background-image 1.5s ease-in-out; /* Smooth transition between backgrounds */
     }
     
-    /* Main enter button */
+    /* Main enter button - LIGHT GOLD with gold shimmer */
     .btn {
-      background: linear-gradient(135deg, #66ffff, #00ccff, #0099ff);
-      color: #003366;
-      border: 3px solid #0066cc;
+      background: #f5e6b0;  /* Light gold base */
+      color: #5c3e0b;       /* Dark gold text */
+      border: 3px solid #e6c87c;
       padding: 1.3rem 4.5rem;
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       font-weight: 800;
+      font-family: 'Poppins', 'Montserrat', 'Quicksand', Arial, sans-serif;
+      letter-spacing: 3px;
+      text-transform: uppercase;
       border-radius: 16px;
       cursor: pointer;
-      font-family: 'Quicksand', Arial, sans-serif;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      box-shadow: 0 0 25px rgba(102, 255, 255, 0.7), 0 0 50px rgba(0, 153, 255, 0.4);
+      box-shadow: 0 0 25px rgba(245, 230, 176, 0.7), 0 0 50px rgba(230, 200, 124, 0.4);
       margin-top: auto;
       margin-bottom: 40px;
+      transform: translateY(38px); /* 1cm ≈ 38px down */
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
       display: inline-block;
@@ -53,20 +53,24 @@
       overflow: hidden;
     }
     
+    /* Gold shimmer effect (only gold tones) */
     .btn::before {
       content: '';
       position: absolute;
       top: 0; left: -100%;
       width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      transition: left 0.5s;
+      background: linear-gradient(90deg, transparent, rgba(255, 245, 200, 0.6), rgba(255, 225, 140, 0.4), transparent);
+      transition: left 0.6s;
     }
-    .btn:hover::before { left: 100%; }
+    .btn:hover::before {
+      left: 100%;
+    }
     
     .btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 0 35px rgba(102, 255, 255, 0.9), 0 0 70px rgba(0, 153, 255, 0.6);
-      background: linear-gradient(135deg, #00ccff, #66ffff, #00ccff);
+      transform: translateY(35px) scale(1.03); /* Keep the 1cm offset + hover effect */
+      box-shadow: 0 0 35px rgba(255, 235, 160, 0.9), 0 0 70px rgba(255, 215, 100, 0.7);
+      background: linear-gradient(145deg, #faeac0, #f5e6b0, #f8e6b0);
+      border-color: #eec77c;
     }
     
     /* Creator button (hidden by default) */
@@ -82,39 +86,46 @@
       font-weight: bold;
       border-radius: 30px;
       cursor: pointer;
-      font-family: 'Quicksand', Arial, sans-serif;
+      font-family: 'Montserrat', 'Poppins', 'Quicksand', Arial, sans-serif;
       box-shadow: 0 0 20px #ffcc00;
       z-index: 100;
-      display: none; /* Hidden by default */
+      display: none;
     }
     .creator-btn:hover {
       transform: scale(1.05);
       background: #ffcc00;
     }
     .creator-btn.visible {
-      display: block; /* Shown only after secret click */
+      display: block;
     }
 
+    /* Language button - PLATINUM style */
     .language-btn {
       position: absolute;
       top: 20px;
       right: 20px;
-      background: linear-gradient(45deg, #66ffff, #00ff9d);
-      color: #000;
-      border: none;
-      padding: 0.8rem 1.6rem;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 20px;
+      background: linear-gradient(145deg, #e5e7eb, #d1d5db, #c0c5cc); /* Platinum gradient */
+      color: #1f2937;       /* Dark gray text */
+      border: 2px solid #9ca3b0;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Montserrat', 'Poppins', 'Quicksand', Arial, sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 30px;
       cursor: pointer;
-      font-family: 'Quicksand', Arial, sans-serif;
-      box-shadow: 0 0 15px rgba(102, 255, 255, 0.6);
+      box-shadow: 0 0 20px rgba(209, 213, 219, 0.7);
       z-index: 100;
+      transition: all 0.3s ease;
     }
     .language-btn:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 20px #66ffff;
+      box-shadow: 0 0 30px rgba(229, 231, 235, 0.9);
+      background: linear-gradient(145deg, #d1d5db, #e5e7eb, #c0c5cc);
+      border-color: #6b7280;
     }
+
     .language-menu {
       position: absolute;
       top: 60px;
@@ -133,7 +144,7 @@
     .language-option {
       padding: 12px 25px;
       color: #00ff9d;
-      font-family: 'Quicksand', Arial, sans-serif;
+      font-family: 'Montserrat', 'Poppins', 'Quicksand', Arial, sans-serif;
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s;
@@ -151,8 +162,8 @@
     footer {
       width: 100%;
       text-align: center;
-      font-family: 'Quicksand', Arial, sans-serif;
-      font-weight: 700;
+      font-family: 'Poppins', 'Montserrat', 'Quicksand', Arial, sans-serif;
+      font-weight: 600;
       padding: 20px 0;
       animation: colorChange 15s infinite;
       background: transparent;
@@ -170,7 +181,7 @@
   </style>
 </head>
 <body>
-  <div class="bg" id="dynamicBg"></div> <!-- Added ID for easy access -->
+  <div class="bg" id="dynamicBg"></div>
 
   <!-- Secret double-click area (bottom left corner) -->
   <div style="position: fixed; bottom: 0; left: 0; width: 100px; height: 100px; background: transparent; z-index: 9999; cursor: pointer;" id="secretArea"></div>
@@ -195,9 +206,8 @@
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
-    // ===== BACKGROUND ROTATION (15 seconds interval) =====
+    // ===== BACKGROUND ROTATION (unchanged, 15 seconds) =====
     (function() {
-        // Array of background images (8 images from 1fon.png to 8fon.png in /backgrounds/)
         const backgrounds = [
             'url("backgrounds/1fon.png")',
             'url("backgrounds/2fon.png")',
@@ -212,22 +222,16 @@
         let currentIndex = 0;
         const bgElement = document.getElementById('dynamicBg');
         
-        // Function to change background
         function rotateBackground() {
-            // Set the new background image
             bgElement.style.backgroundImage = backgrounds[currentIndex];
-            // Move to the next index, loop back to 0 after the last one
             currentIndex = (currentIndex + 1) % backgrounds.length;
         }
         
-        // Set initial background
         rotateBackground();
-        
-        // Change background every 15 seconds (15000 milliseconds)
         setInterval(rotateBackground, 15000);
     })();
 
-    // ===== SIMPLE CREATOR ACCESS ===== (your existing code, unchanged)
+    // ===== TRANSLATIONS & UI (unchanged) =====
     const translations = {
       en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
       fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
@@ -258,12 +262,10 @@
       }
     }
 
-    // ===== SECRET DOUBLE-CLICK ACTIVATION =====
+    // ===== SECRET AREA =====
     document.getElementById('secretArea').addEventListener('dblclick', function() {
-      // Show creator button
       document.getElementById('creatorBtn').classList.add('visible');
       
-      // Optional: show notification
       const toast = document.createElement('div');
       toast.textContent = '👑 Creator mode unlocked';
       toast.style.cssText = `
@@ -275,7 +277,7 @@
         color: #000;
         padding: 10px 20px;
         border-radius: 30px;
-        font-family: 'Quicksand', sans-serif;
+        font-family: 'Poppins', 'Montserrat', sans-serif;
         font-weight: bold;
         z-index: 10000;
         box-shadow: 0 0 30px #ffcc00;
@@ -284,18 +286,16 @@
       setTimeout(() => toast.remove(), 2000);
     });
 
-    // ===== CREATOR BUTTON CLICK =====
     document.getElementById('creatorBtn').addEventListener('click', function() {
       window.location.href = 'profile.html';
     });
 
-    // ===== MAIN ENTER BUTTON (for users) =====
     document.getElementById('enterBtn').addEventListener('click', function(e) {
       e.preventDefault();
       window.location.href = 'rules.html';
     });
 
-    // ===== LANGUAGE MENU (same as before) =====
+    // ===== LANGUAGE MENU =====
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('lang') || 'en';
       applyLanguage(savedLang);
