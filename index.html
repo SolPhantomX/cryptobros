@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
-  <!-- New attractive fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -17,6 +16,7 @@
       position: relative;
       font-family: 'Poppins', 'Montserrat', 'Quicksand', Arial, sans-serif;
     }
+
     .bg {
       position: fixed;
       top: 0; left: 0;
@@ -28,49 +28,61 @@
       transition: background-image 1.5s ease-in-out;
       filter: brightness(0.9);
     }
-    
-    /* Main enter button - LIGHT GOLD with gold shimmer */
-    .btn {
-      background: #f5e6b0;  /* Light gold base */
-      color: #5c3e0b;       /* Dark gold text */
-      border: 3px solid #e6c87c;
-      padding: 1.3rem 4.5rem;
-      font-size: 1.8rem;
+
+    /* Language button - PLATINUM (unchanged) */
+    .language-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(145deg, #e5e7eb, #d1d5db, #c0c5cc);
+      color: #1f2937;
+      border: 2px solid #9ca3b0;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Montserrat', 'Poppins', 'Quicksand', Arial, sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(209, 213, 219, 0.7);
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+    .language-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(229, 231, 235, 0.9);
+      background: linear-gradient(145deg, #d1d5db, #e5e7eb, #c0c5cc);
+      border-color: #6b7280;
+    }
+
+    /* ENTER button - GOLD, same style as LANGUAGE, positioned right under it */
+    .enter-btn {
+      position: absolute;
+      top: 90px; /* 20px (language top) + height (~50px) + 20px gap = 90px */
+      right: 20px;
+      background: linear-gradient(145deg, #f5e6b0, #e6c87c, #d4af37);
+      color: #5c3e0b;
+      border: 2px solid #c9a53b;
+      padding: 0.8rem 2.2rem;
+      font-size: 1.2rem;
       font-weight: 800;
       font-family: 'Poppins', 'Montserrat', 'Quicksand', Arial, sans-serif;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      border-radius: 16px;
+      border-radius: 30px;
       cursor: pointer;
-      box-shadow: 0 0 25px rgba(245, 230, 176, 0.7), 0 0 50px rgba(230, 200, 124, 0.4);
-      margin-top: auto;
-      margin-bottom: 40px;
-      transform: translateY(38px); /* 1cm ≈ 38px down */
-      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 25px rgba(245, 230, 176, 0.7);
+      z-index: 100;
+      transition: all 0.3s ease;
       text-decoration: none;
       display: inline-block;
-      position: relative;
-      overflow: hidden;
     }
-    
-    /* Gold shimmer effect (only gold tones) */
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 245, 200, 0.6), rgba(255, 225, 140, 0.4), transparent);
-      transition: left 0.6s;
-    }
-    .btn:hover::before {
-      left: 100%;
-    }
-    
-    .btn:hover {
-      transform: translateY(35px) scale(1.03); /* Keep the 1cm offset + hover effect */
-      box-shadow: 0 0 35px rgba(255, 235, 160, 0.9), 0 0 70px rgba(255, 215, 100, 0.7);
-      background: linear-gradient(145deg, #faeac0, #f5e6b0, #f8e6b0);
-      border-color: #eec77c;
+    .enter-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.9);
+      background: linear-gradient(145deg, #e6c87c, #f5e6b0, #e6c87c);
+      border-color: #b8860b;
     }
     
     /* Creator button (hidden by default) */
@@ -97,33 +109,6 @@
     }
     .creator-btn.visible {
       display: block;
-    }
-
-    /* Language button - PLATINUM style */
-    .language-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(145deg, #e5e7eb, #d1d5db, #c0c5cc); /* Platinum gradient */
-      color: #1f2937;       /* Dark gray text */
-      border: 2px solid #9ca3b0;
-      padding: 0.8rem 1.8rem;
-      font-size: 1.1rem;
-      font-weight: 700;
-      font-family: 'Montserrat', 'Poppins', 'Quicksand', Arial, sans-serif;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(209, 213, 219, 0.7);
-      z-index: 100;
-      transition: all 0.3s ease;
-    }
-    .language-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(229, 231, 235, 0.9);
-      background: linear-gradient(145deg, #d1d5db, #e5e7eb, #c0c5cc);
-      border-color: #6b7280;
     }
 
     .language-menu {
@@ -167,6 +152,8 @@
       padding: 20px 0;
       animation: colorChange 15s infinite;
       background: transparent;
+      position: absolute;
+      bottom: 0;
     }
     
     @keyframes colorChange {
@@ -189,7 +176,12 @@
   <!-- Creator button (appears after double-click) -->
   <button class="creator-btn" id="creatorBtn">👤 CREATOR LOGIN</button>
 
+  <!-- LANGUAGE button (platinum) -->
   <button type="button" class="language-btn" id="languageBtn">LANGUAGE</button>
+  
+  <!-- ENTER button (gold, right under LANGUAGE) -->
+  <a href="#" class="enter-btn" id="enterBtn">ENTER THE CLUB</a>
+
   <div class="language-menu" id="languageMenu">
     <div class="language-option active" data-lang="en">English</div>
     <div class="language-option" data-lang="fr">Français</div>
@@ -200,13 +192,11 @@
     <div class="language-option" data-lang="he">עברית</div>
     <div class="language-option" data-lang="ru">Русский</div>
   </div>
-  
-  <a href="#" class="btn" id="enterBtn">Enter the Club</a>
 
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
-    // ===== BACKGROUND ROTATION (unchanged, 15 seconds) =====
+    // ===== BACKGROUND ROTATION =====
     (function() {
         const backgrounds = [
             'url("backgrounds/1fon.png")',
@@ -231,16 +221,16 @@
         setInterval(rotateBackground, 15000);
     })();
 
-    // ===== TRANSLATIONS & UI (unchanged) =====
+    // ===== TRANSLATIONS (updated for new button text) =====
     const translations = {
-      en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
-      fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
-      es: { btn: "Entrar al Club", footer: "Cryptobros 2026 ©" },
-      pt: { btn: "Entrar no Clube", footer: "Cryptobros 2026 ©" },
+      en: { btn: "ENTER THE CLUB", footer: "Cryptobros 2026 ©" },
+      fr: { btn: "ENTRER DANS LE CLUB", footer: "Cryptobros 2026 ©" },
+      es: { btn: "ENTRAR AL CLUB", footer: "Cryptobros 2026 ©" },
+      pt: { btn: "ENTRAR NO CLUBE", footer: "Cryptobros 2026 ©" },
       zh: { btn: "进入俱乐部", footer: "Cryptobros 2026 ©" },
       ar: { btn: "دخول النادي", footer: "Cryptobros 2026 ©" },
       he: { btn: "כניסה למועדון", footer: "Cryptobros 2026 ©" },
-      ru: { btn: "Войти в Клуб", footer: "Cryptobros 2026 ©" }
+      ru: { btn: "ВОЙТИ В КЛУБ", footer: "Cryptobros 2026 ©" }
     };
 
     function applyLanguage(lang) {
@@ -256,9 +246,13 @@
       if (lang === 'ar' || lang === 'he') {
         document.body.setAttribute('dir', 'rtl');
         document.documentElement.lang = lang;
+        document.getElementById('enterBtn').style.right = '20px';
+        document.getElementById('enterBtn').style.left = 'auto';
       } else {
         document.body.removeAttribute('dir');
         document.documentElement.lang = lang;
+        document.getElementById('enterBtn').style.right = '20px';
+        document.getElementById('enterBtn').style.left = 'auto';
       }
     }
 
