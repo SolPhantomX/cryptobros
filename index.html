@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>CRYPTOBROS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -29,7 +30,7 @@
       filter: brightness(0.9);
     }
 
-    /* Language button - PLATINUM (unchanged) */
+    /* Language button - PLATINUM */
     .language-btn {
       position: absolute;
       top: 20px;
@@ -56,10 +57,10 @@
       border-color: #6b7280;
     }
 
-    /* ENTER button - GOLD, same style as LANGUAGE, positioned right under it */
+    /* ENTER button - GOLD */
     .enter-btn {
       position: absolute;
-      top: 90px; /* 20px (language top) + height (~50px) + 20px gap = 90px */
+      top: 90px;
       right: 20px;
       background: linear-gradient(145deg, #f5e6b0, #e6c87c, #d4af37);
       color: #5c3e0b;
@@ -85,7 +86,7 @@
       border-color: #b8860b;
     }
     
-    /* Creator button (hidden by default) */
+    /* Creator button */
     .creator-btn {
       position: absolute;
       top: 20px;
@@ -165,21 +166,98 @@
       83.33% { color: #ffff00; }
       100% { color: #00ff9d; }
     }
+
+    /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
+    @media (max-width: 768px) {
+      .language-btn {
+        top: 60px;
+        right: 50%;
+        transform: translateX(50%);
+        padding: 1.2rem 3rem;
+        font-size: 1.5rem;
+        width: 80%;
+        max-width: 350px;
+        text-align: center;
+      }
+      
+      .enter-btn {
+        top: 160px;
+        right: 50%;
+        transform: translateX(50%);
+        padding: 1.2rem 3rem;
+        font-size: 1.6rem;
+        width: 80%;
+        max-width: 350px;
+        text-align: center;
+      }
+      
+      .creator-btn {
+        top: auto;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 1.2rem 2.5rem;
+        font-size: 1.3rem;
+        width: 70%;
+        max-width: 300px;
+        text-align: center;
+      }
+      
+      .language-menu {
+        top: 140px;
+        right: 50%;
+        transform: translateX(50%);
+        width: 80%;
+        max-width: 350px;
+      }
+      
+      .language-option {
+        padding: 18px 25px;
+        font-size: 1.3rem;
+        text-align: center;
+      }
+      
+      #secretArea {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    /* Для очень маленьких экранов */
+    @media (max-width: 480px) {
+      .language-btn {
+        top: 40px;
+        padding: 1rem 2rem;
+        font-size: 1.3rem;
+      }
+      
+      .enter-btn {
+        top: 130px;
+        padding: 1rem 2rem;
+        font-size: 1.4rem;
+      }
+      
+      .creator-btn {
+        bottom: 80px;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="bg" id="dynamicBg"></div>
 
-  <!-- Secret double-click area (bottom left corner) -->
+  <!-- Secret double-click area (larger on mobile) -->
   <div style="position: fixed; bottom: 0; left: 0; width: 100px; height: 100px; background: transparent; z-index: 9999; cursor: pointer;" id="secretArea"></div>
 
-  <!-- Creator button (appears after double-click) -->
+  <!-- Creator button -->
   <button class="creator-btn" id="creatorBtn">👤 CREATOR LOGIN</button>
 
-  <!-- LANGUAGE button (platinum) -->
+  <!-- LANGUAGE button -->
   <button type="button" class="language-btn" id="languageBtn">LANGUAGE</button>
   
-  <!-- ENTER button (gold, right under LANGUAGE) -->
+  <!-- ENTER button -->
   <a href="#" class="enter-btn" id="enterBtn">ENTER THE CLUB</a>
 
   <div class="language-menu" id="languageMenu">
@@ -221,7 +299,7 @@
         setInterval(rotateBackground, 15000);
     })();
 
-    // ===== TRANSLATIONS (updated for new button text) =====
+    // ===== TRANSLATIONS =====
     const translations = {
       en: { btn: "ENTER THE CLUB", footer: "Cryptobros 2026 ©" },
       fr: { btn: "ENTRER DANS LE CLUB", footer: "Cryptobros 2026 ©" },
@@ -242,18 +320,6 @@
       document.querySelectorAll('.language-option').forEach(opt => {
         opt.classList.toggle('active', opt.dataset.lang === lang);
       });
-
-      if (lang === 'ar' || lang === 'he') {
-        document.body.setAttribute('dir', 'rtl');
-        document.documentElement.lang = lang;
-        document.getElementById('enterBtn').style.right = '20px';
-        document.getElementById('enterBtn').style.left = 'auto';
-      } else {
-        document.body.removeAttribute('dir');
-        document.documentElement.lang = lang;
-        document.getElementById('enterBtn').style.right = '20px';
-        document.getElementById('enterBtn').style.left = 'auto';
-      }
     }
 
     // ===== SECRET AREA =====
