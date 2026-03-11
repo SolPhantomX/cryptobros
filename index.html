@@ -16,13 +16,18 @@
       position: relative;
       font-family: 'Quicksand', Arial, sans-serif;
     }
+    /* Background container - old background REMOVED, new one will be set via JS */
     .bg {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: url('logo.jpg') center/cover no-repeat;
+      /* background: url('logo.jpg') center/cover no-repeat; */ /* ---> DELETED <--- */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       z-index: -1;
       filter: brightness(0.9);
+      transition: background-image 1.5s ease-in-out; /* Smooth transition between backgrounds */
     }
     
     /* Main enter button */
@@ -165,7 +170,7 @@
   </style>
 </head>
 <body>
-  <div class="bg"></div>
+  <div class="bg" id="dynamicBg"></div> <!-- Added ID for easy access -->
 
   <!-- Secret double-click area (bottom left corner) -->
   <div style="position: fixed; bottom: 0; left: 0; width: 100px; height: 100px; background: transparent; z-index: 9999; cursor: pointer;" id="secretArea"></div>
@@ -190,7 +195,39 @@
   <footer id="footer">Cryptobros 2026 ©</footer>
 
   <script>
-    // ===== SIMPLE CREATOR ACCESS =====
+    // ===== BACKGROUND ROTATION (15 seconds interval) =====
+    (function() {
+        // Array of background images (8 images from 1fon.png to 8fon.png in /backgrounds/)
+        const backgrounds = [
+            'url("backgrounds/1fon.png")',
+            'url("backgrounds/2fon.png")',
+            'url("backgrounds/3fon.png")',
+            'url("backgrounds/4fon.png")',
+            'url("backgrounds/5fon.png")',
+            'url("backgrounds/6fon.png")',
+            'url("backgrounds/7fon.png")',
+            'url("backgrounds/8fon.png")'
+        ];
+        
+        let currentIndex = 0;
+        const bgElement = document.getElementById('dynamicBg');
+        
+        // Function to change background
+        function rotateBackground() {
+            // Set the new background image
+            bgElement.style.backgroundImage = backgrounds[currentIndex];
+            // Move to the next index, loop back to 0 after the last one
+            currentIndex = (currentIndex + 1) % backgrounds.length;
+        }
+        
+        // Set initial background
+        rotateBackground();
+        
+        // Change background every 15 seconds (15000 milliseconds)
+        setInterval(rotateBackground, 15000);
+    })();
+
+    // ===== SIMPLE CREATOR ACCESS ===== (your existing code, unchanged)
     const translations = {
       en: { btn: "Enter the Club", footer: "Cryptobros 2026 ©" },
       fr: { btn: "Entrer dans le Club", footer: "Cryptobros 2026 ©" },
