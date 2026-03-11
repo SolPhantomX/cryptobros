@@ -211,7 +211,6 @@
       border: 2px solid #ffcc00;
     }
     
-    /* FIXED: images don't crop */
     .grid-item img {
       width: 100%;
       height: 100%;
@@ -344,17 +343,19 @@
       font-family: 'Syne', sans-serif;
     }
 
-    /* ===== FREEZE OVERLAY ===== */
+    /* ===== FREEZE OVERLAY - FIXED! ===== */
     .freeze-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.3); /* Lighter overlay */
       z-index: 9999;
       display: none;
-      /* backdrop-filter: blur(3px); <-- REMOVED! No more screen blur */
+      /* CRITICAL FIXES: */
+      pointer-events: none; /* Allows clicks to pass through */
+      /* NO blur filter - removed completely */
     }
     .freeze-overlay.active { display: block; }
 
@@ -376,7 +377,6 @@
       transition: width 0.3s ease;
     }
 
-    /* ===== LOADING INDICATOR ===== */
     .loading-indicator {
       position: fixed;
       top: 50%;
@@ -403,7 +403,6 @@
   
   <div class="loading-indicator" id="loadingIndicator">⏳ LOADING...</div>
 
-  <!-- FIXED: correct merch link with security attributes -->
   <a href="https://www.cryptobros.pro/merch.html" class="back-button" target="_blank" rel="noopener noreferrer">
     <span>←</span>
     <span>BACK TO MERCH</span>
@@ -559,13 +558,11 @@
         document.body.style.overflow = '';
       }
 
-      // Make lightbox functions globally available
       window.openLightbox = openLightbox;
       window.closeLightbox = closeLightbox;
 
       // ===== File Processing =====
       async function processFiles(files) {
-        // Check if frozen
         if (isFrozen) {
           showToast('🔒 Gallery is frozen', '#ff3366');
           return 0;
@@ -580,7 +577,6 @@
         for (let index = 0; index < files.length; index++) {
           const file = files[index];
           
-          // Update progress
           const progress = Math.round((index / totalFiles) * 100);
           updateProgress(progress);
           
@@ -689,7 +685,7 @@
         fileInput.addEventListener('change', async function(e) {
           const files = Array.from(e.target.files)
             .filter(f => f.type.startsWith('image/'))
-            .filter(f => f.size <= 5 * 1024 * 1024); // 5MB limit
+            .filter(f => f.size <= 5 * 1024 * 1024);
           
           if (files.length !== e.target.files.length) {
             showToast('⚠️ Some files were too large (max 5MB)', '#ffaa00');
