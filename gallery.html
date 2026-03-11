@@ -37,15 +37,28 @@
     
     @keyframes glowPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
     
-    @media (max-width: 768px) {
+    @media (prefers-reduced-motion: reduce) {
+      body::before, .page-title, .slogan-line1, .slogan-line2 {
+        animation: none !important;
+      }
+    }
+    
+    @media (max-width: 1024px) { 
+      .image-grid { grid-template-columns: repeat(3, 1fr); } 
+    }
+    @media (max-width: 768px) { 
       body { padding: 15px; }
       .page-title { font-size: 3rem; }
       .back-button { top: 15px; left: 15px; padding: 12px 24px; }
       .admin-button { bottom: 20px; right: 15px; padding: 12px 20px; }
       .freeze-button { bottom: 90px; right: 15px; padding: 12px 20px; }
+      .image-grid { grid-template-columns: repeat(2, 1fr); } 
+    }
+    @media (max-width: 480px) { 
+      .image-grid { grid-template-columns: 1fr; } 
     }
 
-    /* ===== BACK BUTTON ===== */
+    /* ===== BUTTONS ===== */
     .back-button {
       position: fixed;
       top: 30px;
@@ -74,7 +87,6 @@
       transform: translateX(-5px) scale(1.05);
     }
 
-    /* ===== UPLOAD BUTTON ===== */
     .admin-button {
       position: fixed;
       bottom: 100px;
@@ -95,12 +107,15 @@
       gap: 10px;
       transition: all 0.3s ease;
     }
-    .admin-button:hover {
+    .admin-button:hover:not(:disabled) {
       transform: scale(1.05);
       box-shadow: 0 0 50px #9945FF;
     }
+    .admin-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-    /* ===== FREEZE BUTTON ===== */
     .freeze-button {
       position: fixed;
       bottom: 180px;
@@ -121,7 +136,7 @@
       gap: 10px;
       transition: all 0.3s ease;
     }
-    .freeze-button:hover {
+    .freeze-button:hover:not(:disabled) {
       transform: scale(1.05);
       box-shadow: 0 0 60px #ff3366;
     }
@@ -129,8 +144,10 @@
       background: #00ff00;
       color: #000;
       box-shadow: 0 0 30px #00ff00;
-      pointer-events: none;
+    }
+    .freeze-button:disabled {
       opacity: 0.7;
+      cursor: default;
     }
 
     .page-title {
@@ -217,6 +234,7 @@
       object-fit: contain;
       background: #0a0a0a;
       display: block;
+      pointer-events: none;
     }
     
     .item-number {
@@ -235,6 +253,7 @@
       font-family: 'Syne', sans-serif;
       box-shadow: 0 0 20px #ffcc00;
       z-index: 2;
+      pointer-events: none;
     }
     
     .item-placeholder {
@@ -278,10 +297,14 @@
       font-size: 18px;
       box-shadow: 0 0 30px #00ff00;
     }
-    .upload-btn:hover {
+    .upload-btn:hover:not(:disabled) {
       background: #00ff00;
       color: #000;
       transform: scale(1.1);
+    }
+    .upload-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     .hidden-input { display: none; }
     .upload-note {
@@ -311,6 +334,7 @@
       border: 4px solid #ff00ff;
       border-radius: 15px;
       box-shadow: 0 0 100px #ff00ff;
+      pointer-events: none;
     }
     .lightbox-close {
       position: absolute;
@@ -329,6 +353,9 @@
       border-radius: 50%;
       z-index: 10001;
     }
+    .lightbox-close:focus {
+      outline: 3px solid white;
+    }
     .lightbox-number {
       position: absolute;
       bottom: 30px;
@@ -342,8 +369,31 @@
       border: 3px solid #00ffff;
       font-family: 'Syne', sans-serif;
     }
+    
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 3rem;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid #ff00ff;
+      z-index: 10002;
+    }
+    .lightbox-nav:hover {
+      background: #ff00ff;
+    }
+    .lightbox-prev { left: 30px; }
+    .lightbox-next { right: 30px; }
 
-    /* ===== FREEZE OVERLAY - FIXED! ===== */
+    /* ===== FREEZE OVERLAY ===== */
     .freeze-overlay {
       position: fixed;
       top: 0;
@@ -357,69 +407,68 @@
     }
     .freeze-overlay.active { display: block; }
 
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: #333;
+    .storage-warning {
       position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10001;
+      top: 20px;
+      right: 20px;
+      background: #ff3366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      z-index: 10000;
       display: none;
     }
-    .progress-bar.active { display: block; }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #00ff00, #00ffff, #ff00ff);
-      width: 0%;
-      transition: width 0.3s ease;
-    }
+    .storage-warning.active { display: block; }
 
-    .loading-indicator {
+    .spinner {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #00ffff;
-      font-size: 2rem;
-      font-family: 'Syne', sans-serif;
-      text-shadow: 0 0 30px #00ffff;
-      z-index: 40000;
-      background: rgba(0,0,0,0.9);
-      padding: 20px 40px;
-      border-radius: 60px;
-      border: 3px solid #00ffff;
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(255,255,255,0.1);
+      border-top: 6px solid #00ffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      z-index: 50000;
       display: none;
     }
-    .loading-indicator.active { display: block; }
+    .spinner.active { display: block; }
+    @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
   </style>
 </head>
 <body>
-  <div class="progress-bar" id="progressBar">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
-  
-  <div class="loading-indicator" id="loadingIndicator">⏳ LOADING...</div>
+  <div class="storage-warning" id="storageWarning">⚠️ Storage almost full</div>
+  <div class="spinner" id="spinner"></div>
 
   <a href="https://www.cryptobros.pro/merch.html" class="back-button" target="_blank" rel="noopener noreferrer">
     <span>←</span>
     <span>BACK TO MERCH</span>
   </a>
 
-  <button class="admin-button" id="adminButton">
+  <button class="admin-button" id="adminButton" aria-label="Upload designs">
     <span>📤</span>
     <span>UPLOAD DESIGNS</span>
   </button>
 
-  <button class="freeze-button" id="freezeButton">
+  <button class="freeze-button" id="freezeButton" aria-label="Freeze gallery">
     <span>🔒</span>
     <span>FREEZE GALLERY</span>
+  </button>
+  
+  <button class="freeze-button" id="unfreezeButton" style="bottom: 240px; background: #00ccff; display: none;" aria-label="Unfreeze gallery">
+    <span>🔓</span>
+    <span>UNFREEZE</span>
   </button>
 
   <div class="freeze-overlay" id="freezeOverlay"></div>
 
-  <div class="lightbox" id="lightbox">
-    <div class="lightbox-close" id="lightboxClose">✕</div>
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Image preview">
+    <div class="lightbox-close" id="lightboxClose" aria-label="Close" tabindex="0">✕</div>
+    <div class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image" tabindex="0">←</div>
+    <div class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image" tabindex="0">→</div>
     <img id="lightboxImg" src="" alt="">
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
@@ -428,8 +477,8 @@
     <h1 class="page-title">DESIGN GALLERY</h1>
     
     <div class="slogan-container">
-      <div class="slogan-line1" id="sloganLine1">REAL ONES WEAR THE MERCH</div>
-      <div class="slogan-line2" id="sloganLine2">FAKE ONES FEAR THE TRUTH</div>
+      <div class="slogan-line1">REAL ONES WEAR THE MERCH</div>
+      <div class="slogan-line2">FAKE ONES FEAR THE TRUTH</div>
     </div>
 
     <div class="section-title">⚡ DESIGNS 1–20 ⚡</div>
@@ -442,7 +491,8 @@
       <div class="upload-note">
         Files with numbers (design5.jpg) → slot #5<br>
         Files without numbers → fill empty slots in order<br>
-        Max file size: 5MB
+        Max file size: 1.5MB per image<br>
+        Max total: ~4.5MB
       </div>
     </div>
   </div>
@@ -451,30 +501,40 @@
     (function() {
       'use strict';
       
-      let designImages = {};
-      let isFrozen = false;
-
-      // DOM elements
-      const adminButton = document.getElementById('adminButton');
-      const freezeButton = document.getElementById('freezeButton');
-      const freezeOverlay = document.getElementById('freezeOverlay');
-      const uploadSection = document.getElementById('uploadSection');
-      const uploadButton = document.getElementById('uploadButton');
+      // ===== CONFIG =====
+      const STORAGE_KEY = 'cryptobros_designs';
+      const FROZEN_KEY = 'cryptobros_frozen';
+      const MAX_STORAGE_SIZE = 4.5 * 1024 * 1024; // 4.5MB total
+      const MAX_FILE_SIZE = 1.5 * 1024 * 1024; // 1.5MB per file
+      
+      // ===== STATE =====
+      let designs = {};
+      let frozen = false;
+      let currentLightboxIndex = 1;
+      let uploadInProgress = false;
+      
+      // ===== DOM ELEMENTS =====
+      const grid = document.getElementById('designsGrid');
       const fileInput = document.getElementById('designUpload');
+      const uploadBtn = document.getElementById('uploadButton');
+      const adminBtn = document.getElementById('adminButton');
+      const freezeBtn = document.getElementById('freezeButton');
+      const unfreezeBtn = document.getElementById('unfreezeButton');
+      const overlay = document.getElementById('freezeOverlay');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
-      const lightboxNumber = document.getElementById('lightboxNumber');
+      const lightboxNum = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
-      const designsGrid = document.getElementById('designsGrid');
-      const progressBar = document.getElementById('progressBar');
-      const progressFill = document.getElementById('progressFill');
-      const loadingIndicator = document.getElementById('loadingIndicator');
-
-      // ===== Toast =====
-      function showToast(msg, color) {
-        const toast = document.createElement('div');
-        toast.textContent = msg;
-        toast.style.cssText = `
+      const lightboxPrev = document.getElementById('lightboxPrev');
+      const lightboxNext = document.getElementById('lightboxNext');
+      const storageWarning = document.getElementById('storageWarning');
+      const spinner = document.getElementById('spinner');
+      
+      // ===== UTILS =====
+      function showMessage(text, color, duration = 3000) {
+        const msg = document.createElement('div');
+        msg.textContent = text;
+        msg.style.cssText = `
           position: fixed;
           bottom: 30px;
           left: 50%;
@@ -486,260 +546,456 @@
           border-radius: 60px;
           font-family: 'Sora', sans-serif;
           z-index: 30000;
+          text-align: center;
+          max-width: 90%;
         `;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-      }
-
-      // ===== Loading Indicator =====
-      function showLoading() {
-        if (loadingIndicator) loadingIndicator.classList.add('active');
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), duration);
       }
       
-      function hideLoading() {
-        if (loadingIndicator) loadingIndicator.classList.remove('active');
-      }
-
-      // ===== Progress Bar =====
-      function updateProgress(percent) {
-        if (progressFill) progressFill.style.width = percent + '%';
+      function setButtonsDisabled(disabled) {
+        adminBtn.disabled = disabled || frozen;
+        uploadBtn.disabled = disabled || frozen;
       }
       
-      function showProgress() {
-        if (progressBar) progressBar.classList.add('active');
+      function checkStorageSize() {
+        try {
+          const data = JSON.stringify(designs);
+          const size = new Blob([data]).size;
+          
+          if (size > MAX_STORAGE_SIZE) {
+            storageWarning.classList.add('active');
+            return false;
+          } else {
+            storageWarning.classList.remove('active');
+            return true;
+          }
+        } catch (e) {
+          console.error('Storage check failed:', e);
+          return false;
+        }
       }
       
-      function hideProgress() {
-        if (progressBar) progressBar.classList.remove('active');
-        updateProgress(0);
-      }
-
-      // ===== Render Grid =====
-      function renderDesigns() {
-        if (!designsGrid) return;
+      // ===== RENDER GRID =====
+      function renderGrid() {
+        if (!grid) return;
         
         let html = '';
         for (let i = 1; i <= 20; i++) {
-          const img = designImages[i];
+          const img = designs[i];
           html += `
-            <div class="grid-item" data-design-id="${i}">
+            <div class="grid-item" data-id="${i}" role="button" tabindex="0" aria-label="Design ${i}${img ? '' : ' empty'}">
               <div class="item-number">${i}</div>
-              ${img ? `
-                <img src="${img}" alt="Design ${i}" onclick="window.openLightbox(${i})">
-              ` : `
-                <div class="item-placeholder" onclick="window.openLightbox(${i})">
+              ${img ? 
+                `<img src="${img}" alt="Design ${i}" loading="lazy">` : 
+                `<div class="item-placeholder">
                   <div class="emoji">🎨</div>
                   <div>EMPTY</div>
-                </div>
-              `}
+                </div>`
+              }
             </div>
           `;
         }
-        designsGrid.innerHTML = html;
+        grid.innerHTML = html;
+        checkStorageSize();
       }
-
-      // ===== Lightbox Functions =====
-      function openLightbox(num) {
-        if (designImages[num]) {
-          lightboxImg.src = designImages[num];
-          lightboxNumber.textContent = `DESIGN #${num}`;
-          lightbox.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        } else {
-          showToast(`Slot #${num} is empty`, '#ffaa00');
+      
+      // ===== LIGHTBOX =====
+      function openLightbox(id) {
+        if (!designs[id]) {
+          showMessage(`Slot #${id} is empty`, '#ffaa00');
+          return;
         }
+        
+        currentLightboxIndex = id;
+        lightboxImg.src = designs[id];
+        lightboxNum.textContent = `DESIGN #${id}`;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Move focus to close button for screen readers
+        setTimeout(() => lightboxClose.focus(), 100);
       }
-
+      
       function closeLightbox() {
         lightbox.classList.remove('active');
         lightboxImg.src = '';
         document.body.style.overflow = '';
       }
-
-      window.openLightbox = openLightbox;
-      window.closeLightbox = closeLightbox;
-
-      // ===== File Processing =====
-      async function processFiles(files) {
-        if (isFrozen) {
-          showToast('🔒 Gallery is frozen - cannot upload', '#ff3366');
-          return 0;
+      
+      function nextLightbox() {
+        let next = currentLightboxIndex + 1;
+        while (next <= 20 && !designs[next]) {
+          next++;
         }
-        
-        let successCount = 0;
-        const totalFiles = files.length;
-        
-        showLoading();
-        showProgress();
-        
-        for (let index = 0; index < files.length; index++) {
-          const file = files[index];
-          
-          const progress = Math.round((index / totalFiles) * 100);
-          updateProgress(progress);
-          
-          const match = file.name.match(/\d+/);
-          let slot = null;
-          
-          if (match) {
-            slot = parseInt(match[0]);
-            if (slot < 1 || slot > 20) slot = null;
-          }
-          
-          if (!slot) {
-            for (let i = 1; i <= 20; i++) {
-              if (!designImages[i]) {
-                slot = i;
-                break;
-              }
-            }
-          }
-          
-          if (slot && !designImages[slot]) {
-            const reader = new FileReader();
-            await new Promise(resolve => {
-              reader.onload = e => {
-                designImages[slot] = e.target.result;
-                successCount++;
-                resolve();
-              };
-              reader.readAsDataURL(file);
-            });
-          }
+        if (next <= 20) {
+          openLightbox(next);
+        } else {
+          showMessage('No more designs', '#ffaa00');
         }
-        
-        updateProgress(100);
-        
-        saveDesigns();
-        renderDesigns();
-        
-        setTimeout(() => {
-          hideProgress();
-          hideLoading();
-        }, 500);
-        
-        showToast(`✅ Uploaded ${successCount} files`, '#00ff00');
-        return successCount;
       }
-
+      
+      function prevLightbox() {
+        let prev = currentLightboxIndex - 1;
+        while (prev >= 1 && !designs[prev]) {
+          prev--;
+        }
+        if (prev >= 1) {
+          openLightbox(prev);
+        } else {
+          showMessage('No more designs', '#ffaa00');
+        }
+      }
+      
+      // ===== STORAGE =====
       function saveDesigns() {
-        localStorage.setItem('cryptobros_designs', JSON.stringify(designImages));
+        try {
+          // Check size BEFORE saving
+          const json = JSON.stringify(designs);
+          const size = new Blob([json]).size;
+          
+          if (size > MAX_STORAGE_SIZE) {
+            showMessage('❌ Storage limit reached — cannot save more', '#ff3366', 4000);
+            storageWarning.classList.add('active');
+            return false;
+          }
+          
+          localStorage.setItem(STORAGE_KEY, json);
+          storageWarning.classList.remove('active');
+          return true;
+        } catch (e) {
+          if (e.name === 'QuotaExceededError') {
+            showMessage('❌ Storage full! Delete some designs', '#ff3366', 4000);
+          } else {
+            console.error('Save failed:', e);
+            showMessage('❌ Save failed', '#ff3366');
+          }
+          return false;
+        }
       }
-
+      
       function loadDesigns() {
-        const saved = localStorage.getItem('cryptobros_designs');
+        const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
           try {
-            designImages = JSON.parse(saved);
+            designs = JSON.parse(saved);
           } catch (e) {
-            console.error('Failed to parse saved designs', e);
-            designImages = {};
-            localStorage.removeItem('cryptobros_designs');
+            console.error('Load error:', e);
+            designs = {};
           }
         }
       }
-
-      // ===== FREEZE =====
+      
+      // ===== FILE UPLOAD =====
+      function findFirstEmptySlot() {
+        for (let i = 1; i <= 20; i++) {
+          if (!designs[i]) return i;
+        }
+        return null;
+      }
+      
+      function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(file);
+        });
+      }
+      
+      async function uploadFiles(files) {
+        if (frozen) {
+          showMessage('🔒 Gallery is frozen', '#ff3366');
+          return;
+        }
+        
+        if (uploadInProgress) {
+          showMessage('Upload already in progress', '#ffaa00');
+          return;
+        }
+        
+        uploadInProgress = true;
+        setButtonsDisabled(true);
+        spinner.classList.add('active');
+        
+        let uploaded = 0;
+        const errors = [];
+        const usedSlots = new Set();
+        
+        // Check total size first
+        let totalSize = 0;
+        for (const file of files) {
+          if (file.type.startsWith('image/')) {
+            totalSize += file.size;
+          }
+        }
+        
+        if (totalSize > MAX_STORAGE_SIZE) {
+          showMessage(`❌ Total size exceeds ${MAX_STORAGE_SIZE/1024/1024}MB limit`, '#ff3366', 4000);
+          uploadInProgress = false;
+          setButtonsDisabled(false);
+          spinner.classList.remove('active');
+          return;
+        }
+        
+        // Split files
+        const numberedFiles = [];
+        const unnumberedFiles = [];
+        
+        for (const file of files) {
+          if (!file.type.startsWith('image/')) {
+            errors.push(`${file.name}: not an image`);
+            continue;
+          }
+          
+          if (file.size > MAX_FILE_SIZE) {
+            errors.push(`${file.name}: too large (>1.5MB)`);
+            continue;
+          }
+          
+          const match = file.name.match(/\d+/);
+          if (match) {
+            numberedFiles.push({ file, slot: parseInt(match[0]) });
+          } else {
+            unnumberedFiles.push(file);
+          }
+        }
+        
+        // Sort numbered files by slot
+        numberedFiles.sort((a, b) => a.slot - b.slot);
+        
+        // Process numbered files
+        for (const { file, slot } of numberedFiles) {
+          if (slot < 1 || slot > 20) {
+            errors.push(`${file.name}: slot ${slot} out of range`);
+            continue;
+          }
+          
+          if (usedSlots.has(slot) || designs[slot]) {
+            errors.push(`${file.name}: slot ${slot} already occupied`);
+            continue;
+          }
+          
+          try {
+            const dataUrl = await readFileAsDataURL(file);
+            
+            // Test if this would exceed storage
+            const testDesigns = { ...designs, [slot]: dataUrl };
+            const testSize = new Blob([JSON.stringify(testDesigns)]).size;
+            
+            if (testSize > MAX_STORAGE_SIZE) {
+              errors.push(`${file.name}: would exceed storage limit`);
+              continue;
+            }
+            
+            designs[slot] = dataUrl;
+            usedSlots.add(slot);
+            uploaded++;
+            
+            // Save incrementally
+            saveDesigns();
+            renderGrid();
+          } catch (err) {
+            errors.push(`${file.name}: failed to load`);
+          }
+        }
+        
+        // Process unnumbered files
+        for (const file of unnumberedFiles) {
+          const slot = findFirstEmptySlot();
+          if (!slot) {
+            errors.push(`${file.name}: no empty slots left`);
+            continue;
+          }
+          
+          if (usedSlots.has(slot)) continue;
+          
+          try {
+            const dataUrl = await readFileAsDataURL(file);
+            
+            // Test if this would exceed storage
+            const testDesigns = { ...designs, [slot]: dataUrl };
+            const testSize = new Blob([JSON.stringify(testDesigns)]).size;
+            
+            if (testSize > MAX_STORAGE_SIZE) {
+              errors.push(`${file.name}: would exceed storage limit`);
+              continue;
+            }
+            
+            designs[slot] = dataUrl;
+            usedSlots.add(slot);
+            uploaded++;
+            
+            // Save incrementally
+            saveDesigns();
+            renderGrid();
+          } catch (err) {
+            errors.push(`${file.name}: failed to load`);
+          }
+        }
+        
+        spinner.classList.remove('active');
+        uploadInProgress = false;
+        setButtonsDisabled(false);
+        
+        if (uploaded > 0) {
+          saveDesigns();
+          renderGrid();
+          showMessage(`✅ Uploaded ${uploaded} files`, '#00ff00');
+        }
+        
+        if (errors.length > 0) {
+          if (errors.length === 1) {
+            showMessage(`⚠️ ${errors[0]}`, '#ff6600', 4000);
+          } else {
+            showMessage(`⚠️ ${errors.length} errors`, '#ff6600', 4000);
+          }
+          console.error('Upload errors:', errors);
+        }
+        
+        if (uploaded === 0 && errors.length === 0) {
+          showMessage('No valid images found', '#ffaa00');
+        }
+      }
+      
+      // ===== FREEZE / UNFREEZE =====
       function freezeGallery() {
-        if (isFrozen) return;
-        isFrozen = true;
+        if (frozen) return;
+        frozen = true;
         
-        localStorage.setItem('cryptobros_frozen', 'true');
+        localStorage.setItem(FROZEN_KEY, 'true');
         
-        // НЕ ПРЯЧЕМ КНОПКУ UPLOAD!
-        // adminButton остается видимым
+        freezeBtn.classList.add('frozen');
+        freezeBtn.disabled = true;
+        freezeBtn.style.display = 'none';
+        unfreezeBtn.style.display = 'flex';
+        overlay.classList.add('active');
+        setButtonsDisabled(true);
         
-        if (freezeButton) {
-          freezeButton.classList.add('frozen');
-          freezeButton.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
-        }
-        if (freezeOverlay) freezeOverlay.classList.add('active');
-        
-        showToast('🔒 Gallery frozen', '#00ff00');
+        showMessage('🔒 Gallery frozen', '#00ff00');
       }
-
+      
+      function unfreezeGallery() {
+        if (!frozen) return;
+        
+        if (!confirm('UNFREEZE gallery? This will allow uploads again.')) return;
+        
+        frozen = false;
+        localStorage.removeItem(FROZEN_KEY);
+        
+        freezeBtn.classList.remove('frozen');
+        freezeBtn.disabled = false;
+        freezeBtn.style.display = 'flex';
+        unfreezeBtn.style.display = 'none';
+        overlay.classList.remove('active');
+        setButtonsDisabled(false);
+        
+        showMessage('🔓 Gallery unfrozen', '#00ccff');
+      }
+      
       function checkFrozen() {
-        if (localStorage.getItem('cryptobros_frozen') === 'true') {
-          isFrozen = true;
-          
-          // НЕ ПРЯЧЕМ КНОПКУ UPLOAD!
-          // adminButton остается видимым
-          
-          if (freezeButton) {
-            freezeButton.classList.add('frozen');
-            freezeButton.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
-          }
-          if (freezeOverlay) freezeOverlay.classList.add('active');
+        if (localStorage.getItem(FROZEN_KEY) === 'true') {
+          frozen = true;
+          freezeBtn.classList.add('frozen');
+          freezeBtn.disabled = true;
+          freezeBtn.style.display = 'none';
+          unfreezeBtn.style.display = 'flex';
+          overlay.classList.add('active');
+          setButtonsDisabled(true);
         }
       }
-
-      // ===== Event Listeners =====
-      if (adminButton && fileInput) {
-        adminButton.addEventListener('click', () => {
-          if (isFrozen) {
-            showToast('🔒 Gallery is frozen - cannot upload', '#ff3366');
-            return;
-          }
-          fileInput.click();
-        });
-      }
-
-      if (uploadButton && fileInput) {
-        uploadButton.addEventListener('click', () => {
-          if (isFrozen) {
-            showToast('🔒 Gallery is frozen - cannot upload', '#ff3366');
-            return;
-          }
-          fileInput.click();
-        });
-      }
-
-      if (fileInput) {
-        fileInput.addEventListener('change', async function(e) {
-          const files = Array.from(e.target.files)
-            .filter(f => f.type.startsWith('image/'))
-            .filter(f => f.size <= 5 * 1024 * 1024);
-          
-          if (files.length !== e.target.files.length) {
-            showToast('⚠️ Some files were too large (max 5MB)', '#ffaa00');
-          }
-          
-          if (files.length) {
-            await processFiles(files);
-          }
-          
-          e.target.value = '';
-        });
-      }
-
-      if (freezeButton) {
-        freezeButton.addEventListener('click', () => {
-          if (!isFrozen && confirm('FREEZE GALLERY? This cannot be undone!')) {
-            freezeGallery();
-          }
-        });
-      }
-
-      if (lightboxClose) {
-        lightboxClose.addEventListener('click', closeLightbox);
-      }
-
-      if (lightbox) {
-        lightbox.addEventListener('click', (e) => {
-          if (e.target === lightbox) closeLightbox();
-        });
-      }
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox?.classList.contains('active')) {
-          closeLightbox();
+      
+      // ===== EVENT DELEGATION =====
+      grid.addEventListener('click', (e) => {
+        const item = e.target.closest('.grid-item');
+        if (item) {
+          const id = parseInt(item.dataset.id);
+          openLightbox(id);
         }
       });
-
-      // ===== Initialize =====
+      
+      grid.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          const item = e.target.closest('.grid-item');
+          if (item) {
+            e.preventDefault();
+            const id = parseInt(item.dataset.id);
+            openLightbox(id);
+          }
+        }
+      });
+      
+      // ===== EVENT LISTENERS =====
+      adminBtn.addEventListener('click', () => {
+        if (frozen) {
+          showMessage('🔒 Gallery is frozen', '#ff3366');
+          return;
+        }
+        if (uploadInProgress) {
+          showMessage('Upload in progress', '#ffaa00');
+          return;
+        }
+        fileInput.click();
+      });
+      
+      uploadBtn.addEventListener('click', () => {
+        if (frozen) {
+          showMessage('🔒 Gallery is frozen', '#ff3366');
+          return;
+        }
+        if (uploadInProgress) {
+          showMessage('Upload in progress', '#ffaa00');
+          return;
+        }
+        fileInput.click();
+      });
+      
+      fileInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length) {
+          await uploadFiles(files);
+        }
+        fileInput.value = '';
+      });
+      
+      freezeBtn.addEventListener('click', () => {
+        if (!frozen && confirm('FREEZE GALLERY? This will disable uploads.')) {
+          freezeGallery();
+        }
+      });
+      
+      unfreezeBtn.addEventListener('click', unfreezeGallery);
+      
+      lightboxClose.addEventListener('click', closeLightbox);
+      
+      lightboxPrev.addEventListener('click', prevLightbox);
+      lightboxNext.addEventListener('click', nextLightbox);
+      
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        
+        switch(e.key) {
+          case 'Escape':
+            closeLightbox();
+            break;
+          case 'ArrowLeft':
+            prevLightbox();
+            break;
+          case 'ArrowRight':
+            nextLightbox();
+            break;
+        }
+      });
+      
+      // ===== INIT =====
       loadDesigns();
       checkFrozen();
-      renderDesigns();
+      renderGrid();
+      checkStorageSize();
     })();
   </script>
 </body>
