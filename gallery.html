@@ -6,13 +6,12 @@
   <title>CRYPTOBROS — DESIGN GALLERY</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- SINGLE FONT - SYNE (BOLD) -->
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      font-family: 'Syne', sans-serif; /* Only Syne */
+      font-family: 'Syne', sans-serif;
       background: #0a0a0a;
       color: #fff;
       min-height: 100vh;
@@ -22,99 +21,42 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
     
-    /* LIGHT MODE - full color scheme */
+    /* LIGHT MODE */
     body.light-mode {
-      background: #f5f5f5;
+      background: #f0f0f0;
       color: #222;
     }
     
     body.light-mode .grid-item {
       background: #ffffff;
-      border-color: #cccccc;
-    }
-    
-    body.light-mode .grid-item img {
-      background: #ffffff;
+      border-color: #ccc;
     }
     
     body.light-mode .item-number {
-      background: rgba(255,255,255,0.95);
-      color: #000000;
+      background: rgba(255,255,255,0.9);
+      color: #000;
       border-color: #ff6600;
-      box-shadow: 0 0 20px #ff6600;
-    }
-    
-    body.light-mode .item-placeholder {
-      background: #e0e0e0;
-      color: #444;
     }
     
     body.light-mode .section-title {
       color: #ff6600;
       border-bottom-color: #ff6600;
-      text-shadow: 0 0 10px rgba(255,102,0,0.5);
     }
     
     body.light-mode .slogan-line1 {
       color: #ff3300;
-      text-shadow: 0 0 15px #ff3300;
     }
     
     body.light-mode .slogan-line2 {
       color: #0066cc;
-      text-shadow: 0 0 10px #0066cc;
     }
     
-    body.light-mode .page-title {
-      /* Gradient for light mode */
-      background: linear-gradient(45deg, #ff0000, #ff6600, #ffcc00, #0066ff, #6600ff, #ff0066, #ff0000);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+    body.light-mode .back-button {
+      background: rgba(255,255,255,0.8);
+      color: #ff6600;
+      border-color: #ff6600;
     }
     
-    body.light-mode .freeze-overlay {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    body.light-mode .theme-toggle {
-      background: #333;
-      color: #ffcc00;
-    }
-    
-    body.light-mode .theme-toggle.light {
-      background: #ffcc00;
-      color: #333;
-    }
-    
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 20% 50%, rgba(255,0,255,0.1) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(0,255,255,0.1) 0%, transparent 50%),
-                  radial-gradient(circle at 40% 20%, rgba(255,255,0,0.1) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: -1;
-      animation: glowPulse 8s ease-in-out infinite;
-    }
-    
-    body.light-mode::before {
-      opacity: 0.3; /* Lighter in light mode */
-    }
-    
-    @keyframes glowPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
-    
-    @media (max-width: 768px) {
-      body { padding: 15px; }
-      .page-title { font-size: 3rem; }
-      .back-button { top: 15px; left: 15px; padding: 12px 24px; }
-      .theme-toggle { top: 15px; right: 15px; width: 50px; height: 50px; font-size: 24px; }
-    }
-
     /* ===== BACK BUTTON ===== */
     .back-button {
       position: fixed;
@@ -125,7 +67,7 @@
       backdrop-filter: blur(12px);
       border: 2px solid #ffcc00;
       border-radius: 60px;
-      padding: 16px 36px 16px 28px;
+      padding: 16px 36px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -142,20 +84,8 @@
       color: #000;
       transform: translateX(-5px) scale(1.05);
     }
-    
-    body.light-mode .back-button {
-      background: rgba(255, 255, 255, 0.8);
-      color: #ff6600;
-      border-color: #ff6600;
-      box-shadow: 0 0 30px rgba(255,102,0,0.5);
-    }
-    
-    body.light-mode .back-button:hover {
-      background: #ff6600;
-      color: #fff;
-    }
 
-    /* ===== THEME TOGGLE (DAY/NIGHT) ===== */
+    /* ===== THEME TOGGLE ===== */
     .theme-toggle {
       position: fixed;
       top: 30px;
@@ -177,10 +107,6 @@
     .theme-toggle:hover {
       transform: scale(1.1) rotate(15deg);
     }
-    .theme-toggle.light {
-      background: #ffcc00;
-      color: #000;
-    }
 
     .page-title {
       font-weight: 800;
@@ -193,7 +119,6 @@
       -webkit-text-fill-color: transparent;
       background-size: 400% 400%;
       animation: titleRainbow 8s linear infinite;
-      will-change: background-position;
     }
     @keyframes titleRainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
@@ -207,7 +132,6 @@
       color: #ff6600;
       text-shadow: 0 0 20px #ff6600;
       animation: line1Glow 2.5s ease-in-out infinite;
-      margin-bottom: 15px;
     }
     @keyframes line1Glow { 0%,100%{color:#ff6600} 33%{color:#ff00ff} 66%{color:#ffaa00} }
     .slogan-line2 {
@@ -215,6 +139,7 @@
       color: #00ff00;
       text-shadow: 0 0 15px #00ff00;
       animation: line2Flicker 3s linear infinite;
+      margin-top: 10px;
     }
     @keyframes line2Flicker { 0%,100%{color:#00ff00} 20%{color:#00ffff} 40%{color:#ffff00} 60%{color:#ff00ff} 80%{color:#00ff00} }
 
@@ -237,11 +162,6 @@
       gap: 0;
       margin-bottom: 60px;
       border: 2px solid #333;
-      transition: border-color 0.3s ease;
-    }
-    
-    body.light-mode .image-grid {
-      border-color: #aaa;
     }
     
     .grid-item {
@@ -260,7 +180,7 @@
       transform: scale(1.02);
       z-index: 10;
       box-shadow: 0 0 30px #ffcc00;
-      border: 2px solid #ffcc00 !important;
+      border: 2px solid #ffcc00;
     }
     
     .grid-item img {
@@ -269,16 +189,6 @@
       object-fit: contain;
       background: #0a0a0a;
       display: block;
-      transition: background 0.3s ease;
-    }
-    
-    body.light-mode .grid-item {
-      background: #ffffff;
-      border-color: #cccccc;
-    }
-    
-    body.light-mode .grid-item img {
-      background: #ffffff;
     }
     
     .item-number {
@@ -297,7 +207,6 @@
       font-weight: 700;
       box-shadow: 0 0 20px #ffcc00;
       z-index: 2;
-      transition: all 0.3s ease;
     }
     
     .item-placeholder {
@@ -309,10 +218,46 @@
       justify-content: center;
       color: #666;
       background: #0f0f0f;
-      font-weight: 400;
-      transition: all 0.3s ease;
     }
     .item-placeholder .emoji { font-size: 3.5rem; opacity: 0.5; }
+
+    /* ===== UPLOAD SECTION ===== */
+    .upload-section {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 40px;
+      background: rgba(0,0,0,0.9);
+      border: 3px solid #00ffff;
+      border-radius: 30px;
+      text-align: center;
+    }
+    .upload-title {
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #ff00ff;
+      text-shadow: 0 0 30px #ff00ff;
+    }
+    .upload-btn {
+      background: transparent;
+      border: 3px solid #00ff00;
+      color: #00ff00;
+      padding: 18px 45px;
+      border-radius: 60px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .upload-btn:hover {
+      background: #00ff00;
+      color: #000;
+    }
+    .hidden-input { display: none; }
+    .upload-note {
+      color: #ffaa00;
+      margin-top: 25px;
+      font-size: 14px;
+    }
 
     /* ===== LIGHTBOX ===== */
     .lightbox {
@@ -352,7 +297,6 @@
       border: 3px solid #ff00ff;
       border-radius: 50%;
       z-index: 10001;
-      font-weight: 400;
     }
     .lightbox-number {
       position: absolute;
@@ -368,7 +312,6 @@
       font-weight: 700;
     }
 
-    /* ===== FREEZE OVERLAY ===== */
     .freeze-overlay {
       position: fixed;
       top: 0;
@@ -379,11 +322,27 @@
       z-index: 9999;
       display: none;
       pointer-events: all;
-      transition: background 0.3s ease;
     }
     .freeze-overlay.active { display: block; }
 
-    /* ===== LOADING ===== */
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #333;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10001;
+      display: none;
+    }
+    .progress-bar.active { display: block; }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ff00, #00ffff, #ff00ff);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
     .loading-indicator {
       position: fixed;
       top: 50%;
@@ -404,15 +363,26 @@
   </style>
 </head>
 <body>
-  <!-- DAY/NIGHT TOGGLE BUTTON -->
-  <div class="theme-toggle" id="themeToggle">🌙</div>
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
   
   <div class="loading-indicator" id="loadingIndicator">⏳ LOADING...</div>
 
+  <!-- BACK BUTTON -->
   <a href="https://www.cryptobros.pro/merch.html" class="back-button">
     <span>←</span>
     <span>BACK TO MERCH</span>
   </a>
+
+  <!-- THEME TOGGLE -->
+  <div class="theme-toggle" id="themeToggle">🌙</div>
+
+  <!-- ADMIN BUTTON (UPLOAD) -->
+  <button class="upload-btn" id="adminButton" style="position:fixed; bottom:30px; right:30px; z-index:1000; background:#9945FF; color:white; border:none; padding:16px 32px; box-shadow:0 0 30px #9945FF;">
+    <span>📤</span>
+    <span>UPLOAD</span>
+  </button>
 
   <div class="freeze-overlay" id="freezeOverlay"></div>
 
@@ -432,6 +402,18 @@
 
     <div class="section-title">⚡ DESIGNS 1–20 ⚡</div>
     <div class="image-grid" id="designsGrid"></div>
+
+    <!-- UPLOAD SECTION -->
+    <div class="upload-section" id="uploadSection">
+      <div class="upload-title">📤 UPLOAD DESIGNS</div>
+      <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
+      <button class="upload-btn" id="uploadButton">CHOOSE IMAGES</button>
+      <div class="upload-note">
+        Files with numbers (design5.jpg) → slot #5<br>
+        Files without numbers → fill empty slots<br>
+        Max file size: 5MB
+      </div>
+    </div>
   </div>
 
   <script>
@@ -443,43 +425,87 @@
 
       // DOM elements
       const themeToggle = document.getElementById('themeToggle');
-      const freezeOverlay = document.getElementById('freezeOverlay');
+      const adminButton = document.getElementById('adminButton');
+      const uploadSection = document.getElementById('uploadSection');
+      const uploadButton = document.getElementById('uploadButton');
+      const fileInput = document.getElementById('designUpload');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxNumber = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
       const designsGrid = document.getElementById('designsGrid');
+      const progressBar = document.getElementById('progressBar');
+      const progressFill = document.getElementById('progressFill');
       const loadingIndicator = document.getElementById('loadingIndicator');
+      const freezeOverlay = document.getElementById('freezeOverlay');
 
       // ===== THEME TOGGLE =====
       function toggleTheme() {
         const body = document.body;
-        
         if (body.classList.contains('light-mode')) {
           body.classList.remove('light-mode');
           themeToggle.textContent = '🌙';
-          themeToggle.classList.remove('light');
           localStorage.setItem('cryptobros_theme', 'dark');
         } else {
           body.classList.add('light-mode');
           themeToggle.textContent = '☀️';
-          themeToggle.classList.add('light');
           localStorage.setItem('cryptobros_theme', 'light');
         }
       }
 
       function loadTheme() {
         const savedTheme = localStorage.getItem('cryptobros_theme');
-        
         if (savedTheme === 'light') {
           document.body.classList.add('light-mode');
           themeToggle.textContent = '☀️';
-          themeToggle.classList.add('light');
         } else {
           document.body.classList.remove('light-mode');
           themeToggle.textContent = '🌙';
-          themeToggle.classList.remove('light');
         }
+      }
+
+      // ===== Toast =====
+      function showToast(msg, color) {
+        const toast = document.createElement('div');
+        toast.textContent = msg;
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: black;
+          border: 3px solid ${color};
+          color: ${color};
+          padding: 15px 35px;
+          border-radius: 60px;
+          font-weight: 700;
+          z-index: 30000;
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      // ===== Loading Indicator =====
+      function showLoading() {
+        if (loadingIndicator) loadingIndicator.classList.add('active');
+      }
+      
+      function hideLoading() {
+        if (loadingIndicator) loadingIndicator.classList.remove('active');
+      }
+
+      // ===== Progress Bar =====
+      function updateProgress(percent) {
+        if (progressFill) progressFill.style.width = percent + '%';
+      }
+      
+      function showProgress() {
+        if (progressBar) progressBar.classList.add('active');
+      }
+      
+      function hideProgress() {
+        if (progressBar) progressBar.classList.remove('active');
+        updateProgress(0);
       }
 
       // ===== Render Grid =====
@@ -510,7 +536,6 @@
       function openLightbox(num) {
         if (designImages[num]) {
           lightboxImg.src = designImages[num];
-          lightboxImg.alt = `Design #${num}`;
           lightboxNumber.textContent = `DESIGN #${num}`;
           lightbox.classList.add('active');
           document.body.style.overflow = 'hidden';
@@ -525,28 +550,74 @@
         document.body.style.overflow = '';
       }
 
-      // ===== Toast =====
-      function showToast(msg, color) {
-        const toast = document.createElement('div');
-        toast.textContent = msg;
-        toast.style.cssText = `
-          position: fixed;
-          bottom: 30px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: black;
-          border: 3px solid ${color};
-          color: ${color};
-          padding: 15px 35px;
-          border-radius: 60px;
-          font-weight: 700;
-          z-index: 30000;
-        `;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
+      // ===== File Processing =====
+      async function processFiles(files) {
+        if (isFrozen) {
+          showToast('🔒 Gallery is frozen', '#ff3366');
+          return 0;
+        }
+        
+        let successCount = 0;
+        const totalFiles = files.length;
+        
+        showLoading();
+        showProgress();
+        
+        for (let index = 0; index < files.length; index++) {
+          const file = files[index];
+          
+          updateProgress(Math.round((index / totalFiles) * 100));
+          
+          // Extract number from filename
+          const match = file.name.match(/\d+/);
+          let slot = null;
+          
+          if (match) {
+            slot = parseInt(match[0]);
+            if (slot < 1 || slot > 20) slot = null;
+          }
+          
+          // If no number found, find first empty slot
+          if (!slot) {
+            for (let i = 1; i <= 20; i++) {
+              if (!designImages[i]) {
+                slot = i;
+                break;
+              }
+            }
+          }
+          
+          if (slot && !designImages[slot]) {
+            const reader = new FileReader();
+            await new Promise(resolve => {
+              reader.onload = e => {
+                designImages[slot] = e.target.result;
+                successCount++;
+                resolve();
+              };
+              reader.onerror = resolve;
+              reader.readAsDataURL(file);
+            });
+          }
+        }
+        
+        updateProgress(100);
+        saveDesigns();
+        renderDesigns();
+        
+        setTimeout(() => {
+          hideProgress();
+          hideLoading();
+        }, 500);
+        
+        showToast(`✅ Uploaded ${successCount} files`, '#00ff00');
+        return successCount;
       }
 
-      // ===== Load designs from localStorage =====
+      function saveDesigns() {
+        localStorage.setItem('cryptobros_designs', JSON.stringify(designImages));
+      }
+
       function loadDesigns() {
         const saved = localStorage.getItem('cryptobros_designs');
         if (saved) {
@@ -559,7 +630,7 @@
         }
       }
 
-      // ===== Check frozen state =====
+      // ===== FREEZE =====
       function checkFrozen() {
         if (localStorage.getItem('cryptobros_frozen') === 'true') {
           isFrozen = true;
@@ -574,6 +645,13 @@
         themeToggle.addEventListener('click', toggleTheme);
       }
       
+      // Admin button - scroll to upload
+      if (adminButton) {
+        adminButton.addEventListener('click', () => {
+          uploadSection.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+      
       // Grid click
       if (designsGrid) {
         designsGrid.addEventListener('click', (e) => {
@@ -582,6 +660,25 @@
             const id = parseInt(item.dataset.id);
             openLightbox(id);
           }
+        });
+      }
+
+      // Upload button
+      if (uploadButton && fileInput) {
+        uploadButton.addEventListener('click', () => {
+          fileInput.click();
+        });
+
+        fileInput.addEventListener('change', async function(e) {
+          const files = Array.from(e.target.files)
+            .filter(f => f.type.startsWith('image/'))
+            .filter(f => f.size <= 5 * 1024 * 1024);
+          
+          if (files.length) {
+            await processFiles(files);
+          }
+          
+          e.target.value = '';
         });
       }
 
@@ -606,7 +703,7 @@
       loadDesigns();
       checkFrozen();
       renderDesigns();
-      loadTheme();
+      loadTheme(); // Load saved theme
     })();
   </script>
 </body>
