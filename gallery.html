@@ -350,12 +350,10 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.3); /* Lighter overlay */
+      background: rgba(0, 0, 0, 0.3);
       z-index: 9999;
       display: none;
-      /* CRITICAL FIXES: */
-      pointer-events: none; /* Allows clicks to pass through */
-      /* NO blur filter - removed completely */
+      pointer-events: none;
     }
     .freeze-overlay.active { display: block; }
 
@@ -564,7 +562,7 @@
       // ===== File Processing =====
       async function processFiles(files) {
         if (isFrozen) {
-          showToast('🔒 Gallery is frozen', '#ff3366');
+          showToast('🔒 Gallery is frozen - cannot upload', '#ff3366');
           return 0;
         }
         
@@ -648,12 +646,13 @@
         
         localStorage.setItem('cryptobros_frozen', 'true');
         
-        if (adminButton) adminButton.style.display = 'none';
+        // НЕ ПРЯЧЕМ КНОПКУ UPLOAD!
+        // adminButton остается видимым
+        
         if (freezeButton) {
           freezeButton.classList.add('frozen');
           freezeButton.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
         }
-        if (uploadSection) uploadSection.style.display = 'none';
         if (freezeOverlay) freezeOverlay.classList.add('active');
         
         showToast('🔒 Gallery frozen', '#00ff00');
@@ -662,26 +661,40 @@
       function checkFrozen() {
         if (localStorage.getItem('cryptobros_frozen') === 'true') {
           isFrozen = true;
-          if (adminButton) adminButton.style.display = 'none';
+          
+          // НЕ ПРЯЧЕМ КНОПКУ UPLOAD!
+          // adminButton остается видимым
+          
           if (freezeButton) {
             freezeButton.classList.add('frozen');
             freezeButton.innerHTML = '<span>✅</span><span>GALLERY FROZEN</span>';
           }
-          if (uploadSection) uploadSection.style.display = 'none';
           if (freezeOverlay) freezeOverlay.classList.add('active');
         }
       }
 
       // ===== Event Listeners =====
-      if (uploadButton && fileInput) {
-        uploadButton.addEventListener('click', () => {
+      if (adminButton && fileInput) {
+        adminButton.addEventListener('click', () => {
           if (isFrozen) {
-            showToast('🔒 Gallery is frozen', '#ff3366');
+            showToast('🔒 Gallery is frozen - cannot upload', '#ff3366');
             return;
           }
           fileInput.click();
         });
+      }
 
+      if (uploadButton && fileInput) {
+        uploadButton.addEventListener('click', () => {
+          if (isFrozen) {
+            showToast('🔒 Gallery is frozen - cannot upload', '#ff3366');
+            return;
+          }
+          fileInput.click();
+        });
+      }
+
+      if (fileInput) {
         fileInput.addEventListener('change', async function(e) {
           const files = Array.from(e.target.files)
             .filter(f => f.type.startsWith('image/'))
