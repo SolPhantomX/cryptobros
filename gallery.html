@@ -3,43 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS — DESIGN GALLERY</title>
-  <!-- ONLY ONE FONT - SYNE -->
+  <title>CRYPTOBROS — GALLERY</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     body {
       font-family: 'Syne', sans-serif;
       background: #0a0a0a;
       color: white;
-      min-height: 100vh;
       padding: 30px;
+      transition: 0.3s;
     }
-    
-    /* LIGHT MODE */
     body.light-mode {
-      background: #f0f0f0 !important;
-      color: black !important;
+      background: #f0f0f0;
+      color: black;
     }
-    
     body.light-mode .grid-item {
-      background: white !important;
-      border-color: #ccc !important;
+      background: white;
+      border-color: #ccc;
     }
-    
-    body.light-mode .item-number {
-      background: white !important;
-      color: black !important;
-      border-color: #ff6600 !important;
-    }
-    
-    /* BACK BUTTON */
     .back-button {
       position: fixed;
       top: 30px;
       left: 30px;
-      z-index: 1000;
       background: rgba(0,0,0,0.7);
       border: 2px solid #ffcc00;
       border-radius: 60px;
@@ -47,14 +33,12 @@
       color: #ffcc00;
       text-decoration: none;
       font-weight: 700;
+      z-index: 1000;
     }
-    
-    /* THEME TOGGLE */
     .theme-toggle {
       position: fixed;
       top: 30px;
       right: 30px;
-      z-index: 1000;
       width: 60px;
       height: 60px;
       border-radius: 50%;
@@ -65,24 +49,22 @@
       align-items: center;
       justify-content: center;
       font-size: 28px;
+      z-index: 1000;
     }
-    
-    /* UPLOAD BUTTON */
     #adminButton {
       position: fixed;
       bottom: 30px;
       right: 30px;
-      z-index: 1000;
       background: #9945FF;
       color: white;
       border: none;
       border-radius: 60px;
       padding: 16px 32px;
-      font-family: 'Syne', sans-serif;
       font-weight: 700;
       cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 0 30px #9945FF;
     }
-    
     .page-title {
       font-weight: 800;
       font-size: 5rem;
@@ -93,21 +75,18 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    
     .slogan-line1 {
       font-weight: 700;
       font-size: 2.2rem;
       text-align: center;
       color: #ff6600;
     }
-    
     .slogan-line2 {
       font-size: 1.3rem;
       text-align: center;
       color: #00ff00;
       margin-bottom: 50px;
     }
-    
     .section-title {
       font-weight: 700;
       font-size: 2.8rem;
@@ -115,7 +94,6 @@
       border-bottom: 4px solid #ffdd00;
       margin: 40px 0 30px;
     }
-    
     .image-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -123,7 +101,6 @@
       border: 2px solid #333;
       margin-bottom: 60px;
     }
-    
     .grid-item {
       aspect-ratio: 1/1;
       background: #1a1a1a;
@@ -132,16 +109,13 @@
       position: relative;
       cursor: pointer;
     }
-    
     .grid-item:nth-child(4n) { border-right: none; }
     .grid-item:nth-last-child(-n+4) { border-bottom: none; }
-    
     .grid-item img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
-    
     .item-number {
       position: absolute;
       top: 12px;
@@ -158,7 +132,6 @@
       font-weight: 700;
       z-index: 2;
     }
-    
     .item-placeholder {
       width: 100%;
       height: 100%;
@@ -169,12 +142,7 @@
       background: #0f0f0f;
       color: #666;
     }
-    
-    .item-placeholder .emoji {
-      font-size: 3.5rem;
-      opacity: 0.5;
-    }
-    
+    .item-placeholder .emoji { font-size: 3.5rem; opacity: 0.5; }
     .upload-section {
       max-width: 1200px;
       margin: 40px auto;
@@ -184,27 +152,22 @@
       border-radius: 30px;
       text-align: center;
     }
-    
     .upload-title {
       font-weight: 700;
       font-size: 2.5rem;
       color: #ff00ff;
       margin-bottom: 30px;
     }
-    
     #uploadButton {
       background: transparent;
       border: 3px solid #00ff00;
       color: #00ff00;
       padding: 18px 45px;
       border-radius: 60px;
-      font-family: 'Syne', sans-serif;
       font-weight: 700;
       cursor: pointer;
     }
-    
     .hidden-input { display: none; }
-    
     .lightbox {
       display: none;
       position: fixed;
@@ -217,16 +180,13 @@
       justify-content: center;
       align-items: center;
     }
-    
     .lightbox.active { display: flex; }
-    
     .lightbox img {
       max-width: 90%;
       max-height: 80%;
       border: 4px solid #ff00ff;
       border-radius: 15px;
     }
-    
     .lightbox-close {
       position: absolute;
       top: 30px;
@@ -242,7 +202,6 @@
       align-items: center;
       justify-content: center;
     }
-    
     .lightbox-number {
       position: absolute;
       bottom: 30px;
@@ -256,8 +215,7 @@
       border-radius: 60px;
       font-weight: 700;
     }
-    
-    .loading-indicator {
+    #loadingIndicator {
       position: fixed;
       top: 50%;
       left: 50%;
@@ -271,13 +229,11 @@
       z-index: 40000;
       display: none;
     }
-    
-    .loading-indicator.active { display: block; }
+    #loadingIndicator.active { display: block; }
   </style>
 </head>
 <body>
-  <div class="loading-indicator" id="loadingIndicator">⏳ LOADING...</div>
-
+  <div id="loadingIndicator">⏳ LOADING...</div>
   <a href="https://www.cryptobros.pro/merch.html" class="back-button">← BACK TO MERCH</a>
   <div class="theme-toggle" id="themeToggle">🌙</div>
   <button id="adminButton">📤 UPLOAD</button>
@@ -292,7 +248,6 @@
     <h1 class="page-title">DESIGN GALLERY</h1>
     <div class="slogan-line1">REAL ONES WEAR THE MERCH</div>
     <div class="slogan-line2">FAKE ONES FEAR THE TRUTH</div>
-
     <div class="section-title">⚡ DESIGNS 1–20 ⚡</div>
     <div class="image-grid" id="designsGrid"></div>
 
@@ -300,7 +255,7 @@
       <div class="upload-title">📤 UPLOAD DESIGNS</div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
       <button id="uploadButton">CHOOSE IMAGES</button>
-      <div class="upload-note" style="color:#ffaa00; margin-top:25px;">
+      <div style="color:#ffaa00; margin-top:25px;">
         Files with numbers → that slot<br>
         Files without numbers → fill empty slots<br>
         Max 5MB
@@ -312,7 +267,7 @@
     (function() {
       let designImages = {};
 
-      // GET ELEMENTS
+      // Elements
       const themeToggle = document.getElementById('themeToggle');
       const adminBtn = document.getElementById('adminButton');
       const uploadSection = document.getElementById('uploadSection');
@@ -325,42 +280,21 @@
       const grid = document.getElementById('designsGrid');
       const loader = document.getElementById('loadingIndicator');
 
-      // THEME TOGGLE
-      if (themeToggle) {
-        // Load saved theme
-        if (localStorage.getItem('theme') === 'light') {
-          document.body.classList.add('light-mode');
-          themeToggle.textContent = '☀️';
-        }
-
-        themeToggle.onclick = function() {
-          if (document.body.classList.contains('light-mode')) {
-            document.body.classList.remove('light-mode');
-            themeToggle.textContent = '🌙';
-            localStorage.setItem('theme', 'dark');
-          } else {
-            document.body.classList.add('light-mode');
-            themeToggle.textContent = '☀️';
-            localStorage.setItem('theme', 'light');
-          }
-        };
-      }
-
-      // LOAD DESIGNS
+      // Load saved data
       try {
         const saved = localStorage.getItem('designs');
         if (saved) designImages = JSON.parse(saved);
-      } catch(e) {}
+      } catch(e) { console.warn('Load failed'); }
 
-      // RENDER GRID
-      function renderGrid() {
+      // Render grid
+      function render() {
         if (!grid) return;
         let html = '';
         for (let i = 1; i <= 20; i++) {
-          html += '<div class="grid-item" data-id="' + i + '">';
-          html += '<div class="item-number">' + i + '</div>';
+          html += '<div class="grid-item" data-id="'+i+'">';
+          html += '<div class="item-number">'+i+'</div>';
           if (designImages[i]) {
-            html += '<img src="' + designImages[i] + '" alt="Design ' + i + '">';
+            html += '<img src="'+designImages[i]+'" alt="Design '+i+'">';
           } else {
             html += '<div class="item-placeholder"><div class="emoji">🎨</div><div>EMPTY</div></div>';
           }
@@ -368,41 +302,51 @@
         }
         grid.innerHTML = html;
       }
-      renderGrid();
+      render();
 
-      // LIGHTBOX
+      // Theme
+      if (themeToggle) {
+        if (localStorage.getItem('theme') === 'light') {
+          document.body.classList.add('light-mode');
+          themeToggle.textContent = '☀️';
+        }
+        themeToggle.onclick = () => {
+          document.body.classList.toggle('light-mode');
+          const isLight = document.body.classList.contains('light-mode');
+          themeToggle.textContent = isLight ? '☀️' : '🌙';
+          localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        };
+      }
+
+      // Lightbox
       if (grid) {
-        grid.onclick = function(e) {
+        grid.onclick = (e) => {
           const item = e.target.closest('.grid-item');
           if (item) {
             const id = item.dataset.id;
             if (designImages[id]) {
               lightboxImg.src = designImages[id];
-              lightboxNum.textContent = 'DESIGN #' + id;
+              lightboxNum.textContent = 'DESIGN #'+id;
               lightbox.classList.add('active');
             }
           }
         };
       }
-
       if (lightboxClose) {
-        lightboxClose.onclick = function() {
+        lightboxClose.onclick = () => {
           lightbox.classList.remove('active');
           lightboxImg.src = '';
         };
       }
 
-      // UPLOAD
+      // Scroll to upload
       if (adminBtn) {
-        adminBtn.onclick = function() {
-          uploadSection.scrollIntoView({ behavior: 'smooth' });
-        };
+        adminBtn.onclick = () => uploadSection.scrollIntoView({ behavior: 'smooth' });
       }
 
+      // Upload
       if (uploadBtn && fileInput) {
-        uploadBtn.onclick = function() {
-          fileInput.click();
-        };
+        uploadBtn.onclick = () => fileInput.click();
 
         fileInput.onchange = function(e) {
           const files = Array.from(e.target.files).filter(f => f.size <= 5 * 1024 * 1024);
@@ -413,33 +357,38 @@
 
           files.forEach(file => {
             const reader = new FileReader();
-            reader.onload = function(re) {
-              // Get slot from filename
+            reader.onload = (re) => {
+              // Extract slot number
               const match = file.name.match(/\d+/);
               let slot = match ? parseInt(match[0]) : null;
-              
               if (slot && (slot < 1 || slot > 20)) slot = null;
-              
+
+              // Find first empty slot if no number
               if (!slot) {
                 for (let i = 1; i <= 20; i++) {
                   if (!designImages[i]) { slot = i; break; }
                 }
               }
-              
+
+              // Save if slot is valid
               if (slot && !designImages[slot]) {
                 designImages[slot] = re.target.result;
               }
-              
+
               processed++;
               if (processed === files.length) {
                 localStorage.setItem('designs', JSON.stringify(designImages));
-                renderGrid();
+                render();
                 loader.classList.remove('active');
               }
             };
+            reader.onerror = () => {
+              processed++;
+              if (processed === files.length) loader.classList.remove('active');
+            };
             reader.readAsDataURL(file);
           });
-          
+
           fileInput.value = '';
         };
       }
