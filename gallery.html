@@ -23,6 +23,7 @@
       border-color: #ccc;
     }
     
+    /* BACK BUTTON */
     .back-button {
       position: fixed;
       top: 30px;
@@ -35,13 +36,13 @@
       text-decoration: none;
       font-weight: 700;
       z-index: 1000;
-      cursor: pointer;
-    }
-    .back-button:hover {
-      background: #ffcc00;
-      color: black;
     }
     
+    @media (max-width: 768px) {
+      .back-button { padding: 12px 24px; font-size: 14px; top: 15px; left: 15px; }
+    }
+    
+    /* THEME TOGGLE */
     .theme-toggle {
       position: fixed;
       top: 30px;
@@ -59,6 +60,11 @@
       z-index: 1000;
     }
     
+    @media (max-width: 768px) {
+      .theme-toggle { width: 50px; height: 50px; font-size: 24px; top: 15px; right: 15px; }
+    }
+    
+    /* UPLOAD BUTTON */
     #adminButton {
       position: fixed;
       bottom: 30px;
@@ -74,6 +80,10 @@
       box-shadow: 0 0 30px #9945FF;
     }
     
+    @media (max-width: 768px) {
+      #adminButton { padding: 12px 24px; font-size: 14px; bottom: 15px; right: 15px; }
+    }
+    
     .page-title {
       font-weight: 800;
       font-size: 5rem;
@@ -81,8 +91,11 @@
       margin: 80px 0 20px;
       background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff);
       -webkit-background-clip: text;
-      background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+    
+    @media (max-width: 768px) {
+      .page-title { font-size: 3rem; margin: 60px 0 20px; }
     }
     
     .slogan-line1 {
@@ -148,7 +161,7 @@
       left: 12px;
       width: 40px;
       height: 40px;
-      background: rgba(0,0,0,0.9);
+      background: black;
       border: 2px solid #ffcc00;
       border-radius: 50%;
       display: flex;
@@ -157,6 +170,38 @@
       color: #ffcc00;
       font-weight: 700;
       z-index: 2;
+    }
+    
+    @media (max-width: 480px) {
+      .item-number { width: 30px; height: 30px; font-size: 14px; top: 5px; left: 5px; }
+    }
+    
+    .delete-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      background: #ff3366;
+      border: 2px solid white;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    
+    .grid-item:hover .delete-btn {
+      opacity: 1;
+    }
+    
+    @media (max-width: 480px) {
+      .delete-btn { width: 30px; height: 30px; font-size: 16px; top: 5px; right: 5px; opacity: 0.7; }
     }
     
     .item-placeholder {
@@ -169,13 +214,13 @@
       background: #0f0f0f;
       color: #666;
     }
-    .item-placeholder .emoji { font-size: 3.5rem; opacity: 0.5; }
+    .item-placeholder .emoji { font-size: 3.5rem; }
     
     .upload-section {
       max-width: 1200px;
       margin: 40px auto;
       padding: 40px;
-      background: rgba(0,0,0,0.9);
+      background: #111;
       border: 3px solid #00ffff;
       border-radius: 30px;
       text-align: center;
@@ -196,10 +241,42 @@
       border-radius: 60px;
       font-weight: 700;
       cursor: pointer;
+      font-size: 1.2rem;
       margin: 20px;
     }
     
+    #uploadButton:hover {
+      background: #00ff00;
+      color: black;
+    }
+    
+    #uploadButton:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
     .hidden-input { display: none; }
+    
+    .storage-info {
+      color: #ffaa00;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    
+    .storage-bar {
+      width: 100%;
+      height: 8px;
+      background: #333;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    
+    .storage-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ff00, #ffaa00, #ff3366);
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
     
     .lightbox {
       display: none;
@@ -208,7 +285,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: black;
+      background: rgba(0,0,0,0.95);
       z-index: 10000;
       justify-content: center;
       align-items: center;
@@ -234,6 +311,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-weight: 700;
     }
     .lightbox-number {
       position: absolute;
@@ -264,21 +342,35 @@
       display: none;
     }
     #loadingIndicator.active { display: block; }
+    
+    #toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 60px;
+      font-weight: 700;
+      z-index: 50000;
+      display: none;
+      border: 2px solid #ffcc00;
+    }
+    #toast.show { display: block; }
   </style>
 </head>
 <body>
   <div id="loadingIndicator">⏳ LOADING...</div>
+  <div id="toast"></div>
   
-  <a href="https://www.cryptobros.pro/merch.html" class="back-button">
-    ← BACK TO MERCH
-  </a>
-  
+  <a href="https://www.cryptobros.pro/merch.html" class="back-button">← BACK TO MERCH</a>
   <div class="theme-toggle" id="themeToggle">🌙</div>
   <button id="adminButton">📤 UPLOAD</button>
 
   <div class="lightbox" id="lightbox">
     <div class="lightbox-close" id="lightboxClose">✕</div>
-    <img id="lightboxImg" src="" alt="">
+    <img id="lightboxImg" src="" alt="" loading="lazy">
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
 
@@ -291,73 +383,95 @@
 
     <div class="upload-section" id="uploadSection">
       <div class="upload-title">📤 UPLOAD DESIGNS</div>
+      <div class="storage-info" id="storageInfo">Storage: 0/4.5 MB</div>
+      <div class="storage-bar">
+        <div class="storage-fill" id="storageFill" style="width: 0%"></div>
+      </div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
       <button id="uploadButton">CHOOSE IMAGES</button>
       <div style="color:#ffaa00; margin-top:25px; font-weight:700;">
         Files with numbers → that slot<br>
         Files without numbers → fill empty slots<br>
-        Max 5MB
+        Max 1.5MB per image • 4.5MB total
       </div>
+      <button id="clearAllBtn" style="margin-top:20px; background:#ff3366; border:none; padding:10px 20px; border-radius:60px; color:white; font-weight:700; cursor:pointer;">🗑️ CLEAR ALL</button>
     </div>
   </div>
 
   <script>
-    // Ждем полной загрузки DOM
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM загружен');
+    (function() {
+      const MAX_TOTAL = 4.5 * 1024 * 1024; // 4.5MB
+      const MAX_FILE = 1.5 * 1024 * 1024; // 1.5MB
       
-      let designImages = {};
+      let designs = {};
 
-      // ЭЛЕМЕНТЫ
+      // Elements
       const themeToggle = document.getElementById('themeToggle');
       const adminBtn = document.getElementById('adminButton');
       const uploadSection = document.getElementById('uploadSection');
       const uploadBtn = document.getElementById('uploadButton');
       const fileInput = document.getElementById('designUpload');
+      const grid = document.getElementById('designsGrid');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxNum = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
-      const grid = document.getElementById('designsGrid');
       const loader = document.getElementById('loadingIndicator');
+      const toast = document.getElementById('toast');
+      const storageInfo = document.getElementById('storageInfo');
+      const storageFill = document.getElementById('storageFill');
+      const clearAllBtn = document.getElementById('clearAllBtn');
 
-      console.log('Элементы найдены:', { 
-        uploadBtn: !!uploadBtn, 
-        fileInput: !!fileInput,
-        grid: !!grid 
-      });
-
-      // Загружаем сохранённые картинки
-      try {
-        const saved = localStorage.getItem('designs');
-        if (saved) {
-          designImages = JSON.parse(saved);
-          console.log('Загружено из localStorage:', Object.keys(designImages).length, 'изображений');
-        }
-      } catch(e) {
-        console.error('Ошибка загрузки:', e);
+      // Toast function
+      function showToast(msg, color = '#00ffff') {
+        toast.textContent = msg;
+        toast.style.borderColor = color;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
       }
 
-      // ОТРИСОВКА СЕТКИ
+      // Update storage indicator
+      function updateStorage() {
+        try {
+          const size = new Blob([JSON.stringify(designs)]).size;
+          const percent = Math.min(100, (size / MAX_TOTAL) * 100);
+          storageFill.style.width = percent + '%';
+          storageInfo.textContent = `Storage: ${(size / 1024 / 1024).toFixed(2)}/4.5 MB`;
+          
+          if (percent > 90) storageFill.style.background = '#ff3366';
+          else if (percent > 70) storageFill.style.background = '#ffaa00';
+          else storageFill.style.background = '#00ff00';
+        } catch (e) {}
+      }
+
+      // Load saved designs
+      try {
+        const saved = localStorage.getItem('cryptobros_gallery');
+        if (saved) designs = JSON.parse(saved);
+      } catch (e) {
+        localStorage.removeItem('cryptobros_gallery');
+      }
+
+      // Render grid
       function render() {
-        if (!grid) return;
         let html = '';
         for (let i = 1; i <= 20; i++) {
           html += '<div class="grid-item" data-id="'+i+'">';
           html += '<div class="item-number">'+i+'</div>';
-          if (designImages[i]) {
-            html += '<img src="'+designImages[i]+'" alt="Design '+i+'">';
+          if (designs[i]) {
+            html += '<img src="'+designs[i]+'" alt="" loading="lazy">';
+            html += '<div class="delete-btn" data-delete="'+i+'">✕</div>';
           } else {
             html += '<div class="item-placeholder"><div class="emoji">🎨</div><div>EMPTY</div></div>';
           }
           html += '</div>';
         }
         grid.innerHTML = html;
-        console.log('Сетка отрисована');
+        updateStorage();
       }
       render();
 
-      // ТЕМА
+      // Theme toggle
       if (themeToggle) {
         if (localStorage.getItem('theme') === 'light') {
           document.body.classList.add('light-mode');
@@ -371,114 +485,154 @@
         };
       }
 
-      // ЛАЙТБОКС
-      if (grid) {
-        grid.onclick = (e) => {
-          const item = e.target.closest('.grid-item');
-          if (item) {
-            const id = item.dataset.id;
-            if (designImages[id]) {
-              lightboxImg.src = designImages[id];
-              lightboxNum.textContent = 'DESIGN #'+id;
-              lightbox.classList.add('active');
-            }
+      // Delete handler
+      grid.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('.delete-btn');
+        if (deleteBtn) {
+          e.stopPropagation();
+          const slot = deleteBtn.dataset.delete;
+          if (confirm(`Delete design #${slot}?`)) {
+            delete designs[slot];
+            localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
+            render();
+            showToast(`✅ Design #${slot} deleted`, '#00ff00');
+          }
+        }
+      });
+
+      // Clear all
+      if (clearAllBtn) {
+        clearAllBtn.onclick = () => {
+          if (confirm('Delete ALL designs?')) {
+            designs = {};
+            localStorage.removeItem('cryptobros_gallery');
+            render();
+            showToast('✅ All designs cleared', '#ff3366');
           }
         };
       }
-      
-      if (lightboxClose) {
-        lightboxClose.onclick = () => {
+
+      // Lightbox
+      grid.addEventListener('click', (e) => {
+        const item = e.target.closest('.grid-item');
+        const deleteBtn = e.target.closest('.delete-btn');
+        if (item && !deleteBtn) {
+          const id = item.dataset.id;
+          if (designs[id]) {
+            lightboxImg.src = designs[id];
+            lightboxNum.textContent = 'DESIGN #' + id;
+            lightbox.classList.add('active');
+          }
+        }
+      });
+
+      lightboxClose.onclick = () => {
+        lightbox.classList.remove('active');
+        lightboxImg.src = '';
+      };
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
           lightbox.classList.remove('active');
           lightboxImg.src = '';
-        };
-      }
+        }
+      });
 
-      // КНОПКА UPLOAD — ПРОКРУТКА
-      if (adminBtn) {
-        adminBtn.onclick = () => {
-          console.log('Клик по adminBtn');
-          uploadSection.scrollIntoView({ behavior: 'smooth' });
-        };
-      }
+      // Upload button scroll
+      adminBtn.onclick = () => uploadSection.scrollIntoView({ behavior: 'smooth' });
 
-      // ЗАГРУЗКА ФАЙЛОВ - УПРОЩЕННАЯ ВЕРСИЯ ДЛЯ ТЕСТА
-      if (uploadBtn && fileInput) {
-        console.log('Навешиваем обработчики на upload');
+      // File upload
+      uploadBtn.onclick = () => fileInput.click();
+
+      fileInput.onchange = async function(e) {
+        const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
         
-        uploadBtn.onclick = function() {
-          console.log('Клик по uploadBtn');
-          fileInput.click();
-        };
+        if (files.length === 0) {
+          showToast('❌ No valid images selected', '#ff3366');
+          return;
+        }
 
-        fileInput.onchange = function(e) {
-          console.log('Событие change! Файлы:', e.target.files);
-          
-          const files = Array.from(e.target.files);
-          if (files.length === 0) {
-            console.log('Нет файлов');
-            return;
+        // Check total size
+        let estimatedSize = 0;
+        files.forEach(f => estimatedSize += f.size * 1.4); // base64 overhead
+        const currentSize = new Blob([JSON.stringify(designs)]).size || 0;
+        
+        if (currentSize + estimatedSize > MAX_TOTAL) {
+          showToast('❌ Storage limit exceeded', '#ff3366');
+          return;
+        }
+
+        // Disable button
+        uploadBtn.disabled = true;
+        loader.classList.add('active');
+
+        const errors = [];
+        const newDesigns = { ...designs };
+        let processed = 0;
+
+        for (const file of files) {
+          // Check file size
+          if (file.size > MAX_FILE) {
+            errors.push(`${file.name} >1.5MB`);
+            processed++;
+            continue;
           }
 
-          loader.classList.add('active');
-          console.log('Загружаем', files.length, 'файлов');
-          
-          let processed = 0;
+          try {
+            // Read file
+            const dataUrl = await new Promise((res, rej) => {
+              const reader = new FileReader();
+              reader.onload = () => res(reader.result);
+              reader.onerror = rej;
+              reader.readAsDataURL(file);
+            });
 
-          files.forEach(file => {
-            console.log('Обработка файла:', file.name, 'размер:', file.size);
-            
-            const reader = new FileReader();
-            
-            reader.onload = function(re) {
-              console.log('Файл прочитан:', file.name);
-              
-              // Ищем номер в имени файла
-              const match = file.name.match(/\d+/);
-              let slot = match ? parseInt(match[0]) : null;
-              if (slot && (slot < 1 || slot > 20)) slot = null;
+            // Find slot
+            const match = file.name.match(/\d+/);
+            let slot = match ? parseInt(match[0]) : null;
 
-              // Если нет номера — ищем пустой слот
-              if (!slot) {
-                for (let i = 1; i <= 20; i++) {
-                  if (!designImages[i]) { 
-                    slot = i; 
-                    break; 
-                  }
+            if (slot && slot >= 1 && slot <= 20) {
+              // Check if slot is taken
+              if (newDesigns[slot] && !confirm(`Slot ${slot} is taken. Overwrite?`)) {
+                processed++;
+                continue;
+              }
+              newDesigns[slot] = dataUrl;
+            } else {
+              // Find empty slot
+              for (let i = 1; i <= 20; i++) {
+                if (!newDesigns[i]) {
+                  slot = i;
+                  newDesigns[i] = dataUrl;
+                  break;
                 }
               }
+              if (!slot) errors.push('No empty slots');
+            }
+          } catch (err) {
+            errors.push(`${file.name} failed`);
+          }
+          processed++;
+        }
 
-              // Сохраняем
-              if (slot) {
-                console.log('Сохраняем в слот', slot);
-                designImages[slot] = re.target.result;
-              }
+        // Save
+        if (Object.keys(newDesigns).length > 0) {
+          designs = newDesigns;
+          localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
+          render();
+          showToast(`✅ Uploaded ${files.length - errors.length} images`, '#00ff00');
+        }
 
-              processed++;
-              if (processed === files.length) {
-                localStorage.setItem('designs', JSON.stringify(designImages));
-                render();
-                loader.classList.remove('active');
-                alert('Загружено ' + files.length + ' файлов!');
-              }
-            };
+        if (errors.length > 0) {
+          showToast(`⚠️ ${errors.length} errors`, '#ffaa00');
+        }
 
-            reader.onerror = function() {
-              console.error('Ошибка чтения файла:', file.name);
-              processed++;
-              if (processed === files.length) {
-                loader.classList.remove('active');
-              }
-            };
+        loader.classList.remove('active');
+        uploadBtn.disabled = false;
+        fileInput.value = '';
+      };
 
-            reader.readAsDataURL(file);
-          });
-
-          fileInput.value = '';
-        };
-      } else {
-        console.error('uploadBtn или fileInput не найдены!');
-      }
-    });
+    })();
   </script>
 </body>
 </html>
