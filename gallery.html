@@ -36,6 +36,7 @@
       text-decoration: none;
       font-weight: 700;
       z-index: 1000;
+      backdrop-filter: blur(5px);
     }
     
     @media (max-width: 768px) {
@@ -58,6 +59,7 @@
       justify-content: center;
       font-size: 28px;
       z-index: 1000;
+      backdrop-filter: blur(5px);
     }
     
     @media (max-width: 768px) {
@@ -75,9 +77,16 @@
       border-radius: 60px;
       padding: 16px 32px;
       font-weight: 700;
+      font-size: 1.1rem;
       cursor: pointer;
       z-index: 1000;
       box-shadow: 0 0 30px #9945FF;
+      transition: 0.3s;
+    }
+    
+    #adminButton:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px #9945FF;
     }
     
     @media (max-width: 768px) {
@@ -92,6 +101,9 @@
       background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      letter-spacing: -2px;
+      /* FIX: Добавляем тень для жирности */
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
     }
     
     @media (max-width: 768px) {
@@ -103,6 +115,7 @@
       font-size: 2.2rem;
       text-align: center;
       color: #ff6600;
+      text-transform: uppercase;
     }
     
     .slogan-line2 {
@@ -111,6 +124,8 @@
       text-align: center;
       color: #00ff00;
       margin-bottom: 50px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
     
     .section-title {
@@ -119,6 +134,7 @@
       color: #ffdd00;
       border-bottom: 4px solid #ffdd00;
       margin: 40px 0 30px;
+      padding-bottom: 10px;
     }
     
     .image-grid {
@@ -146,9 +162,48 @@
       border-bottom: 2px solid #333;
       position: relative;
       cursor: pointer;
+      transition: 0.2s;
     }
-    .grid-item:nth-child(4n) { border-right: none; }
-    .grid-item:nth-last-child(-n+4) { border-bottom: none; }
+    
+    .grid-item:hover {
+      filter: brightness(1.1);
+    }
+    
+    /* Fix borders */
+    .grid-item:nth-child(4n) { 
+      border-right: none; 
+    }
+    
+    @media (max-width: 1024px) {
+      .grid-item:nth-child(3n) { border-right: none; }
+      .grid-item:nth-child(4n) { border-right: 2px solid #333; }
+    }
+    
+    @media (max-width: 768px) {
+      .grid-item:nth-child(2n) { border-right: none; }
+      .grid-item:nth-child(3n) { border-right: 2px solid #333; }
+    }
+    
+    @media (max-width: 480px) {
+      .grid-item { border-right: none; }
+    }
+    
+    .grid-item:nth-last-child(-n+4) { 
+      border-bottom: none; 
+    }
+    
+    @media (max-width: 1024px) {
+      .grid-item:nth-last-child(-n+3) { border-bottom: none; }
+    }
+    
+    @media (max-width: 768px) {
+      .grid-item:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    
+    @media (max-width: 480px) {
+      .grid-item:nth-last-child(-n+1) { border-bottom: none; }
+    }
+    
     .grid-item img {
       width: 100%;
       height: 100%;
@@ -194,6 +249,7 @@
       cursor: pointer;
       opacity: 0;
       transition: opacity 0.2s;
+      font-size: 20px;
     }
     
     .grid-item:hover .delete-btn {
@@ -226,6 +282,11 @@
       text-align: center;
     }
     
+    body.light-mode .upload-section {
+      background: white;
+      border-color: #00ccff;
+    }
+    
     .upload-title {
       font-weight: 800;
       font-size: 2.5rem;
@@ -243,6 +304,7 @@
       cursor: pointer;
       font-size: 1.2rem;
       margin: 20px;
+      transition: 0.3s;
     }
     
     #uploadButton:hover {
@@ -273,9 +335,41 @@
     
     .storage-fill {
       height: 100%;
-      background: linear-gradient(90deg, #00ff00, #ffaa00, #ff3366);
+      background: linear-gradient(90deg, #00ff00, #ffaa00);
       border-radius: 4px;
       transition: width 0.3s;
+    }
+    
+    .storage-fill.warning {
+      background: #ffaa00;
+    }
+    
+    .storage-fill.danger {
+      background: #ff3366;
+    }
+    
+    .info-text {
+      color: #ffaa00;
+      margin-top: 25px;
+      font-weight: 700;
+      line-height: 1.8;
+    }
+    
+    #clearAllBtn {
+      margin-top: 20px;
+      background: #ff3366;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 60px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    #clearAllBtn:hover {
+      background: #ff0000;
+      transform: scale(1.05);
     }
     
     .lightbox {
@@ -312,7 +406,14 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
+      transition: 0.3s;
     }
+    
+    .lightbox-close:hover {
+      background: #ff00ff;
+      color: black;
+    }
+    
     .lightbox-number {
       position: absolute;
       bottom: 30px;
@@ -356,6 +457,7 @@
       z-index: 50000;
       display: none;
       border: 2px solid #ffcc00;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
     #toast.show { display: block; }
   </style>
@@ -388,13 +490,13 @@
         <div class="storage-fill" id="storageFill" style="width: 0%"></div>
       </div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
-      <button id="uploadButton">CHOOSE IMAGES</button>
-      <div style="color:#ffaa00; margin-top:25px; font-weight:700;">
-        Files with numbers → that slot<br>
-        Files without numbers → fill empty slots<br>
-        Max 1.5MB per image • 4.5MB total
+      <button id="uploadButton">📁 CHOOSE IMAGES</button>
+      <div class="info-text">
+        ⚡ Files with numbers (e.g., design5.jpg) → slot #5<br>
+        ⚡ Files without numbers → first empty slot<br>
+        ⚡ Max 1.5MB per image • 4.5MB total storage
       </div>
-      <button id="clearAllBtn" style="margin-top:20px; background:#ff3366; border:none; padding:10px 20px; border-radius:60px; color:white; font-weight:700; cursor:pointer;">🗑️ CLEAR ALL</button>
+      <button id="clearAllBtn">🗑️ CLEAR ALL DESIGNS</button>
     </div>
   </div>
 
@@ -422,7 +524,17 @@
       const storageFill = document.getElementById('storageFill');
       const clearAllBtn = document.getElementById('clearAllBtn');
 
-      // Toast function
+      // FIX: Безопасное экранирование для HTML
+      function escapeHtml(unsafe) {
+        return unsafe
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // Show toast message
       function showToast(msg, color = '#00ffff') {
         toast.textContent = msg;
         toast.style.borderColor = color;
@@ -430,36 +542,64 @@
         setTimeout(() => toast.classList.remove('show'), 3000);
       }
 
+      // FIX: Правильный расчет размера Base64
+      function getBase64Size(dataUrl) {
+        // Убираем префикс (data:image/...;base64,)
+        const base64 = dataUrl.split(',')[1] || '';
+        // Каждые 4 символа = 3 байта
+        return Math.ceil(base64.length * 0.75);
+      }
+
+      // Calculate storage size
+      function calculateStorageSize() {
+        let totalSize = 0;
+        for (let key in designs) {
+          totalSize += getBase64Size(designs[key]);
+        }
+        return totalSize;
+      }
+
       // Update storage indicator
       function updateStorage() {
         try {
-          const size = new Blob([JSON.stringify(designs)]).size;
+          const size = calculateStorageSize();
           const percent = Math.min(100, (size / MAX_TOTAL) * 100);
           storageFill.style.width = percent + '%';
           storageInfo.textContent = `Storage: ${(size / 1024 / 1024).toFixed(2)}/4.5 MB`;
           
-          if (percent > 90) storageFill.style.background = '#ff3366';
-          else if (percent > 70) storageFill.style.background = '#ffaa00';
-          else storageFill.style.background = '#00ff00';
+          storageFill.classList.remove('warning', 'danger');
+          if (percent > 90) {
+            storageFill.classList.add('danger');
+            storageInfo.style.color = '#ff3366';
+          } else if (percent > 70) {
+            storageFill.classList.add('warning');
+            storageInfo.style.color = '#ffaa00';
+          } else {
+            storageInfo.style.color = '#ffaa00';
+          }
         } catch (e) {}
       }
 
       // Load saved designs
       try {
         const saved = localStorage.getItem('cryptobros_gallery');
-        if (saved) designs = JSON.parse(saved);
+        if (saved) {
+          designs = JSON.parse(saved);
+        }
       } catch (e) {
         localStorage.removeItem('cryptobros_gallery');
       }
 
-      // Render grid
+      // FIX: Безопасный рендер
       function render() {
         let html = '';
         for (let i = 1; i <= 20; i++) {
           html += '<div class="grid-item" data-id="'+i+'">';
           html += '<div class="item-number">'+i+'</div>';
           if (designs[i]) {
-            html += '<img src="'+designs[i]+'" alt="" loading="lazy">';
+            // FIX: Экранируем URL для безопасности
+            const imgUrl = escapeHtml(designs[i]);
+            html += '<img src="'+imgUrl+'" alt="Design #'+i+'" loading="lazy">';
             html += '<div class="delete-btn" data-delete="'+i+'">✕</div>';
           } else {
             html += '<div class="item-placeholder"><div class="emoji">🎨</div><div>EMPTY</div></div>';
@@ -503,7 +643,7 @@
       // Clear all
       if (clearAllBtn) {
         clearAllBtn.onclick = () => {
-          if (confirm('Delete ALL designs?')) {
+          if (confirm('⚠️ Delete ALL designs?')) {
             designs = {};
             localStorage.removeItem('cryptobros_gallery');
             render();
@@ -538,10 +678,18 @@
         }
       });
 
+      // ESC key for lightbox
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          lightbox.classList.remove('active');
+          lightboxImg.src = '';
+        }
+      });
+
       // Upload button scroll
       adminBtn.onclick = () => uploadSection.scrollIntoView({ behavior: 'smooth' });
 
-      // File upload
+      // File upload handler - FIXED VERSION
       uploadBtn.onclick = () => fileInput.click();
 
       fileInput.onchange = async function(e) {
@@ -552,34 +700,30 @@
           return;
         }
 
-        // Check total size
-        let estimatedSize = 0;
-        files.forEach(f => estimatedSize += f.size * 1.4); // base64 overhead
-        const currentSize = new Blob([JSON.stringify(designs)]).size || 0;
-        
-        if (currentSize + estimatedSize > MAX_TOTAL) {
-          showToast('❌ Storage limit exceeded', '#ff3366');
-          return;
-        }
-
-        // Disable button
         uploadBtn.disabled = true;
         loader.classList.add('active');
 
         const errors = [];
         const newDesigns = { ...designs };
-        let processed = 0;
+        let uploaded = 0;
+        let currentSize = calculateStorageSize();
 
+        // FIX: Проверяем размер после каждого файла
         for (const file of files) {
-          // Check file size
+          // Check individual file size
           if (file.size > MAX_FILE) {
-            errors.push(`${file.name} >1.5MB`);
-            processed++;
+            errors.push(`${file.name} (${(file.size/1024/1024).toFixed(2)}MB > 1.5MB)`);
+            continue;
+          }
+
+          // Check if we have space
+          if (currentSize + file.size > MAX_TOTAL) {
+            errors.push(`${file.name} - no space left`);
             continue;
           }
 
           try {
-            // Read file
+            // Read file as data URL
             const dataUrl = await new Promise((res, rej) => {
               const reader = new FileReader();
               reader.onload = () => res(reader.result);
@@ -587,49 +731,57 @@
               reader.readAsDataURL(file);
             });
 
-            // Find slot
+            // Find slot from filename
             const match = file.name.match(/\d+/);
             let slot = match ? parseInt(match[0]) : null;
 
             if (slot && slot >= 1 && slot <= 20) {
-              // Check if slot is taken
-              if (newDesigns[slot] && !confirm(`Slot ${slot} is taken. Overwrite?`)) {
-                processed++;
-                continue;
+              // Check if replacing existing image
+              if (newDesigns[slot]) {
+                const oldSize = getBase64Size(newDesigns[slot]);
+                currentSize -= oldSize;
               }
               newDesigns[slot] = dataUrl;
+              currentSize += file.size;
+              uploaded++;
             } else {
-              // Find empty slot
+              // Find first empty slot
+              let emptySlot = null;
               for (let i = 1; i <= 20; i++) {
                 if (!newDesigns[i]) {
-                  slot = i;
-                  newDesigns[i] = dataUrl;
+                  emptySlot = i;
                   break;
                 }
               }
-              if (!slot) errors.push('No empty slots');
+              
+              if (emptySlot) {
+                newDesigns[emptySlot] = dataUrl;
+                currentSize += file.size;
+                uploaded++;
+              } else {
+                errors.push('No empty slots available');
+              }
             }
           } catch (err) {
-            errors.push(`${file.name} failed`);
+            errors.push(`${file.name} failed to load`);
           }
-          processed++;
         }
 
-        // Save
-        if (Object.keys(newDesigns).length > 0) {
+        // Save changes
+        if (uploaded > 0) {
           designs = newDesigns;
           localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
           render();
-          showToast(`✅ Uploaded ${files.length - errors.length} images`, '#00ff00');
+          showToast(`✅ Uploaded ${uploaded} image(s)`, '#00ff00');
         }
-
+        
         if (errors.length > 0) {
-          showToast(`⚠️ ${errors.length} errors`, '#ffaa00');
+          showToast(`⚠️ ${errors.length} error(s): ${errors.slice(0, 2).join(', ')}${errors.length > 2 ? '...' : ''}`, '#ffaa00');
         }
 
         loader.classList.remove('active');
         uploadBtn.disabled = false;
-        fileInput.value = '';
+        fileInput.value = ''; // Clear input
       };
 
     })();
