@@ -22,12 +22,7 @@
       background: white;
       border-color: #ccc;
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
-    }
     
-    /* BACK BUTTON */
     .back-button {
       position: fixed;
       top: 30px;
@@ -47,7 +42,6 @@
       color: black;
     }
     
-    /* THEME TOGGLE */
     .theme-toggle {
       position: fixed;
       top: 30px;
@@ -65,7 +59,6 @@
       z-index: 1000;
     }
     
-    /* UPLOAD BUTTON */
     #adminButton {
       position: fixed;
       bottom: 30px;
@@ -79,10 +72,6 @@
       cursor: pointer;
       z-index: 1000;
       box-shadow: 0 0 30px #9945FF;
-    }
-    #adminButton:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
     }
     
     .page-title {
@@ -144,11 +133,6 @@
       border-bottom: 2px solid #333;
       position: relative;
       cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .grid-item:hover {
-      transform: scale(1.02);
-      z-index: 10;
     }
     .grid-item:nth-child(4n) { border-right: none; }
     .grid-item:nth-last-child(-n+4) { border-bottom: none; }
@@ -156,7 +140,6 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      pointer-events: none;
     }
     
     .item-number {
@@ -174,10 +157,6 @@
       color: #ffcc00;
       font-weight: 700;
       z-index: 2;
-    }
-    
-    @media (max-width: 480px) {
-      .item-number { width: 32px; height: 32px; font-size: 14px; }
     }
     
     .item-placeholder {
@@ -217,32 +196,10 @@
       border-radius: 60px;
       font-weight: 700;
       cursor: pointer;
-    }
-    #uploadButton:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+      margin: 20px;
     }
     
     .hidden-input { display: none; }
-    
-    .storage-indicator {
-      margin-top: 15px;
-      color: #ffaa00;
-      font-weight: 700;
-    }
-    .storage-bar {
-      width: 100%;
-      height: 8px;
-      background: #333;
-      border-radius: 4px;
-      margin-top: 10px;
-    }
-    .storage-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #00ff00, #ffaa00, #ff3366);
-      border-radius: 4px;
-      transition: width 0.3s;
-    }
     
     .lightbox {
       display: none;
@@ -251,17 +208,12 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.95);
+      background: black;
       z-index: 10000;
       justify-content: center;
       align-items: center;
-      opacity: 0;
-      transition: opacity 0.3s;
     }
-    .lightbox.active { 
-      display: flex; 
-      opacity: 1;
-    }
+    .lightbox.active { display: flex; }
     .lightbox img {
       max-width: 90%;
       max-height: 80%;
@@ -283,9 +235,6 @@
       align-items: center;
       justify-content: center;
     }
-    .lightbox-close:focus {
-      outline: 3px solid white;
-    }
     .lightbox-number {
       position: absolute;
       bottom: 30px;
@@ -299,27 +248,6 @@
       border-radius: 60px;
       font-weight: 700;
     }
-    .lightbox-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 3rem;
-      color: white;
-      background: rgba(0,0,0,0.5);
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border: 2px solid #ff00ff;
-    }
-    .lightbox-nav:hover {
-      background: rgba(255,0,255,0.3);
-    }
-    .lightbox-nav.prev { left: 30px; }
-    .lightbox-nav.next { right: 30px; }
     
     #loadingIndicator {
       position: fixed;
@@ -336,62 +264,10 @@
       display: none;
     }
     #loadingIndicator.active { display: block; }
-
-    #messageToast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #333;
-      color: white;
-      padding: 15px 30px;
-      border-radius: 60px;
-      font-weight: 700;
-      z-index: 50000;
-      display: none;
-      border: 2px solid #ffcc00;
-    }
-    #messageToast.show { display: block; }
-
-    .delete-btn {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 40px;
-      height: 40px;
-      background: rgba(255,0,0,0.8);
-      border: 2px solid white;
-      border-radius: 50%;
-      color: white;
-      font-weight: 700;
-      z-index: 3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .grid-item:hover .delete-btn {
-      opacity: 1;
-    }
-    
-    @media (max-width: 480px) {
-      .delete-btn { width: 36px; height: 36px; font-size: 20px; opacity: 0.7; }
-    }
-    
-    .storage-warning {
-      color: #ff3366;
-      font-weight: 700;
-      margin-top: 10px;
-      display: none;
-    }
-    .storage-warning.show { display: block; }
   </style>
 </head>
 <body>
   <div id="loadingIndicator">⏳ LOADING...</div>
-  <div id="messageToast"></div>
   
   <a href="https://www.cryptobros.pro/merch.html" class="back-button">
     ← BACK TO MERCH
@@ -400,10 +276,8 @@
   <div class="theme-toggle" id="themeToggle">🌙</div>
   <button id="adminButton">📤 UPLOAD</button>
 
-  <div class="lightbox" id="lightboxElement">
-    <div class="lightbox-close" id="lightboxClose" tabindex="0">✕</div>
-    <div class="lightbox-nav prev" id="lightboxPrev">←</div>
-    <div class="lightbox-nav next" id="lightboxNext">→</div>
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-close" id="lightboxClose">✕</div>
     <img id="lightboxImg" src="" alt="">
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
@@ -419,156 +293,52 @@
       <div class="upload-title">📤 UPLOAD DESIGNS</div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
       <button id="uploadButton">CHOOSE IMAGES</button>
-      <div class="storage-indicator" id="storageIndicator">
-        <span id="storageText">Storage: 0/5 MB</span>
-        <div class="storage-bar">
-          <div class="storage-fill" id="storageFill" style="width: 0%"></div>
-        </div>
-      </div>
-      <div class="storage-warning" id="storageWarning">⚠️ Low storage space!</div>
       <div style="color:#ffaa00; margin-top:25px; font-weight:700;">
         Files with numbers → that slot<br>
         Files without numbers → fill empty slots<br>
-        Max 1.5MB per image • 5MB total
-      </div>
-      <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
-        <button id="unfreezeButton" style="background:#ff3366; border:none; padding:10px 20px; border-radius:60px; color:white; font-weight:700; cursor:pointer;">⚠️ UNFREEZE</button>
-        <button id="clearAllButton" style="background:#9945FF; border:none; padding:10px 20px; border-radius:60px; color:white; font-weight:700; cursor:pointer;">🗑️ CLEAR ALL</button>
+        Max 5MB
       </div>
     </div>
   </div>
 
   <script>
-    (function() {
-      const STORAGE_KEY = 'designs';
-      const MAX_TOTAL_SIZE = 4.5 * 1024 * 1024; // 4.5MB
-      const MAX_FILE_SIZE = 1.5 * 1024 * 1024; // 1.5MB
-      const BASE64_OVERHEAD = 1.37; // ~37% overhead for base64
+    // Ждем полной загрузки DOM
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM загружен');
       
       let designImages = {};
-      let currentLightboxIndex = 1;
 
-      // ELEMENTS
+      // ЭЛЕМЕНТЫ
       const themeToggle = document.getElementById('themeToggle');
       const adminBtn = document.getElementById('adminButton');
       const uploadSection = document.getElementById('uploadSection');
       const uploadBtn = document.getElementById('uploadButton');
       const fileInput = document.getElementById('designUpload');
-      const lightboxElement = document.getElementById('lightboxElement');
+      const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxNum = document.getElementById('lightboxNumber');
       const lightboxClose = document.getElementById('lightboxClose');
-      const lightboxPrev = document.getElementById('lightboxPrev');
-      const lightboxNext = document.getElementById('lightboxNext');
       const grid = document.getElementById('designsGrid');
       const loader = document.getElementById('loadingIndicator');
-      const messageToast = document.getElementById('messageToast');
-      const storageText = document.getElementById('storageText');
-      const storageFill = document.getElementById('storageFill');
-      const storageWarning = document.getElementById('storageWarning');
-      const unfreezeBtn = document.getElementById('unfreezeButton');
-      const clearAllBtn = document.getElementById('clearAllButton');
 
-      // Check if localStorage is available
-      function isStorageAvailable() {
-        try {
-          const test = '__test__';
-          localStorage.setItem(test, test);
-          localStorage.removeItem(test);
-          return true;
-        } catch (e) {
-          return false;
-        }
-      }
+      console.log('Элементы найдены:', { 
+        uploadBtn: !!uploadBtn, 
+        fileInput: !!fileInput,
+        grid: !!grid 
+      });
 
-      if (!isStorageAvailable()) {
-        showMessage('❌ localStorage is not available! Changes will not be saved.', '#ff3366', 0);
-      }
-
-      // UTILS
-      function showMessage(msg, color = '#00ffff', duration = 3000) {
-        messageToast.textContent = msg;
-        messageToast.style.borderColor = color;
-        messageToast.classList.add('show');
-        if (duration > 0) {
-          setTimeout(() => messageToast.classList.remove('show'), duration);
-        }
-      }
-
-      function updateStorageIndicator() {
-        try {
-          const size = new Blob([JSON.stringify(designImages)]).size;
-          const percent = Math.min(100, (size / MAX_TOTAL_SIZE) * 100);
-          storageFill.style.width = percent + '%';
-          storageText.textContent = `Storage: ${(size / 1024 / 1024).toFixed(2)}/${(MAX_TOTAL_SIZE / 1024 / 1024).toFixed(1)} MB`;
-          
-          if (percent > 90) {
-            storageFill.style.background = '#ff3366';
-            storageWarning.classList.add('show');
-          } else if (percent > 70) {
-            storageFill.style.background = '#ffaa00';
-            storageWarning.classList.remove('show');
-          } else {
-            storageFill.style.background = '#00ff00';
-            storageWarning.classList.remove('show');
-          }
-        } catch (e) {
-          console.warn('Storage check failed:', e);
-        }
-      }
-
-      function saveDesigns() {
-        try {
-          const jsonStr = JSON.stringify(designImages);
-          const size = new Blob([jsonStr]).size;
-          
-          if (size > MAX_TOTAL_SIZE) {
-            showMessage('❌ Storage full! Delete some images first', '#ff3366');
-            return false;
-          }
-          
-          localStorage.setItem(STORAGE_KEY, jsonStr);
-          updateStorageIndicator();
-          return true;
-        } catch (e) {
-          if (e.name === 'QuotaExceededError') {
-            showMessage('❌ Browser storage limit exceeded', '#ff3366');
-          } else {
-            console.error('Save failed:', e);
-            showMessage('❌ Save failed', '#ff3366');
-          }
-          return false;
-        }
-      }
-
-      // LOAD SAVED IMAGES WITH CORRUPTION HANDLING
+      // Загружаем сохранённые картинки
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
+        const saved = localStorage.getItem('designs');
         if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            // Validate structure
-            if (typeof parsed === 'object' && parsed !== null) {
-              designImages = parsed;
-            } else {
-              throw new Error('Invalid data structure');
-            }
-          } catch (parseError) {
-            console.error('Corrupted storage, resetting:', parseError);
-            localStorage.removeItem(STORAGE_KEY);
-            showMessage('⚠️ Corrupted data was cleared', '#ff3366');
-          }
+          designImages = JSON.parse(saved);
+          console.log('Загружено из localStorage:', Object.keys(designImages).length, 'изображений');
         }
       } catch(e) {
-        console.error('Failed to access localStorage:', e);
+        console.error('Ошибка загрузки:', e);
       }
 
-      // Set default theme
-      if (!localStorage.getItem('theme')) {
-        localStorage.setItem('theme', 'dark');
-      }
-
-      // RENDER GRID
+      // ОТРИСОВКА СЕТКИ
       function render() {
         if (!grid) return;
         let html = '';
@@ -576,37 +346,18 @@
           html += '<div class="grid-item" data-id="'+i+'">';
           html += '<div class="item-number">'+i+'</div>';
           if (designImages[i]) {
-            html += '<img src="'+designImages[i]+'" alt="Design '+i+'" loading="lazy">';
-            html += '<div class="delete-btn" data-delete="'+i+'">✕</div>';
+            html += '<img src="'+designImages[i]+'" alt="Design '+i+'">';
           } else {
             html += '<div class="item-placeholder"><div class="emoji">🎨</div><div>EMPTY</div></div>';
           }
           html += '</div>';
         }
         grid.innerHTML = html;
-        updateStorageIndicator();
+        console.log('Сетка отрисована');
       }
       render();
 
-      // DELETE HANDLER
-      grid.addEventListener('click', (e) => {
-        const deleteBtn = e.target.closest('.delete-btn');
-        if (deleteBtn) {
-          e.stopPropagation();
-          const slot = deleteBtn.dataset.delete;
-          if (slot && designImages[slot]) {
-            if (confirm(`🗑️ Delete design #${slot}? This cannot be undone.`)) {
-              delete designImages[slot];
-              if (saveDesigns()) {
-                render();
-                showMessage(`✅ Design #${slot} deleted`, '#00ff00');
-              }
-            }
-          }
-        }
-      });
-
-      // THEME TOGGLE
+      // ТЕМА
       if (themeToggle) {
         if (localStorage.getItem('theme') === 'light') {
           document.body.classList.add('light-mode');
@@ -617,254 +368,117 @@
           const isLight = document.body.classList.contains('light-mode');
           themeToggle.textContent = isLight ? '☀️' : '🌙';
           localStorage.setItem('theme', isLight ? 'light' : 'dark');
-          showMessage(`🌓 ${isLight ? 'Light' : 'Dark'} mode`, '#ffcc00');
         };
       }
 
-      // LIGHTBOX NAVIGATION
-      function updateLightbox(slot) {
-        if (designImages[slot]) {
-          lightboxImg.src = designImages[slot];
-          lightboxNum.textContent = 'DESIGN #'+slot;
-          currentLightboxIndex = slot;
-        }
-      }
-
+      // ЛАЙТБОКС
       if (grid) {
-        grid.addEventListener('click', (e) => {
+        grid.onclick = (e) => {
           const item = e.target.closest('.grid-item');
-          const deleteBtn = e.target.closest('.delete-btn');
-          if (item && !deleteBtn) {
-            const id = parseInt(item.dataset.id);
+          if (item) {
+            const id = item.dataset.id;
             if (designImages[id]) {
-              updateLightbox(id);
-              lightboxElement.classList.add('active');
-              lightboxClose.focus();
+              lightboxImg.src = designImages[id];
+              lightboxNum.textContent = 'DESIGN #'+id;
+              lightbox.classList.add('active');
             }
           }
-        });
+        };
       }
       
-      function closeLightbox() {
-        lightboxElement.classList.remove('active');
-        lightboxImg.src = '';
-      }
-
       if (lightboxClose) {
-        lightboxClose.addEventListener('click', closeLightbox);
-        lightboxClose.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') closeLightbox();
-        });
+        lightboxClose.onclick = () => {
+          lightbox.classList.remove('active');
+          lightboxImg.src = '';
+        };
       }
 
-      if (lightboxPrev) {
-        lightboxPrev.addEventListener('click', () => {
-          let nextSlot = currentLightboxIndex - 1;
-          while (nextSlot >= 1 && nextSlot <= 20) {
-            if (designImages[nextSlot]) {
-              updateLightbox(nextSlot);
-              return;
-            }
-            nextSlot--;
-          }
-          showMessage('No more designs', '#ffaa00');
-        });
-      }
-
-      if (lightboxNext) {
-        lightboxNext.addEventListener('click', () => {
-          let nextSlot = currentLightboxIndex + 1;
-          while (nextSlot <= 20) {
-            if (designImages[nextSlot]) {
-              updateLightbox(nextSlot);
-              return;
-            }
-            nextSlot++;
-          }
-          showMessage('No more designs', '#ffaa00');
-        });
-      }
-
-      // Keyboard navigation in lightbox
-      document.addEventListener('keydown', (e) => {
-        if (!lightboxElement.classList.contains('active')) return;
-        
-        if (e.key === 'Escape') {
-          closeLightbox();
-        } else if (e.key === 'ArrowLeft') {
-          lightboxPrev.click();
-        } else if (e.key === 'ArrowRight') {
-          lightboxNext.click();
-        }
-      });
-
-      // CLICK ON OVERLAY TO CLOSE
-      if (lightboxElement) {
-        lightboxElement.addEventListener('click', (event) => {
-          if (event.target === lightboxElement) {
-            closeLightbox();
-          }
-        });
-      }
-
-      // UPLOAD BUTTON SCROLL
+      // КНОПКА UPLOAD — ПРОКРУТКА
       if (adminBtn) {
-        adminBtn.addEventListener('click', () => uploadSection.scrollIntoView({ behavior: 'smooth' }));
+        adminBtn.onclick = () => {
+          console.log('Клик по adminBtn');
+          uploadSection.scrollIntoView({ behavior: 'smooth' });
+        };
       }
 
-      // UNFREEZE BUTTON (with password)
-      if (unfreezeBtn) {
-        unfreezeBtn.addEventListener('click', () => {
-          const answer = prompt('⚠️ Type "UNFREEZE" to delete ALL designs permanently:');
-          if (answer === 'UNFREEZE') {
-            designImages = {};
-            localStorage.removeItem(STORAGE_KEY);
-            render();
-            showMessage('✅ Gallery unfrozen (all designs cleared)', '#ff3366');
-          } else if (answer !== null) {
-            showMessage('❌ Incorrect confirmation', '#ff3366');
-          }
-        });
-      }
-
-      // CLEAR ALL BUTTON (simpler confirmation)
-      if (clearAllBtn) {
-        clearAllBtn.addEventListener('click', () => {
-          if (confirm('🗑️ Delete ALL designs? This cannot be undone.')) {
-            designImages = {};
-            if (saveDesigns()) {
-              render();
-              showMessage('✅ All designs cleared', '#ff3366');
-            }
-          }
-        });
-      }
-
-      // FILE UPLOAD
+      // ЗАГРУЗКА ФАЙЛОВ - УПРОЩЕННАЯ ВЕРСИЯ ДЛЯ ТЕСТА
       if (uploadBtn && fileInput) {
-        uploadBtn.addEventListener('click', () => fileInput.click());
+        console.log('Навешиваем обработчики на upload');
+        
+        uploadBtn.onclick = function() {
+          console.log('Клик по uploadBtn');
+          fileInput.click();
+        };
 
-        fileInput.addEventListener('change', async function(e) {
+        fileInput.onchange = function(e) {
+          console.log('Событие change! Файлы:', e.target.files);
+          
           const files = Array.from(e.target.files);
-          
-          // Check file sizes
-          const errors = [];
-          const validFiles = files.filter(f => {
-            if (f.size > MAX_FILE_SIZE) {
-              errors.push(`${f.name}: too large (>1.5MB)`);
-              return false;
-            }
-            return true;
-          });
-
-          if (errors.length > 0) {
-            showMessage('⚠️ ' + errors.join(', '), '#ffaa00');
-          }
-
-          if (validFiles.length === 0) return;
-
-          // Estimate total size with base64 overhead
-          let estimatedNewSize = 0;
-          for (const file of validFiles) {
-            estimatedNewSize += file.size * BASE64_OVERHEAD;
-          }
-
-          const currentSize = new Blob([JSON.stringify(designImages)]).size;
-          
-          if (currentSize + estimatedNewSize > MAX_TOTAL_SIZE) {
-            showMessage('❌ Upload would exceed storage limit', '#ff3366');
-            fileInput.value = '';
+          if (files.length === 0) {
+            console.log('Нет файлов');
             return;
           }
 
-          // Disable buttons
-          uploadBtn.disabled = true;
-          adminBtn.disabled = true;
           loader.classList.add('active');
-
-          let processed = 0;
-          const newImages = {};
-
-          // Sort numbered files
-          const numberedFiles = [];
-          const unnumberedFiles = [];
-
-          for (const file of validFiles) {
-            const match = file.name.match(/\d+/);
-            if (match) {
-              const slot = parseInt(match[0]);
-              if (slot >= 1 && slot <= 20) {
-                numberedFiles.push({ file, slot });
-              } else {
-                unnumberedFiles.push(file);
-              }
-            } else {
-              unnumberedFiles.push(file);
-            }
-          }
-
-          // Sort numbered by slot
-          numberedFiles.sort((a, b) => a.slot - b.slot);
-
-          // Process numbered files
-          for (const { file, slot } of numberedFiles) {
-            try {
-              const dataUrl = await readFileAsDataURL(file);
-              newImages[slot] = dataUrl;
-              processed++;
-            } catch (error) {
-              console.error('Failed to read file:', file.name);
-            }
-          }
-
-          // Process unnumbered files (find empty slots)
-          for (const file of unnumberedFiles) {
-            let emptySlot = null;
-            for (let i = 1; i <= 20; i++) {
-              if (!designImages[i] && !newImages[i]) {
-                emptySlot = i;
-                break;
-              }
-            }
-            
-            if (emptySlot) {
-              try {
-                const dataUrl = await readFileAsDataURL(file);
-                newImages[emptySlot] = dataUrl;
-                processed++;
-              } catch (error) {
-                console.error('Failed to read file:', file.name);
-              }
-            }
-          }
-
-          // Merge new images with existing
-          designImages = { ...designImages, ...newImages };
+          console.log('Загружаем', files.length, 'файлов');
           
-          if (saveDesigns()) {
-            render();
-            showMessage(`✅ Uploaded ${Object.keys(newImages).length} images`, '#00ff00');
-          }
+          let processed = 0;
 
-          loader.classList.remove('active');
-          uploadBtn.disabled = false;
-          adminBtn.disabled = false;
+          files.forEach(file => {
+            console.log('Обработка файла:', file.name, 'размер:', file.size);
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(re) {
+              console.log('Файл прочитан:', file.name);
+              
+              // Ищем номер в имени файла
+              const match = file.name.match(/\d+/);
+              let slot = match ? parseInt(match[0]) : null;
+              if (slot && (slot < 1 || slot > 20)) slot = null;
+
+              // Если нет номера — ищем пустой слот
+              if (!slot) {
+                for (let i = 1; i <= 20; i++) {
+                  if (!designImages[i]) { 
+                    slot = i; 
+                    break; 
+                  }
+                }
+              }
+
+              // Сохраняем
+              if (slot) {
+                console.log('Сохраняем в слот', slot);
+                designImages[slot] = re.target.result;
+              }
+
+              processed++;
+              if (processed === files.length) {
+                localStorage.setItem('designs', JSON.stringify(designImages));
+                render();
+                loader.classList.remove('active');
+                alert('Загружено ' + files.length + ' файлов!');
+              }
+            };
+
+            reader.onerror = function() {
+              console.error('Ошибка чтения файла:', file.name);
+              processed++;
+              if (processed === files.length) {
+                loader.classList.remove('active');
+              }
+            };
+
+            reader.readAsDataURL(file);
+          });
+
           fileInput.value = '';
-        });
+        };
+      } else {
+        console.error('uploadBtn или fileInput не найдены!');
       }
-
-      function readFileAsDataURL(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      }
-
-      // INIT
-      updateStorageIndicator();
-    })();
+    });
   </script>
 </body>
 </html>
