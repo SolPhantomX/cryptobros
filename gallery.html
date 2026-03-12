@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRYPTOBROS — GALLERY</title>
+  <title>CRYPTOBROS — GALLERY REBORN</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,7 +12,6 @@
       background: #0a0a0a;
       color: white;
       padding: 30px;
-      transition: background 0.2s, color 0.2s;
     }
     body.light-mode {
       background: #f0f0f0;
@@ -29,7 +28,7 @@
       color: #ffcc00;
       text-decoration: none;
       z-index: 1000;
-      transition: box-shadow 0.3s ease;
+      transition: 0.3s;
     }
     .back-button:hover {
       box-shadow: 0 0 20px #ffcc00;
@@ -49,38 +48,14 @@
       justify-content: center;
       font-size: 28px;
       z-index: 1000;
-      transition: box-shadow 0.3s ease;
-    }
-    .theme-toggle:hover {
-      box-shadow: 0 0 20px #ffcc00;
-    }
-    #adminButton {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #9945FF;
-      color: white;
-      border: none;
-      border-radius: 60px;
-      padding: 16px 32px;
-      font-family: 'Archivo Black', sans-serif;
-      cursor: pointer;
-      z-index: 1000;
-      box-shadow: 0 0 30px #9945FF;
-      transition: box-shadow 0.3s ease;
-    }
-    #adminButton:hover {
-      box-shadow: 0 0 50px #9945FF;
     }
     .page-title {
-      font-family: 'Archivo Black', sans-serif;
       font-size: 5rem;
       text-align: center;
       margin: 80px 0 20px;
       background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 20px rgba(255,51,102,0.5));
     }
     .slogan-line1 {
       font-size: 2.2rem;
@@ -94,7 +69,6 @@
       text-align: center;
       color: #00ff00;
       margin-bottom: 50px;
-      text-transform: uppercase;
       text-shadow: 0 0 15px #00ff00;
     }
     .section-title {
@@ -121,11 +95,6 @@
       border-bottom: 2px solid #333;
       position: relative;
       cursor: pointer;
-      transition: box-shadow 0.3s ease;
-    }
-    .grid-item:hover {
-      box-shadow: inset 0 0 30px rgba(255,204,0,0.3);
-      z-index: 10;
     }
     .grid-item:nth-child(4n) { border-right: none; }
     .grid-item:nth-last-child(-n+4) { border-bottom: none; }
@@ -133,6 +102,7 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
+      display: block;
     }
     .item-number {
       position: absolute;
@@ -164,14 +134,11 @@
       justify-content: center;
       cursor: pointer;
       opacity: 0;
-      transition: opacity 0.3s ease, box-shadow 0.3s ease;
+      transition: 0.3s;
       box-shadow: 0 0 15px #ff3366;
     }
     .grid-item:hover .delete-btn {
       opacity: 1;
-    }
-    .delete-btn:hover {
-      box-shadow: 0 0 25px #ff3366;
     }
     .item-placeholder {
       width: 100%;
@@ -191,7 +158,6 @@
       border: 3px solid #00ffff;
       border-radius: 30px;
       text-align: center;
-      box-shadow: 0 0 30px rgba(0,255,255,0.3);
     }
     .upload-title {
       font-size: 2.5rem;
@@ -209,7 +175,7 @@
       cursor: pointer;
       font-size: 1.2rem;
       margin: 20px;
-      transition: all 0.3s ease;
+      transition: 0.3s;
       box-shadow: 0 0 15px #00ff00;
     }
     #uploadButton:hover:not(:disabled) {
@@ -218,11 +184,8 @@
       box-shadow: 0 0 30px #00ff00;
     }
     #uploadButton:disabled {
-      opacity: 0.5;
+      opacity: 0.3;
       cursor: not-allowed;
-      border-color: #666;
-      color: #666;
-      box-shadow: none;
     }
     .hidden-input { display: none; }
     .storage-info {
@@ -236,14 +199,12 @@
       background: #333;
       border-radius: 4px;
       margin-top: 10px;
-      box-shadow: inset 0 0 5px black;
     }
     .storage-fill {
       height: 100%;
       background: linear-gradient(90deg, #00ff00, #ffaa00);
       border-radius: 4px;
-      box-shadow: 0 0 15px #ffaa00;
-      transition: width 0.3s ease;
+      transition: width 0.3s;
     }
     #clearAllBtn {
       margin-top: 20px;
@@ -254,11 +215,7 @@
       color: white;
       font-family: 'Archivo Black', sans-serif;
       cursor: pointer;
-      transition: box-shadow 0.3s ease;
       box-shadow: 0 0 15px #ff3366;
-    }
-    #clearAllBtn:hover {
-      box-shadow: 0 0 30px #ff3366;
     }
     .lightbox {
       display: none;
@@ -294,11 +251,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: box-shadow 0.3s ease;
-      box-shadow: 0 0 20px #ff00ff;
-    }
-    .lightbox-close:hover {
-      box-shadow: 0 0 40px #ff00ff;
     }
     .lightbox-number {
       position: absolute;
@@ -311,7 +263,6 @@
       padding: 12px 35px;
       border: 3px solid #00ffff;
       border-radius: 60px;
-      box-shadow: 0 0 25px #00ffff;
     }
     #loadingIndicator {
       position: fixed;
@@ -326,7 +277,6 @@
       border-radius: 60px;
       z-index: 40000;
       display: none;
-      box-shadow: 0 0 50px #00ffff;
     }
     #loadingIndicator.active { display: block; }
     #toast {
@@ -341,7 +291,6 @@
       z-index: 50000;
       display: none;
       border: 2px solid #ffcc00;
-      box-shadow: 0 0 25px #ffcc00;
     }
     #toast.show { display: block; }
     .info-text {
@@ -349,13 +298,27 @@
       margin-top:25px;
       text-shadow: 0 0 8px #ffaa00;
     }
+    #adminButton {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #9945FF;
+      color: white;
+      border: none;
+      border-radius: 60px;
+      padding: 16px 32px;
+      font-family: 'Archivo Black', sans-serif;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 0 30px #9945FF;
+    }
   </style>
 </head>
 <body>
   <div id="loadingIndicator">⏳ LOADING...</div>
   <div id="toast"></div>
   
-  <a href="/merch.html" class="back-button">← BACK TO MERCH</a>
+  <a href="/merch.html" class="back-button">← BACK</a>
   <div class="theme-toggle" id="themeToggle">🌙</div>
   <button id="adminButton">📤 UPLOAD</button>
 
@@ -366,42 +329,39 @@
   </div>
 
   <div class="gallery-container">
-    <h1 class="page-title">DESIGN GALLERY</h1>
-    <div class="slogan-line1">REAL ONES WEAR THE MERCH</div>
-    <div class="slogan-line2">FAKE ONES FEAR THE TRUTH</div>
-    <div class="section-title">⚡ DESIGNS 1–20 ⚡</div>
+    <h1 class="page-title">GALLERY</h1>
+    <div class="slogan-line1">REAL ONES WEAR MERCH</div>
+    <div class="slogan-line2">FAKES FEAR THE TRUTH</div>
+    <div class="section-title">⚡ SLOTS 1–20 ⚡</div>
     <div class="image-grid" id="designsGrid"></div>
 
     <div class="upload-section" id="uploadSection">
-      <div class="upload-title">📤 UPLOAD DESIGNS</div>
-      <div class="storage-info" id="storageInfo">Storage: 0/4.5 MB</div>
+      <div class="upload-title">📤 UPLOADING</div>
+      <div class="storage-info" id="storageInfo">0/20 slots</div>
       <div class="storage-bar">
         <div class="storage-fill" id="storageFill" style="width: 0%"></div>
       </div>
       <input type="file" id="designUpload" class="hidden-input" accept="image/*" multiple>
-      <button id="uploadButton">📁 CHOOSE IMAGES</button>
+      <button id="uploadButton">📁 SELECT</button>
       <div class="info-text">
-        ⚡ Files with numbers → slot #5<br>
-        ⚡ Files without numbers → first empty slot<br>
-        ⚡ Max 1.5MB per image
+        ⚡ Number in name → specific slot<br>
+        ⚡ No number → first empty slot
       </div>
-      <button id="clearAllBtn">🗑️ CLEAR ALL DESIGNS</button>
+      <button id="clearAllBtn">🗑️ CLEAR ALL</button>
     </div>
   </div>
 
   <script>
     (function() {
-      const MAX_TOTAL = 4.5 * 1024 * 1024;      // 4.5 MB
-      const MAX_FILE = 1.5 * 1024 * 1024;        // 1.5 MB
-      
-      let designs = {};  // key = slot 1..20, value = dataURL
+      // ===================== USE INDEXEDDB =====================
+      const DB_NAME = 'CryptoGalleryDB';
+      const STORE_NAME = 'images';
+      const DB_VERSION = 1;
+      const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-      // DOM elements
-      const themeToggle = document.getElementById('themeToggle');
-      const adminBtn = document.getElementById('adminButton');
-      const uploadSection = document.getElementById('uploadSection');
-      const uploadBtn = document.getElementById('uploadButton');
-      const fileInput = document.getElementById('designUpload');
+      let db = null;
+      let currentDesigns = {}; // cache for fast rendering
+
       const grid = document.getElementById('designsGrid');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
@@ -412,8 +372,26 @@
       const storageInfo = document.getElementById('storageInfo');
       const storageFill = document.getElementById('storageFill');
       const clearAllBtn = document.getElementById('clearAllBtn');
+      const uploadBtn = document.getElementById('uploadButton');
+      const fileInput = document.getElementById('designUpload');
+      const adminBtn = document.getElementById('adminButton');
+      const uploadSection = document.getElementById('uploadSection');
+      const themeToggle = document.getElementById('themeToggle');
 
-      // ---------- helpers ----------
+      // ---------- theme ----------
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        themeToggle.textContent = '☀️';
+      }
+      themeToggle.onclick = () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        themeToggle.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      };
+
+      adminBtn.onclick = () => uploadSection.scrollIntoView({ behavior: 'smooth' });
+
       function showToast(msg, color = '#00ffff') {
         toast.textContent = msg;
         toast.style.borderColor = color;
@@ -421,243 +399,325 @@
         setTimeout(() => toast.classList.remove('show'), 3000);
       }
 
-      // approximate size from base64 dataURL
-      function getBase64Size(dataUrl) {
-        const base64 = dataUrl.split(',')[1] || '';
-        return Math.ceil(base64.length * 0.75); // base64 chars -> bytes
-      }
-
-      function getTotalSize() {
-        let total = 0;
-        for (let key in designs) {
-          total += getBase64Size(designs[key]);
-        }
-        return total;
-      }
-
-      function updateStorageBar() {
-        const size = getTotalSize();
-        const percent = Math.min(100, (size / MAX_TOTAL) * 100);
-        storageFill.style.width = percent + '%';
-        storageInfo.textContent = `Storage: ${(size / 1024 / 1024).toFixed(2)}/4.5 MB`;
-      }
-
-      // ---------- load from localStorage ----------
-      try {
-        const saved = localStorage.getItem('cryptobros_gallery');
-        if (saved) {
-          designs = JSON.parse(saved);
-          // clean invalid slots (just in case)
-          for (let k in designs) {
-            if (isNaN(parseInt(k)) || parseInt(k) < 1 || parseInt(k) > 20) {
-              delete designs[k];
+      // ---------- open DB ----------
+      function openDB() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(DB_NAME, DB_VERSION);
+          request.onerror = () => reject(request.error);
+          request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+          };
+          request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+              db.createObjectStore(STORE_NAME); // key-value store
             }
-          }
-        }
-      } catch (e) {
-        designs = {};
+          };
+        });
+      }
+
+      // ---------- load all slots from DB into cache ----------
+      async function loadAllFromDB() {
+        if (!db) await openDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const request = store.getAllKeys();
+          request.onsuccess = () => {
+            const keys = request.result;
+            const promises = keys.map(key => {
+              return new Promise((res, rej) => {
+                const r = store.get(key);
+                r.onsuccess = () => res({ key, value: r.result });
+                r.onerror = rej;
+              });
+            });
+            Promise.all(promises).then(results => {
+ = {};
+              results.forEach(item => {
+                // Ensure key is a valid integer between 1 and 20 before adding to cache
+                const parsedKey = parseInt(item.key, 10);
+                if (parsedKey >= 1 && parsedKey <= 20) {
+                  // Validate stored data is a data URL image
+                  if (typeof item.value === 'string' && item.value.startsWith('data:image/')) {
+                      currentDesigns[parsedKey] = item.value;
+                  } else {
+                      console.warn("Invalid data found in DB for slot " + parsedKey + ", removing...");
+                      // Optionally remove invalid entries from DB
+                      // deleteFromDB(parsedKey);
+                  }
+                }
+              });
+              resolve();
+            }).catch(reject);
+          };
+          request.onerror = reject;
+        });
+      }
+
+      // ---------- save image to DB ----------
+      async function saveImageToDB(slot, dataUrl) {
+        if (!db) await openDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          const request = store.put(dataUrl, slot);
+          request.onsuccess = resolve;
+          request.onerror = () => reject(request.error);
+        });
+      }
+
+      // ---------- delete from DB ----------
+      async function deleteFromDB(slot) {
+        if (!db) await openDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          const request = store.delete(slot);
+          request.onsuccess = resolve;
+          request.onerror = () => reject(request.error);
+        });
+      }
+
+      // ---------- clear all ----------
+      async function clearDB() {
+        if (!db) await openDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          const request = store.clear();
+          request.onsuccess = resolve;
+          request.onerror = () => reject(request.error);
+        });
       }
 
       // ---------- render grid ----------
-      function render() {
-        let html = '';
+      function renderGrid() {
+        grid.innerHTML = ''; // Clear grid safely
         for (let i = 1; i <= 20; i++) {
-          html += '<div class="grid-item" data-id="' + i + '">';
-          html += '<div class="item-number">' + i + '</div>';
-          
-          if (designs[i]) {
-            html += '<img src="' + designs[i] + '" alt="Design ' + i + '" loading="lazy">';
-            html += '<div class="delete-btn" data-delete="' + i + '">✕</div>';
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'grid-item';
+          itemDiv.dataset.id = i;
+
+          const numberDiv = document.createElement('div');
+          numberDiv.className = 'item-number';
+          numberDiv.textContent = i;
+          itemDiv.appendChild(numberDiv);
+
+          if (currentDesigns[i]) {
+            // Validate before creating image element
+            if (typeof currentDesigns[i] === 'string' && currentDesigns[i].startsWith('data:image/')) {
+                const img = document.createElement('img');
+                img.src = currentDesigns[i]; // This is now safe as it's a validated data URL
+                img.alt = `Design ${i}`;
+                itemDiv.appendChild(img);
+
+                const deleteBtn = document.createElement('div');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.dataset.delete = i;
+                deleteBtn.textContent = '✕';
+                itemDiv.appendChild(deleteBtn);
+            } else {
+                 // Handle invalid data in cache if it somehow got there
+                 const placeholder = document.createElement('div');
+                 placeholder.className = 'item-placeholder';
+                 placeholder.innerHTML = '<div style="font-size:50px;">🎨</div><div>INVALID</div>';
+                 itemDiv.appendChild(placeholder);
+            }
           } else {
-            html += '<div class="item-placeholder"><div style="font-size:50px;">🎨</div><div>EMPTY</div></div>';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'item-placeholder';
+            placeholder.innerHTML = '<div style="font-size:50px;">🎨</div><div>EMPTY</div>';
+            itemDiv.appendChild(placeholder);
           }
-          
-          html += '</div>';
-        }
-        grid.innerHTML = html;
-        updateStorageBar();
-      }
-      render();
 
-      // ---------- theme ----------
-      if (themeToggle) {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-          document.body.classList.add('light-mode');
-          themeToggle.textContent = '☀️';
-        } else {
-          themeToggle.textContent = '🌙';
+          grid.appendChild(itemDiv);
         }
-        themeToggle.onclick = function() {
-          document.body.classList.toggle('light-mode');
-          const isLight = document.body.classList.contains('light-mode');
-          themeToggle.textContent = isLight ? '☀️' : '🌙';
-          localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        };
+
+        // update stats
+        const filled = Object.keys(currentDesigns).length;
+        const percent = (filled / 20) * 100;
+        storageFill.style.width = percent + '%';
+        storageInfo.textContent = filled + '/20 slots';
       }
 
-      // ---------- delete item ----------
-      grid.addEventListener('click', function(e) {
+      // ---------- initialization ----------
+      async function init() {
+        loader.classList.add('active');
+        try {
+          await openDB();
+          await loadAllFromDB();
+          renderGrid();
+        } catch (e) {
+          showToast('❌ DB Error: ' + e.message, '#ff3366');
+        } finally {
+          loader.classList.remove('active');
+        }
+      }
+      init();
+
+      // ---------- deletion ----------
+      grid.addEventListener('click', async (e) => {
         const deleteBtn = e.target.closest('.delete-btn');
-        if (deleteBtn) {
-          e.stopPropagation();
-          const slot = deleteBtn.dataset.delete;
-          if (confirm('Delete design #' + slot + '?')) {
-            delete designs[slot];
-            localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
-            render();
+        if (!deleteBtn) return;
+        e.stopPropagation();
+        const slot = deleteBtn.dataset.delete;
+        if (confirm('Delete design #' + slot + '?')) {
+          loader.classList.add('active');
+          try {
+            await deleteFromDB(parseInt(slot, 10)); // Parse to ensure integer key
+            delete currentDesigns[slot];
+            renderGrid();
             showToast('✅ Deleted #' + slot, '#00ff00');
+          } catch (err) {
+            showToast('❌ Error: ' + err.message, '#ff3366');
+          } finally {
+            loader.classList.remove('active');
           }
+        }
+      });
+
+      // ---------- lightbox ----------
+      grid.addEventListener('click', (e) => {
+        const item = e.target.closest('.grid-item');
+        const del = e.target.closest('.delete-btn');
+        if (item && !del) {
+          const id = item.dataset.id;
+          if (currentDesigns[id]) {
+             // Ensure image source is valid before setting
+             if (typeof currentDesigns[id] === 'string' && currentDesigns[id].startsWith('data:image/')) {
+                 lightboxImg.src = currentDesigns[id];
+                 lightboxNum.textContent = 'DESIGN #' + id;
+                 lightbox.classList.add('active');
+             } else {
+                 showToast('❌ Invalid image data for slot ' + id, '#ff3366');
+             }
+          }
+        }
+      });
+
+      lightboxClose.onclick = () => {
+        lightbox.classList.remove('active');
+        lightboxImg.src = ''; // Reset src on close
+      };
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          lightbox.classList.remove('active');
+          lightboxImg.src = ''; // Reset src on close
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          lightbox.classList.remove('active');
+          lightboxImg.src = ''; // Reset src on close
         }
       });
 
       // ---------- clear all ----------
-      if (clearAllBtn) {
-        clearAllBtn.onclick = function() {
-          if (confirm('Delete ALL designs?')) {
-            designs = {};
-            localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
-            render();
-            showToast('✅ All cleared', '#ff3366');
-          }
-        };
-      }
-
-      // ---------- lightbox ----------
-      grid.addEventListener('click', function(e) {
-        const item = e.target.closest('.grid-item');
-        const deleteBtn = e.target.closest('.delete-btn');
-        if (item && !deleteBtn) {
-          const id = item.dataset.id;
-          if (designs[id]) {
-            lightboxImg.src = designs[id];
-            lightboxNum.textContent = 'DESIGN #' + id;
-            lightbox.classList.add('active');
-          }
+      clearAllBtn.onclick = async () => {
+        if (!confirm('DELETE ALL DESIGNS?')) return;
+        loader.classList.add('active');
+        try {
+          await clearDB();
+          currentDesigns = {};
+          renderGrid();
+          showToast('✅ All cleared', '#ff3366');
+        } catch (err) {
+          showToast('❌ Error: ' + err.message, '#ff3366');
+        } finally {
+          loader.classList.remove('active');
         }
-      });
-
-      lightboxClose.onclick = function() {
-        lightbox.classList.remove('active');
-        lightboxImg.src = '';
       };
 
-      lightbox.addEventListener('click', function(e) {
-        if (e.target === lightbox) {
-          lightbox.classList.remove('active');
-          lightboxImg.src = '';
-        }
-      });
+      // ---------- upload ----------
+      uploadBtn.onclick = () => fileInput.click();
 
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          lightbox.classList.remove('active');
-          lightboxImg.src = '';
-        }
-      });
-
-      // ---------- scroll to upload on admin button ----------
-      adminBtn.onclick = function() {
-        uploadSection.scrollIntoView({ behavior: 'smooth' });
-      };
-
-      // ---------- upload logic ----------
-      uploadBtn.onclick = function() {
-        fileInput.click();
-      };
-
-      fileInput.onchange = async function(e) {
+      fileInput.onchange = async (e) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) return;
 
         uploadBtn.disabled = true;
         loader.classList.add('active');
 
-        let currentSize = getTotalSize();
-        let newDesigns = { ...designs };   // copy
-        let uploaded = 0;
+        let success = 0;
         let errors = [];
 
-        for (let file of files) {
-          // file size check
-          if (file.size > MAX_FILE) {
-            errors.push(`${file.name} exceeds 1.5MB`);
-            continue;
-          }
-
-          if (currentSize + file.size > MAX_TOTAL) {
-            errors.push(`${file.name} not enough space`);
-            continue;
-          }
-
+        for (const file of files) {
           try {
+            // --- Validation ---
+            // Check file size
+            if (file.size > MAX_FILE_SIZE) {
+              errors.push(`${file.name}: File too large (max 5MB)`);
+              continue;
+            }
+
+            // Check file type via MIME
+            if (!file.type || !file.type.startsWith('image/')) {
+              errors.push(`${file.name}: Not an image file`);
+              continue;
+            }
+
+            // Read file
             const dataUrl = await new Promise((resolve, reject) => {
               const reader = new FileReader();
               reader.onload = () => resolve(reader.result);
-              reader.onerror = reject;
+              reader.onerror = () => reject(new Error('File reading error'));
               reader.readAsDataURL(file);
             });
 
-            // extract number from filename (first sequence)
-            const match = file.name.match(/\d+/);
-            let slot = match ? parseInt(match[0]) : null;
+            // --- Validate dataUrl format ---
+            if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
+                errors.push(`${file.name}: Failed to create valid image data`);
+                continue;
+            }
+
+            // Determine slot from filename
+            // Matches a number at the end of the filename before the extension
+            const nameMatch = file.name.match(/(\d+)(\.[^.]*)?$/);
+            let slot = nameMatch ? parseInt(nameMatch[1], 10) : null;
 
             if (slot && slot >= 1 && slot <= 20) {
-              // if slot exists, replace (free up old size)
-              if (newDesigns[slot]) {
-                currentSize -= getBase64Size(newDesigns[slot]);
-              }
-              newDesigns[slot] = dataUrl;
-              currentSize += file.size;
-              uploaded++;
+              // Specific slot
+              await saveImageToDB(slot, dataUrl);
+              currentDesigns[slot] = dataUrl;
+              success++;
             } else {
-              // place in first free slot (1..20)
-              let placed = false;
+              // Find first empty slot
+              let found = false;
               for (let i = 1; i <= 20; i++) {
-                if (!newDesigns[i]) {
-                  newDesigns[i] = dataUrl;
-                  currentSize += file.size;
-                  uploaded++;
-                  placed = true;
+                if (!currentDesigns[i]) {
+                  await saveImageToDB(i, dataUrl);
+                  currentDesigns[i] = dataUrl;
+                  success++;
+                  found = true;
                   break;
                 }
               }
-              if (!placed) {
-                errors.push(`${file.name}: no free slots`);
+              if (!found) {
+                errors.push(`${file.name}: No available slots`);
               }
             }
           } catch (err) {
-            errors.push(`${file.name} read failed`);
+            errors.push(`${file.name}: ${err.message}`);
           }
         }
 
-        if (uploaded > 0) {
-          designs = newDesigns;
-          localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
-          render();
-          showToast(`✅ Uploaded ${uploaded} images`, '#00ff00');
-        }
+        renderGrid(); // Update UI after processing all files
 
+        if (success > 0) {
+          showToast(`✅ Uploaded: ${success}`, '#00ff00');
+        }
         if (errors.length > 0) {
-          showToast(`⚠️ ${errors.length} errors (e.g., ${errors[0]})`, '#ffaa00');
+          showToast(`⚠️ Errors: ${errors.length} (${errors[0]})`, '#ffaa00');
         }
 
         loader.classList.remove('active');
         uploadBtn.disabled = false;
-        fileInput.value = '';   // allow re-upload same files
+        fileInput.value = ''; // Reset input
       };
-
-      // also update storage bar after any external change (just in case)
-      window.addEventListener('storage', function(e) {
-        if (e.key === 'cryptobros_gallery') {
-          try {
-            designs = JSON.parse(e.newValue) || {};
-          } catch (ex) {
-            designs = {};
-          }
-          render();
-        }
-      });
 
     })();
   </script>
