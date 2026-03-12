@@ -4,16 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS — GALLERY</title>
+  <!-- ПОДКЛЮЧАЕМ ТОЧНО ТАКОЙ ЖЕ ШРИФТ КАК В MERCH -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Anton&family=Oswald:wght@700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      font-family: 'Arial Black', 'Impact', 'Arial', sans-serif;
+      font-family: 'Archivo Black', 'Anton', 'Bebas Neue', 'Oswald', sans-serif;
       background: #0a0a0a;
       color: white;
       padding: 30px;
-      transition: 0.3s;
-      font-weight: 900;
+      font-weight: 400;
       letter-spacing: 0.5px;
     }
     
@@ -37,14 +40,17 @@
       padding: 16px 36px;
       color: #ffcc00;
       text-decoration: none;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 18px;
       z-index: 1000;
       backdrop-filter: blur(5px);
-      font-size: 18px;
+      transition: 0.3s;
     }
     
-    @media (max-width: 768px) {
-      .back-button { padding: 12px 24px; font-size: 14px; top: 15px; left: 15px; }
+    .back-button:hover {
+      background: #ffcc00;
+      color: black;
+      transform: scale(1.05);
     }
     
     .theme-toggle {
@@ -63,10 +69,12 @@
       font-size: 28px;
       z-index: 1000;
       backdrop-filter: blur(5px);
+      transition: 0.3s;
     }
     
-    @media (max-width: 768px) {
-      .theme-toggle { width: 50px; height: 50px; font-size: 24px; top: 15px; right: 15px; }
+    .theme-toggle:hover {
+      transform: rotate(15deg);
+      background: #ffcc00;
     }
     
     #adminButton {
@@ -78,25 +86,28 @@
       border: none;
       border-radius: 60px;
       padding: 16px 32px;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
       font-size: 1.1rem;
       cursor: pointer;
       z-index: 1000;
       box-shadow: 0 0 30px #9945FF;
       transition: 0.3s;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 30px #9945FF; }
+      50% { box-shadow: 0 0 50px #9945FF; }
+      100% { box-shadow: 0 0 30px #9945FF; }
     }
     
     #adminButton:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px #9945FF;
-    }
-    
-    @media (max-width: 768px) {
-      #adminButton { padding: 12px 24px; font-size: 14px; bottom: 15px; right: 15px; }
+      transform: scale(1.1);
+      background: #ff00ff;
     }
     
     .page-title {
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
       font-size: 5rem;
       text-align: center;
       margin: 80px 0 20px;
@@ -104,41 +115,69 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -2px;
-      text-shadow: 2px 2px 4px rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      animation: titleGlow 3s infinite;
     }
     
-    @media (max-width: 768px) {
-      .page-title { font-size: 3rem; margin: 60px 0 20px; }
+    @keyframes titleGlow {
+      0% { filter: drop-shadow(0 0 5px #ff3366); }
+      25% { filter: drop-shadow(0 0 15px #ff00ff); }
+      50% { filter: drop-shadow(0 0 5px #6600ff); }
+      75% { filter: drop-shadow(0 0 15px #00ccff); }
+      100% { filter: drop-shadow(0 0 5px #ff3366); }
     }
     
     .slogan-line1 {
-      font-weight: 900;
+      font-family: 'Anton', sans-serif;
       font-size: 2.2rem;
       text-align: center;
       color: #ff6600;
       text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: slogan1Pulse 2s infinite;
       text-shadow: 0 0 10px #ff6600;
     }
     
+    @keyframes slogan1Pulse {
+      0% { opacity: 1; text-shadow: 0 0 10px #ff6600; }
+      50% { opacity: 0.9; text-shadow: 0 0 20px #ff6600; }
+      100% { opacity: 1; text-shadow: 0 0 10px #ff6600; }
+    }
+    
     .slogan-line2 {
-      font-weight: 900;
-      font-size: 1.3rem;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.5rem;
       text-align: center;
       color: #00ff00;
       margin-bottom: 50px;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      animation: slogan2Pulse 2.5s infinite;
       text-shadow: 0 0 10px #00ff00;
     }
     
+    @keyframes slogan2Pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
     .section-title {
-      font-weight: 900;
+      font-family: 'Oswald', sans-serif;
       font-size: 2.8rem;
       color: #ffdd00;
       border-bottom: 4px solid #ffdd00;
       margin: 40px 0 30px;
       padding-bottom: 10px;
-      text-shadow: 0 0 10px #ffdd00;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: borderPulse 2s infinite;
+    }
+    
+    @keyframes borderPulse {
+      0% { border-color: #ffdd00; }
+      50% { border-color: #ff9900; }
+      100% { border-color: #ffdd00; }
     }
     
     .image-grid {
@@ -166,39 +205,28 @@
       border-bottom: 2px solid #333;
       position: relative;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.3s;
+      overflow: hidden;
     }
     
     .grid-item:hover {
-      filter: brightness(1.1);
+      transform: scale(1.02);
+      z-index: 10;
+      box-shadow: 0 0 30px rgba(255,255,255,0.3);
     }
     
-    .grid-item:nth-child(4n) { 
-      border-right: none; 
-    }
-    
-    @media (max-width: 1024px) {
-      .grid-item:nth-child(3n) { border-right: none; }
-      .grid-item:nth-child(4n) { border-right: 2px solid #333; }
-    }
-    
-    @media (max-width: 768px) {
-      .grid-item:nth-child(2n) { border-right: none; }
-      .grid-item:nth-child(3n) { border-right: 2px solid #333; }
-    }
-    
-    @media (max-width: 480px) {
-      .grid-item { border-right: none; }
-    }
-    
-    .grid-item:nth-last-child(-n+4) { 
-      border-bottom: none; 
-    }
+    .grid-item:nth-child(4n) { border-right: none; }
+    .grid-item:nth-last-child(-n+4) { border-bottom: none; }
     
     .grid-item img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      transition: 0.3s;
+    }
+    
+    .grid-item:hover img {
+      transform: scale(1.1);
     }
     
     .item-number {
@@ -214,12 +242,16 @@
       align-items: center;
       justify-content: center;
       color: #ffcc00;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 18px;
       z-index: 2;
+      animation: numberGlow 2s infinite;
     }
     
-    @media (max-width: 480px) {
-      .item-number { width: 30px; height: 30px; font-size: 14px; top: 5px; left: 5px; }
+    @keyframes numberGlow {
+      0% { border-color: #ffcc00; }
+      50% { border-color: #ff00ff; }
+      100% { border-color: #ffcc00; }
     }
     
     .delete-btn {
@@ -232,19 +264,24 @@
       border: 2px solid white;
       border-radius: 50%;
       color: white;
-      font-weight: 900;
-      z-index: 3;
+      font-family: 'Archivo Black', sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       opacity: 0;
-      transition: opacity 0.2s;
+      transition: 0.3s;
       font-size: 20px;
+      z-index: 3;
     }
     
     .grid-item:hover .delete-btn {
       opacity: 1;
+    }
+    
+    .delete-btn:hover {
+      background: #ff0000;
+      transform: rotate(90deg);
     }
     
     .item-placeholder {
@@ -256,8 +293,20 @@
       justify-content: center;
       background: #0f0f0f;
       color: #666;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 20px;
     }
-    .item-placeholder .emoji { font-size: 3.5rem; }
+    
+    .item-placeholder .emoji { 
+      font-size: 3.5rem;
+      animation: emojiBounce 2s infinite;
+    }
+    
+    @keyframes emojiBounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
     
     .upload-section {
       max-width: 1200px;
@@ -267,18 +316,33 @@
       border: 3px solid #00ffff;
       border-radius: 30px;
       text-align: center;
+      animation: sectionGlow 3s infinite;
+    }
+    
+    @keyframes sectionGlow {
+      0% { border-color: #00ffff; box-shadow: 0 0 20px #00ffff; }
+      33% { border-color: #ff00ff; box-shadow: 0 0 20px #ff00ff; }
+      66% { border-color: #ffff00; box-shadow: 0 0 20px #ffff00; }
+      100% { border-color: #00ffff; box-shadow: 0 0 20px #00ffff; }
     }
     
     body.light-mode .upload-section {
       background: white;
-      border-color: #00ccff;
     }
     
     .upload-title {
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
       font-size: 2.5rem;
       color: #ff00ff;
       margin-bottom: 30px;
+      animation: titleColor 3s infinite;
+    }
+    
+    @keyframes titleColor {
+      0% { color: #ff00ff; }
+      33% { color: #00ffff; }
+      66% { color: #ffff00; }
+      100% { color: #ff00ff; }
     }
     
     #uploadButton {
@@ -287,28 +351,32 @@
       color: #00ff00;
       padding: 18px 45px;
       border-radius: 60px;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
       cursor: pointer;
       font-size: 1.2rem;
       margin: 20px;
       transition: 0.3s;
+      animation: buttonPulse 2s infinite;
+    }
+    
+    @keyframes buttonPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
     
     #uploadButton:hover {
       background: #00ff00;
       color: black;
-    }
-    
-    #uploadButton:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+      transform: scale(1.1);
     }
     
     .hidden-input { display: none; }
     
     .storage-info {
       color: #ffaa00;
-      font-weight: 900;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.2rem;
       margin-top: 10px;
     }
     
@@ -329,8 +397,9 @@
     
     .info-text {
       color: #ffaa00;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.3rem;
       margin-top: 25px;
-      font-weight: 900;
       line-height: 1.8;
     }
     
@@ -341,14 +410,14 @@
       padding: 10px 20px;
       border-radius: 60px;
       color: white;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
       cursor: pointer;
       transition: 0.3s;
     }
     
     #clearAllBtn:hover {
       background: #ff0000;
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
     
     .lightbox {
@@ -362,14 +431,29 @@
       z-index: 10000;
       justify-content: center;
       align-items: center;
+      animation: fadeIn 0.3s;
     }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
     .lightbox.active { display: flex; }
+    
     .lightbox img {
       max-width: 90%;
       max-height: 80%;
       border: 4px solid #ff00ff;
       border-radius: 15px;
+      animation: zoomIn 0.3s;
     }
+    
+    @keyframes zoomIn {
+      from { transform: scale(0.9); }
+      to { transform: scale(1); }
+    }
+    
     .lightbox-close {
       position: absolute;
       top: 30px;
@@ -384,13 +468,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
       transition: 0.3s;
     }
     
     .lightbox-close:hover {
       background: #ff00ff;
       color: black;
+      transform: rotate(90deg);
     }
     
     .lightbox-number {
@@ -404,7 +489,8 @@
       padding: 12px 35px;
       border: 3px solid #00ffff;
       border-radius: 60px;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
+      animation: numberGlow 2s infinite;
     }
     
     #loadingIndicator {
@@ -420,8 +506,16 @@
       border-radius: 60px;
       z-index: 40000;
       display: none;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
+      animation: loadingPulse 1s infinite;
     }
+    
+    @keyframes loadingPulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    
     #loadingIndicator.active { display: block; }
     
     #toast {
@@ -433,12 +527,19 @@
       color: white;
       padding: 15px 30px;
       border-radius: 60px;
-      font-weight: 900;
+      font-family: 'Archivo Black', sans-serif;
       z-index: 50000;
       display: none;
       border: 2px solid #ffcc00;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      animation: slideUp 0.3s;
     }
+    
+    @keyframes slideUp {
+      from { bottom: 50px; opacity: 0; }
+      to { bottom: 100px; opacity: 1; }
+    }
+    
     #toast.show { display: block; }
   </style>
 </head>
@@ -487,6 +588,7 @@
       
       let designs = {};
 
+      // Get elements
       const themeToggle = document.getElementById('themeToggle');
       const adminBtn = document.getElementById('adminButton');
       const uploadSection = document.getElementById('uploadSection');
@@ -503,9 +605,9 @@
       const storageFill = document.getElementById('storageFill');
       const clearAllBtn = document.getElementById('clearAllBtn');
 
-      function showToast(msg, color = '#00ffff') {
+      function showToast(msg, color) {
         toast.textContent = msg;
-        toast.style.borderColor = color;
+        toast.style.borderColor = color || '#00ffff';
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3000);
       }
@@ -515,58 +617,60 @@
         return Math.ceil(base64.length * 0.75);
       }
 
-      function calculateStorageSize() {
-        let totalSize = 0;
-        for (let key in designs) {
-          totalSize += getBase64Size(designs[key]);
+      function getTotalSize() {
+        let total = 0;
+        for(let key in designs) {
+          total += getBase64Size(designs[key]);
         }
-        return totalSize;
+        return total;
       }
 
       function updateStorage() {
-        try {
-          const size = calculateStorageSize();
-          const percent = Math.min(100, (size / MAX_TOTAL) * 100);
-          storageFill.style.width = percent + '%';
-          storageInfo.textContent = `Storage: ${(size / 1024 / 1024).toFixed(2)}/4.5 MB`;
-        } catch (e) {}
+        const size = getTotalSize();
+        const percent = Math.min(100, (size / MAX_TOTAL) * 100);
+        storageFill.style.width = percent + '%';
+        storageInfo.textContent = 'Storage: ' + (size / 1024 / 1024).toFixed(2) + '/4.5 MB';
       }
 
-      // Load saved designs
+      // Load designs
       try {
         const saved = localStorage.getItem('cryptobros_gallery');
-        if (saved) {
+        if(saved) {
           designs = JSON.parse(saved);
         }
-      } catch (e) {
-        localStorage.removeItem('cryptobros_gallery');
+      } catch(e) {
+        designs = {};
       }
 
       function render() {
         let html = '';
-        for (let i = 1; i <= 20; i++) {
-          html += '<div class="grid-item" data-id="'+i+'">';
-          html += '<div class="item-number">'+i+'</div>';
-          if (designs[i]) {
-            html += '<img src="'+designs[i]+'" alt="Design #'+i+'">';
-            html += '<div class="delete-btn" data-delete="'+i+'">✕</div>';
+        for(let i = 1; i <= 20; i++) {
+          html += '<div class="grid-item" data-id="' + i + '">';
+          html += '<div class="item-number">' + i + '</div>';
+          
+          if(designs[i]) {
+            html += '<img src="' + designs[i] + '" alt="Design ' + i + '">';
+            html += '<div class="delete-btn" data-delete="' + i + '">✕</div>';
           } else {
             html += '<div class="item-placeholder"><div class="emoji">🎨</div><div>EMPTY</div></div>';
           }
+          
           html += '</div>';
         }
         grid.innerHTML = html;
         updateStorage();
       }
+      
       render();
 
       // Theme toggle
-      if (themeToggle) {
-        if (localStorage.getItem('theme') === 'light') {
+      if(themeToggle) {
+        if(localStorage.getItem('theme') === 'light') {
           document.body.classList.add('light-mode');
           themeToggle.textContent = '☀️';
         }
-        themeToggle.onclick = () => {
+        
+        themeToggle.onclick = function() {
           document.body.classList.toggle('light-mode');
           const isLight = document.body.classList.contains('light-mode');
           themeToggle.textContent = isLight ? '☀️' : '🌙';
@@ -574,40 +678,40 @@
         };
       }
 
-      // Delete handler
-      grid.addEventListener('click', (e) => {
+      // Delete
+      grid.addEventListener('click', function(e) {
         const deleteBtn = e.target.closest('.delete-btn');
-        if (deleteBtn) {
+        if(deleteBtn) {
           e.stopPropagation();
           const slot = deleteBtn.dataset.delete;
-          if (confirm('Delete design #' + slot + '?')) {
+          if(confirm('Delete design #' + slot + '?')) {
             delete designs[slot];
             localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
             render();
-            showToast('✅ Design #' + slot + ' deleted', '#00ff00');
+            showToast('✅ Deleted #' + slot, '#00ff00');
           }
         }
       });
 
       // Clear all
-      if (clearAllBtn) {
-        clearAllBtn.onclick = () => {
-          if (confirm('⚠️ Delete ALL designs?')) {
+      if(clearAllBtn) {
+        clearAllBtn.onclick = function() {
+          if(confirm('Delete ALL designs?')) {
             designs = {};
-            localStorage.removeItem('cryptobros_gallery');
+            localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
             render();
-            showToast('✅ All designs cleared', '#ff3366');
+            showToast('✅ All cleared', '#ff3366');
           }
         };
       }
 
       // Lightbox
-      grid.addEventListener('click', (e) => {
+      grid.addEventListener('click', function(e) {
         const item = e.target.closest('.grid-item');
         const deleteBtn = e.target.closest('.delete-btn');
-        if (item && !deleteBtn) {
+        if(item && !deleteBtn) {
           const id = item.dataset.id;
-          if (designs[id]) {
+          if(designs[id]) {
             lightboxImg.src = designs[id];
             lightboxNum.textContent = 'DESIGN #' + id;
             lightbox.classList.add('active');
@@ -615,106 +719,99 @@
         }
       });
 
-      lightboxClose.onclick = () => {
+      lightboxClose.onclick = function() {
         lightbox.classList.remove('active');
         lightboxImg.src = '';
       };
 
-      lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
+      lightbox.addEventListener('click', function(e) {
+        if(e.target === lightbox) {
           lightbox.classList.remove('active');
           lightboxImg.src = '';
         }
       });
 
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+      document.addEventListener('keydown', function(e) {
+        if(e.key === 'Escape' && lightbox.classList.contains('active')) {
           lightbox.classList.remove('active');
           lightboxImg.src = '';
         }
       });
 
-      adminBtn.onclick = () => uploadSection.scrollIntoView({ behavior: 'smooth' });
+      adminBtn.onclick = function() {
+        uploadSection.scrollIntoView({ behavior: 'smooth' });
+      };
 
-      uploadBtn.onclick = () => fileInput.click();
+      // UPLOAD - WORKING
+      uploadBtn.onclick = function() {
+        fileInput.click();
+      };
 
       fileInput.onchange = async function(e) {
-        const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
-        
-        if (files.length === 0) {
-          showToast('❌ No valid images selected', '#ff3366');
-          return;
-        }
+        const files = Array.from(e.target.files);
+        if(files.length === 0) return;
 
         uploadBtn.disabled = true;
         loader.classList.add('active');
 
-        const errors = [];
-        const newDesigns = { ...designs };
+        let currentSize = getTotalSize();
+        let newDesigns = JSON.parse(JSON.stringify(designs));
         let uploaded = 0;
-        let currentSize = calculateStorageSize();
+        let errors = [];
 
-        for (const file of files) {
-          if (file.size > MAX_FILE) {
-            errors.push(file.name + ' (' + (file.size/1024/1024).toFixed(2) + 'MB > 1.5MB)');
+        for(let file of files) {
+          if(file.size > MAX_FILE) {
+            errors.push(file.name + ' too big');
             continue;
           }
 
-          if (currentSize + file.size > MAX_TOTAL) {
-            errors.push(file.name + ' - no space left');
+          if(currentSize + file.size > MAX_TOTAL) {
+            errors.push(file.name + ' no space');
             continue;
           }
 
           try {
-            const dataUrl = await new Promise((res, rej) => {
+            const dataUrl = await new Promise((resolve, reject) => {
               const reader = new FileReader();
-              reader.onload = () => res(reader.result);
-              reader.onerror = rej;
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = reject;
               reader.readAsDataURL(file);
             });
 
             const match = file.name.match(/\d+/);
             let slot = match ? parseInt(match[0]) : null;
 
-            if (slot && slot >= 1 && slot <= 20) {
-              if (newDesigns[slot]) {
-                const oldSize = getBase64Size(newDesigns[slot]);
-                currentSize -= oldSize;
+            if(slot && slot >= 1 && slot <= 20) {
+              if(newDesigns[slot]) {
+                currentSize -= getBase64Size(newDesigns[slot]);
               }
               newDesigns[slot] = dataUrl;
               currentSize += file.size;
               uploaded++;
             } else {
-              let emptySlot = null;
-              for (let i = 1; i <= 20; i++) {
-                if (!newDesigns[i]) {
-                  emptySlot = i;
+              for(let i = 1; i <= 20; i++) {
+                if(!newDesigns[i]) {
+                  newDesigns[i] = dataUrl;
+                  currentSize += file.size;
+                  uploaded++;
                   break;
                 }
               }
-              
-              if (emptySlot) {
-                newDesigns[emptySlot] = dataUrl;
-                currentSize += file.size;
-                uploaded++;
-              } else {
-                errors.push('No empty slots available');
-              }
             }
-          } catch (err) {
-            errors.push(file.name + ' failed to load');
+          } catch(err) {
+            errors.push(file.name + ' failed');
           }
         }
 
-        if (uploaded > 0) {
+        if(uploaded > 0) {
           designs = newDesigns;
           localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
           render();
-          showToast('✅ Uploaded ' + uploaded + ' image(s)', '#00ff00');
+          showToast('✅ Uploaded ' + uploaded + ' images', '#00ff00');
         }
-        
-        if (errors.length > 0) {
-          showToast('⚠️ ' + errors.length + ' error(s): ' + errors.slice(0, 2).join(', ') + (errors.length > 2 ? '...' : ''), '#ffaa00');
+
+        if(errors.length > 0) {
+          showToast('⚠️ ' + errors.length + ' errors', '#ffaa00');
         }
 
         loader.classList.remove('active');
