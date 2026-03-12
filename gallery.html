@@ -13,10 +13,6 @@
       color: white;
       padding: 30px;
     }
-    body.light-mode {
-      background: #f0f0f0;
-      color: black;
-    }
     .back-button {
       position: fixed;
       top: 30px;
@@ -32,22 +28,6 @@
     }
     .back-button:hover {
       box-shadow: 0 0 20px #ffcc00;
-    }
-    .theme-toggle {
-      position: fixed;
-      top: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #333;
-      border: 3px solid #ffcc00;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      z-index: 1000;
     }
     .page-title {
       font-size: 5rem;
@@ -298,20 +278,6 @@
       margin-top:25px;
       text-shadow: 0 0 8px #ffaa00;
     }
-    #adminButton {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #9945FF;
-      color: white;
-      border: none;
-      border-radius: 60px;
-      padding: 16px 32px;
-      font-family: 'Archivo Black', sans-serif;
-      cursor: pointer;
-      z-index: 1000;
-      box-shadow: 0 0 30px #9945FF;
-    }
   </style>
 </head>
 <body>
@@ -319,8 +285,6 @@
   <div id="toast"></div>
   
   <a href="/merch.html" class="back-button">← BACK</a>
-  <div class="theme-toggle" id="themeToggle">🌙</div>
-  <button id="adminButton">📤 UPLOAD</button>
 
   <div class="lightbox" id="lightbox">
     <div class="lightbox-close" id="lightboxClose">✕</div>
@@ -353,14 +317,10 @@
 
   <script>
     (function() {
-      // ===================== USE INDEXEDDB =====================
-      const DB_NAME = 'CryptoGalleryDB';
-      const STORE_NAME = 'images';
-      const DB_VERSION = 1;
       const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+      const TOTAL_SLOTS = 20;
 
-      let db = null;
-      let currentDesigns = {}; // cache for fast rendering
+      let currentDesigns = JSON.parse(localStorage.getItem('cryptoGalleryImages') || '{}');
 
       const grid = document.getElementById('designsGrid');
       const lightbox = document.getElementById('lightbox');
@@ -374,23 +334,6 @@
       const clearAllBtn = document.getElementById('clearAllBtn');
       const uploadBtn = document.getElementById('uploadButton');
       const fileInput = document.getElementById('designUpload');
-      const adminBtn = document.getElementById('adminButton');
-      const uploadSection = document.getElementById('uploadSection');
-      const themeToggle = document.getElementById('themeToggle');
-
-      // ---------- theme ----------
-      if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
-        themeToggle.textContent = '☀️';
-      }
-      themeToggle.onclick = () => {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        themeToggle.textContent = isLight ? '☀️' : '🌙';
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      };
-
-      adminBtn.onclick = () => uploadSection.scrollIntoView({ behavior: 'smooth' });
 
       function showToast(msg, color = '#00ffff') {
         toast.textContent = msg;
@@ -399,103 +342,13 @@
         setTimeout(() => toast.classList.remove('show'), 3000);
       }
 
-      // ---------- open DB ----------
-      function openDB() {
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open(DB_NAME, DB_VERSION);
-          request.onerror = () => reject(request.error);
-          request.onsuccess = () => {
-            db = request.result;
-            resolve(db);
-          };
-          request.onupgradeneeded = (e) => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(STORE_NAME)) {
-              db.createObjectStore(STORE_NAME); // key-value store
-            }
-          };
-        });
+      function saveToLocalStorage() {
+        localStorage.setItem('cryptoGalleryImages', JSON.stringify(currentDesigns));
       }
 
-      // ---------- load all slots from DB into cache ----------
-      async function loadAllFromDB() {
-        if (!db) await openDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readonly');
-          const store = tx.objectStore(STORE_NAME);
-          const request = store.getAllKeys();
-          request.onsuccess = () => {
-            const keys = request.result;
-            const promises = keys.map(key => {
-              return new Promise((res, rej) => {
-                const r = store.get(key);
-                r.onsuccess = () => res({ key, value: r.result });
-                r.onerror = rej;
-              });
-            });
-            Promise.all(promises).then(results => {
-              currentDesigns = {};
-              results.forEach(item => {
-                // Ensure key is a valid integer between 1 and 20 before adding to cache
-                const parsedKey = parseInt(item.key, 10);
-                if (parsedKey >= 1 && parsedKey <= 20) {
-                  // Validate stored data is a data URL image
-                  if (typeof item.value === 'string' && item.value.startsWith('image/')) {
-                      currentDesigns[parsedKey] = item.value;
-                  } else {
-                      console.warn("Invalid data found in DB for slot " + parsedKey + ", removing...");
-                      // Optionally remove invalid entries from DB
-                      // deleteFromDB(parsedKey);
-                  }
-                }
-              });
-              resolve();
-            }).catch(reject);
-          };
-          request.onerror = reject;
-        });
-      }
-
-      // ---------- save image to DB ----------
-      async function saveImageToDB(slot, dataUrl) {
-        if (!db) await openDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readwrite');
-          const store = tx.objectStore(STORE_NAME);
-          const request = store.put(dataUrl, slot);
-          request.onsuccess = resolve;
-          request.onerror = () => reject(request.error);
-        });
-      }
-
-      // ---------- delete from DB ----------
-      async function deleteFromDB(slot) {
-        if (!db) await openDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readwrite');
-          const store = tx.objectStore(STORE_NAME);
-          const request = store.delete(slot);
-          request.onsuccess = resolve;
-          request.onerror = () => reject(request.error);
-        });
-      }
-
-      // ---------- clear all ----------
-      async function clearDB() {
-        if (!db) await openDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readwrite');
-          const store = tx.objectStore(STORE_NAME);
-          const request = store.clear();
-          request.onsuccess = resolve;
-          request.onerror = () => reject(request.error);
-        });
-      }
-
-      // ---------- render grid ----------
       function renderGrid() {
-        grid.innerHTML = ''; // Clear grid safely
-        for (let i = 1; i <= 20; i++) {
+        grid.innerHTML = '';
+        for (let i = 1; i <= TOTAL_SLOTS; i++) {
           const itemDiv = document.createElement('div');
           itemDiv.className = 'grid-item';
           itemDiv.dataset.id = i;
@@ -506,24 +359,22 @@
           itemDiv.appendChild(numberDiv);
 
           if (currentDesigns[i]) {
-            // Validate before creating image element
             if (typeof currentDesigns[i] === 'string' && currentDesigns[i].startsWith('image/')) {
-                const img = document.createElement('img');
-                img.src = currentDesigns[i]; // This is now safe as it's a validated data URL
-                img.alt = `Design ${i}`;
-                itemDiv.appendChild(img);
+              const img = document.createElement('img');
+              img.src = currentDesigns[i];
+              img.alt = `Design ${i}`;
+              itemDiv.appendChild(img);
 
-                const deleteBtn = document.createElement('div');
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.dataset.delete = i;
-                deleteBtn.textContent = '✕';
-                itemDiv.appendChild(deleteBtn);
+              const deleteBtn = document.createElement('div');
+              deleteBtn.className = 'delete-btn';
+              deleteBtn.dataset.delete = i;
+              deleteBtn.textContent = '✕';
+              itemDiv.appendChild(deleteBtn);
             } else {
-                 // Handle invalid data in cache if it somehow got there
-                 const placeholder = document.createElement('div');
-                 placeholder.className = 'item-placeholder';
-                 placeholder.innerHTML = '<div style="font-size:50px;">🎨</div><div>INVALID</div>';
-                 itemDiv.appendChild(placeholder);
+              const placeholder = document.createElement('div');
+              placeholder.className = 'item-placeholder';
+              placeholder.innerHTML = '<div style="font-size:50px;">🎨</div><div>INVALID</div>';
+              itemDiv.appendChild(placeholder);
             }
           } else {
             const placeholder = document.createElement('div');
@@ -535,81 +386,35 @@
           grid.appendChild(itemDiv);
         }
 
-        // update stats
         const filled = Object.keys(currentDesigns).length;
-        const percent = (filled / 20) * 100;
+        const percent = (filled / TOTAL_SLOTS) * 100;
         storageFill.style.width = percent + '%';
-        storageInfo.textContent = filled + '/20 slots';
+        storageInfo.textContent = filled + '/' + TOTAL_SLOTS + ' slots';
       }
 
-      // ---------- initialization with timeout ----------
-      async function init() {
-        loader.classList.add('active');
-        let timeoutId;
-
-        try {
-          // Set timeout for initialization
-          const initPromise = new Promise((resolve, reject) => {
-            timeoutId = setTimeout(() => {
-              reject(new Error('DB initialization timed out'));
-            }, 5000);
-
-            (async () => {
-              try {
-                await openDB();
-                await loadAllFromDB();
-                resolve();
-              } catch (err) {
-                clearTimeout(timeoutId);
-                reject(err);
-              }
-            })();
-          });
-
-          await initPromise;
-          renderGrid();
-        } catch (e) {
-          console.error('Init failed:', e);
-          showToast('❌ Failed to load gallery: ' + (e.message || 'Unknown error'), '#ff3366');
-          // Restore UI even if init fails
-          currentDesigns = {};
-          renderGrid();
-        } finally {
-          clearTimeout(timeoutId);
-          loader.classList.remove('active');
-        }
+      function init() {
+        renderGrid();
       }
-      init();
 
-      // ---------- deletion ----------
       grid.addEventListener('click', async (e) => {
         const deleteBtn = e.target.closest('.delete-btn');
         if (!deleteBtn) return;
         e.stopPropagation();
         const slot = deleteBtn.dataset.delete;
         if (confirm('Delete design #' + slot + '?')) {
-          loader.classList.add('active');
-          try {
-            await deleteFromDB(parseInt(slot, 10)); // Parse to ensure integer key
-            delete currentDesigns[slot];
-            renderGrid();
-            showToast('✅ Deleted #' + slot, '#00ff00');
-          } catch (err) {
-            showToast('❌ Error: ' + err.message, '#ff3366');
-          } finally {
-            loader.classList.remove('active');
-          }
+          delete currentDesigns[slot];
+          saveToLocalStorage();
+          renderGrid();
+          showToast('✅ Deleted #' + slot, '#00ff00');
         }
       });
 
-      // ---------- lightbox ----------
       grid.addEventListener('click', (e) => {
         const item = e.target.closest('.grid-item');
         const del = e.target.closest('.delete-btn');
         if (item && !del) {
           const id = item.dataset.id;
           if (currentDesigns[id]) {
-             // Ensure image source is valid before setting
              if (typeof currentDesigns[id] === 'string' && currentDesigns[id].startsWith('image/')) {
                  lightboxImg.src = currentDesigns[id];
                  lightboxNum.textContent = 'DESIGN #' + id;
@@ -623,40 +428,31 @@
 
       lightboxClose.onclick = () => {
         lightbox.classList.remove('active');
-        lightboxImg.src = ''; // Reset src on close
+        lightboxImg.src = '';
       };
 
       lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox) {
           lightbox.classList.remove('active');
-          lightboxImg.src = ''; // Reset src on close
+          lightboxImg.src = '';
         }
       });
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           lightbox.classList.remove('active');
-          lightboxImg.src = ''; // Reset src on close
+          lightboxImg.src = '';
         }
       });
 
-      // ---------- clear all ----------
-      clearAllBtn.onclick = async () => {
+      clearAllBtn.onclick = () => {
         if (!confirm('DELETE ALL DESIGNS?')) return;
-        loader.classList.add('active');
-        try {
-          await clearDB();
-          currentDesigns = {};
-          renderGrid();
-          showToast('✅ All cleared', '#ff3366');
-        } catch (err) {
-          showToast('❌ Error: ' + err.message, '#ff3366');
-        } finally {
-          loader.classList.remove('active');
-        }
+        currentDesigns = {};
+        saveToLocalStorage();
+        renderGrid();
+        showToast('✅ All cleared', '#ff3366');
       };
 
-      // ---------- upload (REWRITTEN) ----------
       uploadBtn.onclick = () => fileInput.click();
 
       fileInput.onchange = async (e) => {
@@ -670,24 +466,21 @@
         let errorMessages = [];
 
         for (const file of files) {
-          let processed = false; // Flag to know if file was handled
+          let processed = false;
 
           try {
-            // --- 1. Check file type ---
             if (!file.type || !file.type.startsWith('image/')) {
               errorMessages.push(`${file.name}: Not an image file.`);
-              processed = true; // Handled with error
+              processed = true;
               continue;
             }
 
-            // --- 2. Check file size ---
             if (file.size > MAX_FILE_SIZE) {
               errorMessages.push(`${file.name}: File too large (max 5MB).`);
-              processed = true; // Handled with error
+              processed = true;
               continue;
             }
 
-            // --- 3. Read file to Data URL ---
             const dataUrl = await new Promise((resolve, reject) => {
               const reader = new FileReader();
               reader.onload = () => resolve(reader.result);
@@ -695,82 +488,70 @@
               reader.readAsDataURL(file);
             });
 
-            // --- 4. Validate the resulting Data URL ---
             if (typeof dataUrl !== 'string' || !dataUrl.startsWith('image/')) {
               errorMessages.push(`${file.name}: Invalid image data.`);
-              processed = true; // Handled with error
+              processed = true;
               continue;
             }
 
-            // --- 5. Determine slot from filename ---
-            // Match number at the end of the filename before extension
             const nameMatch = file.name.match(/(\d+)(\.[^.]*)?$/);
             let slot = nameMatch ? parseInt(nameMatch[1], 10) : null;
 
-            // --- 6. Check if slot is within 1-20 ---
-            if (slot !== null && (slot < 1 || slot > 20)) {
-              errorMessages.push(`${file.name}: Slot number ${slot} is out of range (1-20).`);
-              processed = true; // Handled with error
+            if (slot !== null && (slot < 1 || slot > TOTAL_SLOTS)) {
+              errorMessages.push(`${file.name}: Slot number ${slot} is out of range (1-${TOTAL_SLOTS}).`);
+              processed = true;
               continue;
             }
 
-            // --- 7. Check if slot is occupied (if specified) ---
             if (slot !== null && currentDesigns[slot]) {
               errorMessages.push(`${file.name}: Slot ${slot} is already occupied.`);
-              processed = true; // Handled with error
+              processed = true;
               continue;
             }
 
-            // --- 8. If no slot, find first empty one ---
             if (slot === null) {
-              for (let i = 1; i <= 20; i++) {
+              for (let i = 1; i <= TOTAL_SLOTS; i++) {
                 if (!currentDesigns[i]) {
                   slot = i;
                   break;
                 }
               }
-              if (slot === null) { // If no free slot found
+              if (slot === null) {
                 errorMessages.push(`${file.name}: No available slots.`);
-                processed = true; // Handled with error
+                processed = true;
                 continue;
               }
             }
 
-            // --- 9. Save to DB ---
-            await saveImageToDB(slot, dataUrl);
-
-            // --- 10. Update cache ---
             currentDesigns[slot] = dataUrl;
+            saveToLocalStorage();
 
-            // --- 11. Count successful upload ---
             successCount++;
-            processed = true; // Handled successfully
+            processed = true;
           } catch (err) {
-            if (!processed) { // Only if error occurred before handling
+            if (!processed) {
               errorMessages.push(`${file.name}: ${err.message || 'Upload failed.'}`);
             }
           }
         }
 
-        // --- 12. Update UI ---
         renderGrid();
 
-        // --- 13. Show notifications ---
         if (successCount > 0) {
           showToast(`✅ Uploaded ${successCount} file(s).`, '#00ff00');
         }
         if (errorMessages.length > 0) {
-          // Show the first error as an example
           showToast(`⚠️ ${errorMessages.length} error(s): ${errorMessages[0]}`, '#ffaa00');
         }
 
-        // --- 14. Reset button and indicator state ---
         loader.classList.remove('active');
         uploadBtn.disabled = false;
-        fileInput.value = ''; // Reset input so same file can be re-uploaded
+        fileInput.value = '';
       };
+
+      init();
 
     })();
   </script>
 </body>
-</html>
+</
