@@ -9,39 +9,125 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Archivo Black', sans-serif;
-      background: #0a0a0a;
+      background: url('bg3.jpg') no-repeat center center fixed;
+      background-size: cover;
       color: white;
+      min-height: 100vh;
       padding: 30px;
+      transition: background-color 0.4s, color 0.4s;
+    }
+    body.light-mode {
+      background: #f0f0f0 url('bg3.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: black;
     }
     .back-button {
       position: fixed;
-      top: 30px;
-      left: 30px;
-      background: rgba(0,0,0,0.7);
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.6);
       border: 2px solid #ffcc00;
       border-radius: 60px;
-      padding: 16px 36px;
+      padding: 12px 28px;
       color: #ffcc00;
       text-decoration: none;
       z-index: 1000;
       transition: 0.3s;
+      backdrop-filter: blur(5px);
     }
+    .back-button:hover { background: #ffcc00; color: black; }
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      border: 3px solid #ffcc00;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+      transition: 0.3s;
+    }
+    .theme-toggle:hover { transform: scale(1.1); }
+    #adminButton {
+      position: fixed;
+      top: 20px;
+      right: 90px;
+      background: rgba(0,0,0,0.6);
+      border: 3px solid #ff00ff;
+      color: #ff00ff;
+      padding: 12px 28px;
+      border-radius: 60px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+      transition: 0.3s;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+    #adminButton:hover {
+      background: #ff00ff;
+      color: black;
+      transform: scale(1.05);
+    }
+    .page-title {
+      font-size: 4.5rem;
+      text-align: center;
+      margin: 60px 0 20px;
+      background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .slogan-line1 { font-size: 2rem; text-align: center; color: #ff6600; text-shadow: 0 0 15px #ff6600; }
+    .slogan-line2 { font-size: 1.4rem; text-align: center; color: #00ff00; margin-bottom: 40px; text-shadow: 0 0 15px #00ff00; }
+    .section-title { font-size: 2.5rem; color: #ffdd00; border-bottom: 4px solid #ffdd00; margin: 40px 0 30px; text-align: center; }
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 2px solid #333;
+      margin-bottom: 60px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (max-width: 1024px) { .image-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px)  { .image-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px)  { .image-grid { grid-template-columns: 1fr; } }
     .grid-item {
       aspect-ratio: 1/1;
-      background: #1a1a1a;
+      background: rgba(0,0,0,0.6);
       border-right: 2px solid #333;
       border-bottom: 2px solid #333;
       position: relative;
       cursor: pointer;
+      transition: 0.3s;
+      backdrop-filter: blur(3px);
+      overflow: hidden;
     }
-    .grid-item:nth-child(4n) { border-right: none; }
-    .grid-item:nth-last-child(-n+4) { border-bottom: none; }
+    .grid-item:hover { 
+      transform: scale(1.02); 
+      box-shadow: 0 0 30px rgba(255,204,0,0.5);
+      z-index: 10;
+    }
+    .grid-item img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: contain;
+      display: block;
+    }
     .item-number {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      width: 40px;
-      height: 40px;
+      top: 10px;
+      left: 10px;
+      width: 36px;
+      height: 36px;
       background: black;
       border: 2px solid #ffcc00;
       border-radius: 50%;
@@ -49,14 +135,15 @@
       align-items: center;
       justify-content: center;
       color: #ffcc00;
-      box-shadow: 0 0 10px #ffcc00;
+      font-size: 1.1rem;
+      z-index: 2;
     }
     .delete-btn {
       position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 40px;
-      height: 40px;
+      top: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
       background: #ff3366;
       border: 2px solid white;
       border-radius: 50%;
@@ -67,46 +154,42 @@
       cursor: pointer;
       opacity: 0;
       transition: 0.3s;
-      box-shadow: 0 0 15px #ff3366;
+      font-size: 1.3rem;
+      z-index: 3;
     }
-    .grid-item:hover .delete-btn {
-      opacity: 1;
+    .grid-item:hover .delete-btn { opacity: 1; }
+    @media (max-width: 768px) {
+      .delete-btn { opacity: 0.7; }
     }
     .item-placeholder {
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
-      align center;
+      align-items: center;
       justify-content: center;
-      background: #0f0f0f;
+      background: rgba(15,15,15,0.7);
       color: #666;
+      font-size: 1.1rem;
     }
-    .image-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      border: 2px solid #333;
-      margin-bottom: 60px;
-    }
-    @media (max-width: 768px) { 
-      .image-grid { grid-template-columns: repeat(2, 1fr); }    }
     .upload-section {
       max-width: 1200px;
       margin: 40px auto;
       padding: 40px;
-      background: #111;
+      background: rgba(17,17,17,0.8);
       border: 3px solid #00ffff;
       border-radius: 30px;
       text-align: center;
+      backdrop-filter: blur(8px);
     }
+    body.light-mode .upload-section { background: rgba(255,255,255,0.8); border-color: #00ffff; }
+    .upload-title { font-size: 2.5rem; color: #ff00ff; margin-bottom: 20px; text-shadow: 0 0 15px #ff00ff; }
     #uploadButton {
       background: transparent;
       border: 3px solid #00ff00;
       color: #00ff00;
-      padding: 18px 45px;
+      padding: 16px 40px;
       border-radius: 60px;
-      font-family: 'Archivo Black', sans-serif;
       cursor: pointer;
       font-size: 1.2rem;
       margin: 20px;
@@ -118,47 +201,47 @@
       color: black;
       box-shadow: 0 0 30px #00ff00;
     }
-    #uploadButton:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
+    #uploadButton:disabled { opacity: 0.4; cursor: not-allowed; }
     .hidden-input { display: none; }
-    .storage-info {
-      color: #ffaa00;
-      margin-top: 10px;
-      text-shadow: 0 0 8px #ffaa00;
-    }
+    .storage-info { color: #ffaa00; margin: 10px 0; font-size: 1.2rem; text-shadow: 0 0 8px #ffaa00; }
     .storage-bar {
       width: 100%;
-      height: 8px;
+      height: 10px;
       background: #333;
-      border-radius: 4px;
-      margin-top: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 10px 0;
     }
     .storage-fill {
       height: 100%;
       background: linear-gradient(90deg, #00ff00, #ffaa00);
-      border-radius: 4px;
-      transition: width 0.3s;
+      transition: width 0.4s;
     }
+    .info-text {
+      color: #cccccc;
+      margin: 20px 0;
+      font-size: 1rem;
+      line-height: 1.6;
+      font-family: Arial, sans-serif;
+    }
+    body.light-mode .info-text { color: #333333; }
     #clearAllBtn {
       margin-top: 20px;
       background: #ff3366;
       border: none;
-      padding: 10px 20px;
+      padding: 12px 28px;
       border-radius: 60px;
       color: white;
-      font-family: 'Archivo Black', sans-serif;
       cursor: pointer;
+      font-size: 1.1rem;
       box-shadow: 0 0 15px #ff3366;
+      transition: 0.3s;
     }
+    #clearAllBtn:hover { background: #ff0000; transform: scale(1.05); }
     .lightbox {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: rgba(0,0,0,0.95);
       z-index: 10000;
       justify-content: center;
@@ -167,90 +250,78 @@
     .lightbox.active { display: flex; }
     .lightbox img {
       max-width: 90%;
-      max-height: 80%;
+      max-height: 85%;
       border: 4px solid #ff00ff;
       border-radius: 15px;
-      box-shadow: 0 0 50px #ff00ff;
+      box-shadow: 0 0 60px #ff00ff;
     }
     .lightbox-close {
       position: absolute;
       top: 30px;
       right: 30px;
       color: #ff00ff;
-      font-size: 3rem;
+      font-size: 3.5rem;
       cursor: pointer;
-      width: 65px;
-      height: 65px;
-      border 3px solid #ff00ff;
+      width: 70px;
+      height: 70px;
+      border: 3px solid #ff00ff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: rgba(0,0,0,0.5);
+      transition: 0.3s;
     }
+    .lightbox-close:hover { background: #ff00ff; color: black; transform: rotate(90deg); }
     .lightbox-number {
       position: absolute;
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       color: #00ffff;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       background: black;
-      padding: 12px 35px;
+      padding: 12px 30px;
       border: 3px solid #00ffff;
       border-radius: 60px;
     }
     #toast {
       position: fixed;
-      bottom: 100px;
+      bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
-      background: #333;
+      background: #222;
       color: white;
-      padding: 15px 30px;
+      padding: 16px 32px;
       border-radius: 60px;
-      z-index: 50000;
+      z-index: 9999;
       display: none;
       border: 2px solid #ffcc00;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+      font-size: 1.1rem;
     }
     #toast.show { display: block; }
-    .info-text {
-      color: #ffaa00;
-      margin-top:25px;
-      text-shadow: 0 0 8px #ffaa00;
+    #loadingIndicator {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 20000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: #00ffff;
+      font-size: 3rem;
     }
-    .page-title {
-      font-size: 5rem;
-      text-align: center;
-      margin: 80px 0 20px;
-      background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .slogan-line1 {
-      font-size: 2.2rem;
-      text-align: center;
-      color: #ff6600;
-      text-transform: uppercase;
-      text-shadow: 0 0 15px #ff6600;
-    }
-    .slogan-line2 {
-      font-size: 1.5rem;
-      text-align: center;
-      color: #00ff00;
-      margin-bottom: 50px;
-      text-shadow: 0 0 15px #00ff00;
-    }
-    .section-title {
-      font-size: 2.8rem;
-      color: #ffdd00;
-      border-bottom: 4px solid #ffdd00;
-      margin: 40px 0 30px;
-      text-shadow: 0 0 15px #ffdd00;
-    }
+    #loadingIndicator.active { display: flex; }
   </style>
 </head>
 <body>
+  <div id="loadingIndicator">⏳ LOADING...</div>
+  <div id="toast"></div>
+
   <a href="/merch.html" class="back-button">← BACK</a>
+  <div class="theme-toggle" id="themeToggle">🌙</div>
+  <button id="adminButton">📤 UPLOAD</button>
 
   <div class="lightbox" id="lightbox">
     <div class="lightbox-close" id="lightboxClose">✕</div>
@@ -265,197 +336,332 @@
     <div class="section-title">⚡ SLOTS 1–20 ⚡</div>
     <div class="image-grid" id="designsGrid"></div>
 
-    <div class="upload-section">
-      <div class="upload-title">📤 UPLOAD</div>
+    <div class="upload-section" id="uploadSection">
+      <div class="upload-title">📤 UPLOAD PNG</div>
       <div class="storage-info" id="storageInfo">0/20 slots</div>
       <div class="storage-bar">
-        <div class="storage-fill" id="storageFill" style="width: 0%"></div>
+        <div class="storage-fill" id="storageFill" style="width:0%"></div>
       </div>
-      <input type="file" id="designUpload" class="hidden-input" accept="image/png,image/jpeg" multiple>
-      <button id="uploadButton">📁 SELECT</button>
+      <input type="file" id="designUpload" class="hidden-input" accept="image/png" multiple>
+      <button id="uploadButton">📁 SELECT PNG FILES</button>
       <div class="info-text">
-        ⚡ Number in name → specific slot<br>
-        ⚡ No number → first empty slot
+        • Files with number in name → go to that slot<br>
+        • No number → first empty slot<br>
+        • Only .png • max 5 MB per file
       </div>
-      <button id="clearAllBtn">🗑️ CLEAR ALL</button>
+      <button id="clearAllBtn">🗑️ CLEAR ALL SLOTS</button>
     </div>
   </div>
 
   <script>
-    const TOTAL_SLOTS = 20;
-    let designs = JSON.parse(localStorage.getItem('gallery')) || {};
+    (function() {
+      const TOTAL_SLOTS = 20;
+      let designs = {};
 
-    const grid = document.getElementById('designsGrid');
-    const uploadBtn = document.getElementById('uploadButton');
-    const fileInput = document.getElementById('designUpload');
-    const clearBtn = document.getElementById('clearAllBtn');
-    const storageInfo = document.getElementById('storageInfo');
-    const storageFill = document.getElementById('storageFill');
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxNum = document.getElementById('lightboxNumber');
-    const lightboxClose = document.getElementById('lightboxClose');
-    const toast = document.getElementById('toast');
-
-    function showToast(msg, color = '#00ffff') {
-      if (!toast) return;
-      toast.textContent = msg;
-      toast.style.borderColor = color;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    function save() {
-      localStorage.setItem('gallery', JSON.stringify(designs));
-    }
-
-    function render() {
-      grid.innerHTML = '';
-      for (let i = 1; i <= TOTAL_SLOTS; i++) {
-        const el = document.createElement('div');
-        el.className = 'grid-item';
-        el.dataset.id = i;
-
-        const num = document.createElement('div');
-        num.className = 'item-number';
-        num.textContent = i;
-        el.appendChild(num);
-
-        if (designs[i]) {
-          const img = document.createElement('img');
-          img.src = designs[i];
-          img.alt = `Slot ${i}`;
-          img.style.width = '100%';
-          img.style.height = '100%';
-          img.style.objectFit = 'cover';
-          img.style.display = 'block';
-          img.onerror = () => {
-            el.innerHTML = `<div class="item-placeholder"><div>❌</div><div>FAIL</div></div>`;
-          };
-          el.appendChild(img);
-
-          const del = document.createElement('div');
-          del.className = 'delete-btn';
-          del.dataset.del = i;
-          del.textContent = '✕';
-          el.appendChild(del);
-        } else {
-          el.innerHTML = `<div class="item-placeholder"><div>🎨</div><div>EMPTY</div></div>`;
+      // Load from localStorage
+      try {
+        const saved = localStorage.getItem('cryptobros_gallery');
+        if (saved) {
+          designs = JSON.parse(saved);
         }
-
-        grid.appendChild(el);
+      } catch (e) {
+        console.error('Failed to load from localStorage:', e);
       }
 
-      const filled = Object.keys(designs).length;
-      storageFill.style.width = `${(filled / TOTAL_SLOTS) * 100}%`;
-      storageInfo.textContent = `${filled}/${TOTAL_SLOTS} slots`;
-    }
+      // DOM Elements
+      const grid = document.getElementById('designsGrid');
+      const uploadBtn = document.getElementById('uploadButton');
+      const adminBtn = document.getElementById('adminButton');
+      const fileInput = document.getElementById('designUpload');
+      const clearBtn = document.getElementById('clearAllBtn');
+      const storageInfo = document.getElementById('storageInfo');
+      const storageFill = document.getElementById('storageFill');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxNum = document.getElementById('lightboxNumber');
+      const lightboxClose = document.getElementById('lightboxClose');
+      const loader = document.getElementById('loadingIndicator');
+      const toast = document.getElementById('toast');
+      const themeToggle = document.getElementById('themeToggle');
 
-    // Delete
-    grid.addEventListener('click', e => {
-      const btn = e.target.closest('[data-del]');
-      if (btn) {
-        const slot = btn.dataset.del;
-        if (confirm(`Delete slot ${slot}?`)) {
-          delete designs[slot];
-          save();
-          render();
-          showToast(`✅ Slot ${slot} cleared`, '#00ff00');
-        }
+      // ========== THEME TOGGLE ==========
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        themeToggle.textContent = '☀️';
       }
-    });
 
-    // Lightbox
-    grid.addEventListener('click', e => {
-      const item = e.target.closest('.grid-item');
-      if (item && !e.target.closest('.delete-btn')) {
-        const id = item.dataset.id;
-        if (designs[id]) {
-          lightboxImg.src = designs[id];
-          lightboxNum.textContent = `SLOT #${id}`;
-          lightbox.classList.add('active');
-        }
+      themeToggle.onclick = () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        themeToggle.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      };
+
+      // ========== UTILITY FUNCTIONS ==========
+      function showToast(msg, color = '#00ffff') {
+        toast.textContent = msg;
+        toast.style.borderColor = color;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
       }
-    });
-    lightboxClose.onclick = () => lightbox.classList.remove('active');
-    lightbox.addEventListener('click', e => {
-      if (e.target === lightbox) lightbox.classList.remove('active');
-    });
-    document.addEventListener('keydown', e => e.key === 'Escape' && lightbox.classList.remove('active'));
 
-    // Clear all
-    clearBtn.onclick = () => {
-      if (confirm('Clear all?')) {
-        designs = {};
-        save();
-        render();
-        showToast('✅ All cleared', '#ff3366');
-      }
-    };
-
-    // Upload — ONLY PNG, strict, no fluff
-    uploadBtn.onclick = () => fileInput.click();
-
-    fileInput.onchange = async () => {
-      const files = Array.from(fileInput.files);
-      if (!files.length) return;
-
-      for (const f of files) {
+      function saveToStorage() {
         try {
-          // Only PNG allowed (by accept + check)
-          if (!f.name.toLowerCase().endsWith('.png')) {
-            showToast(`⚠️ Skip: "${f.name}" — only .png allowed`, '#ffaa00');
-            continue;
-          }
-          if (f.size > 5_000_000) {
-            showToast(`⚠️ "${f.name}" too big (>5MB)`, '#ffaa00');
-            continue;
-          }
-
-          const reader = new FileReader();
-          const dataUrl = await new Promise((res, rej) => {
-            reader.onload = () => res(reader.result);
-            reader.onerror = () => rej(new Error('Read failed'));
-            reader.readAsDataURL(f);
-          });
-
-          // Must be valid PNG data URL
-          if (!dataUrl.startsWith('data:image/png;base64,')) {
-            showToast(`❌ "${f.name}" is not a valid PNG`, '#ff3366');
-            continue;
-          }
-
-          // Find slot
-          let slot = null;
-          const numMatch = f.name.match(/(\d+)/);
-          if (numMatch) {
-            slot = parseInt(numMatch[1], 10);
-            if (slot < 1 || slot > TOTAL_SLOTS) slot = null;
-          }
-          if (!slot) {
-            for (let i = 1; i <= TOTAL_SLOTS; i++) {
-              if (!designs[i]) { slot = i; break; }
-            }
-          }
-          if (!slot) {
-            showToast('❌ No empty slots', '#ff3366');
-            continue;
-          }
-
-          designs[slot] = dataUrl;
-          save();
-          showToast(`✅ Saved to slot ${slot}`, '#00ff00');
-
-        } catch (err) {
-          showToast(`❌ ${err.message || 'Upload failed'}`, '#ff3366');
+          localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
+          return true;
+        } catch (e) {
+          console.error('Storage save failed:', e);
+          showToast('Storage limit exceeded!', '#ff3366');
+          return false;
         }
       }
 
-      render();
-      fileInput.value = '';
-    };
+      function updateStorageInfo() {
+        const filled = Object.keys(designs).length;
+        const percentage = (filled / TOTAL_SLOTS) * 100;
+        storageFill.style.width = `${percentage}%`;
+        storageInfo.textContent = `${filled}/${TOTAL_SLOTS} slots used`;
+      }
 
-    render();
+      // ========== RENDER GALLERY ==========
+      function render() {
+        grid.innerHTML = '';
+        
+        for (let i = 1; i <= TOTAL_SLOTS; i++) {
+          const item = document.createElement('div');
+          item.className = 'grid-item';
+          item.dataset.id = i;
+
+          // Slot number
+          const num = document.createElement('div');
+          num.className = 'item-number';
+          num.textContent = i;
+          item.appendChild(num);
+
+          if (designs[i]) {
+            // Image
+            const img = document.createElement('img');
+            img.src = designs[i];
+            img.alt = `Slot ${i}`;
+            img.loading = 'lazy';
+            
+            img.onerror = function() {
+              this.style.display = 'none';
+              const errorDiv = document.createElement('div');
+              errorDiv.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff3366;text-align:center;';
+              errorDiv.innerHTML = '❌<br>BROKEN';
+              item.appendChild(errorDiv);
+            };
+            
+            item.appendChild(img);
+
+            // Delete button
+            const del = document.createElement('div');
+            del.className = 'delete-btn';
+            del.textContent = '✕';
+            del.onclick = (e) => {
+              e.stopPropagation();
+              if (confirm(`Delete slot #${i}?`)) {
+                delete designs[i];
+                if (saveToStorage()) {
+                  render();
+                  showToast(`Slot #${i} cleared`, '#ff3366');
+                }
+              }
+            };
+            
+            // Touch support
+            del.ontouchstart = (e) => {
+              e.preventDefault();
+              del.onclick(e);
+            };
+            
+            item.appendChild(del);
+          } else {
+            // Empty slot placeholder
+            const placeholder = document.createElement('div');
+            placeholder.className = 'item-placeholder';
+            placeholder.innerHTML = '<div style="font-size:60px;">🎨</div><div>EMPTY</div>';
+            item.appendChild(placeholder);
+          }
+
+          grid.appendChild(item);
+        }
+
+        updateStorageInfo();
+      }
+
+      // ========== LIGHTBOX ==========
+      grid.onclick = (e) => {
+        const item = e.target.closest('.grid-item');
+        if (item && !e.target.closest('.delete-btn')) {
+          const id = item.dataset.id;
+          if (designs[id]) {
+            lightboxImg.src = designs[id];
+            lightboxNum.textContent = `SLOT #${id}`;
+            lightbox.classList.add('active');
+          }
+        }
+      };
+
+      lightboxClose.onclick = () => lightbox.classList.remove('active');
+      
+      lightbox.onclick = (e) => {
+        if (e.target === lightbox) {
+          lightbox.classList.remove('active');
+        }
+      };
+
+      document.onkeydown = (e) => {
+        if (e.key === 'Escape') {
+          lightbox.classList.remove('active');
+        }
+      };
+
+      // ========== UPLOAD FUNCTIONALITY ==========
+      function triggerFileSelect() {
+        fileInput.click();
+      }
+
+      // Connect both buttons to file input
+      adminBtn.onclick = triggerFileSelect;
+      uploadBtn.onclick = triggerFileSelect;
+
+      // Clear all button
+      clearBtn.onclick = () => {
+        if (confirm('⚠️ Delete ALL slots? This cannot be undone!')) {
+          designs = {};
+          if (saveToStorage()) {
+            render();
+            showToast('All slots cleared', '#ff3366');
+          }
+        }
+      };
+
+      // File upload handler
+      fileInput.onchange = async function() {
+        const files = Array.from(this.files);
+        if (!files.length) return;
+
+        // Disable upload button and show loader
+        uploadBtn.disabled = true;
+        adminBtn.disabled = true;
+        loader.classList.add('active');
+
+        let successCount = 0;
+        let lastToastTime = 0;
+
+        // Process each file
+        for (const file of files) {
+          try {
+            // Validation
+            if (!file.type.startsWith('image/png')) {
+              showToast(`Skipped: ${file.name} - not a PNG`, '#ffaa00');
+              continue;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+              showToast(`${file.name} is too big (>5MB)`, '#ffaa00');
+              continue;
+            }
+
+            // Convert to data URL
+            const dataUrl = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            });
+
+            // Check storage limit (approximate)
+            const currentSize = JSON.stringify(designs).length;
+            const newSize = dataUrl.length;
+            if (currentSize + newSize > 10 * 1024 * 1024) {
+              showToast('Storage limit reached!', '#ff3366');
+              continue;
+            }
+
+            // Determine slot
+            let targetSlot = null;
+            
+            // Try to extract number from filename
+            const numberMatch = file.name.match(/(\d+)/);
+            if (numberMatch) {
+              const num = parseInt(numberMatch[1], 10);
+              if (num >= 1 && num <= TOTAL_SLOTS) {
+                targetSlot = num;
+              }
+            }
+
+            // If no valid number from filename, find first empty slot
+            if (!targetSlot) {
+              for (let i = 1; i <= TOTAL_SLOTS; i++) {
+                if (!designs[i]) {
+                  targetSlot = i;
+                  break;
+                }
+              }
+            }
+
+            // Check if we have a slot
+            if (!targetSlot) {
+              showToast('No free slots available!', '#ff3366');
+              continue;
+            }
+
+            // Check if slot is occupied
+            if (designs[targetSlot]) {
+              const confirmOverwrite = confirm(`Slot #${targetSlot} is occupied. Overwrite?`);
+              if (!confirmOverwrite) continue;
+            }
+
+            // Save to designs
+            designs[targetSlot] = dataUrl;
+            successCount++;
+
+            // Throttle toast messages
+            const now = Date.now();
+            if (now - lastToastTime > 2000) {
+              showToast(`Saved to slot #${targetSlot}`, '#00ff00');
+              lastToastTime = now;
+            }
+
+          } catch (error) {
+            console.error('Upload error:', error);
+            showToast(`Error with ${file.name}`, '#ff3366');
+          }
+        }
+
+        // Save to localStorage if any files were processed
+        if (successCount > 0) {
+          if (saveToStorage()) {
+            render();
+          }
+        }
+
+        // Reset UI
+        loader.classList.remove('active');
+        uploadBtn.disabled = false;
+        adminBtn.disabled = false;
+        this.value = ''; // Clear file input
+
+        // Final summary
+        if (successCount > 0) {
+          showToast(`✅ Uploaded ${successCount} file(s)`, '#00ff00');
+        }
+      };
+
+      // ========== INITIAL RENDER ==========
+      render();
+
+      // ========== ERROR HANDLING ==========
+      window.onerror = function(msg, url, line) {
+        console.error('Global error:', msg, 'at line', line);
+        showToast('An error occurred', '#ff3366');
+        return false;
+      };
+
+    })();
   </script>
 </body>
 </html>
