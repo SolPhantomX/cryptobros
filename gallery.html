@@ -12,6 +12,7 @@
       background: #0a0a0a;
       color: white;
       padding: 30px;
+      transition: background 0.2s, color 0.2s;
     }
     body.light-mode {
       background: #f0f0f0;
@@ -211,10 +212,17 @@
       transition: all 0.3s ease;
       box-shadow: 0 0 15px #00ff00;
     }
-    #uploadButton:hover {
+    #uploadButton:hover:not(:disabled) {
       background: #00ff00;
       color: black;
       box-shadow: 0 0 30px #00ff00;
+    }
+    #uploadButton:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: #666;
+      color: #666;
+      box-shadow: none;
     }
     .hidden-input { display: none; }
     .storage-info {
@@ -383,12 +391,12 @@
 
   <script>
     (function() {
-      const MAX_TOTAL = 4.5 * 1024 * 1024;
-      const MAX_FILE = 1.5 * 1024 * 1024;
+      const MAX_TOTAL = 4.5 * 1024 * 1024;      // 4.5 MB
+      const MAX_FILE = 1.5 * 1024 * 1024;        // 1.5 MB
       
-      let designs = {};
+      let designs = {};  // key = slot 1..20, value = dataURL
 
-      // Get elements
+      // DOM elements
       const themeToggle = document.getElementById('themeToggle');
       const adminBtn = document.getElementById('adminButton');
       const uploadSection = document.getElementById('uploadSection');
@@ -405,52 +413,60 @@
       const storageFill = document.getElementById('storageFill');
       const clearAllBtn = document.getElementById('clearAllBtn');
 
-      function showToast(msg, color) {
+      // ---------- helpers ----------
+      function showToast(msg, color = '#00ffff') {
         toast.textContent = msg;
-        toast.style.borderColor = color || '#00ffff';
+        toast.style.borderColor = color;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3000);
       }
 
+      // approximate size from base64 dataURL
       function getBase64Size(dataUrl) {
         const base64 = dataUrl.split(',')[1] || '';
-        return Math.ceil(base64.length * 0.75);
+        return Math.ceil(base64.length * 0.75); // base64 chars -> bytes
       }
 
       function getTotalSize() {
         let total = 0;
-        for(let key in designs) {
+        for (let key in designs) {
           total += getBase64Size(designs[key]);
         }
         return total;
       }
 
-      function updateStorage() {
+      function updateStorageBar() {
         const size = getTotalSize();
         const percent = Math.min(100, (size / MAX_TOTAL) * 100);
         storageFill.style.width = percent + '%';
-        storageInfo.textContent = 'Storage: ' + (size / 1024 / 1024).toFixed(2) + '/4.5 MB';
+        storageInfo.textContent = `Storage: ${(size / 1024 / 1024).toFixed(2)}/4.5 MB`;
       }
 
-      // Load designs
+      // ---------- load from localStorage ----------
       try {
         const saved = localStorage.getItem('cryptobros_gallery');
-        if(saved) {
+        if (saved) {
           designs = JSON.parse(saved);
+          // clean invalid slots (just in case)
+          for (let k in designs) {
+            if (isNaN(parseInt(k)) || parseInt(k) < 1 || parseInt(k) > 20) {
+              delete designs[k];
+            }
+          }
         }
-      } catch(e) {
+      } catch (e) {
         designs = {};
       }
 
-      // Render grid
+      // ---------- render grid ----------
       function render() {
         let html = '';
-        for(let i = 1; i <= 20; i++) {
+        for (let i = 1; i <= 20; i++) {
           html += '<div class="grid-item" data-id="' + i + '">';
           html += '<div class="item-number">' + i + '</div>';
           
-          if(designs[i]) {
-            html += '<img src="' + designs[i] + '" alt="Design ' + i + '">';
+          if (designs[i]) {
+            html += '<img src="' + designs[i] + '" alt="Design ' + i + '" loading="lazy">';
             html += '<div class="delete-btn" data-delete="' + i + '">✕</div>';
           } else {
             html += '<div class="item-placeholder"><div style="font-size:50px;">🎨</div><div>EMPTY</div></div>';
@@ -459,20 +475,19 @@
           html += '</div>';
         }
         grid.innerHTML = html;
-        updateStorage();
+        updateStorageBar();
       }
-      
       render();
 
-      // Theme toggle
-      if(themeToggle) {
-        if(localStorage.getItem('theme') === 'light') {
+      // ---------- theme ----------
+      if (themeToggle) {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
           document.body.classList.add('light-mode');
           themeToggle.textContent = '☀️';
         } else {
           themeToggle.textContent = '🌙';
         }
-        
         themeToggle.onclick = function() {
           document.body.classList.toggle('light-mode');
           const isLight = document.body.classList.contains('light-mode');
@@ -481,13 +496,13 @@
         };
       }
 
-      // Delete
+      // ---------- delete item ----------
       grid.addEventListener('click', function(e) {
         const deleteBtn = e.target.closest('.delete-btn');
-        if(deleteBtn) {
+        if (deleteBtn) {
           e.stopPropagation();
           const slot = deleteBtn.dataset.delete;
-          if(confirm('Delete design #' + slot + '?')) {
+          if (confirm('Delete design #' + slot + '?')) {
             delete designs[slot];
             localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
             render();
@@ -496,10 +511,10 @@
         }
       });
 
-      // Clear all
-      if(clearAllBtn) {
+      // ---------- clear all ----------
+      if (clearAllBtn) {
         clearAllBtn.onclick = function() {
-          if(confirm('Delete ALL designs?')) {
+          if (confirm('Delete ALL designs?')) {
             designs = {};
             localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
             render();
@@ -508,13 +523,13 @@
         };
       }
 
-      // Lightbox
+      // ---------- lightbox ----------
       grid.addEventListener('click', function(e) {
         const item = e.target.closest('.grid-item');
         const deleteBtn = e.target.closest('.delete-btn');
-        if(item && !deleteBtn) {
+        if (item && !deleteBtn) {
           const id = item.dataset.id;
-          if(designs[id]) {
+          if (designs[id]) {
             lightboxImg.src = designs[id];
             lightboxNum.textContent = 'DESIGN #' + id;
             lightbox.classList.add('active');
@@ -528,48 +543,50 @@
       };
 
       lightbox.addEventListener('click', function(e) {
-        if(e.target === lightbox) {
+        if (e.target === lightbox) {
           lightbox.classList.remove('active');
           lightboxImg.src = '';
         }
       });
 
       document.addEventListener('keydown', function(e) {
-        if(e.key === 'Escape') {
+        if (e.key === 'Escape') {
           lightbox.classList.remove('active');
           lightboxImg.src = '';
         }
       });
 
+      // ---------- scroll to upload on admin button ----------
       adminBtn.onclick = function() {
         uploadSection.scrollIntoView({ behavior: 'smooth' });
       };
 
-      // UPLOAD BUTTON
+      // ---------- upload logic ----------
       uploadBtn.onclick = function() {
         fileInput.click();
       };
 
       fileInput.onchange = async function(e) {
         const files = Array.from(e.target.files);
-        if(files.length === 0) return;
+        if (files.length === 0) return;
 
         uploadBtn.disabled = true;
         loader.classList.add('active');
 
         let currentSize = getTotalSize();
-        let newDesigns = JSON.parse(JSON.stringify(designs));
+        let newDesigns = { ...designs };   // copy
         let uploaded = 0;
         let errors = [];
 
-        for(let file of files) {
-          if(file.size > MAX_FILE) {
-            errors.push(file.name + ' too big');
+        for (let file of files) {
+          // file size check
+          if (file.size > MAX_FILE) {
+            errors.push(`${file.name} exceeds 1.5MB`);
             continue;
           }
 
-          if(currentSize + file.size > MAX_TOTAL) {
-            errors.push(file.name + ' no space');
+          if (currentSize + file.size > MAX_TOTAL) {
+            errors.push(`${file.name} not enough space`);
             continue;
           }
 
@@ -581,20 +598,23 @@
               reader.readAsDataURL(file);
             });
 
+            // extract number from filename (first sequence)
             const match = file.name.match(/\d+/);
             let slot = match ? parseInt(match[0]) : null;
 
-            if(slot && slot >= 1 && slot <= 20) {
-              if(newDesigns[slot]) {
+            if (slot && slot >= 1 && slot <= 20) {
+              // if slot exists, replace (free up old size)
+              if (newDesigns[slot]) {
                 currentSize -= getBase64Size(newDesigns[slot]);
               }
               newDesigns[slot] = dataUrl;
               currentSize += file.size;
               uploaded++;
             } else {
+              // place in first free slot (1..20)
               let placed = false;
-              for(let i = 1; i <= 20; i++) {
-                if(!newDesigns[i]) {
+              for (let i = 1; i <= 20; i++) {
+                if (!newDesigns[i]) {
                   newDesigns[i] = dataUrl;
                   currentSize += file.size;
                   uploaded++;
@@ -602,30 +622,42 @@
                   break;
                 }
               }
-              if(!placed) {
-                errors.push(file.name + ' no free slots');
+              if (!placed) {
+                errors.push(`${file.name}: no free slots`);
               }
             }
-          } catch(err) {
-            errors.push(file.name + ' failed');
+          } catch (err) {
+            errors.push(`${file.name} read failed`);
           }
         }
 
-        if(uploaded > 0) {
+        if (uploaded > 0) {
           designs = newDesigns;
           localStorage.setItem('cryptobros_gallery', JSON.stringify(designs));
           render();
-          showToast('✅ Uploaded ' + uploaded + ' images', '#00ff00');
+          showToast(`✅ Uploaded ${uploaded} images`, '#00ff00');
         }
 
-        if(errors.length > 0) {
-          showToast('⚠️ ' + errors.length + ' errors', '#ffaa00');
+        if (errors.length > 0) {
+          showToast(`⚠️ ${errors.length} errors (e.g., ${errors[0]})`, '#ffaa00');
         }
 
         loader.classList.remove('active');
         uploadBtn.disabled = false;
-        fileInput.value = '';
+        fileInput.value = '';   // allow re-upload same files
       };
+
+      // also update storage bar after any external change (just in case)
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'cryptobros_gallery') {
+          try {
+            designs = JSON.parse(e.newValue) || {};
+          } catch (ex) {
+            designs = {};
+          }
+          render();
+        }
+      });
 
     })();
   </script>
