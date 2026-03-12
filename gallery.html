@@ -320,7 +320,28 @@
       const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
       const TOTAL_SLOTS = 20;
 
-      let currentDesigns = JSON.parse(localStorage.getItem('cryptoGalleryImages') || '{}');
+      // --- Load and validate saved data ---
+      let currentDesigns = {};
+      try {
+        const raw = localStorage.getItem('cryptoGalleryImages');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (typeof parsed === 'object') {
+            for (let key in parsed) {
+              const val = parsed[key];
+              // Ensure it's a valid image data URL
+              if (typeof val === 'string' && val.startsWith('image/')) {
+                currentDesigns[key] = val;
+              } else {
+                console.warn(`[CLEAN] Removed invalid entry: slot ${key}`);
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load saved data', e);
+        localStorage.removeItem('cryptoGalleryImages');
+      }
 
       const grid = document.getElementById('designsGrid');
       const lightbox = document.getElementById('lightbox');
@@ -343,7 +364,12 @@
       }
 
       function saveToLocalStorage() {
-        localStorage.setItem('cryptoGalleryImages', JSON.stringify(currentDesigns));
+        try {
+          localStorage.setItem('cryptoGalleryImages', JSON.stringify(currentDesigns));
+        } catch (e) {
+          console.error('Storage error:', e);
+          showToast('⚠️ Storage full. Clear some slots.', '#ffaa00');
+        }
       }
 
       function renderGrid() {
@@ -363,6 +389,10 @@
               const img = document.createElement('img');
               img.src = currentDesigns[i];
               img.alt = `Design ${i}`;
+              // Show broken icon if image fails to load
+              img.onerror = () => {
+                itemDiv.innerHTML = '<div class="item-placeholder"><div style="font-size:50px;">🎨</div><div>BROKEN</div></div>';
+              };
               itemDiv.appendChild(img);
 
               const deleteBtn = document.createElement('div');
@@ -396,7 +426,8 @@
         renderGrid();
       }
 
-      grid.addEventListener('click', async (e) => {
+      // --- Delete ---
+      grid.addEventListener('click', (e) => {
         const deleteBtn = e.target.closest('.delete-btn');
         if (!deleteBtn) return;
         e.stopPropagation();
@@ -409,19 +440,20 @@
         }
       });
 
+      // --- Lightbox ---
       grid.addEventListener('click', (e) => {
         const item = e.target.closest('.grid-item');
         const del = e.target.closest('.delete-btn');
         if (item && !del) {
           const id = item.dataset.id;
           if (currentDesigns[id]) {
-             if (typeof currentDesigns[id] === 'string' && currentDesigns[id].startsWith('image/')) {
-                 lightboxImg.src = currentDesigns[id];
-                 lightboxNum.textContent = 'DESIGN #' + id;
-                 lightbox.classList.add('active');
-             } else {
-                 showToast('❌ Invalid image data for slot ' + id, '#ff3366');
-             }
+            if (typeof currentDesigns[id] === 'string' && currentDesigns[id].startsWith('data:image/')) {
+              lightboxImg.src = currentDesigns[id];
+              lightboxNum.textContent = 'DESIGN #' + id;
+              lightbox.classList.add('active');
+            } else {
+              showToast('❌ Invalid image data for slot ' + id, '#ff3366');
+            }
           }
         }
       });
@@ -445,6 +477,7 @@
         }
       });
 
+      // --- Clear All ---
       clearAllBtn.onclick = () => {
         if (!confirm('DELETE ALL DESIGNS?')) return;
         currentDesigns = {};
@@ -453,6 +486,7 @@
         showToast('✅ All cleared', '#ff3366');
       };
 
+      // --- NEW UPLOAD LOGIC ---
       uploadBtn.onclick = () => fileInput.click();
 
       fileInput.onchange = async (e) => {
@@ -469,46 +503,55 @@
           let processed = false;
 
           try {
+            // --- 1. Validate file type ---
             if (!file.type || !file.type.startsWith('image/')) {
-              errorMessages.push(`${file.name}: Not an image file.`);
+              errorMessages.push(`${file.name}: Not an image.`);
               processed = true;
               continue;
             }
 
+            // --- 2. Validate file size ---
             if (file.size > MAX_FILE_SIZE) {
-              errorMessages.push(`${file.name}: File too large (max 5MB).`);
+              errorMessages.push(`${file.name}: Too large (max 5MB).`);
               processed = true;
               continue;
             }
 
+            // --- 3. Read file as Data URL ---
             const dataUrl = await new Promise((resolve, reject) => {
               const reader = new FileReader();
-              reader.onload = () => resolve(reader.result);
-              reader.onerror = () => reject(new Error('Failed to read file.'));
+              reader.onload = () => {
+                const result = reader.result;
+                // Final validation: must be a valid image data URL
+                if (typeof result === 'string' && result.startsWith('data:image/')) {
+                  resolve(result);
+                } else {
+                  reject(new Error('Invalid image data after read'));
+                }
+              };
+              reader.onerror = () => reject(new Error('File read error'));
               reader.readAsDataURL(file);
             });
 
-            if (typeof dataUrl !== 'string' || !dataUrl.startsWith('image/')) {
-              errorMessages.push(`${file.name}: Invalid image data.`);
-              processed = true;
-              continue;
-            }
-
+            // --- 4. Determine slot from filename ---
             const nameMatch = file.name.match(/(\d+)(\.[^.]*)?$/);
             let slot = nameMatch ? parseInt(nameMatch[1], 10) : null;
 
+            // --- 5. Validate slot range ---
             if (slot !== null && (slot < 1 || slot > TOTAL_SLOTS)) {
-              errorMessages.push(`${file.name}: Slot number ${slot} is out of range (1-${TOTAL_SLOTS}).`);
+              errorMessages.push(`${file.name}: Slot ${slot} out of range (1-${TOTAL_SLOTS}).`);
               processed = true;
               continue;
             }
 
+            // --- 6. Check if slot is occupied ---
             if (slot !== null && currentDesigns[slot]) {
-              errorMessages.push(`${file.name}: Slot ${slot} is already occupied.`);
+              errorMessages.push(`${file.name}: Slot ${slot} is occupied.`);
               processed = true;
               continue;
             }
 
+            // --- 7. Find first empty slot if no number in name ---
             if (slot === null) {
               for (let i = 1; i <= TOTAL_SLOTS; i++) {
                 if (!currentDesigns[i]) {
@@ -517,17 +560,18 @@
                 }
               }
               if (slot === null) {
-                errorMessages.push(`${file.name}: No available slots.`);
+                errorMessages.push(`${file.name}: No empty slots.`);
                 processed = true;
                 continue;
               }
             }
 
+            // --- 8. Save to cache and storage ---
             currentDesigns[slot] = dataUrl;
             saveToLocalStorage();
-
             successCount++;
             processed = true;
+
           } catch (err) {
             if (!processed) {
               errorMessages.push(`${file.name}: ${err.message || 'Upload failed.'}`);
@@ -554,4 +598,4 @@
     })();
   </script>
 </body>
-</
+</html>
