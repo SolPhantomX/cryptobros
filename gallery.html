@@ -434,13 +434,13 @@
               });
             });
             Promise.all(promises).then(results => {
- = {};
+              currentDesigns = {};
               results.forEach(item => {
                 // Ensure key is a valid integer between 1 and 20 before adding to cache
                 const parsedKey = parseInt(item.key, 10);
                 if (parsedKey >= 1 && parsedKey <= 20) {
                   // Validate stored data is a data URL image
-                  if (typeof item.value === 'string' && item.value.startsWith('data:image/')) {
+                  if (typeof item.value === 'string' && item.value.startsWith('image/')) {
                       currentDesigns[parsedKey] = item.value;
                   } else {
                       console.warn("Invalid data found in DB for slot " + parsedKey + ", removing...");
@@ -507,7 +507,7 @@
 
           if (currentDesigns[i]) {
             // Validate before creating image element
-            if (typeof currentDesigns[i] === 'string' && currentDesigns[i].startsWith('data:image/')) {
+            if (typeof currentDesigns[i] === 'string' && currentDesigns[i].startsWith('image/')) {
                 const img = document.createElement('img');
                 img.src = currentDesigns[i]; // This is now safe as it's a validated data URL
                 img.alt = `Design ${i}`;
@@ -542,16 +542,40 @@
         storageInfo.textContent = filled + '/20 slots';
       }
 
-      // ---------- initialization ----------
+      // ---------- initialization with timeout ----------
       async function init() {
         loader.classList.add('active');
+        let timeoutId;
+
         try {
-          await openDB();
-          await loadAllFromDB();
+          // Set timeout for initialization
+          const initPromise = new Promise((resolve, reject) => {
+            timeoutId = setTimeout(() => {
+              reject(new Error('DB initialization timed out'));
+            }, 5000);
+
+            (async () => {
+              try {
+                await openDB();
+                await loadAllFromDB();
+                resolve();
+              } catch (err) {
+                clearTimeout(timeoutId);
+                reject(err);
+              }
+            })();
+          });
+
+          await initPromise;
           renderGrid();
         } catch (e) {
-          showToast('❌ DB Error: ' + e.message, '#ff3366');
+          console.error('Init failed:', e);
+          showToast('❌ Failed to load gallery: ' + (e.message || 'Unknown error'), '#ff3366');
+          // Restore UI even if init fails
+          currentDesigns = {};
+          renderGrid();
         } finally {
+          clearTimeout(timeoutId);
           loader.classList.remove('active');
         }
       }
@@ -586,7 +610,7 @@
           const id = item.dataset.id;
           if (currentDesigns[id]) {
              // Ensure image source is valid before setting
-             if (typeof currentDesigns[id] === 'string' && currentDesigns[id].startsWith('data:image/')) {
+             if (typeof currentDesigns[id] === 'string' && currentDesigns[id].startsWith('image/')) {
                  lightboxImg.src = currentDesigns[id];
                  lightboxNum.textContent = 'DESIGN #' + id;
                  lightbox.classList.add('active');
@@ -632,7 +656,7 @@
         }
       };
 
-      // ---------- upload ----------
+      // ---------- upload (REWRITTEN) ----------
       uploadBtn.onclick = () => fileInput.click();
 
       fileInput.onchange = async (e) => {
@@ -642,81 +666,108 @@
         uploadBtn.disabled = true;
         loader.classList.add('active');
 
-        let success = 0;
-        let errors = [];
+        let successCount = 0;
+        let errorMessages = [];
 
         for (const file of files) {
+          let processed = false; // Flag to know if file was handled
+
           try {
-            // --- Validation ---
-            // Check file size
-            if (file.size > MAX_FILE_SIZE) {
-              errors.push(`${file.name}: File too large (max 5MB)`);
-              continue;
-            }
-
-            // Check file type via MIME
+            // --- 1. Check file type ---
             if (!file.type || !file.type.startsWith('image/')) {
-              errors.push(`${file.name}: Not an image file`);
+              errorMessages.push(`${file.name}: Not an image file.`);
+              processed = true; // Handled with error
               continue;
             }
 
-            // Read file
+            // --- 2. Check file size ---
+            if (file.size > MAX_FILE_SIZE) {
+              errorMessages.push(`${file.name}: File too large (max 5MB).`);
+              processed = true; // Handled with error
+              continue;
+            }
+
+            // --- 3. Read file to Data URL ---
             const dataUrl = await new Promise((resolve, reject) => {
               const reader = new FileReader();
               reader.onload = () => resolve(reader.result);
-              reader.onerror = () => reject(new Error('File reading error'));
+              reader.onerror = () => reject(new Error('Failed to read file.'));
               reader.readAsDataURL(file);
             });
 
-            // --- Validate dataUrl format ---
-            if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
-                errors.push(`${file.name}: Failed to create valid image data`);
-                continue;
+            // --- 4. Validate the resulting Data URL ---
+            if (typeof dataUrl !== 'string' || !dataUrl.startsWith('image/')) {
+              errorMessages.push(`${file.name}: Invalid image data.`);
+              processed = true; // Handled with error
+              continue;
             }
 
-            // Determine slot from filename
-            // Matches a number at the end of the filename before the extension
+            // --- 5. Determine slot from filename ---
+            // Match number at the end of the filename before extension
             const nameMatch = file.name.match(/(\d+)(\.[^.]*)?$/);
             let slot = nameMatch ? parseInt(nameMatch[1], 10) : null;
 
-            if (slot && slot >= 1 && slot <= 20) {
-              // Specific slot
-              await saveImageToDB(slot, dataUrl);
-              currentDesigns[slot] = dataUrl;
-              success++;
-            } else {
-              // Find first empty slot
-              let found = false;
+            // --- 6. Check if slot is within 1-20 ---
+            if (slot !== null && (slot < 1 || slot > 20)) {
+              errorMessages.push(`${file.name}: Slot number ${slot} is out of range (1-20).`);
+              processed = true; // Handled with error
+              continue;
+            }
+
+            // --- 7. Check if slot is occupied (if specified) ---
+            if (slot !== null && currentDesigns[slot]) {
+              errorMessages.push(`${file.name}: Slot ${slot} is already occupied.`);
+              processed = true; // Handled with error
+              continue;
+            }
+
+            // --- 8. If no slot, find first empty one ---
+            if (slot === null) {
               for (let i = 1; i <= 20; i++) {
                 if (!currentDesigns[i]) {
-                  await saveImageToDB(i, dataUrl);
-                  currentDesigns[i] = dataUrl;
-                  success++;
-                  found = true;
+                  slot = i;
                   break;
                 }
               }
-              if (!found) {
-                errors.push(`${file.name}: No available slots`);
+              if (slot === null) { // If no free slot found
+                errorMessages.push(`${file.name}: No available slots.`);
+                processed = true; // Handled with error
+                continue;
               }
             }
+
+            // --- 9. Save to DB ---
+            await saveImageToDB(slot, dataUrl);
+
+            // --- 10. Update cache ---
+            currentDesigns[slot] = dataUrl;
+
+            // --- 11. Count successful upload ---
+            successCount++;
+            processed = true; // Handled successfully
           } catch (err) {
-            errors.push(`${file.name}: ${err.message}`);
+            if (!processed) { // Only if error occurred before handling
+              errorMessages.push(`${file.name}: ${err.message || 'Upload failed.'}`);
+            }
           }
         }
 
-        renderGrid(); // Update UI after processing all files
+        // --- 12. Update UI ---
+        renderGrid();
 
-        if (success > 0) {
-          showToast(`✅ Uploaded: ${success}`, '#00ff00');
+        // --- 13. Show notifications ---
+        if (successCount > 0) {
+          showToast(`✅ Uploaded ${successCount} file(s).`, '#00ff00');
         }
-        if (errors.length > 0) {
-          showToast(`⚠️ Errors: ${errors.length} (${errors[0]})`, '#ffaa00');
+        if (errorMessages.length > 0) {
+          // Show the first error as an example
+          showToast(`⚠️ ${errorMessages.length} error(s): ${errorMessages[0]}`, '#ffaa00');
         }
 
+        // --- 14. Reset button and indicator state ---
         loader.classList.remove('active');
         uploadBtn.disabled = false;
-        fileInput.value = ''; // Reset input
+        fileInput.value = ''; // Reset input so same file can be re-uploaded
       };
 
     })();
