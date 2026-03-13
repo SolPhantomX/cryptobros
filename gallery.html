@@ -465,34 +465,46 @@
             }
 
             const files = event.target.files;
-            let uploadCount = 0;
+            if (files.length === 0) return;
             
-            // Find first empty slot
-            let currentSlot = uploadedImages.findIndex(img => img === null);
-            if (currentSlot === -1) {
+            // Find all empty slots
+            const emptySlots = [];
+            for (let i = 0; i < 20; i++) {
+                if (uploadedImages[i] === null) {
+                    emptySlots.push(i);
+                }
+            }
+            
+            if (emptySlots.length === 0) {
                 alert('All slots are filled!');
                 return;
             }
             
-            for (let file of files) {
-                if (currentSlot >= 20) {
-                    alert('All slots are filled!');
-                    break;
+            let filesToUpload = Math.min(files.length, emptySlots.length);
+            let uploadedCount = 0;
+            
+            // Process each file
+            for (let i = 0; i < filesToUpload; i++) {
+                const file = files[i];
+                const slotIndex = emptySlots[i];
+                
+                if (file.type !== 'image/png') {
+                    alert(`File "${file.name}" is not PNG. Skipping...`);
+                    continue;
                 }
                 
-                if (file.type === 'image/png') {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        uploadedImages[currentSlot] = e.target.result;
-                        displayImage(currentSlot + 1, e.target.result);
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages[slotIndex] = e.target.result;
+                    displayImage(slotIndex + 1, e.target.result);
+                    uploadedCount++;
+                    
+                    // Save after all files are loaded
+                    if (uploadedCount >= filesToUpload) {
                         saveToLocalStorage();
-                    };
-                    reader.readAsDataURL(file);
-                    currentSlot++;
-                    uploadCount++;
-                } else {
-                    alert('Please upload PNG files only!');
-                }
+                    }
+                };
+                reader.readAsDataURL(file);
             }
             
             event.target.value = '';
