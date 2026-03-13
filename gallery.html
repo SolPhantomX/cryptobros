@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -145,6 +145,10 @@
             border: 2px solid var(--accent-yellow);
         }
 
+        .upload-section.hidden {
+            display: none !important;
+        }
+
         .upload-label {
             display: inline-block;
             background: linear-gradient(135deg, var(--accent-purple), var(--accent-orange));
@@ -213,7 +217,7 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            padding: 40px;
+            padding: 10px;
         }
 
         .slot-placeholder {
@@ -268,10 +272,6 @@
             box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4);
         }
 
-        .freeze-btn.hidden {
-            display: none;
-        }
-
         @media (max-width: 1024px) {
             .gallery-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -312,11 +312,11 @@
 
         <div class="upload-section" id="uploadSection">
             <label for="fileInput" class="upload-label">
-                📤 ЗАГРУЗИТЬ ИЗОБРАЖЕНИЯ (PNG)
+                📤 UPLOAD IMAGES (PNG)
             </label>
             <input type="file" id="fileInput" accept="image/png" multiple onchange="handleFiles(event)">
             <br><br>
-            <button class="freeze-btn" onclick="freezePage()">🔒 ЗАМОРОЗИТЬ СТРАНИЦУ</button>
+            <button class="freeze-btn" onclick="freezePage()">🔒 FREEZE PAGE</button>
         </div>
 
         <div class="gallery-grid" id="galleryGrid">
@@ -362,7 +362,7 @@
 
         function handleFiles(event) {
             if (isFrozen) {
-                alert('Страница заморожена!');
+                alert('Page is frozen!');
                 return;
             }
 
@@ -370,7 +370,7 @@
             
             for (let file of files) {
                 if (currentSlot >= 20) {
-                    alert('Все слоты заполнены!');
+                    alert('All slots are filled!');
                     break;
                 }
                 
@@ -384,7 +384,7 @@
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    alert('Пожалуйста, загружайте только PNG файлы!');
+                    alert('Please upload PNG files only!');
                 }
             }
             
@@ -413,7 +413,7 @@
 
         function removeImage(slotNum) {
             if (isFrozen) {
-                alert('Страница заморожена!');
+                alert('Page is frozen!');
                 return;
             }
             
@@ -434,9 +434,9 @@
         }
 
         function freezePage() {
-            if (confirm('Вы уверены, что хотите заморозить страницу? После этого загрузка будет отключена.')) {
+            if (confirm('Are you sure you want to freeze the page? After this, uploading will be disabled.')) {
                 isFrozen = true;
-                document.getElementById('uploadSection').style.display = 'none';
+                document.getElementById('uploadSection').classList.add('hidden');
                 
                 // Remove all remove buttons
                 document.querySelectorAll('.remove-btn').forEach(btn => {
@@ -444,7 +444,8 @@
                 });
                 
                 localStorage.setItem('galleryFrozen', 'true');
-                alert('Страница заморожена! Изображения сохранены.');
+                localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));
+                alert('Page is frozen! Images are saved. Buttons will be hidden after reload.');
             }
         }
 
@@ -465,6 +466,20 @@
             const savedTheme = localStorage.getItem('galleryTheme');
             const frozen = localStorage.getItem('galleryFrozen');
             
+            // Check if page is frozen - hide upload section
+            if (frozen === 'true') {
+                isFrozen = true;
+                const uploadSection = document.getElementById('uploadSection');
+                if (uploadSection) {
+                    uploadSection.classList.add('hidden');
+                }
+                // Hide all remove buttons
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.style.display = 'none';
+                });
+            }
+            
+            // Load saved images
             if (savedImages) {
                 uploadedImages = JSON.parse(savedImages);
                 uploadedImages.forEach((img, index) => {
@@ -474,16 +489,9 @@
                 });
             }
             
+            // Load theme
             if (savedTheme === 'light') {
                 document.body.classList.add('light-mode');
-            }
-            
-            if (frozen === 'true') {
-                isFrozen = true;
-                document.getElementById('uploadSection').style.display = 'none';
-                document.querySelectorAll('.remove-btn').forEach(btn => {
-                    btn.style.display = 'none';
-                });
             }
         }
 
