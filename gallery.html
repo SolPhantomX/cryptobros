@@ -391,7 +391,6 @@
 
     <script>
         let uploadedImages = new Array(20).fill(null);
-        let currentSlot = 0;
         let isFrozen = false;
 
         // Generate slots
@@ -439,6 +438,14 @@
             }
 
             const files = event.target.files;
+            let uploadCount = 0;
+            
+            // Find first empty slot
+            let currentSlot = uploadedImages.findIndex(img => img === null);
+            if (currentSlot === -1) {
+                alert('All slots are filled!');
+                return;
+            }
             
             for (let file of files) {
                 if (currentSlot >= 20) {
@@ -449,12 +456,13 @@
                 if (file.type === 'image/png') {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        currentSlot++;
-                        uploadedImages[currentSlot - 1] = e.target.result;
-                        displayImage(currentSlot, e.target.result);
+                        uploadedImages[currentSlot] = e.target.result;
+                        displayImage(currentSlot + 1, e.target.result);
                         saveToLocalStorage();
                     };
                     reader.readAsDataURL(file);
+                    currentSlot++;
+                    uploadCount++;
                 } else {
                     alert('Please upload PNG files only!');
                 }
@@ -528,9 +536,7 @@
         }
 
         function saveToLocalStorage() {
-            if (!isFrozen) {
-                localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));
-            }
+            localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));
         }
 
         function loadFromLocalStorage() {
@@ -553,12 +559,17 @@
             
             // Load saved images
             if (savedImages) {
-                uploadedImages = JSON.parse(savedImages);
-                uploadedImages.forEach((img, index) => {
-                    if (img) {
-                        displayImage(index + 1, img);
-                    }
-                });
+                try {
+                    uploadedImages = JSON.parse(savedImages);
+                    uploadedImages.forEach((img, index) => {
+                        if (img) {
+                            displayImage(index + 1, img);
+                        }
+                    });
+                    console.log('Images loaded:', uploadedImages.filter(img => img !== null).length);
+                } catch (e) {
+                    console.error('Error loading images:', e);
+                }
             }
             
             // Load theme
