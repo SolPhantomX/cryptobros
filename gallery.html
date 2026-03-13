@@ -159,6 +159,7 @@
             font-weight: bold;
             font-size: 1.2rem;
             transition: transform 0.3s, box-shadow 0.3s;
+            margin: 10px;
         }
 
         .upload-label:hover {
@@ -274,6 +275,24 @@
             box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4);
         }
 
+        .generate-btn {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #00ff00, #00aa00);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.4);
+        }
+
         .reset-btn {
             position: fixed;
             bottom: 20px;
@@ -294,6 +313,10 @@
         .reset-btn:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .reset-btn.hidden {
+            display: none !important;
         }
 
         /* Modal styles */
@@ -394,8 +417,14 @@
                 📤 UPLOAD IMAGES (PNG)
             </label>
             <input type="file" id="fileInput" accept="image/png" multiple onchange="handleFiles(event)">
-            <br><br>
-            <button class="freeze-btn" onclick="freezePage()">🔒 FREEZE PAGE</button>
+            <br>
+            <button class="generate-btn" onclick="generateStaticHTML()">
+                📥 GENERATE STATIC HTML
+            </button>
+            <br>
+            <button class="freeze-btn" onclick="freezePage()">
+                🔒 FREEZE PAGE
+            </button>
         </div>
 
         <div class="gallery-grid" id="galleryGrid">
@@ -403,8 +432,8 @@
         </div>
     </div>
 
-    <!-- Reset button - always visible -->
-    <button class="reset-btn" onclick="resetGallery()">
+    <!-- Reset button - hidden when frozen -->
+    <button class="reset-btn" id="resetBtn" onclick="resetGallery()">
         🔓 RESET GALLERY
     </button>
 
@@ -552,19 +581,250 @@
             saveToLocalStorage();
         }
 
+        function generateStaticHTML() {
+            const imageCount = uploadedImages.filter(img => img !== null).length;
+            
+            if (imageCount === 0) {
+                alert('⚠️ No images uploaded yet!\n\nPlease upload images first.');
+                return;
+            }
+            
+            if (confirm(`📥 Generate static HTML with ${imageCount} images?\n\nThis file will contain ALL images embedded (base64).\nFile size will be large but will work for everyone!`)) {
+                
+                const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALLERY - CryptoBros Merch</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 30px 0; position: relative; }
+        .back-btn {
+            position: absolute;
+            left: 0;
+            top: 30px;
+            background: transparent;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-btn:hover { background: #ffd700; color: #000; }
+        h1 {
+            font-size: 4rem;
+            color: #d946ef;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(217, 70, 239, 0.5);
+        }
+        .subtitle-1 {
+            font-size: 2rem;
+            color: #ff6600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .subtitle-2 {
+            font-size: 1.3rem;
+            color: #00ff00;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .slots-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            padding: 20px;
+            border-bottom: 3px solid #ffd700;
+        }
+        .slots-title {
+            font-size: 2.5rem;
+            color: #ffd700;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .slot {
+            aspect-ratio: 1;
+            background: #1a1a1a;
+            border: 3px solid #333;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .slot:hover {
+            border-color: #ffd700;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        }
+        .slot-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ffd700;
+            color: #000;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 10;
+        }
+        .slot-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .slot-image:hover { transform: scale(1.05); }
+        .slot.empty { opacity: 0.3; background: #0a0a0a; }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            animation: fadeIn 0.3s;
+        }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-image {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #ffd700;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+        .modal-close:hover { color: #ff0000; transform: scale(1.2); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 1024px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size: 3rem; }
+        }
+        @media (max-width: 600px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5rem; }
+            .subtitle-1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="https://www.cryptobros.pro/merch.html" class="back-btn">← BACK</a>
+            <h1>GALLERY</h1>
+            <div class="subtitle-1">REAL ONES WEAR MERCH</div>
+            <div class="subtitle-2">FAKES FEAR THE TRUTH</div>
+        </div>
+        <div class="slots-header">
+            <span>⚡</span>
+            <span class="slots-title">SLOTS 1-20</span>
+            <span>⚡</span>
+        </div>
+        <div class="gallery-grid">
+            ${uploadedImages.map((img, i) => img ? `
+            <div class="slot" onclick="openModal(${i})">
+                <div class="slot-number">${i + 1}</div>
+                <img class="slot-image" src="${img}" id="img-${i}">
+            </div>` : `
+            <div class="slot empty">
+                <div class="slot-number">${i + 1}</div>
+            </div>`).join('')}
+        </div>
+    </div>
+    <div id="modal" class="modal" onclick="closeModal(event)">
+        <span class="modal-close" onclick="closeModal(event)">&times;</span>
+        <img id="modalImage" class="modal-image" src="">
+    </div>
+    <script>
+        function openModal(i) {
+            const img = document.getElementById('img-' + i).src;
+            document.getElementById('modalImage').src = img;
+            document.getElementById('modal').classList.add('active');
+        }
+        function closeModal(e) {
+            if (e.target.id === 'modal' || e.target.className === 'modal-close' || e.target.id === 'modalImage') {
+                document.getElementById('modal').classList.remove('active');
+            }
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('modal').classList.remove('active');
+            }
+        });
+    <\/script>
+</body>
+</html>`;
+
+                // Create and download file
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'cryptobros-gallery.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert(`✅ Static HTML generated!\n\n📁 File: cryptobros-gallery.html\n📊 Images: ${imageCount}/20\n\n📤 Upload this file to your server as gallery.html\n\n⚠️ WARNING: File contains all images (base64) - size will be large!`);
+            }
+        }
+
         function freezePage() {
-            if (confirm('⚠️ WARNING: This will hide upload buttons permanently!\n\nAre you sure?')) {
+            if (confirm('⚠️ WARNING: This will hide ALL buttons permanently!\nUpload & Reset buttons will disappear!\n\nAre you sure?')) {
                 isFrozen = true;
+                
+                // Hide upload section
                 document.getElementById('uploadSection').classList.add('hidden');
+                
+                // Hide reset button
+                document.getElementById('resetBtn').classList.add('hidden');
                 
                 // Remove all remove buttons
                 document.querySelectorAll('.remove-btn').forEach(btn => {
                     btn.style.display = 'none';
                 });
                 
+                // Save to localStorage
                 localStorage.setItem('galleryFrozen', 'true');
                 localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));
-                alert('✅ Page frozen! Upload buttons hidden.\n\nTo restore: click RESET GALLERY button');
+                
+                alert('✅ Page FROZEN!\n\n• All buttons hidden\n• Images saved\n• Gallery is now view-only\n\nTo edit again: Click RESET GALLERY (if visible) or clear browser data');
             }
         }
 
@@ -583,13 +843,22 @@
             const savedTheme = localStorage.getItem('galleryTheme');
             const frozen = localStorage.getItem('galleryFrozen');
             
-            // Check if page is frozen - hide upload section
+            // Check if page is frozen - hide ALL buttons
             if (frozen === 'true') {
                 isFrozen = true;
+                
+                // Hide upload section
                 const uploadSection = document.getElementById('uploadSection');
                 if (uploadSection) {
                     uploadSection.classList.add('hidden');
                 }
+                
+                // Hide reset button
+                const resetBtn = document.getElementById('resetBtn');
+                if (resetBtn) {
+                    resetBtn.classList.add('hidden');
+                }
+                
                 // Hide all remove buttons
                 document.querySelectorAll('.remove-btn').forEach(btn => {
                     btn.style.display = 'none';
