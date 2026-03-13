@@ -432,7 +432,7 @@
         </div>
     </div>
 
-    <!-- Reset button - hidden when frozen -->
+    <!-- Reset button - always visible for admin -->
     <button class="reset-btn" id="resetBtn" onclick="resetGallery()">
         🔓 RESET GALLERY
     </button>
@@ -824,7 +824,7 @@
                 localStorage.setItem('galleryFrozen', 'true');
                 localStorage.setItem('galleryImages', JSON.stringify(uploadedImages));
                 
-                alert('✅ Page FROZEN!\n\n• All buttons hidden\n• Images saved\n• Gallery is now view-only\n\nTo edit again: Click RESET GALLERY (if visible) or clear browser data');
+                alert('✅ Page FROZEN!\n\n• All buttons hidden\n• Images saved\n• Gallery is now view-only\n\nTo edit again: Click RESET GALLERY button');
             }
         }
 
@@ -841,29 +841,9 @@
         function loadFromLocalStorage() {
             const savedImages = localStorage.getItem('galleryImages');
             const savedTheme = localStorage.getItem('galleryTheme');
-            const frozen = localStorage.getItem('galleryFrozen');
             
-            // Check if page is frozen - hide ALL buttons
-            if (frozen === 'true') {
-                isFrozen = true;
-                
-                // Hide upload section
-                const uploadSection = document.getElementById('uploadSection');
-                if (uploadSection) {
-                    uploadSection.classList.add('hidden');
-                }
-                
-                // Hide reset button
-                const resetBtn = document.getElementById('resetBtn');
-                if (resetBtn) {
-                    resetBtn.classList.add('hidden');
-                }
-                
-                // Hide all remove buttons
-                document.querySelectorAll('.remove-btn').forEach(btn => {
-                    btn.style.display = 'none';
-                });
-            }
+            // ⚠️ ВАЖНО: НЕ проверяем galleryFrozen при загрузке!
+            // Кнопки ВСЕГДА видны при загрузке страницы
             
             // Load saved images
             if (savedImages) {
