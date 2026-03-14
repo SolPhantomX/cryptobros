@@ -276,57 +276,87 @@
       font-weight: 600;
     }
 
-    /* ===== NEW BOTTOM TEXT STYLES ===== */
+    /* ===== BOTTOM MESSAGE - BOLD & GLOWING ===== */
     .bottom-message {
-      max-width: 900px;
-      margin: 40px auto 60px;
-      padding: 25px 35px;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 204, 0, 0.3);
-      border-radius: 20px;
+      max-width: 1000px;
+      margin: 50px auto 70px;
+      padding: 30px 40px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255, 204, 0, 0.4);
+      border-radius: 30px;
       text-align: center;
       font-family: 'Montserrat', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 400;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.9);
-      text-shadow: 0 0 8px rgba(255, 204, 0, 0.5), 0 0 15px rgba(255, 204, 0, 0.3);
-      box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+      font-size: 1.4rem;
+      font-weight: 600; /* BOLDER! */
+      line-height: 1.7;
+      color: #ffffff;
+      text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffaa00, 0 0 30px #ff8800; /* GLOW! */
+      box-shadow: 0 0 40px rgba(255, 204, 0, 0.3);
       position: relative;
       z-index: 10;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
     }
 
     .bottom-message .email {
-      font-weight: 700;
-      color: #ffaa00;
-      text-shadow: 0 0 10px #ffaa00, 0 0 20px #ffaa00;
-      font-size: 1.3rem;
       display: inline-block;
-      margin-top: 8px;
-      padding: 5px 15px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 40px;
-      border: 1px solid rgba(255, 170, 0, 0.4);
+      margin-top: 20px;
+      padding: 12px 30px;
+      font-weight: 800;
+      font-size: 1.8rem;
+      color: #ffcc00;
+      text-shadow: 0 0 15px #ffcc00, 0 0 30px #ffaa00, 0 0 45px #ff8800;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #ffcc00;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
     }
 
     .bottom-message .email:hover {
-      text-shadow: 0 0 15px #ffcc00, 0 0 30px #ffaa00;
-      border-color: #ffaa00;
+      transform: scale(1.05);
+      background: rgba(255, 204, 0, 0.2);
+      box-shadow: 0 0 50px #ffcc00;
+      border-color: #ffffff;
     }
 
-    /* Light mode adjustments for bottom text */
+    /* Copy toast notification */
+    .copy-toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #000;
+      color: #ffcc00;
+      padding: 16px 32px;
+      border-radius: 60px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      border: 2px solid #ffcc00;
+      box-shadow: 0 0 30px #ffcc00;
+      z-index: 20000;
+      opacity: 0;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .copy-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Light mode adjustments */
     body.light-mode .bottom-message {
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.8);
       color: #222;
-      border-color: #ffcc00;
+      text-shadow: 0 0 10px #ffaa00, 0 0 20px #ffaa00;
     }
 
     body.light-mode .bottom-message .email {
       color: #cc7700;
-      text-shadow: 0 0 10px #ffaa00;
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.7);
     }
   </style>
 </head>
@@ -344,6 +374,9 @@
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
 
+  <!-- Copy toast notification -->
+  <div class="copy-toast" id="copyToast">📋 Email copied to clipboard!</div>
+
   <!-- Main content -->
   <div class="gallery-container">
     <h1 class="page-title">DESIGN GALLERY</h1>
@@ -354,10 +387,10 @@
     <!-- Grid 30 slots - ALL FILLED -->
     <div class="image-grid" id="designsGrid"></div>
 
-    <!-- NEW: Bottom message -->
+    <!-- BOTTOM MESSAGE - BOLD & GLOWING -->
     <div class="bottom-message">
       Hey bro, just pick your shirt number and design number. Drop your size from the chart, shipping address and name — I'll hit you back with the exact price, no BS!<br>
-      <span class="email">✉️ xbro10@proton.me</span>
+      <span class="email" id="emailCopy">✉️ xbro10@proton.me</span>
     </div>
   </div>
 
@@ -376,19 +409,16 @@
       const colors = ['#ffcc00', '#ff3366', '#33ccff', '#aa66ff', '#00ffaa', '#ff8800', '#ff00ff', '#66ff66'];
 
       // ========== FILE NAMES ==========
-      // 30 files: 1a.png through 31a.png, but 17a.png is MISSING
-      
       const IMAGE_PATH = 'merch-artworks/';
       
-      // Array of 30 filenames in correct order for slots 1-30
       const imageFiles = [
         '1a.png', '2a.png', '3a.png', '4a.png', '5a.png',
         '6a.png', '7a.png', '8a.png', '9a.png', '10a.png',
         '11a.png', '12a.png', '13a.png', '14a.png', '15a.png',
-        '16a.png',           // slot 16
+        '16a.png',
         '18a.png', '19a.png', '20a.png', '21a.png', '22a.png',
         '23a.png', '24a.png', '25a.png', '26a.png', '27a.png',
-        '28a.png', '29a.png', '30a.png', '31a.png'  // slots 17-30
+        '28a.png', '29a.png', '30a.png', '31a.png'
       ];
 
       // Elements
@@ -399,35 +429,43 @@
       const lightboxClose = document.getElementById('lightboxClose');
       const themeToggle = document.getElementById('themeToggle');
       const sloganEl = document.getElementById('rotatingSlogan');
+      const emailSpan = document.getElementById('emailCopy');
+      const copyToast = document.getElementById('copyToast');
+
+      // ========== COPY EMAIL TO CLIPBOARD ==========
+      emailSpan.addEventListener('click', async () => {
+        const email = 'xbro10@proton.me';
+        try {
+          await navigator.clipboard.writeText(email);
+          copyToast.classList.add('show');
+          setTimeout(() => {
+            copyToast.classList.remove('show');
+          }, 2000);
+        } catch (err) {
+          alert('Failed to copy email. Please copy manually: ' + email);
+        }
+      });
 
       // ========== ROTATING SLOGAN ==========
       let sloganIndex = 0;
       
       function updateSlogan() {
-        // Fade out
         sloganEl.style.opacity = '0';
         sloganEl.style.transform = 'translateY(10px)';
         
         setTimeout(() => {
-          // Change text and color
           sloganEl.textContent = slogans[sloganIndex];
           sloganEl.style.color = colors[Math.floor(Math.random() * colors.length)];
-          
-          // Fade in
           sloganEl.style.opacity = '1';
           sloganEl.style.transform = 'translateY(0)';
         }, 300);
         
-        // Move to next slogan
         sloganIndex = (sloganIndex + 1) % slogans.length;
       }
 
-      // Initial slogan
       sloganEl.textContent = slogans[0];
       sloganEl.style.color = colors[Math.floor(Math.random() * colors.length)];
       sloganEl.style.transition = 'opacity 0.3s ease, transform 0.3s ease, color 0.5s ease';
-      
-      // Change slogan every 15 seconds
       setInterval(updateSlogan, 15000);
 
       // ========== THEME TOGGLE ==========
@@ -446,34 +484,25 @@
       // ========== RENDER GRID ==========
       function renderGrid() {
         let html = '';
-        
         for (let slot = 1; slot <= 30; slot++) {
           html += '<div class="grid-item" data-id="' + slot + '">';
           html += '<div class="item-number">' + slot + '</div>';
-          
-          // Get filename for this slot (direct mapping: slot-1 = index)
           const fileName = imageFiles[slot - 1];
           const imagePath = IMAGE_PATH + fileName;
-          
           html += '<img src="' + imagePath + '" alt="Design ' + slot + '" loading="lazy">';
-          
           html += '</div>';
         }
-        
         grid.innerHTML = html;
       }
 
-      // Run render
       renderGrid();
 
       // ========== LIGHTBOX ==========
       grid.addEventListener('click', (e) => {
         const item = e.target.closest('.grid-item');
         if (!item) return;
-        
         const slot = item.dataset.id;
         const img = item.querySelector('img');
-        
         if (img && img.src) {
           lightboxImg.src = img.src;
           lightboxNum.textContent = 'DESIGN #' + slot;
@@ -481,7 +510,6 @@
         }
       });
 
-      // Close lightbox
       lightboxClose.addEventListener('click', () => {
         lightbox.classList.remove('active');
         lightboxImg.src = '';
