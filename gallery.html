@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS — GALLERY</title>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -14,15 +14,47 @@
 
     body {
       font-family: 'Montserrat', sans-serif;
-      background: #0a0a0a;
-      color: white;
+      min-height: 100vh;
       padding: 30px;
+      position: relative;
       transition: background-color 0.3s, color 0.3s;
     }
 
+    /* Background image */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('bg3.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -2;
+    }
+
+    /* Dark overlay for better readability */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+      transition: background 0.3s;
+    }
+
+    /* Light mode adjustments */
+    body.light-mode::after {
+      background: rgba(255, 255, 255, 0.7);
+    }
+
     body.light-mode {
-      background: #f0f0f0;
-      color: black;
+      color: #000;
     }
 
     /* Back button */
@@ -74,33 +106,36 @@
       transform: scale(1.1);
     }
 
-    /* Titles */
+    /* Main title - solid, bold font */
     .page-title {
       font-family: 'Archivo Black', sans-serif;
       font-size: 5rem;
       text-align: center;
       margin: 80px 0 20px;
-      background: linear-gradient(45deg, #ff3366, #ff00ff, #6600ff, #00ccff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 20px rgba(255,51,102,0.5));
+      color: #ffcc00;
+      text-shadow: 4px 4px 0 #000, 0 0 30px #ffcc00, 0 0 60px #ff9900;
+      letter-spacing: 2px;
+      position: relative;
+      z-index: 10;
     }
 
-    /* Rotating slogan */
+    /* Rotating slogan - thicker and glowing */
     .rotating-slogan {
       font-family: 'Montserrat', sans-serif;
       font-size: 2rem;
       text-align: center;
-      font-weight: 300;
+      font-weight: 700;  /* Bold */
       margin-bottom: 50px;
       min-height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: color 0.5s ease;
-      color: #00ff00;
-      text-shadow: 0 0 15px #00ff00;
       padding: 0 20px;
+      transition: color 0.5s ease;
+      text-shadow: 2px 2px 0 #000, 0 0 20px currentColor, 0 0 40px currentColor;
+      letter-spacing: 1px;
+      position: relative;
+      z-index: 10;
     }
 
     .slogan-fade {
@@ -119,8 +154,11 @@
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 0;
-      border: 2px solid #333;
+      border: 2px solid #ffcc00;
       margin-bottom: 60px;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 0 30px rgba(255,204,0,0.3);
     }
 
     @media (max-width: 768px) {
@@ -137,16 +175,17 @@
 
     .grid-item {
       aspect-ratio: 1/1;
-      background: #1a1a1a;
-      border-right: 2px solid #333;
-      border-bottom: 2px solid #333;
+      background: rgba(20, 20, 20, 0.8);
+      backdrop-filter: blur(2px);
+      border-right: 2px solid #ffcc00;
+      border-bottom: 2px solid #ffcc00;
       position: relative;
       cursor: pointer;
       transition: 0.2s;
     }
 
     .grid-item:hover {
-      box-shadow: inset 0 0 30px rgba(255,204,0,0.3);
+      box-shadow: inset 0 0 30px rgba(255,204,0,0.5);
       z-index: 5;
     }
 
@@ -286,7 +325,6 @@
 
       // ========== FILE NAMES ==========
       // 30 files: 1a.png through 31a.png, but 17a.png is MISSING
-      // So we have 30 files total in correct order
       
       const IMAGE_PATH = 'merch-artworks/';
       
