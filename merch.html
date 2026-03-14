@@ -19,9 +19,9 @@
       overflow: hidden;
     }
 
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Russo+One&family=Playfair+Display:wght@400;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Russo+One&family=Oswald:wght@400;500;600;700&display=swap');
 
-    /* Back button */
+    /* Back button to PROFILE */
     .back-button {
       position: fixed;
       top: 30px;
@@ -52,7 +52,7 @@
       box-shadow: 0 15px 40px rgba(255,204,0,0.5);
     }
 
-    /* Gallery button */
+    /* Gallery button - clean and beautiful */
     .gallery-button {
       position: fixed;
       top: 30px;
@@ -91,33 +91,35 @@
       z-index: 1000;
       max-width: 900px;
       pointer-events: none;
+      right: 30px; /* Allow text to use full width */
     }
 
     .main-title {
       font-family: 'Russo One', 'Bebas Neue', sans-serif;
-      font-size: 6rem;
+      font-size: 5.5rem; /* Slightly smaller to fit better */
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 6px;
+      letter-spacing: 4px;
       text-shadow: 4px 4px 0 rgba(0,0,0,0.8), 0 0 40px currentColor;
       margin-bottom: 25px;
-      line-height: 1;
+      line-height: 1.2; /* Allow multiline */
       transition: color 0.5s ease;
       color: #ffcc00;
-      white-space: nowrap; /* Title in one line */
+      word-wrap: break-word;
+      max-width: 100%;
     }
 
     .slogan {
-      font-family: 'Playfair Display', serif;  /* Beautiful attractive font */
-      font-size: 2rem;
-      font-weight: 600;
+      font-family: 'Oswald', sans-serif;  /* Super beautiful, no italic */
+      font-size: 2.2rem;
+      font-weight: 500;
       max-width: 800px;
       line-height: 1.4;
       text-shadow: 3px 3px 0 rgba(0,0,0,0.8), 0 0 20px currentColor;
       transition: color 0.5s ease;
       color: #ffffff;
-      font-style: italic;
       letter-spacing: 0.5px;
+      text-transform: uppercase; /* Optional: gives it a bold look */
     }
 
     /* Image container */
@@ -148,41 +150,18 @@
       z-index: 2;
       pointer-events: none;
     }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.9);
-      border: 2px solid #00ff9d;
-      color: #00ff9d;
-      padding: 15px 30px;
-      border-radius: 60px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      z-index: 10000;
-      animation: slideUp 0.3s ease;
-      box-shadow: 0 0 30px #00ff9d;
-    }
-    @keyframes slideUp {
-      from { transform: translate(-50%, 100px); opacity: 0; }
-      to { transform: translate(-50%, 0); opacity: 1; }
-    }
   </style>
 </head>
 <body>
-  <!-- Back button -->
-  <a href="javascript:history.back()" class="back-button">
+  <!-- Back button to PROFILE page -->
+  <a href="profile.html" class="back-button">
     <span>←</span>
-    <span>BACK</span>
+    <span>PROFILE</span>
   </a>
 
-  <!-- Gallery button -->
+  <!-- Gallery button - clean text only -->
   <a href="gallery.html" class="gallery-button">
-    <span>🎨</span>
-    <span>DESIGN GALLERY</span>
+    <span>GALLERY</span>
   </a>
 
   <!-- Text block -->
@@ -225,15 +204,14 @@
       const mainImage = document.getElementById('mainImage');
 
       // ===== ALL GALLERY IMAGES (30 files) =====
-      // 1a.png through 31a.png, skipping 17a.png
       const imageFiles = [
         '1a.png', '2a.png', '3a.png', '4a.png', '5a.png',
         '6a.png', '7a.png', '8a.png', '9a.png', '10a.png',
         '11a.png', '12a.png', '13a.png', '14a.png', '15a.png',
-        '16a.png',           // 16
+        '16a.png',
         '18a.png', '19a.png', '20a.png', '21a.png', '22a.png',
         '23a.png', '24a.png', '25a.png', '26a.png', '27a.png',
-        '28a.png', '29a.png', '30a.png', '31a.png'  // 18-31 = 14 files, total 16+14=30
+        '28a.png', '29a.png', '30a.png', '31a.png'
       ];
 
       const IMAGE_PATH = 'merch-artworks/';
@@ -249,13 +227,9 @@
       let currentImageIndex = 0;
       
       function rotateBackground() {
-        // Use our 30 images
         if (images.length > 0) {
           currentImageIndex = (currentImageIndex + 1) % images.length;
           mainImage.src = images[currentImageIndex].src;
-        } else {
-          // Fallback
-          mainImage.src = 'merch-bg.jpg';
         }
       }
 
@@ -265,7 +239,6 @@
         mainImage.src = images[currentImageIndex].src;
       }
 
-      // Rotate every 10 seconds
       setInterval(rotateBackground, 10000);
 
       // ===== TITLE/SLOGAN ROTATION =====
@@ -289,7 +262,6 @@
         sloganEl.textContent = slogans[sloganIndex];
       }, 30000);
 
-      // Initial colors
       titleEl.style.color = colors[Math.floor(Math.random() * colors.length)];
       sloganEl.style.color = colors[Math.floor(Math.random() * colors.length)];
     })();
