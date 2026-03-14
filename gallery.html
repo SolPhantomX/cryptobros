@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS — GALLERY</title>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -124,7 +124,7 @@
       font-family: 'Montserrat', sans-serif;
       font-size: 2rem;
       text-align: center;
-      font-weight: 700;  /* Bold */
+      font-weight: 700;
       margin-bottom: 50px;
       min-height: 80px;
       display: flex;
@@ -136,17 +136,6 @@
       letter-spacing: 1px;
       position: relative;
       z-index: 10;
-    }
-
-    .slogan-fade {
-      animation: fadeInOut 1s ease;
-    }
-
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translateY(10px); }
-      20% { opacity: 1; transform: translateY(0); }
-      80% { opacity: 1; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(-10px); }
     }
 
     /* Grid 6x5 = 30 slots */
@@ -199,23 +188,27 @@
       display: block;
     }
 
+    /* ===== SLOT NUMBERS - BOLD & GLOWING ===== */
     .item-number {
       position: absolute;
       top: 12px;
       left: 12px;
-      width: 40px;
-      height: 40px;
-      background: black;
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.85);
       border: 2px solid #ffcc00;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #ffcc00;
-      font-weight: bold;
+      font-weight: 900;
+      font-size: 1.3rem;
       font-family: 'Montserrat', sans-serif;
-      box-shadow: 0 0 10px #ffcc00;
-      z-index: 2;
+      text-shadow: 0 0 15px #ffcc00, 0 0 30px #ffaa00, 0 0 45px #ff8800;
+      box-shadow: 0 0 20px #ffcc00, inset 0 0 10px rgba(255,204,0,0.5);
+      z-index: 20;
+      backdrop-filter: blur(2px);
     }
 
     /* Lightbox */
@@ -320,7 +313,7 @@
         "Don't just HODL — SHOW it. CRYPTOBROS Merch for the fearless."
       ];
 
-      // Colors for slogan (from merch page)
+      // Colors for slogan
       const colors = ['#ffcc00', '#ff3366', '#33ccff', '#aa66ff', '#00ffaa', '#ff8800', '#ff00ff', '#66ff66'];
 
       // ========== FILE NAMES ==========
