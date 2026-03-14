@@ -305,13 +305,16 @@
 
   <div class="main-layout">
     <div class="sidebar">
-      <a href="news.html" class="nav-item">📰 CryptoNews</a>
-      <a href="profile.html" class="nav-item">👤 My Profile</a>
+      <!-- UPDATED: Open newspaper emoji before CryptoNews -->
+      <a href="news.html" class="nav-item">📖 CryptoNews</a>
+      <!-- REMOVED: My Profile -->
       <a href="feed.html" class="nav-item">📰 News Feed</a>
       <a href="messages.html" class="nav-item">💬 Messages</a>
       <a href="groups.html" class="nav-item">👥 My Groups</a>
       <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
       <a href="friends.html" class="nav-item">👫 My Friends</a>
+      <!-- NEW: CryptoMerch with t-shirt emoji -->
+      <a href="merch.html" class="nav-item">👕 CryptoMerch</a>
     </div>
     <div class="main" id="profileContent"></div>
   </div>
@@ -339,10 +342,9 @@
       // Creator mode - default false, only activated by double-click
       let isCreator = false;
 
+      // UPDATED: Only bg1-bg5 remain
       const bgPresets = [
-        'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png',
-        'bg6.jpg', 'bg7.jpg', 'bg8.jpg', 'bg9.jpg', 'bg10.jpg',
-        'bg11.jpg', 'bg12.jpg', 'bg13.jpg'
+        'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png'
       ];
 
       function init() {
@@ -417,6 +419,7 @@
 
       function buildEditMenuContent() {
         const menu = document.getElementById('editMenu');
+        // UPDATED: Only 5 bg buttons
         let bgButtons = bgPresets.map(bg => 
           `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
         ).join('');
