@@ -143,7 +143,6 @@
       z-index: 5;
     }
 
-    /* Remove extra borders */
     .grid-item:nth-child(6n) { border-right: none; }
     .grid-item:nth-last-child(-n+6) { border-bottom: none; }
 
@@ -170,18 +169,6 @@
       font-weight: bold;
       box-shadow: 0 0 10px #ffcc00;
       z-index: 2;
-    }
-
-    /* Empty slot placeholder */
-    .item-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #0f0f0f;
-      color: #666;
     }
 
     /* Lightbox */
@@ -268,27 +255,27 @@
     <div class="slogan-line2">FAKE ONES FEAR THE TRUTH</div>
     <div class="section-title">⚡ DESIGNS 1–30 ⚡</div>
     
-    <!-- Grid 30 slots -->
+    <!-- Grid 30 slots - ALL FILLED -->
     <div class="image-grid" id="designsGrid"></div>
   </div>
 
   <script>
     (function() {
-      // ========== FILE NAMES ACCORDING TO YOUR LIST ==========
-      // 30 images: 1a.png through 31a.png, but 17a.png is MISSING
+      // ========== 30 FILES, 30 SLOTS ==========
+      // Files: 1a.png through 31a.png, but 17a.png is MISSING
+      // So we have 30 files total
       
       const IMAGE_PATH = 'merch-artworks/';
       
-      // Array of 30 filenames in correct order
+      // Array of 30 filenames in correct order (skipping 17a)
       const imageFiles = [
         '1a.png', '2a.png', '3a.png', '4a.png', '5a.png',
         '6a.png', '7a.png', '8a.png', '9a.png', '10a.png',
         '11a.png', '12a.png', '13a.png', '14a.png', '15a.png',
-        '16a.png',           // slot 16
-        // slot 17 is EMPTY (17a.png missing)
+        '16a.png',           // slot 1-16
         '18a.png', '19a.png', '20a.png', '21a.png', '22a.png',
         '23a.png', '24a.png', '25a.png', '26a.png', '27a.png',
-        '28a.png', '29a.png', '30a.png', '31a.png'
+        '28a.png', '29a.png', '30a.png', '31a.png'  // last 14 files fill slots 17-30
       ];
 
       // Elements
@@ -320,28 +307,44 @@
           html += '<div class="grid-item" data-id="' + slot + '">';
           html += '<div class="item-number">' + slot + '</div>';
           
-          // Check if this slot should have an image
-          // Slot 17 is empty
-          if (slot === 17) {
-            // Empty slot
-            html += '<div class="item-placeholder"><div style="font-size:50px;">🎨</div><div>EMPTY</div></div>';
+          // Get filename for this slot
+          // Slots 1-16 map directly to indices 0-15
+          // Slots 17-30 map to indices 16-29 (skipping 17a)
+          let fileIndex;
+          if (slot <= 16) {
+            fileIndex = slot - 1;  // 0-15
           } else {
-            // Calculate array index: 
-            // For slots 1-16: index = slot-1
-            // For slots 18-30: index = slot-2 (because we skipped 17)
-            let imageIndex;
-            if (slot < 17) {
-              imageIndex = slot - 1;
-            } else {
-              // slot >= 18
-              imageIndex = slot - 2;
-            }
+            fileIndex = slot - 2;  // 16-28? Wait, let's calculate properly
+            // slot 17 -> index 15? No, let's fix:
+            // slot 17 should get index 16 (18a.png)
+            // slot 18 -> index 17
+            // ...
+            // slot 30 -> index 29
+            // So formula: fileIndex = slot - 1? No
+            // Better: fileIndex = slot - 1 for slots 1-16 (0-15)
+            // For slots 17-30: fileIndex = slot - 1? That would give 16-29
+            // But we need to account for missing 17a
+            // Actually since we have 30 files and 30 slots,
+            // and 17a is missing, the mapping is:
+            // slots 1-16: files 1a-16a (indices 0-15)
+            // slots 17-30: files 18a-31a (indices 16-29)
             
-            const fileName = imageFiles[imageIndex];
-            const imagePath = IMAGE_PATH + fileName;
-            
-            html += '<img src="' + imagePath + '" alt="Design ' + slot + '" loading="lazy">';
+            // So:
+            // if slot <= 16: index = slot - 1
+            // if slot >= 17: index = slot - 2? Let's check:
+            // slot 17: index = 15? No, should be 16
+            // slot 17: index = slot - 1 = 16 ✓
+            // slot 18: index = 17 ✓
+            // So actually it's just slot - 1 for all slots,
+            // but we need to make sure the array has 30 items
           }
+          
+          // Simpler: just use slot-1 as index, but array must be in correct order
+          // Our imageFiles array has 30 items in the correct order for slots 1-30
+          const fileName = imageFiles[slot - 1];
+          const imagePath = IMAGE_PATH + fileName;
+          
+          html += '<img src="' + imagePath + '" alt="Design ' + slot + '" loading="lazy">';
           
           html += '</div>';
         }
@@ -360,7 +363,6 @@
         const slot = item.dataset.id;
         const img = item.querySelector('img');
         
-        // Only open lightbox if there's an image
         if (img && img.src) {
           lightboxImg.src = img.src;
           lightboxNum.textContent = 'DESIGN #' + slot;
@@ -385,16 +387,6 @@
         if (e.key === 'Escape') {
           lightbox.classList.remove('active');
           lightboxImg.src = '';
-        }
-      });
-
-      // Preload images (optional)
-      window.addEventListener('load', () => {
-        for (let i = 0; i < imageFiles.length; i++) {
-          if (i !== 16) { // skip 17a (index 16)
-            const img = new Image();
-            img.src = IMAGE_PATH + imageFiles[i];
-          }
         }
       });
 
