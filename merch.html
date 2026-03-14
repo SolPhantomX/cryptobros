@@ -19,7 +19,7 @@
       overflow: hidden;
     }
 
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Russo+One&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Russo+One&family=Playfair+Display:wght@400;600;700;800&display=swap');
 
     /* Back button */
     .back-button {
@@ -104,17 +104,20 @@
       line-height: 1;
       transition: color 0.5s ease;
       color: #ffcc00;
+      white-space: nowrap; /* Title in one line */
     }
 
     .slogan {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 300;
+      font-family: 'Playfair Display', serif;  /* Beautiful attractive font */
+      font-size: 2rem;
+      font-weight: 600;
       max-width: 800px;
-      line-height: 1.5;
-      text-shadow: 3px 3px 0 rgba(0,0,0,0.8);
+      line-height: 1.4;
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.8), 0 0 20px currentColor;
       transition: color 0.5s ease;
       color: #ffffff;
+      font-style: italic;
+      letter-spacing: 0.5px;
     }
 
     /* Image container */
@@ -188,7 +191,7 @@
     <div class="slogan" id="changingSlogan">Real ones wear the merch. Fake ones fear the truth.</div>
   </div>
 
-  <!-- Image -->
+  <!-- Image container (background) -->
   <div class="image-container">
     <img id="mainImage" src="merch-bg.jpg" alt="CRYPTOBROS Merch">
   </div>
@@ -221,31 +224,49 @@
       const sloganEl = document.getElementById('changingSlogan');
       const mainImage = document.getElementById('mainImage');
 
-      // ===== GET DESIGNS FROM LOCALSTORAGE =====
-      let designImages = JSON.parse(localStorage.getItem('designImages')) || {};
+      // ===== ALL GALLERY IMAGES (30 files) =====
+      // 1a.png through 31a.png, skipping 17a.png
+      const imageFiles = [
+        '1a.png', '2a.png', '3a.png', '4a.png', '5a.png',
+        '6a.png', '7a.png', '8a.png', '9a.png', '10a.png',
+        '11a.png', '12a.png', '13a.png', '14a.png', '15a.png',
+        '16a.png',           // 16
+        '18a.png', '19a.png', '20a.png', '21a.png', '22a.png',
+        '23a.png', '24a.png', '25a.png', '26a.png', '27a.png',
+        '28a.png', '29a.png', '30a.png', '31a.png'  // 18-31 = 14 files, total 16+14=30
+      ];
 
-      // ===== ROTATE BACKGROUND EVERY 15 SECONDS =====
+      const IMAGE_PATH = 'merch-artworks/';
+      
+      // Preload all images
+      const images = imageFiles.map(file => {
+        const img = new Image();
+        img.src = IMAGE_PATH + file;
+        return img;
+      });
+
+      // ===== ROTATE BACKGROUND EVERY 10 SECONDS =====
+      let currentImageIndex = 0;
+      
       function rotateBackground() {
-        // Get all uploaded designs as array
-        const designs = [];
-        for (let i = 1; i <= 20; i++) {
-          if (designImages[i]) {
-            designs.push(designImages[i]);
-          }
-        }
-
-        if (designs.length > 0) {
-          // Random design
-          const randomIndex = Math.floor(Math.random() * designs.length);
-          mainImage.src = designs[randomIndex];
+        // Use our 30 images
+        if (images.length > 0) {
+          currentImageIndex = (currentImageIndex + 1) % images.length;
+          mainImage.src = images[currentImageIndex].src;
         } else {
-          // Fallback to merch-bg.jpg
+          // Fallback
           mainImage.src = 'merch-bg.jpg';
         }
       }
 
-      // Rotate every 15 seconds
-      setInterval(rotateBackground, 15000);
+      // Initial random image
+      if (images.length > 0) {
+        currentImageIndex = Math.floor(Math.random() * images.length);
+        mainImage.src = images[currentImageIndex].src;
+      }
+
+      // Rotate every 10 seconds
+      setInterval(rotateBackground, 10000);
 
       // ===== TITLE/SLOGAN ROTATION =====
       setInterval(() => {
