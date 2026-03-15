@@ -6,7 +6,7 @@
   <title>CRYPTOBROS TRIBUNAL — AI Risk Assessment</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
@@ -19,6 +19,10 @@
       --text-secondary: #a0a0c0; --agent-hunter: #ff4d4d; --agent-oracle: #9d00ff;
       --agent-judge: #00f0ff; --agent-moderator: #ffd700;
       --border-width: 3px; --border-glow: 0 0 20px rgba(0, 240, 255, 0.5);
+      --font-display: 'Plus Jakarta Sans', sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Quicksand', sans-serif;
+      --font-mono: 'Space Grotesk', sans-serif;
     }
     .day-mode {
       --deep-bg: linear-gradient(135deg, #FFD700 0%, #FFA500 25%, #FFF8DC 50%, #FFD700 75%, #FFA500 100%);
@@ -27,32 +31,83 @@
       --border-glow: 0 0 25px rgba(255, 215, 0, 0.7);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: var(--deep-bg); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; background-size: 400% 400%; transition: background 0.5s ease; }
+    body { 
+      font-family: var(--font-body); 
+      background: var(--deep-bg); 
+      color: var(--text-primary); 
+      min-height: 100vh; 
+      overflow-x: hidden; 
+      background-size: 400% 400%; 
+      transition: background 0.5s ease;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
     .day-mode body { animation: goldSilk 8s ease infinite; }
     @keyframes goldSilk { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     #particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
     
-    .back-btn { position: absolute; top: 20px; left: 20px; padding: 0.8rem 1.6rem; background: rgba(10, 14, 39, 0.8); border: var(--border-width) solid var(--neon-cyan); border-radius: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--neon-cyan); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; backdrop-filter: blur(10px); box-shadow: var(--border-glow); z-index: 1001; }
+    .header-controls {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .back-btn { 
+      padding: 0.8rem 1.6rem; 
+      background: rgba(10, 14, 39, 0.8); border: var(--border-width) solid var(--neon-cyan); 
+      border-radius: 50px; font-family: var(--font-heading); 
+      font-weight: 700; font-size: 0.95rem; color: var(--neon-cyan); cursor: pointer; 
+      text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; 
+      backdrop-filter: blur(10px); box-shadow: var(--border-glow); z-index: 1001; 
+      transition: all 0.3s ease;
+    }
     .back-btn:hover { transform: translateX(-4px); box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); }
     
-    .theme-toggle { position: absolute; top: 20px; left: 220px; width: 48px; height: 48px; background: rgba(10, 14, 39, 0.8); border: var(--border-width) solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s ease; z-index: 1001; box-shadow: var(--border-glow); }
+    .theme-toggle { 
+      width: 48px; height: 48px; 
+      background: rgba(10, 14, 39, 0.8); border: var(--border-width) solid var(--glass-border); 
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+      cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s ease; 
+      z-index: 1001; box-shadow: var(--border-glow); 
+      font-family: var(--font-heading);
+      margin-left: auto;
+    }
     .theme-toggle:hover { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.6); transform: scale(1.1); }
     
-    .sound-toggle { position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px; background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s ease; z-index: 1000; box-shadow: var(--border-glow); }
+    .sound-toggle { 
+      position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px; 
+      background: var(--card-bg); border: var(--border-width) solid var(--glass-border); 
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+      cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s ease; 
+      z-index: 1000; box-shadow: var(--border-glow); 
+      font-family: var(--font-heading);
+    }
     .sound-toggle:hover { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.6); transform: scale(1.1); }
     
-    .header { text-align: center; padding: 3rem 0; margin-bottom: 2rem; margin-top: 60px; }
-    .main-title { font-family: 'Rajdhani', sans-serif; font-size: 3.5rem; font-weight: 700; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-blue)); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientFlow 5s ease infinite; margin-bottom: 0.5rem; }
+    .header { text-align: center; padding: 3rem 0; margin-bottom: 2rem; }
+    
+    .main-title { 
+      font-family: var(--font-display); 
+      font-size: 3.8rem; 
+      font-weight: 800; 
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-blue)); 
+      background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+      animation: gradientFlow 5s ease infinite; margin-bottom: 0.5rem; 
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
     @keyframes gradientFlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     
     .subtitle {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 600;
       color: var(--neon-cyan);
       margin-bottom: 1.5rem;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
       animation: subtitleFlicker 2.5s ease-in-out infinite;
       text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
@@ -62,29 +117,97 @@
       50% { opacity: 1; text-shadow: 0 0 20px rgba(0, 240, 255, 0.8); }
     }
     
-    .warning-text { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 800; background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-purple), var(--neon-green)); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: warningColor 4s ease-in-out infinite; }
+    .warning-text { 
+      font-family: var(--font-display); 
+      font-size: 1.5rem; 
+      font-weight: 700; 
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-purple), var(--neon-green)); 
+      background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+      animation: warningColor 4s ease-in-out infinite; 
+      letter-spacing: 1px;
+    }
     @keyframes warningColor { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-    .not-highlight { color: #ff4d4d !important; -webkit-text-fill-color: #ff4d4d !important; text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d, 0 0 40px rgba(255, 77, 77, 0.6) !important; font-weight: 900; animation: dangerPulse 0.8s ease-in-out infinite; display: inline-block; }
+    
+    .not-highlight { 
+      color: #ff4d4d !important; 
+      -webkit-text-fill-color: #ff4d4d !important; 
+      text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d, 0 0 40px rgba(255, 77, 77, 0.6) !important; 
+      font-weight: 900; 
+      animation: dangerPulse 0.8s ease-in-out infinite; 
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      margin: 0 4px;
+    }
     @keyframes dangerPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.05); } }
     
-    .search-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); box-shadow: var(--border-glow); }
-    .search-input-wrapper { display: flex; gap: 1rem; margin-bottom: 1rem; }
-    .search-input { flex: 1; padding: 1rem 1.5rem; background: rgba(10, 14, 39, 0.5); border: 2px solid var(--glass-border); border-radius: 14px; font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--text-primary); }
+    .search-section { 
+      background: var(--card-bg); border: var(--border-width) solid var(--glass-border); 
+      border-radius: 30px; padding: 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); 
+      box-shadow: var(--border-glow); 
+    }
+    .search-input-wrapper { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .search-input { 
+      flex: 1; min-width: 200px; padding: 1rem 1.5rem; background: rgba(10, 14, 39, 0.5); 
+      border: 2px solid var(--glass-border); border-radius: 40px; 
+      font-family: var(--font-body); font-size: 1rem; color: var(--text-primary); 
+      font-weight: 500;
+    }
     .search-input:focus { outline: none; border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
     
-    .analyze-btn { padding: 1rem 3rem; background: linear-gradient(135deg, #00F0FF, #0047FF, #9D00FF); background-size: 300% 300%; border: none; border-radius: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 1.1rem; color: #fff; cursor: pointer; animation: gradientShift 4s ease infinite; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 0 30px rgba(0, 240, 255, 0.5); }
+    .analyze-btn { 
+      padding: 1rem 3rem; 
+      background: linear-gradient(135deg, #00F0FF, #0047FF, #9D00FF); 
+      background-size: 300% 300%; border: none; 
+      border-radius: 50px;
+      font-family: var(--font-heading); 
+      font-weight: 700; 
+      font-size: 1.1rem; 
+      color: #fff; 
+      cursor: pointer; 
+      animation: gradientShift 4s ease infinite; 
+      letter-spacing: 2px; 
+      text-transform: uppercase; 
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
     @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     .analyze-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 0 50px rgba(0, 240, 255, 0.8); }
     .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; animation: none; }
     
     .quick-tokens { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
-    .token-chip { padding: 0.5rem 1rem; background: rgba(0, 240, 255, 0.1); border: 2px solid var(--neon-cyan); border-radius: 20px; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--neon-cyan); cursor: pointer; transition: all 0.3s ease; font-weight: 600; }
+    .token-chip { 
+      padding: 0.5rem 1.2rem; background: rgba(0, 240, 255, 0.1); 
+      border: 2px solid var(--neon-cyan); border-radius: 40px; 
+      font-family: var(--font-body); font-size: 0.85rem; color: var(--neon-cyan); 
+      cursor: pointer; transition: all 0.3s ease; font-weight: 600; 
+    }
     .token-chip:hover { background: rgba(0, 240, 255, 0.25); transform: scale(1.05); box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
     
-    .tribunal-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); box-shadow: var(--border-glow); }
-    .section-title { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--neon-cyan); text-align: center; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 2px; }
+    .tribunal-section { 
+      background: var(--card-bg); border: var(--border-width) solid var(--glass-border); 
+      border-radius: 30px; padding: 2rem; margin-bottom: 2rem; 
+      backdrop-filter: blur(12px); box-shadow: var(--border-glow); 
+    }
+    
+    .section-title { 
+      font-family: var(--font-heading); 
+      font-size: 1.6rem; 
+      font-weight: 700; 
+      color: var(--neon-cyan); 
+      text-align: center; 
+      margin-bottom: 2rem; 
+      text-transform: uppercase; 
+      letter-spacing: 3px; 
+    }
     .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-    .agent-card { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 16px; padding: 1.5rem; position: relative; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
+    
+    .agent-card { 
+      background: var(--card-bg); border: var(--border-width) solid var(--glass-border); 
+      border-radius: 24px; padding: 1.5rem; position: relative; overflow: hidden; 
+      transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); 
+    }
     .agent-card:hover { transform: translateY(-4px); }
     .agent-card[data-agent="hunter"]:hover { border-color: var(--agent-hunter); box-shadow: 0 0 30px rgba(255, 77, 77, 0.4); }
     .agent-card[data-agent="oracle"]:hover { border-color: var(--agent-oracle); box-shadow: 0 0 30px rgba(157, 0, 255, 0.4); }
@@ -95,15 +218,79 @@
     .agent-core { width: 64px; height: 64px; position: relative; flex-shrink: 0; filter: drop-shadow(0 0 15px currentColor); }
     .core-svg { width: 100%; height: 100%; }
     .agent-info { flex: 1; }
-    .agent-name { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
-    .agent-model { font-family: 'Roboto Mono', monospace; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
-    .agent-status { font-family: 'Inter', sans-serif; font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block; background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); font-weight: 600; }
-    .agent-status.analyzing { background: rgba(255, 215, 0, 0.15); color: var(--neon-gold); border-color: var(--neon-gold); animation: statusPulse 1s ease-in-out infinite; }
+    
+    .agent-name { 
+      font-family: var(--font-heading); 
+      font-size: 1rem; 
+      font-weight: 700; 
+      color: var(--text-primary); 
+      margin-bottom: 0.25rem; 
+    }
+    
+    .agent-model { 
+      font-family: var(--font-mono); 
+      font-size: 0.7rem; 
+      color: var(--text-secondary); 
+      margin-bottom: 0.5rem; 
+      font-weight: 500;
+    }
+    
+    .agent-status { 
+      font-family: var(--font-body); 
+      font-size: 0.7rem; 
+      padding: 0.25rem 0.5rem; 
+      border-radius: 30px;
+      display: inline-block; 
+      background: rgba(0, 240, 255, 0.1); 
+      color: var(--neon-cyan); 
+      border: 1px solid var(--neon-cyan); 
+      font-weight: 600; 
+    }
+    .agent-status.analyzing { 
+      background: rgba(255, 215, 0, 0.15); 
+      color: var(--neon-gold); 
+      border-color: var(--neon-gold); 
+      animation: statusPulse 1s ease-in-out infinite; 
+    }
     @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     
-    .agent-output { font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; min-height: 80px; }
-    .agent-output li { list-style: none; margin-bottom: 0.4rem; padding-left: 1rem; position: relative; }
-    .agent-output li::before { content: '→'; position: absolute; left: 0; color: var(--neon-cyan); font-weight: 700; }
+    .agent-output { 
+      font-family: var(--font-body); 
+      font-size: 0.9rem; 
+      color: var(--text-primary); 
+      line-height: 1.7; 
+      min-height: 80px; 
+      font-weight: 500;
+      word-break: break-word;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    
+    .agent-output li { 
+      list-style: none; 
+      margin-bottom: 0.4rem; 
+      padding-left: 1rem; 
+      position: relative; 
+    }
+    .agent-output li::before { 
+      content: '→'; 
+      position: absolute; 
+      left: 0; 
+      color: var(--neon-cyan); 
+      font-weight: 700; 
+    }
+    
+    .agent-loading {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      border-top-color: var(--neon-cyan);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
     
     .core-ring { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-opacity: 0.6; animation: corePulse 4s ease-in-out infinite; }
     .core-ring-outer { animation-delay: 0s; }
@@ -128,46 +315,155 @@
       animation-play-state: paused !important;
     }
     
-    .verdict-section { background: var(--card-bg); border: var(--border-width) solid var(--glass-border); border-radius: 20px; padding: 3rem 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); text-align: center; box-shadow: var(--border-glow); display: none; }
+    .verdict-section { 
+      background: var(--card-bg); border: var(--border-width) solid var(--glass-border); 
+      border-radius: 40px;
+      padding: 3rem 2rem; margin-bottom: 2rem; backdrop-filter: blur(12px); 
+      text-align: center; box-shadow: var(--border-glow); display: none; 
+    }
     .verdict-section.high-risk { border-color: var(--neon-red); box-shadow: 0 0 60px rgba(255, 77, 77, 0.4); }
     .verdict-section.low-risk { border-color: var(--neon-green); box-shadow: 0 0 60px rgba(0, 255, 157, 0.4); }
-    .verdict-title { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--neon-cyan); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 2px; }
-    .verdict-score { font-family: 'Rajdhani', sans-serif; font-size: 4rem; font-weight: 700; margin-bottom: 1rem; text-shadow: 0 0 40px currentColor; }
+    
+    .verdict-title { 
+      font-family: var(--font-heading); 
+      font-size: 1.6rem; 
+      font-weight: 700; 
+      color: var(--neon-cyan); 
+      margin-bottom: 1.5rem; 
+      text-transform: uppercase; 
+      letter-spacing: 3px; 
+    }
+    
+    .verdict-score { 
+      font-family: var(--font-display); 
+      font-size: 4.5rem; 
+      font-weight: 800; 
+      margin-bottom: 1rem; 
+      text-shadow: 0 0 40px currentColor; 
+      line-height: 1;
+    }
     .verdict-score.high-risk { color: var(--neon-red); }
     .verdict-score.low-risk { color: var(--neon-green); }
-    .verdict-label { font-family: 'Rajdhani', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-transform: uppercase; }
+    
+    .verdict-label { 
+      font-family: var(--font-display); 
+      font-size: 2.2rem; 
+      font-weight: 800; 
+      margin-bottom: 2rem; 
+      text-transform: uppercase; 
+      letter-spacing: 2px;
+    }
     .verdict-label.high-risk { color: var(--neon-red); text-shadow: 0 0 30px rgba(255, 77, 77, 0.8); }
     .verdict-label.low-risk { color: var(--neon-green); text-shadow: 0 0 30px rgba(0, 255, 157, 0.8); }
-    .quantum-scan { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    
+    .quantum-scan { 
+      font-family: var(--font-body); 
+      font-size: 0.9rem; 
+      color: var(--text-secondary); 
+      margin-bottom: 2rem; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 0.5rem; 
+      font-weight: 500;
+    }
     .scan-indicator { width: 8px; height: 8px; background: var(--neon-cyan); border-radius: 50%; animation: scanBlink 1s ease-in-out infinite; }
     @keyframes scanBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    .verdict-details { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--text-primary); margin: 1.5rem 0; text-align: left; background: rgba(0, 10, 50, 0.5); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--neon-cyan); }
-    .save-verdict-btn { padding: 1rem 3rem; background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan)); border: none; border-radius: 14px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1rem; color: var(--deep-bg); cursor: pointer; box-shadow: 0 0 30px rgba(157, 0, 255, 0.5); letter-spacing: 1px; text-transform: uppercase; }
+    
+    .verdict-details { 
+      font-family: var(--font-mono); 
+      font-size: 0.85rem; 
+      color: var(--text-primary); 
+      margin: 1.5rem 0; 
+      text-align: left; 
+      background: rgba(0, 10, 50, 0.5); 
+      padding: 1rem; 
+      border-radius: 20px; 
+      border-left: 3px solid var(--neon-cyan); 
+      font-weight: 500;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    
+    .save-verdict-btn { 
+      padding: 1rem 3rem; 
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan)); 
+      border: none; 
+      border-radius: 50px;
+      font-family: var(--font-heading); 
+      font-weight: 700; 
+      font-size: 1rem; 
+      color: var(--deep-bg); 
+      cursor: pointer; 
+      box-shadow: 0 0 30px rgba(157, 0, 255, 0.5); 
+      letter-spacing: 2px; 
+      text-transform: uppercase; 
+      transition: all 0.3s ease;
+    }
     .save-verdict-btn:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(157, 0, 255, 0.7); }
     
-    .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(0, 240, 255, 0.3); border-top-color: var(--neon-cyan); border-radius: 50%; animation: spin 1s linear infinite; margin-right: 10px; vertical-align: middle; }
+    .loading-spinner { 
+      display: inline-block; width: 20px; height: 20px; 
+      border: 3px solid rgba(0, 240, 255, 0.3); border-top-color: var(--neon-cyan); 
+      border-radius: 50%; animation: spin 1s linear infinite; margin-right: 10px; 
+      vertical-align: middle; 
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
     
+    .error-message {
+      color: var(--neon-red);
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 77, 77, 0.1);
+      border: 1px solid var(--neon-red);
+      margin: 10px 0;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+    
     @media (max-width: 768px) {
-      .main-title { font-size: 2.2rem; }
-      .search-input-wrapper { flex-direction: column; }
-      .analyze-btn { width: 100%; }
+      .main-title { font-size: 2.5rem; }
+      .search-input-wrapper { 
+        flex-direction: column; 
+        align-items: stretch;
+      }
+      .analyze-btn { 
+        width: 100%;
+        white-space: normal;
+        padding: 0.8rem;
+      }
       .agent-grid { grid-template-columns: 1fr; }
-      .verdict-score { font-size: 2.5rem; }
-      .verdict-label { font-size: 1.5rem; }
-      .back-btn { position: relative; top: auto; left: auto; margin-bottom: 1rem; }
-      .theme-toggle { position: relative; top: auto; left: auto; margin: 0 auto 1rem; display: flex; }
+      .verdict-score { font-size: 3rem; }
+      .verdict-label { font-size: 1.8rem; }
+      .header-controls {
+        flex-wrap: wrap;
+      }
+      .back-btn, .theme-toggle {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin: 0;
+      }
+      .theme-toggle {
+        margin-left: auto;
+      }
       .header { padding: 2rem 0; margin-top: 0; }
       .sound-toggle { bottom: 20px; right: 20px; width: 42px; height: 42px; }
-      .warning-text { font-size: 1.1rem; }
+      .warning-text { font-size: 1.2rem; }
+      .not-highlight { font-size: 1.5rem; }
+      .agent-output {
+        max-height: 150px;
+      }
     }
   </style>
 </head>
 <body>
   <div id="particles-container"></div>
   <div class="container">
-    <a href="index.html" class="back-btn">↩ Back to Home</a>
-    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</div>
+    <div class="header-controls">
+      <a href="index.html" class="back-btn">↩ Back to Home</a>
+      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</div>
+    </div>
     
     <div class="header">
       <h1 class="main-title">CRYPTOBROS TRIBUNAL</h1>
@@ -178,7 +474,7 @@
     <div class="search-section">
       <div class="search-input-wrapper">
         <input type="text" class="search-input" id="tokenInput" placeholder="Enter token address or symbol (e.g., $WIF, $BONK)...">
-        <button class="analyze-btn" id="analyzeBtn" onclick="analyzeToken()">🔍 ANALYZE</button>
+        <button class="analyze-btn" id="analyzeBtn" onclick="debouncedAnalyze()">🔍 ANALYZE</button>
       </div>
       <div class="quick-tokens">
         <span class="token-chip" onclick="quickAnalyze('$WIF')">$WIF</span>
@@ -283,25 +579,161 @@
   <div class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇</div>
 
   <script>
+    // ================== CONFIGURATION ==================
+    const CONFIG = {
+      CACHE_TTL: 5 * 60 * 1000, // 5 minutes
+      MAX_RETRIES: 3,
+      RETRY_DELAY: 1000,
+      CHAIN_IDS: {
+        'solana': '1399811149',
+        'ethereum': '1',
+        'bsc': '56',
+        'polygon': '137',
+        'base': '8453',
+        'arbitrum': '42161',
+        'optimism': '10',
+        'avalanche': '43114'
+      },
+      BLUE_CHIPS: ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'],
+      MEME_PATTERNS: ['wif','bonk','pepe','mog','turbo','dog','shib','floki']
+    };
+    
+    // ================== STATE ==================
     let isDayMode = localStorage.getItem('tribunalTheme') === 'day';
     let soundsEnabled = localStorage.getItem('tribunalSounds') === 'true';
+    let goPlusDataCache = new Map();
+    let isAnalyzing = false;
+    let particlesInitialized = false;
+    let tiltObserver = null;
     
+    // ================== UTILITIES ==================
     function escapeHTML(str) {
-      if (!str) return str;
-      return String(str).replace(/[&<>"']/g, function(match) {
-        const escape = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-        return escape[match] || match;
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = String(str);
+      return div.innerHTML;
+    }
+    
+    function formatNumber(num) {
+      if (!num || isNaN(num)) return '0';
+      if (num >= 1e9) return (num/1e9).toFixed(2)+'B';
+      if (num >= 1e6) return (num/1e6).toFixed(2)+'M';
+      if (num >= 1e3) return (num/1e3).toFixed(2)+'K';
+      return num.toFixed(2);
+    }
+    
+    function formatDate(timestamp) {
+      if (!timestamp || timestamp <= 0) return 'Unknown';
+      return new Date(timestamp).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
       });
     }
     
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    function isOnline() {
+      return navigator.onLine;
+    }
+    
+    function validateTokenInput(input) {
+      if (!input || typeof input !== 'string') return false;
+      const trimmed = input.trim();
+      if (trimmed.length < 2 || trimmed.length > 100) return false;
+      
+      // Solana address - base58, 32-44 characters
+      if (/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(trimmed)) return true;
+      
+      // Symbols like $WIF, BONK
+      if (/^\$?[A-Z]{2,10}$/i.test(trimmed)) return true;
+      
+      return false;
+    }
+    
+    // ================== DEBOUNCE ==================
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+    
+    // ================== API WITH RETRY AND TIMEOUT ==================
+    async function fetchWithRetry(url, options = {}, retries = CONFIG.MAX_RETRIES) {
+      if (!isOnline()) {
+        throw new Error('No internet connection');
+      }
+      
+      let timeoutId;
+      const controller = new AbortController();
+      
+      try {
+        timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        for (let i = 0; i < retries; i++) {
+          try {
+            const response = await fetch(url, { 
+              ...options, 
+              signal: controller.signal 
+            });
+            
+            if (response.ok) {
+              return response;
+            }
+            
+            if (response.status === 429) { // Rate limited
+              const delay = CONFIG.RETRY_DELAY * Math.pow(2, i);
+              console.log(`Rate limited, retrying in ${delay}ms...`);
+              await sleep(delay);
+              continue;
+            }
+            
+            throw new Error(`HTTP ${response.status}`);
+          } catch (e) {
+            if (e.name === 'AbortError') {
+              throw new Error('Request timeout after 10 seconds');
+            }
+            if (i === retries - 1) throw e;
+            await sleep(CONFIG.RETRY_DELAY * Math.pow(2, i));
+          }
+        }
+      } finally {
+        if (timeoutId) clearTimeout(timeoutId);
+      }
+      
+      throw new Error('Max retries exceeded');
+    }
+    
+    // ================== THEME ==================
     function toggleTheme() {
       isDayMode = !isDayMode;
       document.body.classList.toggle('day-mode', isDayMode);
       document.getElementById('themeToggle').textContent = isDayMode ? '☀️' : '🌙';
       localStorage.setItem('tribunalTheme', isDayMode ? 'day' : 'night');
+      
       const pc = document.getElementById('particles-container');
-      if (pc) pc.style.display = isDayMode ? 'none' : 'block';
-      if (!isDayMode) initParticles();
+      
+      if (!isDayMode) {
+        pc.style.display = 'block';
+        if (!particlesInitialized) {
+          initParticles();
+        } else if (typeof tsParticles !== 'undefined' && !tsParticles.domItem(0)) {
+          initParticles();
+        }
+      } else {
+        pc.style.display = 'none';
+        if (typeof tsParticles !== 'undefined' && tsParticles.domItem(0)) {
+          tsParticles.domItem(0).destroy();
+        }
+      }
     }
     
     function toggleSound() {
@@ -311,55 +743,235 @@
     }
     
     async function initParticles() {
-      if (isDayMode || typeof tsParticles === 'undefined') return;
+      if (isDayMode || typeof tsParticles === 'undefined' || particlesInitialized) return;
+      
       try {
         await tsParticles.load("particles-container", {
-          particles: { number: { value: 60 }, color: { value: ["#0047FF", "#00F0FF", "#9D00FF"] }, shape: { type: "circle" }, opacity: { value: 0.3, random: true }, size: { value: 2, random: true }, move: { enable: true, speed: 0.5, out_mode: "out" }, links: { enable: true, distance: 150, color: "#0047FF", opacity: 0.2, width: 1 } }
+          particles: { 
+            number: { value: 60 }, 
+            color: { value: ["#0047FF", "#00F0FF", "#9D00FF"] }, 
+            shape: { type: "circle" }, 
+            opacity: { value: 0.3, random: true }, 
+            size: { value: 2, random: true }, 
+            move: { enable: true, speed: 0.5, out_mode: "out" }, 
+            links: { enable: true, distance: 150, color: "#0047FF", opacity: 0.2, width: 1 } 
+          }
         });
+        particlesInitialized = true;
       } catch(e) { 
-        const pc = document.getElementById('particles-container');
-        if (pc) pc.style.display = 'none';
+        console.log('Particles failed:', e);
+        document.getElementById('particles-container').style.display = 'none';
       }
     }
     
-    function formatNumber(num) {
-      if (num >= 1e9) return (num/1e9).toFixed(2)+'B';
-      if (num >= 1e6) return (num/1e6).toFixed(2)+'M';
-      if (num >= 1e3) return (num/1e3).toFixed(2)+'K';
-      return num.toFixed(2);
+    // ================== TILT INITIALIZATION ==================
+    function initTilt() {
+      if (window.innerWidth <= 768) return;
+      if (typeof VanillaTilt !== 'undefined') {
+        const cards = document.querySelectorAll('.agent-card');
+        if (cards.length > 0) {
+          VanillaTilt.init(cards, { 
+            max: 8, 
+            speed: 400, 
+            glare: true, 
+            'max-glare': 0.3 
+          });
+        }
+      }
     }
     
+    // ================== GET CHAIN ID ==================
+    function getChainId(chainName) {
+      if (!chainName) return CONFIG.CHAIN_IDS.solana;
+      const normalized = chainName.toLowerCase();
+      return CONFIG.CHAIN_IDS[normalized] || CONFIG.CHAIN_IDS.solana;
+    }
+    
+    // ================== FETCH GOPLUS DATA ==================
+    async function fetchGoPlusData(contractAddress, chainName) {
+      if (!contractAddress) return null;
+      
+      const chainId = getChainId(chainName);
+      const cacheKey = `${chainId}_${contractAddress}`;
+      
+      // Check cache
+      if (goPlusDataCache.has(cacheKey)) {
+        const cached = goPlusDataCache.get(cacheKey);
+        if (Date.now() - cached.timestamp < CONFIG.CACHE_TTL) {
+          return cached.data;
+        }
+      }
+      
+      try {
+        const response = await fetchWithRetry('https://cryptobros-backend.onrender.com/api/goplus/token-security', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            chain_id: chainId, 
+            contract_addresses: contractAddress 
+          })
+        });
+        
+        const data = await response.json();
+        
+        // Check GoPlus API response code
+        if (data.code !== 1) {
+          throw new Error(`GoPlus API error: ${data.message || 'Unknown'}`);
+        }
+        
+        const result = data.result?.[contractAddress];
+        
+        if (result) {
+          const goPlusData = {
+            creationTimestamp: parseInt(result.creation_timestamp) || null,
+            creationBlock: result.creation_block || null,
+            holders: parseInt(result.holder_count) || 0,
+            liquidity: parseFloat(result.liquidity) || 0,
+            mintAuthority: result.mint_authority || null,
+            freezeAuthority: result.freeze_authority || null,
+            isHoneypot: result.is_honeypot === '1',
+            isBlacklisted: result.is_blacklisted === '1',
+            buyTax: parseFloat(result.buy_tax) || 0,
+            sellTax: parseFloat(result.sell_tax) || 0,
+            isOpenSource: result.is_open_source === '1',
+            isProxy: result.is_proxy === '1',
+            canTakeBackOwnership: result.can_take_back_ownership === '1',
+            ownerBalance: parseFloat(result.owner_balance) || 0,
+            ownerPercentage: parseFloat(result.owner_percentage) || 0
+          };
+          
+          // Save to cache
+          goPlusDataCache.set(cacheKey, {
+            data: goPlusData,
+            timestamp: Date.now()
+          });
+          
+          return goPlusData;
+        }
+      } catch (e) {
+        console.log('GoPlus fetch failed:', e);
+      }
+      return null;
+    }
+    
+    // ================== FETCH DEXSCREENER DATA ==================
     async function fetchTokenData(query) {
       try {
-        const response = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(query)}`);
-        if (!response.ok) return { offlineMode: true, tokenData: null };
+        const trimmedQuery = query.trim();
+        const response = await fetchWithRetry(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(trimmedQuery)}`);
         const data = await response.json();
-        if (!data.pairs || data.pairs.length === 0) return { offlineMode: true, tokenData: null };
-        const tokenData = data.pairs.reduce((best, current) => (current.liquidity?.usd || 0) > (best.liquidity?.usd || 0) ? current : best);
-        return { offlineMode: false, tokenData };
+        
+        if (!data.pairs || data.pairs.length === 0) {
+          return { success: false, error: 'No pairs found' };
+        }
+        
+        // Take pair with highest liquidity
+        const tokenData = data.pairs.reduce((best, current) => 
+          (current.liquidity?.usd || 0) > (best.liquidity?.usd || 0) ? current : best
+        );
+        
+        // Get GoPlus data
+        let goPlusData = null;
+        if (tokenData.baseToken?.address) {
+          goPlusData = await fetchGoPlusData(
+            tokenData.baseToken.address, 
+            tokenData.chainId
+          );
+        }
+        
+        return { 
+          success: true, 
+          tokenData, 
+          goPlusData 
+        };
+        
       } catch(e) {
-        return { offlineMode: true, tokenData: null };
+        console.error('DexScreener error:', e);
+        return { success: false, error: e.message };
       }
     }
     
-    function analyzeOnChain(tokenQuery, tokenData, offlineMode) {
-      if (offlineMode || !tokenData) return { output: "→ Contract verification: FAILED\n→ No on-chain data available\n→ ⚠️ EXTREME RISK: Unknown contract", risk: 0.95 };
+    // ================== CALCULATE CONTRACT AGE (FIXED) ==================
+    function calculateContractAge(goPlusData, tokenData) {
+      const result = {
+        hours: null,
+        days: null,
+        source: 'Unknown',
+        isValid: false,
+        timestamp: null
+      };
+      
+      const now = Date.now();
+      const oneYearAgo = now - 365 * 24 * 3600 * 1000;
+      
+      // 1. GoPlus — most accurate source (mint creation)
+      if (goPlusData?.creationTimestamp != null && goPlusData.creationTimestamp > 0) {
+        const ts = goPlusData.creationTimestamp * 1000;
+        // Check if timestamp is reasonable (not in future, after 2020)
+        if (ts < now && ts > 1600000000000) {
+          result.hours = (now - ts) / 3600000;
+          result.days = result.hours / 24;
+          result.source = 'GoPlus (mint creation)';
+          result.isValid = true;
+          result.timestamp = ts;
+          return result; // CRITICAL: return immediately
+        }
+      }
+      
+      // 2. DexScreener pairCreatedAt — pool age (fallback)
+      if (tokenData?.pairCreatedAt && tokenData.pairCreatedAt > 1600000000000) {
+        const ts = tokenData.pairCreatedAt;
+        if (ts < now && ts > oneYearAgo) {
+          result.hours = (now - ts) / 3600000;
+          result.days = result.hours / 24;
+          result.source = 'DexScreener (pool creation)';
+          result.isValid = true;
+          result.timestamp = ts;
+          // Don't return yet — continue to check holders/volume
+        }
+      }
+      
+      // 3. Additional traction check
+      const holders = goPlusData?.holders || 0;
+      const volume24h = tokenData?.volume?.h24 || 0;
+      
+      if (holders > 3000 || volume24h > 500000) {
+        result.source = 'High traction override';
+        result.days = 90; // Consider "old" for risk reduction
+        result.isValid = true;
+      }
+      
+      return result;
+    }
+    
+    // ================== ON-CHAIN ANALYSIS ==================
+    function analyzeOnChain(tokenQuery, tokenData, goPlusData) {
+      if (!tokenData) {
+        return { 
+          output: "→ Contract verification: FAILED\n→ No on-chain data available\n→ ⚠️ EXTREME RISK: Unknown contract", 
+          risk: 0.95 
+        };
+      }
       
       const baseToken = tokenData.baseToken || {};
       const liquidity = tokenData.liquidity || {};
       const fdv = tokenData.fdv || 0;
-      const pairCreatedAt = tokenData.pairCreatedAt || 0;
       
       let output = "→ On-chain analysis complete\n";
       let risk = 0.5;
       
+      // AURASPACE token
       if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) {
-        return { output: "→ AURASPACE token detected\n→ Native to CRYPTOBROS ecosystem\n→ Contract verified and trusted\n→ LP locked permanently", risk: 0.05 };
+        return { 
+          output: "→ AURASPACE token detected\n→ Native to CRYPTOBROS ecosystem\n→ Contract verified and trusted\n→ LP locked permanently", 
+          risk: 0.05 
+        };
       }
       
       const ticker = (tokenData.baseToken?.symbol || '').toLowerCase();
-      const blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'];
-      if (blueChips.some(chip => ticker.includes(chip))) {
+      
+      // Blue chips
+      if (CONFIG.BLUE_CHIPS.some(chip => ticker.includes(chip))) {
         const liqRisk = liquidity.usd ? Math.max(0.05, 0.2 - (liquidity.usd / 1e9)) : 0.2;
         risk = Math.min(0.25, liqRisk);
         output += `→ Blue chip asset: ${ticker.toUpperCase()}\n`;
@@ -368,32 +980,141 @@
         return { output, risk };
       }
       
-      const ageHours = (Date.now() - (pairCreatedAt * 1000)) / (1000 * 60 * 60);
-      if (ageHours < 1) { output += "→ ⚠️ BRAND NEW CONTRACT (<1h)\n"; risk += 0.4; }
-      else if (ageHours < 6) { output += `→ Very young contract (${ageHours.toFixed(1)}h)\n`; risk += 0.3; }
-      else if (ageHours < 24) { output += `→ Young contract (${ageHours.toFixed(1)}h)\n`; risk += 0.2; }
-      else if (ageHours < 168) { output += `→ Developing contract (${(ageHours/24).toFixed(1)} days)\n`; risk += 0.1; }
+      // Determine age
+      const age = calculateContractAge(goPlusData, tokenData);
       
+      if (age.isValid) {
+        output += `→ Age source: ${age.source}\n`;
+        if (age.timestamp) {
+          output += `→ Created: ${formatDate(age.timestamp)}\n`; // FIXED: no /1000
+        }
+        
+        if (age.days < 1) {
+          // Less than a day
+          const holders = goPlusData?.holders || 0;
+          const volume24h = tokenData?.volume?.h24 || 0;
+          
+          if (holders > 3000 || volume24h > 500000) {
+            output += `→ 🔶 NEW CONTRACT (${age.hours.toFixed(1)}h) but ${holders} holders already\n`;
+            output += `→ Likely airdrop/listing, not fresh scam\n`;
+            risk += 0.1;
+          } else {
+            output += `→ ⚠️ BRAND NEW CONTRACT (<24h)\n`; 
+            risk += 0.4;
+          }
+        } else if (age.days < 7) {
+          output += `→ Very young contract (${age.days.toFixed(1)} days)\n`; 
+          risk += 0.3;
+        } else if (age.days < 30) {
+          output += `→ Young contract (${age.days.toFixed(1)} days)\n`; 
+          risk += 0.2;
+        } else if (age.days < 90) {
+          output += `→ Developing contract (${age.days.toFixed(1)} days)\n`; 
+          risk += 0.1;
+        } else {
+          output += `→ Mature contract (${age.days.toFixed(1)} days)\n`;
+          risk -= 0.1;
+        }
+      } else {
+        output += "→ ⚠️ Could not determine contract age\n";
+        risk += 0.2;
+      }
+      
+      // GoPlus additional checks
+      if (goPlusData) {
+        if (goPlusData.isHoneypot) {
+          output += "→ ⚠️ HONEYPOT DETECTED\n";
+          risk += 0.5;
+        }
+        if (goPlusData.mintAuthority) {
+          output += "→ ⚠️ Mint authority active\n";
+          risk += 0.2;
+        }
+        if (goPlusData.freezeAuthority) {
+          output += "→ ⚠️ Freeze authority active\n";
+          risk += 0.15;
+        }
+        if (goPlusData.buyTax > 10 || goPlusData.sellTax > 10) {
+          output += `→ ⚠️ High taxes: Buy ${goPlusData.buyTax}% / Sell ${goPlusData.sellTax}%\n`;
+          risk += 0.2;
+        }
+        if (goPlusData.isProxy) {
+          output += "→ ⚠️ PROXY CONTRACT\n";
+          risk += 0.3;
+        }
+        if (goPlusData.isOpenSource === false) {
+          output += "→ ⚠️ NOT OPEN SOURCE\n";
+          risk += 0.25;
+        }
+        if (goPlusData.canTakeBackOwnership) {
+          output += "→ ⚠️ OWNER CAN RECLAIM\n";
+          risk += 0.35;
+        }
+        if (goPlusData.holders > 0) {
+          output += `→ Holders: ${goPlusData.holders}\n`;
+        }
+        if (goPlusData.ownerPercentage > 5) {
+          output += `→ ⚠️ Owner holds ${goPlusData.ownerPercentage.toFixed(1)}%\n`;
+          risk += 0.2;
+        }
+      }
+      
+      // Liquidity
       if (liquidity.usd) {
-        if (liquidity.usd < 10000) { output += `→ ⚠️ CRITICAL: Extremely low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.4; }
-        else if (liquidity.usd < 50000) { output += `→ ⚠️ Very low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.3; }
-        else if (liquidity.usd < 200000) { output += `→ ⚠️ Low liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.2; }
-        else if (liquidity.usd < 1000000) { output += `→ Moderate liquidity $${formatNumber(liquidity.usd)}\n`; risk += 0.1; }
-        else { output += `→ Strong liquidity $${formatNumber(liquidity.usd)}\n`; risk -= 0.1; }
+        if (liquidity.usd < 10000) { 
+          output += `→ ⚠️ CRITICAL: Extremely low liquidity $${formatNumber(liquidity.usd)}\n`; 
+          risk += 0.4; 
+        }
+        else if (liquidity.usd < 50000) { 
+          output += `→ ⚠️ Very low liquidity $${formatNumber(liquidity.usd)}\n`; 
+          risk += 0.3; 
+        }
+        else if (liquidity.usd < 200000) { 
+          output += `→ ⚠️ Low liquidity $${formatNumber(liquidity.usd)}\n`; 
+          risk += 0.2; 
+        }
+        else if (liquidity.usd < 1000000) { 
+          output += `→ Moderate liquidity $${formatNumber(liquidity.usd)}\n`; 
+          risk += 0.1; 
+        }
+        else { 
+          output += `→ Strong liquidity $${formatNumber(liquidity.usd)}\n`; 
+          risk -= 0.1; 
+        }
       }
       
+      // FDV
       if (fdv > 0) {
-        if (fdv < 50000) { output += `→ ⚠️ Micro-cap FDV: $${formatNumber(fdv)}\n`; risk += 0.2; }
-        else if (fdv < 500000) { output += `→ Small-cap FDV: $${formatNumber(fdv)}\n`; risk += 0.1; }
-        else if (fdv > 1e9) { output += `→ Large-cap FDV: $${formatNumber(fdv)}\n`; risk -= 0.05; }
+        if (fdv < 50000) { 
+          output += `→ ⚠️ Micro-cap FDV: $${formatNumber(fdv)}\n`; 
+          risk += 0.2; 
+        }
+        else if (fdv < 500000) { 
+          output += `→ Small-cap FDV: $${formatNumber(fdv)}\n`; 
+          risk += 0.1; 
+        }
+        else if (fdv > 1e9) { 
+          output += `→ Large-cap FDV: $${formatNumber(fdv)}\n`; 
+          risk -= 0.05; 
+        }
       }
       
-      output += `→ Contract: ${baseToken.address?.substring(0, 8)}...\n→ DEX: ${tokenData.dexId || 'Unknown'}\n→ Chain: ${tokenData.chainId || 'Unknown'}\n`;
-      return { output, risk: Math.min(0.99, Math.max(0.05, risk)) };
+      output += `→ Contract: ${baseToken.address?.substring(0, 8)}...\n→ DEX: ${tokenData.dexId || 'Unknown'}\n→ Chain: ${tokenData.chainId || 'Unknown'}`;
+      
+      return { 
+        output, 
+        risk: Math.min(0.99, Math.max(0.05, risk)) 
+      };
     }
     
-    function analyzeSentiment(tokenQuery, tokenData, offlineMode) {
-      if (offlineMode || !tokenData) return { output: "→ Social sentiment: UNKNOWN\n→ No market data available\n→ ⚠️ Cannot assess community trust", risk: 0.85 };
+    // ================== SENTIMENT ANALYSIS ==================
+    function analyzeSentiment(tokenQuery, tokenData) {
+      if (!tokenData) {
+        return { 
+          output: "→ Social sentiment: UNKNOWN\n→ No market data available\n→ ⚠️ Cannot assess community trust", 
+          risk: 0.85 
+        };
+      }
       
       const volume = tokenData.volume || {};
       const priceChange = tokenData.priceChange || {};
@@ -403,12 +1124,15 @@
       let risk = 0.5;
       
       if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) {
-        return { output: "→ Positive community sentiment\n→ Strong ecosystem support\n→ Growing adoption in CRYPTOBROS network\n→ Active developer engagement", risk: 0.1 };
+        return { 
+          output: "→ Positive community sentiment\n→ Strong ecosystem support\n→ Growing adoption in CRYPTOBROS network\n→ Active developer engagement", 
+          risk: 0.1 
+        };
       }
       
       const ticker = (tokenData.baseToken?.symbol || '').toLowerCase();
-      const blueChips = ['sol','eth','btc','usdt','usdc'];
-      if (blueChips.some(chip => ticker.includes(chip))) {
+      
+      if (CONFIG.BLUE_CHIPS.slice(0, 5).some(chip => ticker.includes(chip))) {
         const volRisk = volume.h24 ? Math.max(0.05, 0.2 - (volume.h24 / 1e10)) : 0.2;
         risk = Math.min(0.25, volRisk);
         output += `→ Established asset: ${ticker.toUpperCase()}\n`;
@@ -417,41 +1141,92 @@
         return { output, risk };
       }
       
+      // Volume
       if (volume.h24) {
-        if (volume.h24 > 1e8) { output += `→ 🔥 MASSIVE VOLUME: $${formatNumber(volume.h24)}\n→ Potential manipulation\n`; risk += 0.2; }
-        else if (volume.h24 > 1e7) { output += `→ 🔥 High volume: $${formatNumber(volume.h24)}\n`; risk += 0.1; }
-        else if (volume.h24 < 10000) { output += `→ ⚠️ Very low volume: $${formatNumber(volume.h24)}\n`; risk += 0.3; }
-        else if (volume.h24 < 100000) { output += `→ Low volume: $${formatNumber(volume.h24)}\n`; risk += 0.2; }
+        if (volume.h24 > 1e8) { 
+          output += `→ 🔥 MASSIVE VOLUME: $${formatNumber(volume.h24)}\n→ Potential manipulation\n`; 
+          risk += 0.2; 
+        }
+        else if (volume.h24 > 1e7) { 
+          output += `→ 🔥 High volume: $${formatNumber(volume.h24)}\n`; 
+          risk += 0.1; 
+        }
+        else if (volume.h24 < 10000) { 
+          output += `→ ⚠️ Very low volume: $${formatNumber(volume.h24)}\n`; 
+          risk += 0.3; 
+        }
+        else if (volume.h24 < 100000) { 
+          output += `→ Low volume: $${formatNumber(volume.h24)}\n`; 
+          risk += 0.2; 
+        }
       }
       
-      if (txns.h24?.buys && txns.h24?.sells) {
-        const ratio = txns.h24.buys / (txns.h24.buys + txns.h24.sells);
-        if (ratio > 0.9) { output += `→ ⚠️ Extreme buy pressure: ${(ratio*100).toFixed(1)}%\n`; risk += 0.25; }
-        else if (ratio > 0.8) { output += `→ High buy ratio: ${(ratio*100).toFixed(1)}%\n`; risk += 0.15; }
-        else if (ratio < 0.3) { output += `→ High sell pressure: ${((1-ratio)*100).toFixed(1)}%\n`; risk += 0.2; }
+      // Transactions
+      if (txns.h24?.buys != null && txns.h24?.sells != null) {
+        const total = txns.h24.buys + txns.h24.sells;
+        if (total > 0) {
+          const ratio = txns.h24.buys / total;
+          
+          if (ratio > 0.9) { 
+            output += `→ ⚠️ Extreme buy pressure: ${(ratio*100).toFixed(1)}%\n`; 
+            risk += 0.25; 
+          }
+          else if (ratio > 0.8) { 
+            output += `→ High buy ratio: ${(ratio*100).toFixed(1)}%\n`; 
+            risk += 0.15; 
+          }
+          else if (ratio < 0.3) { 
+            output += `→ High sell pressure: ${((1-ratio)*100).toFixed(1)}%\n`; 
+            risk += 0.2; 
+          }
+        }
       }
       
+      // Price changes
       if (priceChange.h24) {
         const change = parseFloat(priceChange.h24);
-        if (change > 100) { output += `→ 🚀 EXTREME PUMP: +${change.toFixed(1)}%\n`; risk += 0.4; }
-        else if (change > 50) { output += `→ 🚀 Strong pump: +${change.toFixed(1)}%\n`; risk += 0.3; }
-        else if (change > 20) { output += `→ Bullish: +${change.toFixed(1)}%\n`; risk += 0.15; }
-        else if (change < -50) { output += `→ 📉 Heavy dump: ${change.toFixed(1)}%\n`; risk += 0.35; }
-        else if (change < -20) { output += `→ Bearish: ${change.toFixed(1)}%\n`; risk += 0.2; }
+        if (change > 100) { 
+          output += `→ 🚀 EXTREME PUMP: +${change.toFixed(1)}%\n`; 
+          risk += 0.4; 
+        }
+        else if (change > 50) { 
+          output += `→ 🚀 Strong pump: +${change.toFixed(1)}%\n`; 
+          risk += 0.3; 
+        }
+        else if (change > 20) { 
+          output += `→ Bullish: +${change.toFixed(1)}%\n`; 
+          risk += 0.15; 
+        }
+        else if (change < -50) { 
+          output += `→ 📉 Heavy dump: ${change.toFixed(1)}%\n`; 
+          risk += 0.35; 
+        }
+        else if (change < -20) { 
+          output += `→ Bearish: ${change.toFixed(1)}%\n`; 
+          risk += 0.2; 
+        }
       }
       
-      const memePatterns = ['wif','bonk','pepe','mog','turbo','dog','shib','floki'];
-      if (memePatterns.some(p => ticker.includes(p))) {
-        const memeRisk = 0.3 + Math.random() * 0.2;
+      // Meme coins
+      if (CONFIG.MEME_PATTERNS.some(p => ticker.includes(p))) {
         output += `→ 🐸 Meme coin: ${ticker.toUpperCase()}\n→ High social volatility\n`;
-        risk += memeRisk;
+        risk += 0.3;
       }
       
-      return { output, risk: Math.min(0.99, Math.max(0.05, risk)) };
+      return { 
+        output, 
+        risk: Math.min(0.99, Math.max(0.05, risk)) 
+      };
     }
     
-    function analyzePrice(tokenQuery, tokenData, offlineMode) {
-      if (offlineMode || !tokenData) return { output: "→ Price action: UNKNOWN\n→ No trading history available\n→ ⚠️ Cannot assess price stability", risk: 0.9 };
+    // ================== PRICE ACTION ANALYSIS ==================
+    function analyzePrice(tokenQuery, tokenData) {
+      if (!tokenData) {
+        return { 
+          output: "→ Price action: UNKNOWN\n→ No trading history available\n→ ⚠️ Cannot assess price stability", 
+          risk: 0.9 
+        };
+      }
       
       const liquidity = tokenData.liquidity || {};
       const volume = tokenData.volume || {};
@@ -462,8 +1237,8 @@
       let risk = 0.5;
       
       const ticker = (tokenData.baseToken?.symbol || '').toLowerCase();
-      const blueChips = ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'];
-      if (blueChips.some(chip => ticker.includes(chip))) {
+      
+      if (CONFIG.BLUE_CHIPS.some(chip => ticker.includes(chip))) {
         const stabilityRisk = priceChange.h24 ? Math.abs(parseFloat(priceChange.h24)) / 200 : 0.1;
         risk = Math.min(0.2, 0.05 + stabilityRisk);
         output += `→ Stable asset: ${ticker.toUpperCase()}\n`;
@@ -472,134 +1247,278 @@
         return { output, risk };
       }
       
-      if (liquidity.usd && volume.h24) {
+      // Volume/Liquidity ratio
+      if (liquidity.usd > 0 && volume.h24) {
         const ratio = volume.h24 / liquidity.usd;
-        if (ratio > 20) { output += `→ ⚠️ EXTREME PUMP: V/L ${ratio.toFixed(1)}x\n`; risk += 0.45; }
-        else if (ratio > 10) { output += `→ ⚠️ High pump risk: V/L ${ratio.toFixed(1)}x\n`; risk += 0.35; }
-        else if (ratio > 5) { output += `→ Elevated activity: V/L ${ratio.toFixed(1)}x\n`; risk += 0.25; }
-        else if (ratio > 2) { output += `→ Normal activity: V/L ${ratio.toFixed(1)}x\n`; risk += 0.1; }
-        else { output += `→ Healthy ratio: V/L ${ratio.toFixed(1)}x\n`; risk -= 0.1; }
+        if (ratio > 20) { 
+          output += `→ ⚠️ EXTREME PUMP: V/L ${ratio.toFixed(1)}x\n`; 
+          risk += 0.45; 
+        }
+        else if (ratio > 10) { 
+          output += `→ ⚠️ High pump risk: V/L ${ratio.toFixed(1)}x\n`; 
+          risk += 0.35; 
+        }
+        else if (ratio > 5) { 
+          output += `→ Elevated activity: V/L ${ratio.toFixed(1)}x\n`; 
+          risk += 0.25; 
+        }
+        else if (ratio > 2) { 
+          output += `→ Normal activity: V/L ${ratio.toFixed(1)}x\n`; 
+          risk += 0.1; 
+        }
+        else { 
+          output += `→ Healthy ratio: V/L ${ratio.toFixed(1)}x\n`; 
+          risk -= 0.1; 
+        }
       }
       
-      if (fdv > 0 && liquidity.usd > 0) {
+      // FDV/Liquidity ratio (rug risk)
+      if (fdv > 0 && liquidity.usd > 0 && liquidity.usd > 1) {
         const fdvLiqRatio = fdv / liquidity.usd;
-        if (fdvLiqRatio > 500) { output += `→ ⚠️ CRITICAL RUG RISK: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; risk += 0.4; }
-        else if (fdvLiqRatio > 100) { output += `→ ⚠️ High rug risk: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; risk += 0.3; }
-        else if (fdvLiqRatio > 50) { output += `→ ⚠️ Elevated risk: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; risk += 0.2; }
-        else if (fdvLiqRatio < 10) { output += `→ Healthy backing: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; risk -= 0.1; }
+        if (fdvLiqRatio > 500) { 
+          output += `→ ⚠️ CRITICAL RUG RISK: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; 
+          risk += 0.4; 
+        }
+        else if (fdvLiqRatio > 100) { 
+          output += `→ ⚠️ High rug risk: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; 
+          risk += 0.3; 
+        }
+        else if (fdvLiqRatio > 50) { 
+          output += `→ ⚠️ Elevated risk: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; 
+          risk += 0.2; 
+        }
+        else if (fdvLiqRatio < 10) { 
+          output += `→ Healthy backing: FDV/LP ${fdvLiqRatio.toFixed(0)}x\n`; 
+          risk -= 0.1; 
+        }
       }
       
+      // Pump & dump patterns
       if (priceChange.h6 && priceChange.h24) {
-        const h6 = parseFloat(priceChange.h6), h24 = parseFloat(priceChange.h24);
-        const divergence = Math.abs(h6 - h24/4);
-        if (divergence > 25) { output += `→ ⚠️ Volatile pattern: 6h (${h6.toFixed(1)}%) vs 24h (${h24.toFixed(1)}%)\n`; risk += 0.25; }
-        else if (h6 > 30 && h24 < 10) { output += `→ ⚠️ Pump & dump pattern\n`; risk += 0.35; }
-        else if (h6 < -20 && h24 > 10) { output += `→ ⚠️ Dump & recovery pattern\n`; risk += 0.2; }
+        const h6 = parseFloat(priceChange.h6);
+        const h24 = parseFloat(priceChange.h24);
+        
+        if (h6 > 30 && h24 < 10) { 
+          output += `→ ⚠️ Pump & dump pattern\n`; 
+          risk += 0.35; 
+        }
       }
       
-      return { output, risk: Math.min(0.99, Math.max(0.05, risk)) };
+      return { 
+        output, 
+        risk: Math.min(0.99, Math.max(0.05, risk)) 
+      };
     }
     
+    // ================== DISCREPANCY ANALYSIS (IMPROVED CONSENSUS) ==================
     function analyzeDiscrepancies(onChain, sentiment, price) {
+      // Ensure valid inputs
+      const validOnChain = onChain || { risk: 0.9, output: '→ On-chain data unavailable' };
+      const validSentiment = sentiment || { risk: 0.9, output: '→ Sentiment data unavailable' };
+      const validPrice = price || { risk: 0.9, output: '→ Price data unavailable' };
+      
       let output = "⚠️ CONSENSUS VERDICT\n";
       let contradictions = 0;
       
-      if (onChain.risk === 0.05) {
-        return { output: "→ TOKEN VERIFIED AS TRUSTED\n→ Native to CRYPTOBROS ecosystem\n→ Maximum security and transparency\n→ All experts concur: LOW RISK\n→ Risk Score: 0.05/1.00", risk: 0.05, category: 'trusted', recommendation: 'TRUST' };
+      if (validOnChain.risk === 0.05) {
+        return { 
+          output: "→ TOKEN VERIFIED AS TRUSTED\n→ Native to CRYPTOBROS ecosystem\n→ Maximum security and transparency\n→ All experts concur: LOW RISK\n→ Risk Score: 0.05/1.00", 
+          risk: 0.05, 
+          category: 'trusted' 
+        };
       }
       
-      if (Math.abs(onChain.risk - sentiment.risk) > 0.4) { output += "⚠️ ON-CHAIN vs SENTIMENT\n"; contradictions++; }
-      if (Math.abs(sentiment.risk - price.risk) > 0.4) { output += "⚠️ SENTIMENT vs PRICE\n"; contradictions++; }
-      if (Math.abs(onChain.risk - price.risk) > 0.4) { output += "⚠️ ON-CHAIN vs PRICE\n"; contradictions++; }
+      if (Math.abs(validOnChain.risk - validSentiment.risk) > 0.4) { 
+        output += "⚠️ ON-CHAIN vs SENTIMENT\n"; 
+        contradictions++; 
+      }
+      if (Math.abs(validSentiment.risk - validPrice.risk) > 0.4) { 
+        output += "⚠️ SENTIMENT vs PRICE\n"; 
+        contradictions++; 
+      }
+      if (Math.abs(validOnChain.risk - validPrice.risk) > 0.4) { 
+        output += "⚠️ ON-CHAIN vs PRICE\n"; 
+        contradictions++; 
+      }
       
-      let baseRisk = (onChain.risk + sentiment.risk + price.risk) / 3;
-      if (contradictions > 0) { baseRisk += 0.15 * contradictions; output += "⚠️ Expert disagreement\n"; }
+      // Take maximum + penalty for contradictions
+      let finalRisk = Math.max(validOnChain.risk, validSentiment.risk, validPrice.risk);
+      if (contradictions > 1) { 
+        finalRisk += 0.2; 
+        output += "⚠️ Strong expert disagreement\n"; 
+      }
       
-      let finalRisk = Math.min(0.99, Math.max(0.05, baseRisk));
-      let category, recommendation;
+      finalRisk = Math.min(0.99, Math.max(0.05, finalRisk));
       
+      let category;
       if (finalRisk < 0.3) {
-        category = 'low'; recommendation = 'TRUST';
+        category = 'low';
         output += "\n→ RECOMMENDATION: TRUST\n→ Suitable for investment\n→ Strong fundamentals";
       } else if (finalRisk < 0.7) {
-        category = 'medium'; recommendation = 'WATCH';
+        category = 'medium';
         output += "\n→ RECOMMENDATION: WATCH\n→ Moderate risk\n→ DYOR before investing";
       } else {
-        category = 'high'; recommendation = 'AVOID';
+        category = 'high';
         output += "\n→ RECOMMENDATION: AVOID\n→ Multiple red flags\n→ Extreme caution";
       }
       
       output += `\n→ Risk Score: ${finalRisk.toFixed(2)}/1.00`;
-      return { output, risk: parseFloat(finalRisk.toFixed(2)), category, recommendation };
+      
+      return { 
+        output, 
+        risk: parseFloat(finalRisk.toFixed(2)), 
+        category 
+      };
     }
     
+    // ================== MAIN ANALYSIS FUNCTION ==================
     async function analyzeToken() {
+      if (isAnalyzing) {
+        alert('Analysis already in progress, please wait...');
+        return;
+      }
+      
+      const input = document.getElementById('tokenInput');
+      const btn = document.getElementById('analyzeBtn');
+      const token = input.value.trim();
+      
+      if (!validateTokenInput(token)) { 
+        alert('Please enter a valid token symbol or address'); 
+        return; 
+      }
+      
+      if (!isOnline()) {
+        alert('No internet connection. Please check your network.');
+        return;
+      }
+      
+      isAnalyzing = true;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span>SCANNING...';
+      document.getElementById('verdictSection').style.display = 'none';
+      
+      // Reset agent statuses
+      const agents = ['hunter', 'oracle', 'judge', 'moderator'];
+      agents.forEach(id => {
+        const status = document.getElementById(`${id}-status`);
+        const output = document.getElementById(`${id}-output`);
+        if (status) { 
+          status.textContent = 'ANALYZING...'; 
+          status.classList.add('analyzing'); 
+          status.style.color = ''; // Reset color
+        }
+        if (output) output.innerHTML = '<li><span class="agent-loading"></span> Working...</li>';
+      });
+      
       try {
-        const input = document.getElementById('tokenInput');
-        const btn = document.getElementById('analyzeBtn');
-        const token = input.value.trim();
+        // Fetch data
+        const result = await fetchTokenData(token);
         
-        if (!token) { alert('Please enter a token'); return; }
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to fetch token data');
+        }
         
-        btn.disabled = true;
-        btn.innerHTML = '<span class="loading-spinner"></span>SCANNING...';
-        document.getElementById('verdictSection').style.display = 'none';
+        const { tokenData, goPlusData } = result;
         
-        ['hunter', 'oracle', 'judge', 'moderator'].forEach(id => {
-          const status = document.getElementById(`${id}-status`);
-          const output = document.getElementById(`${id}-output`);
-          if (status) { status.textContent = 'ANALYZING...'; status.classList.add('analyzing'); }
-          if (output) output.innerHTML = '<li>Working...</li>';
-        });
+        // Analysis from each agent
+        const onChain = analyzeOnChain(token, tokenData, goPlusData);
+        const sentiment = analyzeSentiment(token, tokenData);
+        const price = analyzePrice(token, tokenData);
         
-        const { offlineMode, tokenData } = await fetchTokenData(token);
-        
-        const [onChain, sentiment, price] = await Promise.all([
-          Promise.resolve(analyzeOnChain(token, tokenData, offlineMode)),
-          Promise.resolve(analyzeSentiment(token, tokenData, offlineMode)),
-          Promise.resolve(analyzePrice(token, tokenData, offlineMode))
-        ]);
-        
+        // Update agent UI
         const hunterOutput = document.getElementById('hunter-output');
         const oracleOutput = document.getElementById('oracle-output');
         const judgeOutput = document.getElementById('judge-output');
         
-        if (hunterOutput) hunterOutput.innerHTML = onChain.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
-        if (oracleOutput) oracleOutput.innerHTML = sentiment.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
-        if (judgeOutput) judgeOutput.innerHTML = price.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
+        if (hunterOutput) {
+          hunterOutput.innerHTML = onChain.output.split('\n')
+            .filter(l => l.trim())
+            .map(l => `<li>${escapeHTML(l)}</li>`)
+            .join('');
+        }
         
+        if (oracleOutput) {
+          oracleOutput.innerHTML = sentiment.output.split('\n')
+            .filter(l => l.trim())
+            .map(l => `<li>${escapeHTML(l)}</li>`)
+            .join('');
+        }
+        
+        if (judgeOutput) {
+          judgeOutput.innerHTML = price.output.split('\n')
+            .filter(l => l.trim())
+            .map(l => `<li>${escapeHTML(l)}</li>`)
+            .join('');
+        }
+        
+        // Update statuses
         ['hunter', 'oracle', 'judge'].forEach(id => {
           const status = document.getElementById(`${id}-status`);
-          if (status) { status.textContent = 'COMPLETE'; status.classList.remove('analyzing'); }
+          if (status) { 
+            status.textContent = 'COMPLETE'; 
+            status.classList.remove('analyzing'); 
+          }
         });
         
+        // Moderator analysis
         const moderator = analyzeDiscrepancies(onChain, sentiment, price);
         const modOutput = document.getElementById('moderator-output');
         const modStatus = document.getElementById('moderator-status');
         
-        if (modOutput) modOutput.innerHTML = moderator.output.split('\n').filter(l => l.trim()).map(l => `<li>${escapeHTML(l)}</li>`).join('');
-        if (modStatus) { modStatus.textContent = 'COMPLETE'; modStatus.classList.remove('analyzing'); }
+        if (modOutput) {
+          modOutput.innerHTML = moderator.output.split('\n')
+            .filter(l => l.trim())
+            .map(l => `<li>${escapeHTML(l)}</li>`)
+            .join('');
+        }
         
-        showVerdict(moderator, token, tokenData);
+        if (modStatus) { 
+          modStatus.textContent = 'COMPLETE'; 
+          modStatus.classList.remove('analyzing'); 
+        }
+        
+        // Show verdict
+        showVerdict(moderator, token, tokenData, goPlusData);
+        
+        // Reinitialize tilt for new content
+        initTilt();
         
       } catch(error) {
         console.error('Analysis failed:', error);
-        alert('Analysis failed. Please try again.');
+        
+        let userMessage = '❌ Analysis error';
+        if (error.message.includes('429')) userMessage = '⏳ Rate limit — please wait 60 seconds';
+        if (error.message.includes('Failed to fetch') || error.message.includes('internet')) userMessage = '🌐 No internet connection';
+        if (error.message.includes('timeout')) userMessage = '⏱️ Request timeout';
+        if (error.message.includes('No pairs')) userMessage = '❌ Token not found';
+        if (error.message.includes('GoPlus API')) userMessage = '⚠️ Security data unavailable';
+        
+        // Show error in all agents
+        agents.forEach(id => {
+          const output = document.getElementById(`${id}-output`);
+          if (output) {
+            output.innerHTML = `<li class="error-message">${escapeHTML(userMessage)}</li>`;
+          }
+          const status = document.getElementById(`${id}-status`);
+          if (status) {
+            status.textContent = 'ERROR';
+            status.style.color = 'var(--neon-red)';
+          }
+        });
+        
       } finally {
-        const btn = document.getElementById('analyzeBtn');
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = '🔍 ANALYZE';
-        }
+        // Unlock button
+        btn.disabled = false;
+        btn.innerHTML = '🔍 ANALYZE';
+        isAnalyzing = false;
       }
     }
     
-    function quickAnalyze(token) {
-      document.getElementById('tokenInput').value = token;
-      analyzeToken();
-    }
+    // ================== DEBOUNCED ANALYZE ==================
+    const debouncedAnalyze = debounce(analyzeToken, 300);
     
-    function showVerdict(moderator, token, tokenData) {
+    // ================== SHOW VERDICT ==================
+    function showVerdict(moderator, token, tokenData, goPlusData) {
       document.body.classList.add('verdict-revealed');
       
       const section = document.getElementById('verdictSection');
@@ -616,97 +1535,183 @@
       scoreEl.className = `verdict-score ${category === 'high' ? 'high-risk' : 'low-risk'}`;
       labelEl.className = `verdict-label ${category === 'high' ? 'high-risk' : 'low-risk'}`;
       
+      // Score animation with GSAP
       if (typeof gsap !== 'undefined') {
         const data = { val: 0 };
-        gsap.to(data, { val: risk, duration: 2, ease: 'power2.out', onUpdate: function() { scoreEl.textContent = data.val.toFixed(2); }});
+        gsap.to(data, { 
+          val: risk, 
+          duration: 2, 
+          ease: 'power2.out', 
+          onUpdate: () => { 
+            scoreEl.textContent = data.val.toFixed(2); 
+          }
+        });
       } else {
         scoreEl.textContent = risk.toFixed(2);
       }
       
-      labelEl.textContent = category === 'trusted' ? 'TRUSTED' : (category === 'high' ? 'HIGH RISK' : 'LOW RISK');
+      labelEl.textContent = category === 'high' ? 'HIGH RISK' : 'LOW RISK';
       
-      const tier = localStorage.getItem('selectedTier') || '';
-      const isPremium = ['Premium', 'Pro'].includes(tier);
-      
-      if (isPremium && tokenData && tokenData.baseToken) {
-        const contract = tokenData.baseToken.address;
-        const chain = tokenData.chainId || 'base';
+      // GoPlus details
+      if (goPlusData && tokenData?.baseToken) {
+        const age = calculateContractAge(goPlusData, tokenData);
         
-        if (contract && detailsEl) {
-          fetch('https://cryptobros-backend.onrender.com/api/goplus/token-security', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chain_id: chain, contract_addresses: contract })
-          })
-          .then(res => res.json())
-          .then(data => {
-            const sec = data.result?.[contract];
-            if (sec) {
-              let scan = '\n🔍 QUANTUM CONTRACT SCAN\n';
-              scan += `→ Ownership: ${sec.is_open_source === '1' ? 'RENOUNCED' : 'ACTIVE'}\n`;
-              scan += `→ Taxes: Buy ${sec.buy_tax||0}% | Sell ${sec.sell_tax||0}%\n`;
-              scan += `→ Liquidity: ${sec.is_proxy === '0' ? 'LOCKED' : 'UNLOCKED'}\n`;
-              scan += `→ Honeypot: ${sec.is_honeypot === '1' ? 'DETECTED' : 'CLEAR'}`;
-              detailsEl.innerHTML = `<pre style="color:#00ff9d">${escapeHTML(scan)}</pre>`;
-            }
-          })
-          .catch(() => { if (detailsEl) detailsEl.innerHTML = '<pre style="color:#ff4d4d">⚠️ Scan unavailable</pre>'; });
+        let scan = '\n🔍 QUANTUM CONTRACT SCAN\n';
+        if (age.isValid && age.timestamp) {
+          scan += `→ Contract created: ${formatDate(age.timestamp)}\n`;
+          scan += `→ Age: ${age.days.toFixed(1)} days\n`;
+        }
+        scan += `→ Holders: ${goPlusData.holders || 0}\n`;
+        scan += `→ Ownership: ${!goPlusData.mintAuthority ? 'RENOUNCED' : 'ACTIVE'}\n`;
+        scan += `→ Freeze: ${!goPlusData.freezeAuthority ? 'DISABLED' : 'ACTIVE'}\n`;
+        scan += `→ Taxes: Buy ${goPlusData.buyTax || 0}% | Sell ${goPlusData.sellTax || 0}%\n`;
+        scan += `→ Honeypot: ${goPlusData.isHoneypot ? '⚠️ DETECTED' : '✓ CLEAR'}\n`;
+        scan += `→ Proxy: ${goPlusData.isProxy ? '⚠️ YES' : '✓ NO'}\n`;
+        scan += `→ Open Source: ${goPlusData.isOpenSource ? '✓ YES' : '⚠️ NO'}\n`;
+        if (goPlusData.ownerPercentage > 0) {
+          scan += `→ Owner holds: ${goPlusData.ownerPercentage.toFixed(1)}%\n`;
+        }
+        
+        // Use textContent for security
+        detailsEl.textContent = scan;
+      } else if (tokenData?.baseToken) {
+        const age = calculateContractAge(null, tokenData);
+        
+        if (age.isValid) {
+          const scan = `⚠️ Using pool data only
+→ Pool created: ${formatDate(age.timestamp)}
+→ Age: ${age.days.toFixed(1)} days (pool)
+→ For accurate contract data, GoPlus Labs integration recommended`;
+          detailsEl.textContent = scan;
         }
       }
     }
     
+    // ================== SAVE VERDICT ==================
     function saveVerdict() {
       try {
         const token = document.getElementById('tokenInput').value.trim();
         const risk = document.getElementById('verdictScore').textContent;
         const label = document.getElementById('verdictLabel').textContent;
         
-        const verdict = { token, risk, label, timestamp: Date.now() };
-        let history = [];
+        if (!token) {
+          alert('No token analyzed');
+          return;
+        }
         
-        try { history = JSON.parse(localStorage.getItem('verdictHistory') || '[]'); } catch(e) { history = []; }
+        const verdict = { 
+          token, 
+          risk, 
+          label, 
+          timestamp: Date.now() 
+        };
+        
+        // Load history
+        let history = [];
+        try { 
+          history = JSON.parse(localStorage.getItem('verdictHistory') || '[]'); 
+        } catch(e) { 
+          history = []; 
+        }
         
         history.unshift(verdict);
         
-        try { localStorage.setItem('verdictHistory', JSON.stringify(history.slice(0, 50))); } catch(e) {}
+        // Save last 50
+        try { 
+          localStorage.setItem('verdictHistory', JSON.stringify(history.slice(0, 50))); 
+        } catch(e) {}
         
+        // Visual feedback
         const btn = document.querySelector('.save-verdict-btn');
         if (btn) {
+          const originalText = btn.textContent;
           btn.textContent = '✓ SAVED';
-          setTimeout(() => { btn.textContent = '💾 SAVE VERDICT'; }, 2000);
+          btn.style.background = 'linear-gradient(135deg, #00FF9D, #00F0FF)';
+          setTimeout(() => { 
+            btn.textContent = originalText;
+            btn.style.background = 'linear-gradient(135deg, var(--neon-purple), var(--neon-cyan))';
+          }, 2000);
         }
+        
+        // Clear input (optional)
+        // document.getElementById('tokenInput').value = '';
       } catch(e) {
+        console.error('Save failed:', e);
         alert('Failed to save verdict');
       }
     }
     
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        if (typeof tsParticles !== 'undefined') {
-          tsParticles.domItem(0)?.refresh();
-        }
-      }, 250);
-    });
+    // ================== QUICK ANALYZE ==================
+    function quickAnalyze(token) {
+      document.getElementById('tokenInput').value = token;
+      debouncedAnalyze();
+    }
     
+    // ================== SEARCH DEBOUNCE ==================
+    let searchTimeout;
+    function setupSearchDebounce() {
+      const input = document.getElementById('tokenInput');
+      if (input) {
+        input.addEventListener('input', (e) => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            const val = e.target.value.trim();
+            if (val.length > 2) {
+              // Optional: add autocomplete or suggestions
+            }
+          }, 500);
+        });
+      }
+    }
+    
+    // ================== INITIALIZATION ==================
     window.addEventListener('DOMContentLoaded', () => {
+      // Theme
       if (isDayMode) {
         document.body.classList.add('day-mode');
         document.getElementById('themeToggle').textContent = '☀️';
       }
+      
+      // Sound
       if (soundsEnabled) {
         document.getElementById('soundToggle').textContent = '🔊';
       }
       
-      initParticles();
+      // Particles
+      if (!isDayMode) {
+        initParticles();
+      }
       
+      // Enter for search
       document.getElementById('tokenInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') analyzeToken();
+        if (e.key === 'Enter') debouncedAnalyze();
       });
       
-      if (typeof VanillaTilt !== 'undefined') {
-        VanillaTilt.init(document.querySelectorAll('.agent-card'), { max: 8, speed: 400, glare: true, 'max-glare': 0.3 });
+      // Debounce for search
+      setupSearchDebounce();
+      
+      // VanillaTilt for cards (desktop only)
+      initTilt();
+      
+      // Observer to reinit tilt after card updates
+      if (window.innerWidth > 768 && typeof VanillaTilt !== 'undefined') {
+        const agentGrid = document.querySelector('.agent-grid');
+        if (agentGrid) {
+          tiltObserver = new MutationObserver(() => {
+            initTilt();
+          });
+          tiltObserver.observe(agentGrid, { childList: true, subtree: true });
+        }
+      }
+    });
+    
+    // Cleanup observer on page unload
+    window.addEventListener('beforeunload', () => {
+      if (tiltObserver) {
+        tiltObserver.disconnect();
+      }
+      if (typeof tsParticles !== 'undefined' && tsParticles.domItem(0)) {
+        tsParticles.domItem(0).destroy();
       }
     });
   </script>
