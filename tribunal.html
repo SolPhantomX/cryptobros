@@ -4,13 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS TRIBUNAL — AI Risk Assessment</title>
-  
-  <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.dexscreener.com https://cryptobros-backend.onrender.com; img-src 'self' data:; worker-src 'none';">
-  
-  <!-- DOMPurify for XSS protection -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -870,34 +863,6 @@
   <div class="sound-toggle" id="soundToggle">🔇</div>
 
   <script>
-    // ================== DOMPurify CONFIGURATION ==================
-    // Ensure DOMPurify is loaded and configured
-    const purifyConfig = {
-      ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'pre', 'div', 'span', 'br', 'p'],
-      ALLOWED_ATTR: ['href', 'target', 'class', 'style'],
-      ALLOW_DATA_ATTR: false,
-      USE_PROFILES: { html: true }
-    };
-    
-    // Safe HTML sanitization function
-    function sanitizeHTML(dirty) {
-      if (!dirty) return '';
-      if (typeof DOMPurify !== 'undefined') {
-        return DOMPurify.sanitize(dirty, purifyConfig);
-      }
-      // Fallback basic sanitization if DOMPurify not loaded
-      return String(dirty).replace(/[&<>"']/g, function(match) {
-        const escape = {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;'
-        };
-        return escape[match];
-      });
-    }
-    
     // ================== CONFIGURATION ==================
     const CONFIG = {
       CACHE_TTL: 5 * 60 * 1000, // 5 minutes
@@ -943,7 +908,7 @@
     let lastApiCall = 0;
     let cacheCleanupInterval = null;
     
-    // ================== RATE LIMITER (FIXED) ==================
+    // ================== RATE LIMITER ==================
     const rateLimiter = {
       async check() {
         const now = Date.now();
@@ -957,7 +922,6 @@
           await sleep(waitTime);
           if (rateMsg) rateMsg.style.display = 'none';
         }
-        // Update ONLY after successful wait
         lastApiCall = Date.now();
       }
     };
@@ -969,6 +933,17 @@
       const div = document.createElement('div');
       div.textContent = html;
       return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    
+    function sanitizeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"]/g, function(match) {
+        if (match === '&') return '&amp;';
+        if (match === '<') return '&lt;';
+        if (match === '>') return '&gt;';
+        if (match === '"') return '&quot;';
+        return match;
+      });
     }
     
     function isValidUrl(url) {
@@ -1084,34 +1059,20 @@
       }
     }
     
-    // ================== DEBOUNCE FOR ASYNC FUNCTIONS (FIXED) ==================
-    function debounceAsync(func, wait) {
+    // ================== DEBOUNCE ==================
+    function debounce(func, wait) {
       let timeout;
-      let pendingPromise = null;
-      
       return function executedFunction(...args) {
-        // Clear previous timeout
-        if (timeout) {
+        const later = () => {
           clearTimeout(timeout);
-        }
-        
-        return new Promise((resolve, reject) => {
-          timeout = setTimeout(async () => {
-            try {
-              pendingPromise = func.apply(this, args);
-              const result = await pendingPromise;
-              resolve(result);
-            } catch (error) {
-              reject(error);
-            } finally {
-              pendingPromise = null;
-            }
-          }, wait);
-        });
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
       };
     }
     
-    // ================== API WITH RETRY AND TIMEOUT (FIXED) ==================
+    // ================== API WITH RETRY AND TIMEOUT ==================
     async function fetchWithRetry(url, options = {}, retries = CONFIG.MAX_RETRIES) {
       if (!isOnline()) {
         throw new Error('No internet connection');
@@ -1428,6 +1389,7 @@
       
       const age = calculateContractAge(goPlusData, tokenData);
       
+      // FIXED: Strict null check
       if (age.days !== null && !isNaN(age.days) && age.days > 0) {
         output += `→ Age source: ${age.source}\n`;
         if (age.timestamp) {
@@ -1775,7 +1737,7 @@
         };
       }
       
-      // Use threshold from config
+      // FIXED: Use threshold from config
       if (Math.abs(safeOnChain.risk - safeSentiment.risk) > CONFIG.DISAGREEMENT_THRESHOLD) { 
         output += "⚠️ ON-CHAIN vs SENTIMENT\n"; 
         contradictions++; 
@@ -1950,11 +1912,8 @@
       }
     }
     
-    // ================== DEBOUNCED ANALYZE (FIXED) ==================
-    const debouncedAnalyze = debounceAsync(analyzeToken, 300);
-    
-    // Make analyzeToken available globally for quickAnalyze
-    window.analyzeTokenGlobal = debouncedAnalyze;
+    // ================== DEBOUNCED ANALYZE ==================
+    const debouncedAnalyze = debounce(analyzeToken, 300);
     
     // ================== SHOW VERDICT (FIXED XSS) ==================
     function showVerdict(moderator, token, tokenData, goPlusData) {
@@ -2065,23 +2024,16 @@
         scan += `🔗 Chain      : ${tokenData.chainId || 'Unknown'}\n`;
       }
       
-      // FIXED: Use DOM methods instead of innerHTML for scan
-      const escapedScan = escapeHTML(scan);
-      const safeWarningHtml = sanitizeHTML(warningHtml);
+      // FIXED: Sanitize both parts
+      const safeWarningHtml = warningHtml.replace(/[&<>"]/g, function(match) {
+        if (match === '&') return '&amp;';
+        if (match === '<') return '&lt;';
+        if (match === '>') return '&gt;';
+        if (match === '"') return '&quot;';
+        return match;
+      });
       
-      // Clear and safely populate details
-      detailsEl.innerHTML = '';
-      
-      const pre = document.createElement('pre');
-      pre.style.cssText = 'font-family: var(--font-mono); margin: 0; white-space: pre-wrap;';
-      pre.textContent = scan; // textContent automatically escapes
-      detailsEl.appendChild(pre);
-      
-      if (warningHtml) {
-        const warningDiv = document.createElement('div');
-        warningDiv.innerHTML = safeWarningHtml;
-        detailsEl.appendChild(warningDiv);
-      }
+      detailsEl.innerHTML = `<pre style="font-family: var(--font-mono); margin: 0; white-space: pre-wrap;">${escapeHTML(scan)}</pre>${safeWarningHtml}`;
     }
     
     // ================== SAVE VERDICT ==================
@@ -2210,23 +2162,16 @@
       }
     }
     
-    // FIXED: Use global analyzeTokenGlobal
     window.quickAnalyze = function(token) {
       document.getElementById('tokenInput').value = token;
-      if (window.analyzeTokenGlobal) {
-        window.analyzeTokenGlobal();
-      }
+      debouncedAnalyze();
     };
     
     // ================== EVENT LISTENERS ==================
     function initEventListeners() {
       document.getElementById('themeToggle').addEventListener('click', toggleTheme);
       document.getElementById('soundToggle').addEventListener('click', toggleSound);
-      document.getElementById('analyzeBtn').addEventListener('click', () => {
-        if (window.analyzeTokenGlobal) {
-          window.analyzeTokenGlobal();
-        }
-      });
+      document.getElementById('analyzeBtn').addEventListener('click', debouncedAnalyze);
       document.getElementById('saveVerdictBtn').addEventListener('click', saveVerdict);
       document.getElementById('historyBtn').addEventListener('click', toggleHistory);
       document.getElementById('exportHistoryBtn').addEventListener('click', exportHistory);
@@ -2234,9 +2179,7 @@
       document.getElementById('closeHistoryBtn').addEventListener('click', toggleHistory);
       
       document.getElementById('tokenInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && window.analyzeTokenGlobal) {
-          window.analyzeTokenGlobal();
-        }
+        if (e.key === 'Enter') debouncedAnalyze();
       });
       
       document.addEventListener('keydown', (e) => {
