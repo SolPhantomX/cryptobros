@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRESH SOLANA LAUNCHES — CryptoBros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --neon-cyan: #00F0FF;
+      --neon-purple: #9D00FF;
+      --neon-red: #FF4D4D;
+      --neon-gold: #FFD700;
+      --neon-green: #00FF9D;
+      --neon-orange: #FF9900;
+      --deep-bg: #0a0e27;
+      --card-bg: rgba(10, 14, 39, 0.8);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text: #e0e0ff;
+      --text2: #a0a0c0;
+      --glow: 0 0 20px rgba(0, 240, 255, 0.5);
+      --border: 3px solid rgba(255, 255, 255, 0.1);
+      --gradient-1: rgba(0, 240, 255, 0.05);
+      --gradient-2: rgba(157, 0, 255, 0.05);
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, var(--deep-bg) 0%, #0f1338 50%, #1a1a3a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.3s ease;
+    }
+    
+    body.day-mode {
+      --deep-bg: #fff8e7;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text: #1a1a2e;
+      --text2: #4a4a6a;
+      --glass-border: rgba(255, 215, 0, 0.3);
+      --glow: 0 0 25px rgba(255, 215, 0, 0.5);
+      --gradient-1: rgba(255, 215, 0, 0.1);
+      --gradient-2: rgba(255, 165, 0, 0.1);
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 25%, #FFF8DC 50%, #FFD700 75%, #FFA500 100%);
+      background-size: 400% 400%;
+      animation: goldSilk 15s ease infinite;
+    }
+    
+    @keyframes goldSilk {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, var(--gradient-1) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, var(--gradient-2) 0%, transparent 30%),
+        repeating-linear-gradient(45deg, rgba(0,240,255,0.02) 0px, rgba(0,240,255,0.02) 2px, transparent 2px, transparent 8px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .back-btn {
+      padding: 0.8rem 1.6rem;
+      background: rgba(10, 14, 39, 0.8);
+      border: var(--border);
+      border-radius: 50px;
+      color: var(--neon-cyan);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--glow);
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .back-btn:hover {
+      transform: translateX(-4px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+    
+    h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.8rem;
+      text-align: center;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      flex: 1;
+      text-shadow: 0 0 30px rgba(0,240,255,0.3);
+      animation: titleGlow 3s ease-in-out infinite;
+    }
+    
+    @keyframes titleGlow {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.2); }
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: var(--neon-cyan);
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      text-shadow: 0 0 10px rgba(0,240,255,0.5);
+    }
+    
+    .theme-toggle {
+      width: 48px;
+      height: 48px;
+      background: rgba(10, 14, 39, 0.8);
+      border: var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      box-shadow: var(--glow);
+    }
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 25px rgba(0,240,255,0.6);
+    }
+    
+    .filter-bar {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: rgba(0, 240, 255, 0.05);
+      border-radius: 60px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(0, 240, 255, 0.2);
+      transition: opacity 0.3s ease;
+    }
+    
+    .filter-bar.loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    select, button.filter-btn {
+      padding: 0.6rem 1.2rem;
+      background: rgba(0, 240, 255, 0.1);
+      border: 2px solid var(--neon-cyan);
+      border-radius: 30px;
+      color: var(--neon-cyan);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      min-width: 120px;
+      font-family: 'Quicksand', sans-serif;
+      backdrop-filter: blur(5px);
+    }
+    select:hover, button.filter-btn:hover, select:focus {
+      background: rgba(0, 240, 255, 0.3);
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+      outline: none;
+    }
+    
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+    
+    .token-card {
+      background: var(--card-bg);
+      border: var(--border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--glow);
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .token-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+      animation: scan 3s linear infinite;
+    }
+    @keyframes scan {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .token-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.6);
+    }
+    
+    .token-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    
+    .token-symbol {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 10px rgba(0,240,255,0.5);
+    }
+    
+    .token-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .tag {
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .tag-pump {
+      background: rgba(255, 153, 0, 0.2);
+      border: 1px solid #FF9900;
+      color: #FF9900;
+      box-shadow: 0 0 10px rgba(255,153,0,0.3);
+    }
+    .tag-raydium {
+      background: rgba(0, 240, 255, 0.2);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0,240,255,0.3);
+    }
+    
+    .token-info {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.6;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0.8rem;
+      border-radius: 12px;
+      margin: 0.5rem 0;
+    }
+    
+    .token-ca {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.85rem;
+      word-break: break-all;
+      margin: 0.5rem 0;
+      color: var(--text2);
+      background: rgba(0, 240, 255, 0.1);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      display: inline-block;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .token-ca:hover {
+      background: rgba(0, 240, 255, 0.2);
+      color: var(--neon-cyan);
+    }
+    
+    .token-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .action-btn {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid var(--neon-cyan);
+      border-radius: 30px;
+      color: var(--neon-cyan);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      flex: 1;
+      min-width: 80px;
+    }
+    .action-btn:hover {
+      background: rgba(0, 240, 255, 0.15);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+    
+    .sparkline-canvas {
+      width: 100%;
+      height: 40px;
+      margin-top: 0.8rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 4px;
+    }
+    
+    .no-data-placeholder {
+      height: 40px;
+      margin-top: 0.8rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text2);
+      font-size: 0.85rem;
+    }
+    
+    .loader, .empty {
+      text-align: center;
+      padding: 3rem;
+      color: var(--neon-cyan);
+      font-size: 1.2rem;
+      grid-column: 1 / -1;
+      background: var(--card-bg);
+      border-radius: 30px;
+      border: var(--border);
+      backdrop-filter: blur(10px);
+    }
+    
+    .loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    
+    .loader::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(0, 240, 255, 0.3);
+      border-top-color: var(--neon-cyan);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .update-info {
+      text-align: center;
+      color: var(--text2);
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .update-timer {
+      color: var(--neon-cyan);
+      font-weight: 600;
+      background: rgba(0, 240, 255, 0.1);
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      border: 1px solid var(--neon-cyan);
+    }
+    
+    .refresh-now {
+      background: transparent;
+      border: 1px solid var(--neon-cyan);
+      border-radius: 30px;
+      color: var(--neon-cyan);
+      padding: 0.3rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .refresh-now:hover {
+      background: rgba(0, 240, 255, 0.15);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+    .refresh-now:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    
+    .rate-limit {
+      color: var(--neon-orange);
+      border-color: var(--neon-orange);
+    }
+    
+    .error-message {
+      color: var(--neon-red);
+      border-color: var(--neon-red);
+    }
+    
+    @media (max-width: 768px) {
+      h1 { font-size: 2.2rem; }
+      .token-grid { grid-template-columns: 1fr; }
+      .filter-bar { 
+        flex-direction: column; 
+        align-items: stretch;
+        border-radius: 30px;
+        padding: 1rem;
+      }
+      select, button.filter-btn { width: 100%; }
+      .update-info { flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="https://www.cryptobros.pro/tribunal.html" class="back-btn" target="_self">← Back to Tribunal</a>
+      <h1>🆕 FRESH SOLANA LAUNCHES</h1>
+      <div class="theme-toggle" id="themeToggle">🌙</div>
+    </div>
+
+    <p class="subtitle">
+      <span class="update-timer" id="platformIndicator">⚡ pump.fun + Raydium</span> • 
+      Auto-refresh every <span id="updateInterval">60</span> sec
+    </p>
+
+    <div class="filter-bar" id="filterBar">
+      <div class="filter-group">
+        <select id="timeFilter">
+          <option value="all">⏱️ All launches</option>
+          <option value="5m">🔥 Up to 5 min</option>
+          <option value="30m">⚡ Up to 30 min</option>
+          <option value="1h">🕐 Up to 1 hour</option>
+        </select>
+        <select id="liqFilter">
+          <option value="all">💰 Any liquidity</option>
+          <option value="5k">💎 >$5K</option>
+          <option value="10k">💎 >$10K</option>
+          <option value="50k">💎 >$50K</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <select id="platformFilter">
+          <option value="all">🌐 All platforms</option>
+          <option value="pump">🎯 pump.fun</option>
+          <option value="raydium">💧 Raydium</option>
+        </select>
+        <select id="sortFilter">
+          <option value="newest">🆕 Newest</option>
+          <option value="growth">📈 5m growth</option>
+          <option value="volume">📊 Volume</option>
+          <option value="holders">👥 Holders</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="tokenGrid" class="token-grid">
+      <div class="loader">Loading fresh launches</div>
+    </div>
+
+    <div class="update-info">
+      <span class="update-timer" id="updateTimer">⏱️ Refresh in 60 sec</span>
+      <button class="refresh-now" id="refreshBtn">⟳ Refresh now</button>
+      <span id="cacheInfo" style="color: var(--text2); font-size: 0.9rem;"></span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      "use strict";
+      
+      // ==================== STATE ====================
+      let currentTimeFilter = 'all';
+      let currentLiqFilter = 'all';
+      let currentPlatformFilter = 'all';
+      let currentSort = 'newest';
+      let updateCountdown = 60;
+      let updateInterval = null;
+      let allTokens = [];
+      let isRateLimited = false;
+      let filterTimeout = null;
+      let isRefreshing = false;
+      const chartInstances = new Map();
+      
+      // Cache settings
+      const CACHE_KEY = 'freshTokensCache';
+      const CACHE_TIME_KEY = 'freshTokensCacheTime';
+      const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+      
+      // ==================== UTILITY FUNCTIONS ====================
+      function safeLocalStorageSet(key, value) {
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch (e) {
+          console.warn('LocalStorage not available:', e);
+          return false;
+        }
+      }
+      
+      function safeLocalStorageGet(key) {
+        try {
+          return localStorage.getItem(key);
+        } catch (e) {
+          console.warn('LocalStorage not available:', e);
+          return null;
+        }
+      }
+      
+      function showError(message) {
+        const grid = document.getElementById('tokenGrid');
+        if (grid) {
+          grid.innerHTML = `<div class="empty error-message">❌ ${message}</div>`;
+        }
+      }
+      
+      function setFilterBarLoading(isLoading) {
+        const filterBar = document.getElementById('filterBar');
+        if (filterBar) {
+          if (isLoading) {
+            filterBar.classList.add('loading');
+          } else {
+            filterBar.classList.remove('loading');
+          }
+        }
+      }
+      
+      function destroyAllCharts() {
+        // Destroy all chart instances from Map with proper checks
+        chartInstances.forEach((chart, id) => {
+          try { 
+            if (chart && typeof chart.destroy === 'function') {
+              chart.destroy(); 
+            }
+          } catch (e) {
+            console.warn('Error destroying chart:', e);
+          }
+        });
+        chartInstances.clear();
+        
+        // Also destroy any charts attached to canvas elements in DOM
+        if (typeof Chart !== 'undefined') {
+          document.querySelectorAll('canvas.sparkline-canvas').forEach(canvas => {
+            try {
+              const chart = Chart.getChart(canvas);
+              if (chart) {
+                chart.destroy();
+              }
+            } catch (e) {
+              // Ignore errors when Chart.getChart doesn't exist
+            }
+          });
+        }
+      }
+      
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+      
+      function isValidToken(token) {
+        return token && 
+               typeof token === 'object' &&
+               (token.symbol || token.address) &&
+               (!token.created_timestamp || !isNaN(token.created_timestamp));
+      }
+      
+      // ==================== TOKEN AGE CALCULATION ====================
+      function calculateTokenAge(createdTimestamp) {
+        if (!createdTimestamp || isNaN(createdTimestamp)) return 0;
+        
+        try {
+          const now = Date.now();
+          // Check if timestamp is in seconds (10 digits) or milliseconds (13 digits)
+          const timestamp = createdTimestamp > 1e12 ? createdTimestamp : createdTimestamp * 1000;
+          
+          // Validate timestamp is reasonable (after 2020 and not in future)
+          if (timestamp > now || timestamp < 1600000000000) {
+            return 0;
+          }
+          
+          return Math.round((now - timestamp) / 60000);
+        } catch (e) {
+          console.warn('Age calculation error:', e);
+          return 0;
+        }
+      }
+      
+      // ==================== THEME ====================
+      function toggleTheme() {
+        document.body.classList.toggle('day-mode');
+        const isDay = document.body.classList.contains('day-mode');
+        safeLocalStorageSet('tribunalTheme', isDay ? 'day' : 'night');
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+          themeToggle.textContent = isDay ? '☀️' : '🌙';
+        }
+        
+        // Redraw charts with new theme
+        if (allTokens.length) {
+          applyFilters();
+        }
+      }
+      
+      // Initialize theme
+      (function initTheme() {
+        const savedTheme = safeLocalStorageGet('tribunalTheme');
+        if (savedTheme === 'day') {
+          document.body.classList.add('day-mode');
+          const themeToggle = document.getElementById('themeToggle');
+          if (themeToggle) {
+            themeToggle.textContent = '☀️';
+          }
+        }
+      })();
+      
+      // ==================== LOAD TOKENS ====================
+      async function loadFreshTokens(force = false) {
+        const grid = document.getElementById('tokenGrid');
+        if (!grid) return;
+        
+        // CRITICAL FIX: Block multiple requests during rate limit or refresh
+        if (isRateLimited || isRefreshing) {
+          grid.innerHTML = '<div class="loader rate-limit">⏱️ Already refreshing or rate-limited. Please wait...</div>';
+          return;
+        }
+        
+        if (isRefreshing) return;
+        
+        isRefreshing = true;
+        setFilterBarLoading(true);
+        const refreshBtn = document.getElementById('refreshBtn');
+        if (refreshBtn) refreshBtn.disabled = true;
+        
+        grid.innerHTML = '<div class="loader">Loading fresh launches</div>';
+        
+        // Check cache
+        const cached = safeLocalStorageGet(CACHE_KEY);
+        const cacheTime = safeLocalStorageGet(CACHE_TIME_KEY);
+        
+        if (!force && cached && cacheTime) {
+          const cacheAge = Date.now() - parseInt(cacheTime);
+          if (cacheAge < CACHE_TTL) {
+            try {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length) {
+                allTokens = parsed.filter(isValidToken);
+                applyFilters();
+                const cacheInfo = document.getElementById('cacheInfo');
+                if (cacheInfo) {
+                  cacheInfo.textContent = `📦 from cache • ${new Date(parseInt(cacheTime)).toLocaleTimeString()}`;
+                }
+                startCountdown();
+                isRefreshing = false;
+                setFilterBarLoading(false);
+                if (refreshBtn) refreshBtn.disabled = false;
+                return;
+              }
+            } catch (e) {
+              console.error('Cache parse error:', e);
+              // Continue to fetch new data
+            }
+          }
+        }
+        
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+          
+          const res = await fetch('https://public-api.birdeye.so/defi/v2/tokens/new_listing?limit=60&meme_platform_enabled=true', {
+            headers: { 
+              'x-chain': 'solana', 
+              'accept': 'application/json'
+            },
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+          
+          // Rate limit handling
+          if (res.status === 429) {
+            isRateLimited = true;
+            grid.innerHTML = '<div class="loader rate-limit">⏱️ Rate limited by Birdeye. Waiting 60 seconds...</div>';
+            setTimeout(() => {
+              isRateLimited = false;
+              loadFreshTokens(true);
+            }, 60000);
+            isRefreshing = false;
+            setFilterBarLoading(false);
+            if (refreshBtn) refreshBtn.disabled = false;
+            return;
+          }
+          
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          
+          const data = await res.json();
+          
+          if (data.success && data.data?.items?.length) {
+            // Reset rate limit on success
+            isRateLimited = false;
+            allTokens = data.data.items.filter(isValidToken);
+            safeLocalStorageSet(CACHE_KEY, JSON.stringify(allTokens));
+            safeLocalStorageSet(CACHE_TIME_KEY, Date.now().toString());
+            applyFilters();
+            const cacheInfo = document.getElementById('cacheInfo');
+            if (cacheInfo) {
+              cacheInfo.textContent = `🔄 updated ${new Date().toLocaleTimeString()}`;
+            }
+          } else {
+            grid.innerHTML = '<div class="empty">✨ No fresh tokens found</div>';
+          }
+        } catch(e) {
+          console.error('Loading error:', e);
+          
+          if (e.name === 'AbortError') {
+            showError('Request timeout. Check your connection.');
+          } else {
+            showError('Network error. Check connection.');
+          }
+          
+          // Try to load from cache even if expired
+          const cached = safeLocalStorageGet(CACHE_KEY);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length) {
+                allTokens = parsed.filter(isValidToken);
+                applyFilters();
+                const cacheInfo = document.getElementById('cacheInfo');
+                if (cacheInfo) {
+                  cacheInfo.textContent = `📦 old cache • offline mode`;
+                }
+              }
+            } catch (parseError) {
+              // Error already shown
+            }
+          }
+        }
+        
+        startCountdown();
+        isRefreshing = false;
+        setFilterBarLoading(false);
+        if (refreshBtn) refreshBtn.disabled = false;
+      }
+      
+      // ==================== APPLY FILTERS ====================
+      function applyFilters() {
+        const grid = document.getElementById('tokenGrid');
+        if (!grid) return;
+        
+        setFilterBarLoading(true);
+        
+        // Show loading indicator for filter with visual feedback
+        grid.innerHTML = '<div class="loader">Filtering tokens...</div>';
+        
+        if (!allTokens || !allTokens.length) {
+          grid.innerHTML = '<div class="empty">✨ No tokens available</div>';
+          setFilterBarLoading(false);
+          return;
+        }
+        
+        // Use setTimeout to allow UI to update before heavy filtering
+        setTimeout(() => {
+          // Filter
+          let filtered = allTokens.filter(t => {
+            const ageMin = calculateTokenAge(t.created_timestamp);
+            const platform = (t.platform || '').toLowerCase();
+            
+            // Time filter
+            if (currentTimeFilter !== 'all') {
+              const maxMin = currentTimeFilter === '5m' ? 5 : currentTimeFilter === '30m' ? 30 : 60;
+              if (ageMin > maxMin) return false;
+            }
+            
+            // Liquidity filter
+            if (currentLiqFilter !== 'all') {
+              const minLiq = currentLiqFilter === '5k' ? 5000 : currentLiqFilter === '10k' ? 10000 : 50000;
+              if ((t.liquidity || 0) < minLiq) return false;
+            }
+            
+            // Platform filter - fixed to match exact platform names
+            if (currentPlatformFilter !== 'all') {
+              if (currentPlatformFilter === 'pump' && !platform.includes('pump.fun')) return false;
+              if (currentPlatformFilter === 'raydium' && !platform.includes('raydium')) return false;
+            }
+            
+            return true;
+          });
+          
+          // Sort
+          if (currentSort === 'growth') {
+            filtered.sort((a, b) => (b.price_change_5m || 0) - (a.price_change_5m || 0));
+          } else if (currentSort === 'volume') {
+            filtered.sort((a, b) => (b.volume_5m || 0) - (a.volume_5m || 0));
+          } else if (currentSort === 'holders') {
+            filtered.sort((a, b) => (b.holder_count || 0) - (a.holder_count || 0));
+          } else {
+            filtered.sort((a, b) => (b.created_timestamp || 0) - (a.created_timestamp || 0));
+          }
+          
+          renderTokens(filtered);
+          setFilterBarLoading(false);
+          
+          // FIX: Always restart countdown after filter
+          startCountdown();
+        }, 50);
+      }
+      
+      // ==================== RENDER TOKENS ====================
+      function renderTokens(tokens) {
+        const grid = document.getElementById('tokenGrid');
+        if (!grid) return;
+        
+        // FIX: Destroy all canvas charts before clearing grid to prevent memory leaks
+        document.querySelectorAll('canvas.sparkline-canvas').forEach(canvas => {
+          try {
+            if (typeof Chart !== 'undefined') {
+              const chart = Chart.getChart(canvas);
+              if (chart) {
+                chart.destroy();
+              }
+            }
+          } catch (e) {
+            // Ignore errors
+          }
+        });
+        
+        // Destroy all existing charts from Map before re-rendering
+        destroyAllCharts();
+        
+        if (tokens.length === 0) {
+          grid.innerHTML = '<div class="empty">🔍 No tokens match your filters</div>';
+          return;
+        }
+        
+        const fragment = document.createDocumentFragment();
+        
+        // Get current theme color for charts
+        const isDay = document.body.classList.contains('day-mode');
+        const chartColor = isDay ? '#1a1a2e' : '#00F0FF';
+        
+        tokens.forEach((item, index) => {
+          // Generate unique ID for each chart
+          const uniqueId = `chart-${Date.now()}-${Math.random().toString(36).substr(2, 8)}-${index}`;
+          
+          // Safe address handling
+          const safeAddress = item.address ? 
+            item.address.replace(/'/g, "\\'") : 
+            'address_not_available';
+          
+          const displayAddress = item.address ? 
+            `${item.address.slice(0,8)}...${item.address.slice(-6)}` : 
+            'Address N/A';
+          
+          const ageMin = calculateTokenAge(item.created_timestamp);
+          const platform = (item.platform || '').toLowerCase();
+          
+          // Build tags HTML
+          let tagsHtml = '';
+          if (platform.includes('pump.fun')) {
+            tagsHtml += '<span class="tag tag-pump">pump.fun</span>';
+          }
+          if (platform.includes('raydium')) {
+            tagsHtml += '<span class="tag tag-raydium">Raydium</span>';
+          }
+          
+          // Safe price change calculation with NaN check
+          let priceChangeHtml = '<div>📈 5m: N/A</div>';
+          if (item.price_change_5m && !isNaN(item.price_change_5m)) {
+            const priceChangeValue = (item.price_change_5m * 100).toFixed(2);
+            priceChangeHtml = `<div>📈 5m: ${priceChangeValue}%</div>`;
+          }
+          
+          // Check if chart data is valid (minimum 2 points needed for a line chart)
+          const hasChartData = item.price_change_history && 
+                              Array.isArray(item.price_change_history) && 
+                              item.price_change_history.length >= 2 &&
+                              item.price_change_history.every(v => !isNaN(v) && v !== null);
+          
+          // Add placeholder when no chart data
+          const sparklineHtml = hasChartData ? 
+            `<canvas class="sparkline-canvas" id="${uniqueId}"></canvas>` : 
+            '<div class="no-data-placeholder">📊 No price data</div>';
+          
+          const card = document.createElement('div');
+          card.className = 'token-card';
+          
+          card.innerHTML = `
+            <div class="token-header">
+              <div class="token-symbol">
+                ${item.symbol || '???'} 
+                ${ageMin < 10 ? '🔥' : ageMin < 30 ? '⚡' : '🆕'}
+              </div>
+              <div class="token-tags">
+                ${tagsHtml}
+              </div>
+            </div>
+            <div class="token-info">
+              <div>⏱️ Age: ${ageMin} min</div>
+              <div>💰 MC: $${(item.mc || 0).toLocaleString()}</div>
+              <div>💧 Liquidity: $${(item.liquidity || 0).toLocaleString()}</div>
+              <div>👥 Holders: ${item.holder_count || '?'}</div>
+              ${priceChangeHtml}
+            </div>
+            <div class="token-ca" title="Click to copy">
+              📋 ${displayAddress}
+            </div>
+            ${sparklineHtml}
+            <div class="token-actions">
+              <button class="action-btn analyze-btn">🔍 ANALYZE</button>
+              <button class="action-btn dexscreener-btn">📊 DS</button>
+              <button class="action-btn copy-btn">📋 COPY</button>
+            </div>
+          `;
+          
+          // Store data in dataset
+          card.dataset.address = safeAddress;
+          if (hasChartData) {
+            card.dataset.chartId = uniqueId;
+            // Store only last 5 points for sparkline
+            const lastFivePoints = item.price_change_history.slice(-5).filter(v => !isNaN(v) && v !== null);
+            card.dataset.priceHistory = JSON.stringify(lastFivePoints);
+          }
+          
+          fragment.appendChild(card);
+        });
+        
+        grid.innerHTML = '';
+        grid.appendChild(fragment);
+        
+        // Initialize charts
+        requestAnimationFrame(() => {
+          document.querySelectorAll('.token-card').forEach(card => {
+            const chartId = card.dataset.chartId;
+            const priceHistory = card.dataset.priceHistory;
+            
+            if (chartId && priceHistory) {
+              const canvas = document.getElementById(chartId);
+              if (canvas) {
+                try {
+                  const data = JSON.parse(priceHistory).filter(v => !isNaN(v) && v !== null);
+                  // Need at least 2 points for a line chart
+                  if (data.length >= 2) {
+                    // Check if chart already exists using our Map
+                    let existingChart = chartInstances.get(chartId);
+                    if (existingChart) {
+                      try {
+                        existingChart.destroy();
+                      } catch (e) {
+                        console.warn('Error destroying existing chart:', e);
+                      }
+                    }
+                    
+                    // Double-check if Chart is available
+                    if (typeof Chart !== 'undefined') {
+                      const chart = new Chart(canvas, {
+                        type: 'line',
+                        data: { 
+                          labels: Array(data.length).fill(''),
+                          datasets: [{ 
+                            data: data, 
+                            borderColor: chartColor,
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            fill: false
+                          }] 
+                        },
+                        options: { 
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          animation: false, // Disable animation for performance
+                          scales: { 
+                            x: { display: false, grid: { display: false } }, 
+                            y: { display: false, grid: { display: false } } 
+                          }, 
+                          elements: { point: { radius: 0 } }, 
+                          plugins: { legend: { display: false } } 
+                        }
+                      });
+                      
+                      chartInstances.set(chartId, chart);
+                    }
+                  }
+                } catch (e) {
+                  console.warn('Chart init error:', e);
+                }
+              }
+            }
+            
+            // Attach event listeners
+            const address = card.dataset.address;
+            
+            // CA click for copying
+            const caElement = card.querySelector('.token-ca');
+            if (caElement) {
+              caElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyCA(address);
+              });
+            }
+            
+            // Action buttons
+            const analyzeBtn = card.querySelector('.analyze-btn');
+            if (analyzeBtn) {
+              analyzeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                analyzeToken(address);
+              });
+            }
+            
+            const dexscreenerBtn = card.querySelector('.dexscreener-btn');
+            if (dexscreenerBtn) {
+              dexscreenerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (address && address !== 'address_not_available') {
+                  window.open(`https://dexscreener.com/solana/${address}`, '_blank');
+                } else {
+                  alert('❌ Address not available');
+                }
+              });
+            }
+            
+            const copyBtn = card.querySelector('.copy-btn');
+            if (copyBtn) {
+              copyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyCA(address);
+              });
+            }
+            
+            // Card click for analyze
+            card.addEventListener('click', (e) => {
+              if (!e.target.closest('button') && !e.target.closest('.token-ca')) {
+                analyzeToken(address);
+              }
+            });
+          });
+        });
+      }
+      
+      // ==================== ACTIONS ====================
+      function analyzeToken(ca) {
+        if (!ca || ca === 'address_not_available') {
+          alert('❌ No address to analyze');
+          return;
+        }
+        
+        try {
+          const saved = safeLocalStorageSet('pendingAnalysis', ca);
+          if (!saved) {
+            // If localStorage fails, pass via URL
+            window.location.href = `https://www.cryptobros.pro/tribunal.html?ca=${encodeURIComponent(ca)}`;
+          } else {
+            window.location.href = 'https://www.cryptobros.pro/tribunal.html';
+          }
+        } catch (e) {
+          console.error('Analysis error:', e);
+          window.location.href = `https://www.cryptobros.pro/tribunal.html?ca=${encodeURIComponent(ca)}`;
+        }
+      }
+      
+      function copyCA(ca) {
+        if (!ca || ca === 'address_not_available') {
+          alert('❌ No address to copy');
+          return;
+        }
+        
+        // Modern clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(ca).then(() => {
+            alert('✅ CA copied!');
+          }).catch(() => {
+            fallbackCopy(ca);
+          });
+        } else {
+          fallbackCopy(ca);
+        }
+      }
+      
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        
+        try {
+          const success = document.execCommand('copy');
+          if (success) {
+            alert('✅ CA copied!');
+          } else {
+            alert('❌ Copy failed. Manual copy: ' + text);
+          }
+        } catch (err) {
+          alert('❌ Copy error. Manual copy: ' + text);
+        }
+        
+        document.body.removeChild(textarea);
+      }
+      
+      // ==================== FILTER HANDLERS ====================
+      function setupFilterListeners() {
+        const timeFilter = document.getElementById('timeFilter');
+        if (timeFilter) {
+          timeFilter.addEventListener('change', (e) => {
+            currentTimeFilter = e.target.value;
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(applyFilters, 300);
+          });
+        }
+        
+        const liqFilter = document.getElementById('liqFilter');
+        if (liqFilter) {
+          liqFilter.addEventListener('change', (e) => {
+            currentLiqFilter = e.target.value;
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(applyFilters, 300);
+          });
+        }
+        
+        const platformFilter = document.getElementById('platformFilter');
+        if (platformFilter) {
+          platformFilter.addEventListener('change', (e) => {
+            currentPlatformFilter = e.target.value;
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(applyFilters, 300);
+          });
+        }
+        
+        const sortFilter = document.getElementById('sortFilter');
+        if (sortFilter) {
+          sortFilter.addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(applyFilters, 300);
+          });
+        }
+      }
+      
+      // ==================== AUTO REFRESH ====================
+      function startCountdown() {
+        if (updateInterval) {
+          clearInterval(updateInterval);
+        }
+        
+        updateCountdown = 60;
+        updateTimerDisplay();
+        
+        updateInterval = setInterval(() => {
+          updateCountdown--;
+          updateTimerDisplay();
+          
+          if (updateCountdown <= 0) {
+            updateCountdown = 60; // Reset counter
+            loadFreshTokens();
+          }
+        }, 1000);
+      }
+      
+      function updateTimerDisplay() {
+        const timer = document.getElementById('updateTimer');
+        if (timer) {
+          timer.textContent = `⏱️ Refresh in ${updateCountdown} sec`;
+        }
+      }
+      
+      // ==================== INITIALIZATION ====================
+      function init() {
+        // Check if Chart.js is loaded
+        if (typeof Chart === 'undefined') {
+          console.error('Chart.js not loaded');
+          // Show warning but continue
+        }
+        
+        // Setup theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', toggleTheme);
+        }
+        
+        // Debounced refresh button
+        const refreshBtn = document.getElementById('refreshBtn');
+        if (refreshBtn) {
+          refreshBtn.addEventListener('click', debounce(() => {
+            updateCountdown = 60; // Reset counter
+            loadFreshTokens(true);
+          }, 1000));
+        }
+        
+        // Setup filters
+        setupFilterListeners();
+        
+        // Load initial data
+        loadFreshTokens();
+      }
+      
+      // Start when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+      
+      // Cleanup on page unload
+      window.addEventListener('beforeunload', () => {
+        if (updateInterval) {
+          clearInterval(updateInterval);
+        }
+        
+        destroyAllCharts();
+      });
+      
+    })();
+  </script>
+</body>
+</html>
