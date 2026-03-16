@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRYPTOBROS TRIBUNAL — AI Risk Assessment</title>
+  
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.dexscreener.com https://cryptobros-backend.onrender.com; img-src 'self' data:; worker-src 'none';">
+  
+  <!-- DOMPurify for XSS protection -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -86,7 +93,7 @@
       background: var(--card-bg); border: var(--border-width) solid var(--glass-border); 
       border-radius: 50%; display: flex; align-items: center; justify-content: center; 
       cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s ease; 
-      z-index: 1000; box-shadow: var(--border-glow); 
+      z-index: 999; 
       font-family: var(--font-heading);
     }
     .sound-toggle:hover { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.6); transform: scale(1.1); }
@@ -112,7 +119,7 @@
       color: var(--neon-cyan);
       margin-bottom: 1.5rem;
       letter-spacing: 3px;
-      animation: subtitleFlicker 2.5s ease-in-out infinite, softPulse 3s ease-in-out infinite;
+      animation: subtitleFlicker 2.5s ease-in-out infinite;
       text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
     @keyframes subtitleFlicker {
@@ -144,11 +151,6 @@
       margin: 0 4px;
     }
     @keyframes dangerPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.05); } }
-    
-    @keyframes softPulse {
-      0%, 100% { opacity: 1; text-shadow: 0 0 5px currentColor; }
-      50% { opacity: 0.8; text-shadow: 0 0 15px currentColor; }
-    }
     
     .search-section { 
       background: var(--card-bg); border: var(--border-width) solid var(--glass-border); 
@@ -209,7 +211,6 @@
       margin-bottom: 2rem; 
       text-transform: uppercase; 
       letter-spacing: 3px; 
-      animation: softPulse 4s ease-in-out infinite;
     }
     .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
     
@@ -275,6 +276,21 @@
       max-height: 200px;
       overflow-y: auto;
       padding-right: 5px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--neon-cyan) transparent;
+    }
+    
+    .agent-output::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .agent-output::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .agent-output::-webkit-scrollbar-thumb {
+      background: var(--neon-cyan);
+      border-radius: 3px;
     }
     
     .agent-output li { 
@@ -332,6 +348,7 @@
       text-align: center; box-shadow: var(--border-glow); display: none; 
     }
     .verdict-section.high-risk { border-color: var(--neon-red); box-shadow: 0 0 60px rgba(255, 77, 77, 0.4); }
+    .verdict-section.medium-risk { border-color: var(--neon-gold); box-shadow: 0 0 60px rgba(255, 215, 0, 0.4); }
     .verdict-section.low-risk { border-color: var(--neon-green); box-shadow: 0 0 60px rgba(0, 255, 157, 0.4); }
     
     .verdict-title { 
@@ -342,7 +359,6 @@
       margin-bottom: 1.5rem; 
       text-transform: uppercase; 
       letter-spacing: 3px; 
-      animation: softPulse 3s ease-in-out infinite;
     }
     
     .quantum-scan {
@@ -358,7 +374,6 @@
     }
     
     .quantum-scan span {
-      animation: softPulse 2s ease-in-out infinite;
       color: var(--neon-cyan);
     }
     
@@ -371,6 +386,7 @@
       line-height: 1;
     }
     .verdict-score.high-risk { color: var(--neon-red); }
+    .verdict-score.medium-risk { color: var(--neon-gold); }
     .verdict-score.low-risk { color: var(--neon-green); }
     
     .verdict-label { 
@@ -382,6 +398,7 @@
       letter-spacing: 2px;
     }
     .verdict-label.high-risk { color: var(--neon-red); text-shadow: 0 0 30px rgba(255, 77, 77, 0.8); }
+    .verdict-label.medium-risk { color: var(--neon-gold); text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
     .verdict-label.low-risk { color: var(--neon-green); text-shadow: 0 0 30px rgba(0, 255, 157, 0.8); }
     
     .scan-indicator { 
@@ -419,12 +436,6 @@
       font-family: var(--font-body);
       font-size: 0.85rem;
       box-shadow: var(--warning-glow);
-      animation: warningPulse 2s ease-in-out infinite;
-    }
-    
-    @keyframes warningPulse {
-      0%, 100% { border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 153, 0, 0.3); }
-      50% { border-color: #ffcc00; box-shadow: 0 0 20px rgba(255, 204, 0, 0.6); }
     }
     
     .success-box {
@@ -450,14 +461,190 @@
       font-size: 0.85rem;
     }
     
+    .rate-limit-box {
+      background: rgba(255, 153, 0, 0.1);
+      border: 2px solid var(--neon-orange);
+      border-radius: 12px;
+      padding: 0.8rem;
+      margin: 1rem 0;
+      color: var(--neon-orange);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      text-align: center;
+      animation: rateLimitPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes rateLimitPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .verdict-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+    
+    .history-btn {
+      padding: 1rem 2rem;
+      background: rgba(10, 14, 39, 0.8);
+      border: var(--border-width) solid var(--neon-gold);
+      border-radius: 50px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--neon-gold);
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .history-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.7);
+      border-color: #ffcc00;
+    }
+    
+    .history-panel {
+      background: var(--card-bg);
+      border: var(--border-width) solid var(--neon-gold);
+      border-radius: 25px;
+      padding: 1.8rem;
+      margin-top: 2rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .history-panel h3 {
+      font-family: var(--font-display);
+      color: var(--neon-gold);
+      border-bottom: 2px solid var(--neon-gold);
+      padding-bottom: 12px;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+    }
+    
+    #historyList {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--glass-border);
+      transition: all 0.2s ease;
+      border-radius: 10px;
+    }
+    
+    .history-item:hover {
+      background: rgba(255, 215, 0, 0.1);
+      transform: translateX(5px);
+    }
+    
+    .history-token {
+      font-weight: bold;
+      color: var(--neon-cyan);
+      font-size: 1rem;
+    }
+    
+    .history-risk {
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    
+    .risk-high { 
+      background: rgba(255, 77, 77, 0.2); 
+      color: var(--neon-red);
+      border: 1px solid var(--neon-red);
+    }
+    .risk-medium { 
+      background: rgba(255, 215, 0, 0.2); 
+      color: var(--neon-gold);
+      border: 1px solid var(--neon-gold);
+    }
+    .risk-low { 
+      background: rgba(0, 255, 157, 0.2); 
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
+    }
+    
+    .history-date {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      display: block;
+      margin-top: 3px;
+    }
+    
+    .history-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .history-action-btn {
+      padding: 0.7rem 1.3rem;
+      background: transparent;
+      border: 1px solid var(--neon-cyan);
+      border-radius: 30px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--neon-cyan);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(5px);
+    }
+    
+    .history-action-btn:hover {
+      background: rgba(0, 240, 255, 0.15);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+    
+    .history-action-btn.warning {
+      border-color: var(--neon-red);
+      color: var(--neon-red);
+    }
+    
+    .history-action-btn.warning:hover {
+      background: rgba(255, 77, 77, 0.15);
+    }
+    
+    .empty-history {
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 40px 20px;
+      font-style: italic;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+    }
+    
     .save-verdict-btn { 
-      padding: 1rem 3rem; 
+      padding: 1rem 2.5rem; 
       background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan)); 
       border: none; 
       border-radius: 50px;
       font-family: var(--font-heading); 
       font-weight: 700; 
-      font-size: 1rem; 
+      font-size: 1.1rem; 
       color: var(--deep-bg); 
       cursor: pointer; 
       box-shadow: 0 0 30px rgba(157, 0, 255, 0.5); 
@@ -465,7 +652,7 @@
       text-transform: uppercase; 
       transition: all 0.3s ease;
     }
-    .save-verdict-btn:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(157, 0, 255, 0.7); }
+    .save-verdict-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 0 50px rgba(157, 0, 255, 0.8); }
     
     .loading-spinner { 
       display: inline-block; width: 20px; height: 20px; 
@@ -519,6 +706,29 @@
       .agent-output {
         max-height: 150px;
       }
+      .history-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .verdict-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .history-btn, .save-verdict-btn {
+        width: 100%;
+      }
+      .history-panel {
+        padding: 1rem;
+        max-height: 60vh;
+      }
+      .history-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .history-action-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -527,7 +737,7 @@
   <div class="container">
     <div class="header-controls">
       <a href="index.html" class="back-btn">↩ Back to Home</a>
-      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</div>
+      <div class="theme-toggle" id="themeToggle">🌙</div>
     </div>
     
     <div class="header">
@@ -539,15 +749,17 @@
     <div class="search-section">
       <div class="search-input-wrapper">
         <input type="text" class="search-input" id="tokenInput" placeholder="Enter token address or symbol (e.g., $WIF, $BONK)...">
-        <button class="analyze-btn" id="analyzeBtn" onclick="debouncedAnalyze()">🔍 ANALYZE</button>
+        <button class="analyze-btn" id="analyzeBtn">🔍 ANALYZE</button>
       </div>
       <div class="quick-tokens">
-        <span class="token-chip" onclick="quickAnalyze('$WIF')">$WIF</span>
-        <span class="token-chip" onclick="quickAnalyze('$BONK')">$BONK</span>
-        <span class="token-chip" onclick="quickAnalyze('$SOL')">$SOL</span>
-        <span class="token-chip" onclick="quickAnalyze('$AUS')">$AUS</span>
+        <span class="token-chip" onclick="window.quickAnalyze('$WIF')">$WIF</span>
+        <span class="token-chip" onclick="window.quickAnalyze('$BONK')">$BONK</span>
+        <span class="token-chip" onclick="window.quickAnalyze('$SOL')">$SOL</span>
+        <span class="token-chip" onclick="window.quickAnalyze('$AUS')">$AUS</span>
       </div>
     </div>
+    
+    <div id="rateLimitMessage" class="rate-limit-box" style="display: none;"></div>
     
     <div class="tribunal-section">
       <h2 class="section-title">Tribunal Deliberation</h2>
@@ -637,18 +849,64 @@
       <div class="verdict-label high-risk" id="verdictLabel">HIGH RISK</div>
       <div class="quantum-scan"><div class="scan-indicator"></div><span>Initiating Quantum Contract Scan...</span></div>
       <div id="verdictDetails" class="verdict-details"></div>
-      <button class="save-verdict-btn" onclick="saveVerdict()">💾 SAVE VERDICT</button>
+      
+      <div class="verdict-actions">
+        <button class="save-verdict-btn" id="saveVerdictBtn">💾 SAVE VERDICT</button>
+        <button class="history-btn" id="historyBtn">📜 MY VERDICTS</button>
+      </div>
+      
+      <div id="historyPanel" class="history-panel" style="display: none;">
+        <h3>📜 YOUR SAVED VERDICTS</h3>
+        <div id="historyList"></div>
+        <div class="history-actions">
+          <button class="history-action-btn" id="exportHistoryBtn">📤 EXPORT</button>
+          <button class="history-action-btn warning" id="clearHistoryBtn">🗑️ CLEAR ALL</button>
+          <button class="history-action-btn" id="closeHistoryBtn">✖️ CLOSE</button>
+        </div>
+      </div>
     </div>
   </div>
   
-  <div class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇</div>
+  <div class="sound-toggle" id="soundToggle">🔇</div>
 
   <script>
+    // ================== DOMPurify CONFIGURATION ==================
+    // Ensure DOMPurify is loaded and configured
+    const purifyConfig = {
+      ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'pre', 'div', 'span', 'br', 'p'],
+      ALLOWED_ATTR: ['href', 'target', 'class', 'style'],
+      ALLOW_DATA_ATTR: false,
+      USE_PROFILES: { html: true }
+    };
+    
+    // Safe HTML sanitization function
+    function sanitizeHTML(dirty) {
+      if (!dirty) return '';
+      if (typeof DOMPurify !== 'undefined') {
+        return DOMPurify.sanitize(dirty, purifyConfig);
+      }
+      // Fallback basic sanitization if DOMPurify not loaded
+      return String(dirty).replace(/[&<>"']/g, function(match) {
+        const escape = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        };
+        return escape[match];
+      });
+    }
+    
     // ================== CONFIGURATION ==================
     const CONFIG = {
       CACHE_TTL: 5 * 60 * 1000, // 5 minutes
       MAX_RETRIES: 3,
       RETRY_DELAY: 1000,
+      RATE_LIMIT: 1000, // 1 second between API calls
+      DISAGREEMENT_THRESHOLD: 0.3, // FIXED: from 0.4 to 0.3
+      MIN_VALID_TIMESTAMP: 1600000000000, // 2020-09-01
+      MAX_VALID_TIMESTAMP: 1893456000000, // 2030-01-01
       CHAIN_IDS: {
         'solana': '1399811149',
         'ethereum': '1',
@@ -662,7 +920,7 @@
       BLUE_CHIPS: ['sol','eth','btc','usdt','usdc','xrp','ada','dot','avax','matic'],
       MEME_PATTERNS: ['wif','bonk','pepe','mog','turbo','dog','shib','floki'],
       BLUE_CHIP_AGES: {
-        'sol': 2200, // days since 2020
+        'sol': 2200,
         'eth': 3000,
         'btc': 5000,
         'usdt': 3000,
@@ -682,30 +940,90 @@
     let isAnalyzing = false;
     let particlesInitialized = false;
     let tiltObserver = null;
+    let lastApiCall = 0;
+    let cacheCleanupInterval = null;
+    
+    // ================== RATE LIMITER (FIXED) ==================
+    const rateLimiter = {
+      async check() {
+        const now = Date.now();
+        const waitTime = CONFIG.RATE_LIMIT - (now - lastApiCall);
+        if (waitTime > 0) {
+          const rateMsg = document.getElementById('rateLimitMessage');
+          if (rateMsg) {
+            rateMsg.textContent = `⏱️ Rate limit: please wait ${Math.ceil(waitTime/1000)}s...`;
+            rateMsg.style.display = 'block';
+          }
+          await sleep(waitTime);
+          if (rateMsg) rateMsg.style.display = 'none';
+        }
+        // Update ONLY after successful wait
+        lastApiCall = Date.now();
+      }
+    };
     
     // ================== UTILITIES ==================
     function escapeHTML(str) {
-      if (!str) return '';
+      if (str === null || str === undefined) return '';
+      const html = String(str);
       const div = document.createElement('div');
-      div.textContent = String(str);
-      return div.innerHTML;
+      div.textContent = html;
+      return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    
+    function isValidUrl(url) {
+      try {
+        new URL(url);
+        return true;
+      } catch {
+        return false;
+      }
     }
     
     function formatNumber(num) {
-      if (!num || isNaN(num)) return '0';
-      if (num >= 1e9) return (num/1e9).toFixed(2)+'B';
-      if (num >= 1e6) return (num/1e6).toFixed(2)+'M';
-      if (num >= 1e3) return (num/1e3).toFixed(2)+'K';
-      return num.toFixed(2);
+      if (num === null || num === undefined || isNaN(num)) return '0';
+      const value = parseFloat(num);
+      if (value >= 1e9) return (value/1e9).toFixed(2)+'B';
+      if (value >= 1e6) return (value/1e6).toFixed(2)+'M';
+      if (value >= 1e3) return (value/1e3).toFixed(2)+'K';
+      return value.toFixed(2);
     }
     
     function formatDate(timestamp) {
-      if (!timestamp || timestamp <= 0) return 'Unknown';
-      return new Date(timestamp).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
+      if (!timestamp || timestamp <= 0 || isNaN(timestamp)) return 'Unknown';
+      let ts = Number(timestamp);
+      // Convert seconds to ms if in seconds range
+      if (ts > 1000000000 && ts < 1000000000000) {
+        ts *= 1000;
+      }
+      // Validate timestamp range
+      if (ts < CONFIG.MIN_VALID_TIMESTAMP || ts > CONFIG.MAX_VALID_TIMESTAMP) {
+        return 'Unknown';
+      }
+      try {
+        return new Date(ts).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      } catch {
+        return 'Unknown';
+      }
+    }
+    
+    function formatDateTime(timestamp) {
+      if (!timestamp || timestamp <= 0 || isNaN(timestamp)) return 'Unknown';
+      try {
+        return new Date(timestamp).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch {
+        return 'Unknown';
+      }
     }
     
     function sleep(ms) {
@@ -713,47 +1031,103 @@
     }
     
     function isOnline() {
-      return navigator.onLine;
+      return navigator.onLine !== false;
+    }
+    
+    function sanitizeTokenData(data) {
+      if (!data || typeof data !== 'object') return null;
+      return {
+        baseToken: data.baseToken ? {
+          address: String(data.baseToken.address || '').slice(0, 100),
+          symbol: String(data.baseToken.symbol || '').slice(0, 20)
+        } : null,
+        liquidity: {
+          usd: Math.max(0, parseFloat(data.liquidity?.usd) || 0)
+        },
+        volume: {
+          h24: Math.max(0, parseFloat(data.volume?.h24) || 0)
+        },
+        fdv: Math.max(0, parseFloat(data.fdv) || 0),
+        pairCreatedAt: Math.max(0, parseInt(data.pairCreatedAt) || 0),
+        chainId: String(data.chainId || '').slice(0, 20),
+        dexId: String(data.dexId || '').slice(0, 20),
+        txns: data.txns ? {
+          h24: data.txns.h24 ? {
+            buys: Math.max(0, parseInt(data.txns.h24.buys) || 0),
+            sells: Math.max(0, parseInt(data.txns.h24.sells) || 0)
+          } : null
+        } : null,
+        priceChange: data.priceChange ? {
+          h24: parseFloat(data.priceChange.h24) || 0,
+          h6: parseFloat(data.priceChange.h6) || 0
+        } : null
+      };
     }
     
     function validateTokenInput(input) {
       if (!input || typeof input !== 'string') return false;
       const trimmed = input.trim();
       if (trimmed.length < 2 || trimmed.length > 100) return false;
-      
-      // Solana address - base58, 32-44 characters
-      if (/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(trimmed)) return true;
-      
-      // Symbols like $WIF, BONK
+      // FIXED: Better Solana address validation (not all zeros)
+      if (/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(trimmed) && !/^1+$/.test(trimmed)) return true;
       if (/^\$?[A-Z]{2,10}$/i.test(trimmed)) return true;
-      
       return false;
     }
     
-    // ================== DEBOUNCE ==================
-    function debounce(func, wait) {
+    // ================== CACHE CLEANUP ==================
+    function cleanupCache() {
+      const now = Date.now();
+      for (const [key, value] of goPlusDataCache.entries()) {
+        if (now - value.timestamp > CONFIG.CACHE_TTL) {
+          goPlusDataCache.delete(key);
+        }
+      }
+    }
+    
+    // ================== DEBOUNCE FOR ASYNC FUNCTIONS (FIXED) ==================
+    function debounceAsync(func, wait) {
       let timeout;
+      let pendingPromise = null;
+      
       return function executedFunction(...args) {
-        const later = () => {
+        // Clear previous timeout
+        if (timeout) {
           clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        }
+        
+        return new Promise((resolve, reject) => {
+          timeout = setTimeout(async () => {
+            try {
+              pendingPromise = func.apply(this, args);
+              const result = await pendingPromise;
+              resolve(result);
+            } catch (error) {
+              reject(error);
+            } finally {
+              pendingPromise = null;
+            }
+          }, wait);
+        });
       };
     }
     
-    // ================== API WITH RETRY AND TIMEOUT ==================
+    // ================== API WITH RETRY AND TIMEOUT (FIXED) ==================
     async function fetchWithRetry(url, options = {}, retries = CONFIG.MAX_RETRIES) {
       if (!isOnline()) {
         throw new Error('No internet connection');
       }
       
-      let timeoutId;
+      if (!isValidUrl(url)) {
+        throw new Error('Invalid URL');
+      }
+      
+      await rateLimiter.check();
+      
+      let timeoutId = null;
       const controller = new AbortController();
       
       try {
-        timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        timeoutId = setTimeout(() => controller.abort(), 10000);
         
         for (let i = 0; i < retries; i++) {
           try {
@@ -766,10 +1140,15 @@
               return response;
             }
             
-            if (response.status === 429) { // Rate limited
+            if (response.status === 429) {
               const delay = CONFIG.RETRY_DELAY * Math.pow(2, i);
-              console.log(`Rate limited, retrying in ${delay}ms...`);
+              const rateMsg = document.getElementById('rateLimitMessage');
+              if (rateMsg) {
+                rateMsg.textContent = `⏱️ Rate limited by API. Retrying in ${delay/1000}s...`;
+                rateMsg.style.display = 'block';
+              }
               await sleep(delay);
+              if (rateMsg) rateMsg.style.display = 'none';
               continue;
             }
             
@@ -783,7 +1162,9 @@
           }
         }
       } finally {
-        if (timeoutId) clearTimeout(timeoutId);
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId);
+        }
       }
       
       throw new Error('Max retries exceeded');
@@ -801,14 +1182,13 @@
       if (!isDayMode) {
         pc.style.display = 'block';
         if (!particlesInitialized) {
-          initParticles();
-        } else if (typeof tsParticles !== 'undefined' && !tsParticles.domItem(0)) {
-          initParticles();
+          initParticles().then(() => { particlesInitialized = true; });
         }
       } else {
         pc.style.display = 'none';
-        if (typeof tsParticles !== 'undefined' && tsParticles.domItem(0)) {
+        if (particlesInitialized && typeof tsParticles !== 'undefined' && tsParticles.domItem(0)) {
           tsParticles.domItem(0).destroy();
+          particlesInitialized = false;
         }
       }
     }
@@ -841,11 +1221,11 @@
       }
     }
     
-    // ================== TILT INITIALIZATION ==================
+    // ================== TILT INITIALIZATION (FIXED) ==================
     function initTilt() {
-      if (window.innerWidth <= 768) return;
+      if (window.innerWidth <= 768 || ('ontouchstart' in window)) return;
       if (typeof VanillaTilt !== 'undefined') {
-        const cards = document.querySelectorAll('.agent-card');
+        const cards = document.querySelectorAll('.agent-card:not([data-tilt-initialized])');
         if (cards.length > 0) {
           VanillaTilt.init(cards, { 
             max: 8, 
@@ -853,13 +1233,14 @@
             glare: true, 
             'max-glare': 0.3 
           });
+          cards.forEach(card => card.setAttribute('data-tilt-initialized', 'true'));
         }
       }
     }
     
     // ================== GET CHAIN ID ==================
     function getChainId(chainName) {
-      if (!chainName) return CONFIG.CHAIN_IDS.solana;
+      if (!chainName || typeof chainName !== 'string') return CONFIG.CHAIN_IDS.solana;
       const normalized = chainName.toLowerCase();
       return CONFIG.CHAIN_IDS[normalized] || CONFIG.CHAIN_IDS.solana;
     }
@@ -868,10 +1249,11 @@
     async function fetchGoPlusData(contractAddress, chainName) {
       if (!contractAddress) return null;
       
-      const chainId = getChainId(chainName);
-      const cacheKey = `${chainId}_${contractAddress}`;
+      cleanupCache(); // Clean old entries before adding new ones
       
-      // Check cache
+      const chainId = getChainId(chainName);
+      const cacheKey = `${chainId || 'unknown'}_${contractAddress}`;
+      
       if (goPlusDataCache.has(cacheKey)) {
         const cached = goPlusDataCache.get(cacheKey);
         if (Date.now() - cached.timestamp < CONFIG.CACHE_TTL) {
@@ -891,9 +1273,9 @@
         
         const data = await response.json();
         
-        // Check GoPlus API response code
         if (data.code !== 1) {
-          throw new Error(`GoPlus API error: ${data.message || 'Unknown'}`);
+          console.warn('GoPlus API error:', data.message || 'Unknown error');
+          return null;
         }
         
         const result = data.result?.[contractAddress];
@@ -917,7 +1299,6 @@
             ownerPercentage: parseFloat(result.owner_percentage) || 0
           };
           
-          // Save to cache
           goPlusDataCache.set(cacheKey, {
             data: goPlusData,
             timestamp: Date.now()
@@ -942,23 +1323,23 @@
           return { success: false, error: 'No pairs found' };
         }
         
-        // Take pair with highest liquidity
         const tokenData = data.pairs.reduce((best, current) => 
           (current.liquidity?.usd || 0) > (best.liquidity?.usd || 0) ? current : best
         );
         
-        // Get GoPlus data
+        const sanitizedData = sanitizeTokenData(tokenData);
+        
         let goPlusData = null;
-        if (tokenData.baseToken?.address) {
+        if (sanitizedData?.baseToken?.address) {
           goPlusData = await fetchGoPlusData(
-            tokenData.baseToken.address, 
-            tokenData.chainId
+            sanitizedData.baseToken.address, 
+            sanitizedData.chainId
           );
         }
         
         return { 
           success: true, 
-          tokenData, 
+          tokenData: sanitizedData, 
           goPlusData 
         };
         
@@ -974,47 +1355,38 @@
         hours: null,
         days: null,
         source: 'Unknown',
-        isValid: false,
         timestamp: null
       };
       
       const now = Date.now();
-      const oneYearAgo = now - 365 * 24 * 3600 * 1000;
       
-      // 1. GoPlus — most accurate source (mint creation)
       if (goPlusData?.creationTimestamp != null && goPlusData.creationTimestamp > 0) {
         const ts = goPlusData.creationTimestamp * 1000;
-        // Check if timestamp is reasonable (not in future, after 2020)
-        if (ts < now && ts > 1600000000000) {
+        if (!isNaN(ts) && ts < now && ts > CONFIG.MIN_VALID_TIMESTAMP) {
           result.hours = (now - ts) / 3600000;
           result.days = result.hours / 24;
           result.source = 'GoPlus (mint creation)';
-          result.isValid = true;
           result.timestamp = ts;
-          return result; // CRITICAL: return immediately
+          return result;
         }
       }
       
-      // 2. DexScreener pairCreatedAt — pool age (fallback)
-      if (tokenData?.pairCreatedAt && tokenData.pairCreatedAt > 1600000000000) {
+      if (tokenData?.pairCreatedAt && tokenData.pairCreatedAt > 0) {
         const ts = tokenData.pairCreatedAt;
-        if (ts < now && ts > oneYearAgo) {
+        if (!isNaN(ts) && ts < now && ts > now - 365 * 24 * 3600 * 1000) {
           result.hours = (now - ts) / 3600000;
           result.days = result.hours / 24;
           result.source = 'DexScreener (pool creation)';
-          result.isValid = true;
           result.timestamp = ts;
         }
       }
       
-      // 3. Additional traction check
       const holders = goPlusData?.holders || 0;
       const volume24h = tokenData?.volume?.h24 || 0;
       
       if (holders > 3000 || volume24h > 500000) {
         result.source = 'High traction override';
-        result.days = 90; // Consider "old" for risk reduction
-        result.isValid = true;
+        result.days = 90;
       }
       
       return result;
@@ -1036,8 +1408,7 @@
       let output = "→ On-chain analysis complete\n";
       let risk = 0.5;
       
-      // AURASPACE token
-      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) {
+      if (tokenQuery?.toLowerCase().includes('aus') || tokenQuery?.toLowerCase().includes('auraspace')) {
         return { 
           output: "→ AURASPACE token detected\n→ Native to CRYPTOBROS ecosystem\n→ Contract verified and trusted\n→ LP locked permanently", 
           risk: 0.05 
@@ -1046,7 +1417,6 @@
       
       const ticker = (tokenData.baseToken?.symbol || '').toLowerCase();
       
-      // Blue chips
       if (CONFIG.BLUE_CHIPS.some(chip => ticker.includes(chip))) {
         const liqRisk = liquidity.usd ? Math.max(0.05, 0.2 - (liquidity.usd / 1e9)) : 0.2;
         risk = Math.min(0.25, liqRisk);
@@ -1056,22 +1426,20 @@
         return { output, risk };
       }
       
-      // Determine age
       const age = calculateContractAge(goPlusData, tokenData);
       
-      if (age.isValid) {
+      if (age.days !== null && !isNaN(age.days) && age.days > 0) {
         output += `→ Age source: ${age.source}\n`;
         if (age.timestamp) {
           output += `→ Created: ${formatDate(age.timestamp)}\n`;
         }
         
         if (age.days < 1) {
-          // Less than a day
           const holders = goPlusData?.holders || 0;
           const volume24h = tokenData?.volume?.h24 || 0;
           
           if (holders > 3000 || volume24h > 500000) {
-            output += `→ 🔶 NEW CONTRACT (${age.hours.toFixed(1)}h) but ${holders} holders already\n`;
+            output += `→ 🔶 NEW CONTRACT (${age.hours?.toFixed(1) || '?'}h) but ${holders} holders already\n`;
             output += `→ Likely airdrop/listing, not fresh scam\n`;
             risk += 0.1;
           } else {
@@ -1096,7 +1464,6 @@
         risk += 0.2;
       }
       
-      // GoPlus additional checks
       if (goPlusData) {
         if (goPlusData.isHoneypot) {
           output += "→ ⚠️ HONEYPOT DETECTED\n";
@@ -1135,7 +1502,6 @@
         }
       }
       
-      // Liquidity
       if (liquidity.usd) {
         if (liquidity.usd < 10000) { 
           output += `→ ⚠️ CRITICAL: Extremely low liquidity $${formatNumber(liquidity.usd)}\n`; 
@@ -1159,7 +1525,6 @@
         }
       }
       
-      // FDV
       if (fdv > 0) {
         if (fdv < 50000) { 
           output += `→ ⚠️ Micro-cap FDV: $${formatNumber(fdv)}\n`; 
@@ -1175,7 +1540,7 @@
         }
       }
       
-      output += `→ Contract: ${baseToken.address?.substring(0, 8)}...\n→ DEX: ${tokenData.dexId || 'Unknown'}\n→ Chain: ${tokenData.chainId || 'Unknown'}`;
+      output += `→ Contract: ${(baseToken.address || '').substring(0, 8)}...\n→ DEX: ${tokenData.dexId || 'Unknown'}\n→ Chain: ${tokenData.chainId || 'Unknown'}`;
       
       return { 
         output, 
@@ -1199,7 +1564,7 @@
       let output = "→ Social sentiment analysis\n";
       let risk = 0.5;
       
-      if (tokenQuery.toLowerCase().includes('aus') || tokenQuery.toLowerCase().includes('auraspace')) {
+      if (tokenQuery?.toLowerCase().includes('aus') || tokenQuery?.toLowerCase().includes('auraspace')) {
         return { 
           output: "→ Positive community sentiment\n→ Strong ecosystem support\n→ Growing adoption in CRYPTOBROS network\n→ Active developer engagement", 
           risk: 0.1 
@@ -1217,7 +1582,6 @@
         return { output, risk };
       }
       
-      // Volume
       if (volume.h24) {
         if (volume.h24 > 1e8) { 
           output += `→ 🔥 MASSIVE VOLUME: $${formatNumber(volume.h24)}\n→ Potential manipulation\n`; 
@@ -1237,11 +1601,12 @@
         }
       }
       
-      // Transactions
-      if (txns.h24?.buys != null && txns.h24?.sells != null) {
-        const total = txns.h24.buys + txns.h24.sells;
+      if (txns?.h24?.buys != null && txns?.h24?.sells != null) {
+        const buys = parseInt(txns.h24.buys) || 0;
+        const sells = parseInt(txns.h24.sells) || 0;
+        const total = buys + sells;
         if (total > 0) {
-          const ratio = txns.h24.buys / total;
+          const ratio = buys / total;
           
           if (ratio > 0.9) { 
             output += `→ ⚠️ Extreme buy pressure: ${(ratio*100).toFixed(1)}%\n`; 
@@ -1258,32 +1623,32 @@
         }
       }
       
-      // Price changes
-      if (priceChange.h24) {
+      if (priceChange?.h24) {
         const change = parseFloat(priceChange.h24);
-        if (change > 100) { 
-          output += `→ 🚀 EXTREME PUMP: +${change.toFixed(1)}%\n`; 
-          risk += 0.4; 
-        }
-        else if (change > 50) { 
-          output += `→ 🚀 Strong pump: +${change.toFixed(1)}%\n`; 
-          risk += 0.3; 
-        }
-        else if (change > 20) { 
-          output += `→ Bullish: +${change.toFixed(1)}%\n`; 
-          risk += 0.15; 
-        }
-        else if (change < -50) { 
-          output += `→ 📉 Heavy dump: ${change.toFixed(1)}%\n`; 
-          risk += 0.35; 
-        }
-        else if (change < -20) { 
-          output += `→ Bearish: ${change.toFixed(1)}%\n`; 
-          risk += 0.2; 
+        if (!isNaN(change)) {
+          if (change > 100) { 
+            output += `→ 🚀 EXTREME PUMP: +${change.toFixed(1)}%\n`; 
+            risk += 0.4; 
+          }
+          else if (change > 50) { 
+            output += `→ 🚀 Strong pump: +${change.toFixed(1)}%\n`; 
+            risk += 0.3; 
+          }
+          else if (change > 20) { 
+            output += `→ Bullish: +${change.toFixed(1)}%\n`; 
+            risk += 0.15; 
+          }
+          else if (change < -50) { 
+            output += `→ 📉 Heavy dump: ${change.toFixed(1)}%\n`; 
+            risk += 0.35; 
+          }
+          else if (change < -20) { 
+            output += `→ Bearish: ${change.toFixed(1)}%\n`; 
+            risk += 0.2; 
+          }
         }
       }
       
-      // Meme coins
       if (CONFIG.MEME_PATTERNS.some(p => ticker.includes(p))) {
         output += `→ 🐸 Meme coin: ${ticker.toUpperCase()}\n→ High social volatility\n`;
         risk += 0.3;
@@ -1323,8 +1688,7 @@
         return { output, risk };
       }
       
-      // Volume/Liquidity ratio
-      if (liquidity.usd > 0 && volume.h24) {
+      if (liquidity.usd > 0 && volume.h24 > 0) {
         const ratio = volume.h24 / liquidity.usd;
         if (ratio > 20) { 
           output += `→ ⚠️ EXTREME PUMP: V/L ${ratio.toFixed(1)}x\n`; 
@@ -1348,7 +1712,6 @@
         }
       }
       
-      // FDV/Liquidity ratio (rug risk)
       if (fdv > 0 && liquidity.usd > 0 && liquidity.usd > 1) {
         const fdvLiqRatio = fdv / liquidity.usd;
         if (fdvLiqRatio > 500) { 
@@ -1369,14 +1732,14 @@
         }
       }
       
-      // Pump & dump patterns
-      if (priceChange.h6 && priceChange.h24) {
+      if (priceChange?.h6 && priceChange?.h24) {
         const h6 = parseFloat(priceChange.h6);
         const h24 = parseFloat(priceChange.h24);
-        
-        if (h6 > 30 && h24 < 10) { 
-          output += `→ ⚠️ Pump & dump pattern\n`; 
-          risk += 0.35; 
+        if (!isNaN(h6) && !isNaN(h24)) {
+          if (h6 > 30 && h24 < 10) { 
+            output += `→ ⚠️ Pump & dump pattern\n`; 
+            risk += 0.35; 
+          }
         }
       }
       
@@ -1386,17 +1749,25 @@
       };
     }
     
-    // ================== DISCREPANCY ANALYSIS ==================
+    // ================== DISCREPANCY ANALYSIS (FIXED) ==================
     function analyzeDiscrepancies(onChain, sentiment, price) {
-      // Ensure valid inputs
-      const validOnChain = onChain || { risk: 0.9, output: '→ On-chain data unavailable' };
-      const validSentiment = sentiment || { risk: 0.9, output: '→ Sentiment data unavailable' };
-      const validPrice = price || { risk: 0.9, output: '→ Price data unavailable' };
+      const safeOnChain = {
+        risk: onChain?.risk ?? 0.9,
+        output: onChain?.output || '→ On-chain data unavailable'
+      };
+      const safeSentiment = {
+        risk: sentiment?.risk ?? 0.9,
+        output: sentiment?.output || '→ Sentiment data unavailable'
+      };
+      const safePrice = {
+        risk: price?.risk ?? 0.9,
+        output: price?.output || '→ Price data unavailable'
+      };
       
       let output = "⚠️ CONSENSUS VERDICT\n";
       let contradictions = 0;
       
-      if (validOnChain.risk === 0.05) {
+      if (safeOnChain.risk === 0.05) {
         return { 
           output: "→ TOKEN VERIFIED AS TRUSTED\n→ Native to CRYPTOBROS ecosystem\n→ Maximum security and transparency\n→ All experts concur: LOW RISK\n→ Risk Score: 0.05/1.00", 
           risk: 0.05, 
@@ -1404,21 +1775,21 @@
         };
       }
       
-      if (Math.abs(validOnChain.risk - validSentiment.risk) > 0.4) { 
+      // Use threshold from config
+      if (Math.abs(safeOnChain.risk - safeSentiment.risk) > CONFIG.DISAGREEMENT_THRESHOLD) { 
         output += "⚠️ ON-CHAIN vs SENTIMENT\n"; 
         contradictions++; 
       }
-      if (Math.abs(validSentiment.risk - validPrice.risk) > 0.4) { 
+      if (Math.abs(safeSentiment.risk - safePrice.risk) > CONFIG.DISAGREEMENT_THRESHOLD) { 
         output += "⚠️ SENTIMENT vs PRICE\n"; 
         contradictions++; 
       }
-      if (Math.abs(validOnChain.risk - validPrice.risk) > 0.4) { 
+      if (Math.abs(safeOnChain.risk - safePrice.risk) > CONFIG.DISAGREEMENT_THRESHOLD) { 
         output += "⚠️ ON-CHAIN vs PRICE\n"; 
         contradictions++; 
       }
       
-      // Take maximum + penalty for contradictions
-      let finalRisk = Math.max(validOnChain.risk, validSentiment.risk, validPrice.risk);
+      let finalRisk = Math.max(safeOnChain.risk, safeSentiment.risk, safePrice.risk);
       if (contradictions > 1) { 
         finalRisk += 0.2; 
         output += "⚠️ Strong expert disagreement\n"; 
@@ -1473,7 +1844,6 @@
       btn.innerHTML = '<span class="loading-spinner"></span>SCANNING...';
       document.getElementById('verdictSection').style.display = 'none';
       
-      // Reset agent statuses
       const agents = ['hunter', 'oracle', 'judge', 'moderator'];
       agents.forEach(id => {
         const status = document.getElementById(`${id}-status`);
@@ -1481,13 +1851,11 @@
         if (status) { 
           status.textContent = 'ANALYZING...'; 
           status.classList.add('analyzing'); 
-          status.style.color = ''; // Reset color
         }
         if (output) output.innerHTML = '<li><span class="agent-loading"></span> Working...</li>';
       });
       
       try {
-        // Fetch data
         const result = await fetchTokenData(token);
         
         if (!result.success) {
@@ -1496,12 +1864,10 @@
         
         const { tokenData, goPlusData } = result;
         
-        // Analysis from each agent
         const onChain = analyzeOnChain(token, tokenData, goPlusData);
         const sentiment = analyzeSentiment(token, tokenData);
         const price = analyzePrice(token, tokenData);
         
-        // Update agent UI
         const hunterOutput = document.getElementById('hunter-output');
         const oracleOutput = document.getElementById('oracle-output');
         const judgeOutput = document.getElementById('judge-output');
@@ -1527,16 +1893,14 @@
             .join('');
         }
         
-        // Update statuses
-        ['hunter', 'oracle', 'judge'].forEach(id => {
+        ['hunter', 'oracle', 'judge', 'moderator'].forEach(id => {
           const status = document.getElementById(`${id}-status`);
-          if (status) { 
+          if (status && status.textContent === 'ANALYZING...') { 
             status.textContent = 'COMPLETE'; 
             status.classList.remove('analyzing'); 
           }
         });
         
-        // Moderator analysis
         const moderator = analyzeDiscrepancies(onChain, sentiment, price);
         const modOutput = document.getElementById('moderator-output');
         const modStatus = document.getElementById('moderator-status');
@@ -1553,10 +1917,8 @@
           modStatus.classList.remove('analyzing'); 
         }
         
-        // Show verdict
         showVerdict(moderator, token, tokenData, goPlusData);
         
-        // Reinitialize tilt for new content
         initTilt();
         
       } catch(error) {
@@ -1569,7 +1931,6 @@
         if (error.message.includes('No pairs')) userMessage = '❌ Token not found';
         if (error.message.includes('GoPlus API')) userMessage = '⚠️ Security data unavailable';
         
-        // Show error in all agents
         agents.forEach(id => {
           const output = document.getElementById(`${id}-output`);
           if (output) {
@@ -1583,17 +1944,19 @@
         });
         
       } finally {
-        // Unlock button
         btn.disabled = false;
         btn.innerHTML = '🔍 ANALYZE';
         isAnalyzing = false;
       }
     }
     
-    // ================== DEBOUNCED ANALYZE ==================
-    const debouncedAnalyze = debounce(analyzeToken, 300);
+    // ================== DEBOUNCED ANALYZE (FIXED) ==================
+    const debouncedAnalyze = debounceAsync(analyzeToken, 300);
     
-    // ================== SHOW VERDICT (FIXED - shows REAL age for everyone) ==================
+    // Make analyzeToken available globally for quickAnalyze
+    window.analyzeTokenGlobal = debouncedAnalyze;
+    
+    // ================== SHOW VERDICT (FIXED XSS) ==================
     function showVerdict(moderator, token, tokenData, goPlusData) {
       document.body.classList.add('verdict-revealed');
       
@@ -1607,11 +1970,10 @@
       section.style.display = 'block';
       const { risk, category } = moderator;
       
-      section.className = `verdict-section ${category === 'high' ? 'high-risk' : 'low-risk'}`;
-      scoreEl.className = `verdict-score ${category === 'high' ? 'high-risk' : 'low-risk'}`;
-      labelEl.className = `verdict-label ${category === 'high' ? 'high-risk' : 'low-risk'}`;
+      section.className = `verdict-section ${category === 'high' ? 'high-risk' : category === 'medium' ? 'medium-risk' : 'low-risk'}`;
+      scoreEl.className = `verdict-score ${category === 'high' ? 'high-risk' : category === 'medium' ? 'medium-risk' : 'low-risk'}`;
+      labelEl.className = `verdict-label ${category === 'high' ? 'high-risk' : category === 'medium' ? 'medium-risk' : 'low-risk'}`;
       
-      // Score animation with GSAP
       if (typeof gsap !== 'undefined') {
         const data = { val: 0 };
         gsap.to(data, { 
@@ -1626,16 +1988,14 @@
         scoreEl.textContent = risk.toFixed(2);
       }
       
-      labelEl.textContent = category === 'high' ? 'HIGH RISK' : 'LOW RISK';
+      labelEl.textContent = category === 'high' ? 'HIGH RISK' : category === 'medium' ? 'MEDIUM RISK' : 'LOW RISK';
       
-      // ========== SHOW REAL CONTRACT AGE FOR EVERYONE ==========
       const ticker = tokenData?.baseToken?.symbol || '';
       const isBlueChip = CONFIG.BLUE_CHIPS.some(chip => ticker.toLowerCase().includes(chip));
       
       let scan = '';
       let warningHtml = '';
       
-      // PRIORITY 1: GoPlus data (most accurate)
       if (goPlusData?.creationTimestamp && goPlusData.creationTimestamp > 0) {
         const realAgeMs = Date.now() - (goPlusData.creationTimestamp * 1000);
         const realAgeDays = realAgeMs / (1000 * 60 * 60 * 24);
@@ -1657,10 +2017,8 @@
           scan += `👥 Holders    : ${formatNumber(goPlusData.holders)}\n`;
         }
         
-        // Add success box
         warningHtml = `<div class="success-box">✅ Verified contract data from GoPlus Labs</div>`;
       }
-      // PRIORITY 2: Blue chip known data
       else if (isBlueChip) {
         const ageDays = CONFIG.BLUE_CHIP_AGES[ticker.toLowerCase()] || 1000;
         const launchYear = 2026 - Math.floor(ageDays / 365);
@@ -1675,7 +2033,6 @@
         
         warningHtml = `<div class="success-box">✅ Verified blue chip asset with known history</div>`;
       }
-      // PRIORITY 3: Try to get from DexScreener with beautiful warning
       else if (tokenData?.pairCreatedAt) {
         const poolAgeMs = Date.now() - tokenData.pairCreatedAt;
         const poolAgeDays = poolAgeMs / (1000 * 60 * 60 * 24);
@@ -1687,7 +2044,6 @@
         scan += `⏱️ Pool age   : ${poolAgeDays.toFixed(1)} days\n`;
         scan += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
         
-        // Beautiful warning box
         warningHtml = `<div class="warning-box">
           ⚠️ <strong>IMPORTANT:</strong> This shows POOL age, not contract age!<br>
           The actual token may be much older.<br>
@@ -1703,15 +2059,29 @@
         warningHtml = `<div class="warning-box">⚠️ Cannot verify contract age - insufficient data</div>`;
       }
       
-      // Add contract address if available
       if (tokenData?.baseToken?.address) {
         const address = tokenData.baseToken.address;
-        scan += `\n📝 Contract   : ${address.substring(0, 8)}...${address.substring(address.length-4)}\n`;
+        scan += `\n📝 Contract   : ${address.substring(0, 8)}...${address.substring(Math.max(0, address.length-4))}\n`;
         scan += `🔗 Chain      : ${tokenData.chainId || 'Unknown'}\n`;
       }
       
-      // Combine scan and warning
-      detailsEl.innerHTML = `<pre style="font-family: var(--font-mono); margin: 0;">${escapeHTML(scan)}</pre>${warningHtml}`;
+      // FIXED: Use DOM methods instead of innerHTML for scan
+      const escapedScan = escapeHTML(scan);
+      const safeWarningHtml = sanitizeHTML(warningHtml);
+      
+      // Clear and safely populate details
+      detailsEl.innerHTML = '';
+      
+      const pre = document.createElement('pre');
+      pre.style.cssText = 'font-family: var(--font-mono); margin: 0; white-space: pre-wrap;';
+      pre.textContent = scan; // textContent automatically escapes
+      detailsEl.appendChild(pre);
+      
+      if (warningHtml) {
+        const warningDiv = document.createElement('div');
+        warningDiv.innerHTML = safeWarningHtml;
+        detailsEl.appendChild(warningDiv);
+      }
     }
     
     // ================== SAVE VERDICT ==================
@@ -1721,19 +2091,18 @@
         const risk = document.getElementById('verdictScore').textContent;
         const label = document.getElementById('verdictLabel').textContent;
         
-        if (!token) {
-          alert('No token analyzed');
+        if (!token || risk === '0.00') {
+          alert('Please analyze a token first!');
           return;
         }
         
         const verdict = { 
           token, 
-          risk, 
+          risk: parseFloat(risk), 
           label, 
           timestamp: Date.now() 
         };
         
-        // Load history
         let history = [];
         try { 
           history = JSON.parse(localStorage.getItem('verdictHistory') || '[]'); 
@@ -1743,13 +2112,19 @@
         
         history.unshift(verdict);
         
-        // Save last 50
         try { 
-          localStorage.setItem('verdictHistory', JSON.stringify(history.slice(0, 50))); 
-        } catch(e) {}
+          localStorage.setItem('verdictHistory', JSON.stringify(history.slice(0, 100))); 
+        } catch(e) { 
+          if (e.name === 'QuotaExceededError') {
+            alert('Storage limit reached. Clearing old entries...');
+            history = history.slice(0, 50);
+            localStorage.setItem('verdictHistory', JSON.stringify(history));
+          } else {
+            console.warn('Failed to save to localStorage:', e);
+          }
+        }
         
-        // Visual feedback
-        const btn = document.querySelector('.save-verdict-btn');
+        const btn = document.getElementById('saveVerdictBtn');
         if (btn) {
           const originalText = btn.textContent;
           btn.textContent = '✓ SAVED';
@@ -1760,68 +2135,143 @@
           }, 2000);
         }
         
-        // Clear input (optional)
-        // document.getElementById('tokenInput').value = '';
+        if (document.getElementById('historyPanel').style.display === 'block') {
+          updateHistoryList();
+        }
       } catch(e) {
         console.error('Save failed:', e);
         alert('Failed to save verdict');
       }
     }
     
-    // ================== QUICK ANALYZE ==================
-    function quickAnalyze(token) {
-      document.getElementById('tokenInput').value = token;
-      debouncedAnalyze();
+    // ================== HISTORY FUNCTIONS ==================
+    function toggleHistory() {
+      const panel = document.getElementById('historyPanel');
+      if (panel.style.display === 'none' || !panel.style.display) {
+        updateHistoryList();
+        panel.style.display = 'block';
+      } else {
+        panel.style.display = 'none';
+      }
     }
     
-    // ================== SEARCH DEBOUNCE ==================
-    let searchTimeout;
-    function setupSearchDebounce() {
-      const input = document.getElementById('tokenInput');
-      if (input) {
-        input.addEventListener('input', (e) => {
-          clearTimeout(searchTimeout);
-          searchTimeout = setTimeout(() => {
-            const val = e.target.value.trim();
-            if (val.length > 2) {
-              // Optional: add autocomplete or suggestions
-            }
-          }, 500);
-        });
+    function updateHistoryList() {
+      const history = JSON.parse(localStorage.getItem('verdictHistory') || '[]');
+      const listEl = document.getElementById('historyList');
+      
+      if (history.length === 0) {
+        listEl.innerHTML = '<div class="empty-history">📭 No saved verdicts yet.<br>Analyze a token and click SAVE VERDICT!</div>';
+        return;
       }
+      
+      let html = '';
+      history.forEach((v) => {
+        const date = formatDateTime(v.timestamp);
+        const riskClass = v.risk < 0.3 ? 'risk-low' : (v.risk < 0.7 ? 'risk-medium' : 'risk-high');
+        
+        html += `
+          <div class="history-item">
+            <div>
+              <span class="history-token">${escapeHTML(v.token)}</span>
+              <span class="history-date">${escapeHTML(date)}</span>
+            </div>
+            <div>
+              <span class="history-risk ${riskClass}">${v.risk.toFixed(2)} (${escapeHTML(v.label)})</span>
+            </div>
+          </div>
+        `;
+      });
+      
+      listEl.innerHTML = html;
+    }
+    
+    function exportHistory() {
+      const history = localStorage.getItem('verdictHistory');
+      if (!history || history === '[]') {
+        alert('No verdicts to export');
+        return;
+      }
+      
+      const blob = new Blob([history], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `tribunal-history-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      alert('✅ History exported successfully!');
+    }
+    
+    function clearHistory() {
+      if (confirm('⚠️ Are you sure you want to delete ALL saved verdicts? This cannot be undone.')) {
+        localStorage.removeItem('verdictHistory');
+        updateHistoryList();
+      }
+    }
+    
+    // FIXED: Use global analyzeTokenGlobal
+    window.quickAnalyze = function(token) {
+      document.getElementById('tokenInput').value = token;
+      if (window.analyzeTokenGlobal) {
+        window.analyzeTokenGlobal();
+      }
+    };
+    
+    // ================== EVENT LISTENERS ==================
+    function initEventListeners() {
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      document.getElementById('soundToggle').addEventListener('click', toggleSound);
+      document.getElementById('analyzeBtn').addEventListener('click', () => {
+        if (window.analyzeTokenGlobal) {
+          window.analyzeTokenGlobal();
+        }
+      });
+      document.getElementById('saveVerdictBtn').addEventListener('click', saveVerdict);
+      document.getElementById('historyBtn').addEventListener('click', toggleHistory);
+      document.getElementById('exportHistoryBtn').addEventListener('click', exportHistory);
+      document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+      document.getElementById('closeHistoryBtn').addEventListener('click', toggleHistory);
+      
+      document.getElementById('tokenInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && window.analyzeTokenGlobal) {
+          window.analyzeTokenGlobal();
+        }
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const panel = document.getElementById('historyPanel');
+          if (panel.style.display === 'block') {
+            panel.style.display = 'none';
+          }
+        }
+      });
+      
+      document.getElementById('tokenInput').setAttribute('aria-label', 'Enter token address or symbol');
+      document.getElementById('analyzeBtn').setAttribute('aria-label', 'Analyze token');
     }
     
     // ================== INITIALIZATION ==================
     window.addEventListener('DOMContentLoaded', () => {
-      // Theme
       if (isDayMode) {
         document.body.classList.add('day-mode');
         document.getElementById('themeToggle').textContent = '☀️';
       }
       
-      // Sound
       if (soundsEnabled) {
         document.getElementById('soundToggle').textContent = '🔊';
       }
       
-      // Particles
       if (!isDayMode) {
         initParticles();
       }
       
-      // Enter for search
-      document.getElementById('tokenInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') debouncedAnalyze();
-      });
+      initEventListeners();
       
-      // Debounce for search
-      setupSearchDebounce();
-      
-      // VanillaTilt for cards (desktop only)
       initTilt();
       
-      // Observer to reinit tilt after card updates
-      if (window.innerWidth > 768 && typeof VanillaTilt !== 'undefined') {
+      if (window.innerWidth > 768 && typeof VanillaTilt !== 'undefined' && !('ontouchstart' in window)) {
         const agentGrid = document.querySelector('.agent-grid');
         if (agentGrid) {
           tiltObserver = new MutationObserver(() => {
@@ -1830,14 +2280,19 @@
           tiltObserver.observe(agentGrid, { childList: true, subtree: true });
         }
       }
+      
+      // Start periodic cache cleanup
+      cacheCleanupInterval = setInterval(cleanupCache, CONFIG.CACHE_TTL);
     });
     
-    // Cleanup observer on page unload
     window.addEventListener('beforeunload', () => {
       if (tiltObserver) {
         tiltObserver.disconnect();
       }
-      if (typeof tsParticles !== 'undefined' && tsParticles.domItem(0)) {
+      if (cacheCleanupInterval) {
+        clearInterval(cacheCleanupInterval);
+      }
+      if (particlesInitialized && typeof tsParticles !== 'undefined' && tsParticles.domItem(0)) {
         tsParticles.domItem(0).destroy();
       }
     });
