@@ -11,6 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
   <style>
+    /* [ALL YOUR EXISTING STYLES REMAIN EXACTLY THE SAME] */
     :root {
       --neon-blue: #0047FF; --neon-cyan: #00F0FF; --neon-green: #00FF9D;
       --neon-gold: #FFD700; --neon-purple: #9D00FF; --neon-red: #FF4D4D;
@@ -189,7 +190,7 @@
     }
     .token-chip:hover { background: rgba(0, 240, 255, 0.25); transform: scale(1.05); box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
     
-    /* ===== NEW FRESH TOKENS BUTTON STYLES ===== */
+    /* Fresh tokens button */
     .fresh-tokens-container {
       text-align: center;
       margin: 20px 0 10px 0;
@@ -257,7 +258,6 @@
       color: var(--neon-cyan);
       font-weight: 600;
     }
-    /* ===== END FRESH TOKENS BUTTON STYLES ===== */
     
     .tribunal-section { 
       background: var(--card-bg); border: var(--border-width) solid var(--glass-border); 
@@ -828,7 +828,7 @@
         <span class="token-chip" data-token="$AUS">$AUS</span>
       </div>
       
-      <!-- ===== NEW FRESH TOKENS BUTTON (exactly where you marked in red!) ===== -->
+      <!-- Fresh tokens button -->
       <div class="fresh-tokens-container">
         <button class="fresh-tokens-btn" onclick="window.location.href='fresh-tokens.html'">
           <span class="icon">🆕</span> FRESH SOLANA TOKENS
@@ -837,8 +837,6 @@
           <span>⚡ New launches from pump.fun + Raydium</span> • Updated every 60 sec
         </div>
       </div>
-      <!-- ===== END FRESH TOKENS BUTTON ===== -->
-      
     </div>
     
     <div id="rateLimitMessage" class="rate-limit-box" style="display: none;"></div>
@@ -955,6 +953,9 @@
     (function() {
       // ================== CONFIGURATION ==================
       const CONFIG = {
+        // Helius API Key - ADDED HERE!
+        HELIUS_API_KEY: '09dc7385-332b-4114-819b-dbd21ab0db5e',
+        
         CACHE_TTL: 5 * 60 * 1000, // 5 minutes
         MAX_RETRIES: 3,
         RETRY_DELAY: 1000,
@@ -992,6 +993,7 @@
       let isDayMode = localStorage.getItem('tribunalTheme') === 'day';
       let soundsEnabled = localStorage.getItem('tribunalSounds') === 'true';
       let goPlusDataCache = new Map();
+      let heliusDataCache = new Map(); // New cache for Helius
       let isAnalyzing = false;
       let particlesInitialized = false;
       let tiltObserver = null;
@@ -1191,6 +1193,11 @@
             goPlusDataCache.delete(key);
           }
         }
+        for (const [key, value] of heliusDataCache.entries()) {
+          if (now - value.timestamp > CONFIG.CACHE_TTL) {
+            heliusDataCache.delete(key);
+          }
+        }
       }
       
       // ================== DEBOUNCE ==================
@@ -1257,84 +1264,70 @@
         throw new Error('Max retries exceeded');
       }
       
-      // ================== THEME ==================
-      function toggleTheme() {
-        isDayMode = !isDayMode;
-        document.body.classList.toggle('day-mode', isDayMode);
-        document.getElementById('themeToggle').textContent = isDayMode ? '☀️' : '🌙';
-        localStorage.setItem('tribunalTheme', isDayMode ? 'day' : 'night');
+      // ================== FETCH HELIUS HOLDER DATA ==================
+      async function fetchHeliusHolderData(contractAddress) {
+        if (!contractAddress) return null;
         
-        const pc = document.getElementById('particles-container');
+        const cacheKey = `helius_${contractAddress}`;
         
-        if (!isDayMode) {
-          pc.style.display = 'block';
-          if (!particlesInitialized) {
-            initParticles().then(() => { particlesInitialized = true; });
-          }
-        } else {
-          pc.style.display = 'none';
-          if (particlesInitialized && typeof tsParticles !== 'undefined' && tsParticles.domItem(0)) {
-            tsParticles.domItem(0).destroy();
-            particlesInitialized = false;
+        if (heliusDataCache.has(cacheKey)) {
+          const cached = heliusDataCache.get(cacheKey);
+          if (Date.now() - cached.timestamp < CONFIG.CACHE_TTL) {
+            return cached.data;
           }
         }
-      }
-      
-      function toggleSound() {
-        soundsEnabled = !soundsEnabled;
-        localStorage.setItem('tribunalSounds', soundsEnabled);
-        document.getElementById('soundToggle').textContent = soundsEnabled ? '🔊' : '🔇';
-        if (soundsEnabled) {
-          initAudio();
-          playBeep();
-        }
-      }
-      
-      async function initParticles() {
-        if (isDayMode || typeof tsParticles === 'undefined' || particlesInitialized) return;
         
         try {
-          await tsParticles.load("particles-container", {
-            particles: { 
-              number: { value: 60 }, 
-              color: { value: ["#0047FF", "#00F0FF", "#9D00FF"] }, 
-              shape: { type: "circle" }, 
-              opacity: { value: 0.3, random: true }, 
-              size: { value: 2, random: true }, 
-              move: { enable: true, speed: 0.5, out_mode: "out" }, 
-              links: { enable: true, distance: 150, color: "#0047FF", opacity: 0.2, width: 1 } 
-            }
+          // Get token accounts for the mint
+          const response = await fetchWithRetry(`https://mainnet.helius-rpc.com/?api-key=${CONFIG.HELIUS_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 'helius-holders',
+              method: 'getTokenAccounts',
+              params: {
+                mint: contractAddress,
+                limit: 1000
+              }
+            })
           });
-          particlesInitialized = true;
-        } catch(e) { 
-          console.log('Particles failed:', e);
-          document.getElementById('particles-container').style.display = 'none';
-        }
-      }
-      
-      // ================== TILT INITIALIZATION ==================
-      function initTilt() {
-        if (window.innerWidth <= 768 || ('ontouchstart' in window)) return;
-        if (typeof VanillaTilt !== 'undefined') {
-          // Only initialize visible cards
-          const cards = document.querySelectorAll('.agent-card:not([data-tilt-initialized])');
-          if (cards.length > 0 && cards[0].offsetParent !== null) {
-            VanillaTilt.init(cards, { 
-              max: 8, 
-              speed: 400, 
-              glare: true, 
-              'max-glare': 0.3 
+          
+          const data = await response.json();
+          
+          if (data.result) {
+            const accounts = data.result.token_accounts || [];
+            const totalSupply = accounts.reduce((sum, acc) => sum + (parseInt(acc.amount) || 0), 0);
+            const holderCount = accounts.length;
+            
+            // Get top 10 holders
+            const topHolders = accounts
+              .sort((a, b) => (parseInt(b.amount) || 0) - (parseInt(a.amount) || 0))
+              .slice(0, 10)
+              .map(acc => ({
+                address: acc.owner || acc.address,
+                amount: parseInt(acc.amount) || 0,
+                percentage: totalSupply > 0 ? ((parseInt(acc.amount) || 0) / totalSupply) * 100 : 0
+              }));
+            
+            const heliusData = {
+              holderCount,
+              totalSupply,
+              topHolders,
+              timestamp: Date.now()
+            };
+            
+            heliusDataCache.set(cacheKey, {
+              data: heliusData,
+              timestamp: Date.now()
             });
-            cards.forEach(card => card.setAttribute('data-tilt-initialized', 'true'));
+            
+            return heliusData;
           }
+        } catch (e) {
+          console.log('Helius fetch failed:', e);
         }
-      }
-      
-      // ================== GET CHAIN ID ==================
-      function getChainId(chainName) {
-        if (!chainName || typeof chainName !== 'string') return CONFIG.CHAIN_IDS.solana;
-        const normalized = chainName.toLowerCase();
-        return CONFIG.CHAIN_IDS[normalized] || CONFIG.CHAIN_IDS.solana;
+        return null;
       }
       
       // ================== FETCH GOPLUS DATA ==================
@@ -1421,6 +1414,7 @@
           
           const sanitizedData = sanitizeTokenData(tokenData);
           
+          // Fetch GoPlus data
           let goPlusData = null;
           if (sanitizedData?.baseToken?.address) {
             goPlusData = await fetchGoPlusData(
@@ -1429,10 +1423,17 @@
             );
           }
           
+          // Fetch Helius holder data (NEW!)
+          let heliusData = null;
+          if (sanitizedData?.baseToken?.address && sanitizedData.chainId === 'solana') {
+            heliusData = await fetchHeliusHolderData(sanitizedData.baseToken.address);
+          }
+          
           return { 
             success: true, 
             tokenData: sanitizedData, 
-            goPlusData 
+            goPlusData,
+            heliusData // Added Helius data
           };
           
         } catch(e) {
@@ -1441,8 +1442,15 @@
         }
       }
       
+      // ================== GET CHAIN ID ==================
+      function getChainId(chainName) {
+        if (!chainName || typeof chainName !== 'string') return CONFIG.CHAIN_IDS.solana;
+        const normalized = chainName.toLowerCase();
+        return CONFIG.CHAIN_IDS[normalized] || CONFIG.CHAIN_IDS.solana;
+      }
+      
       // ================== CALCULATE CONTRACT AGE ==================
-      function calculateContractAge(goPlusData, tokenData) {
+      function calculateContractAge(goPlusData, tokenData, heliusData) {
         const result = {
           hours: null,
           days: null,
@@ -1483,7 +1491,7 @@
           }
         }
         
-        const holders = goPlusData?.holders || 0;
+        const holders = heliusData?.holderCount || goPlusData?.holders || 0;
         const volume24h = tokenData?.volume?.h24 || 0;
         
         if (holders > 3000 || volume24h > 500000) {
@@ -1496,7 +1504,7 @@
       }
       
       // ================== ON-CHAIN ANALYSIS ==================
-      function analyzeOnChain(tokenQuery, tokenData, goPlusData) {
+      function analyzeOnChain(tokenQuery, tokenData, goPlusData, heliusData) {
         if (!tokenData) {
           return { 
             output: "→ Contract verification: FAILED\n→ No on-chain data available\n→ ⚠️ EXTREME RISK: Unknown contract", 
@@ -1529,7 +1537,7 @@
           return { output, risk };
         }
         
-        const age = calculateContractAge(goPlusData, tokenData);
+        const age = calculateContractAge(goPlusData, tokenData, heliusData);
         
         if (age.days !== null && !isNaN(age.days) && age.days > 0) {
           output += `→ Age source: ${age.source}\n`;
@@ -1538,7 +1546,7 @@
           }
           
           if (age.days < 1) {
-            const holders = goPlusData?.holders || 0;
+            const holders = heliusData?.holderCount || goPlusData?.holders || 0;
             const volume24h = tokenData?.volume?.h24 || 0;
             
             if (holders > 3000 || volume24h > 500000) {
@@ -1596,13 +1604,34 @@
             output += "→ ⚠️ OWNER CAN RECLAIM\n";
             risk += 0.35;
           }
-          if (goPlusData.holders > 0) {
-            output += `→ Holders: ${goPlusData.holders}\n`;
+        }
+        
+        // Add Helius holder data (NEW!)
+        if (heliusData) {
+          output += `→ 👥 Verified holders: ${heliusData.holderCount}\n`;
+          
+          // Check top holder concentration
+          if (heliusData.topHolders && heliusData.topHolders.length > 0) {
+            const topHolder = heliusData.topHolders[0];
+            if (topHolder.percentage > 10) {
+              output += `→ ⚠️ Top holder owns ${topHolder.percentage.toFixed(1)}%\n`;
+              risk += 0.2;
+            }
+            if (topHolder.percentage > 30) {
+              output += `→ ⚠️ CRITICAL: Top holder owns ${topHolder.percentage.toFixed(1)}%\n`;
+              risk += 0.4;
+            }
           }
-          if (goPlusData.ownerPercentage > 5) {
-            output += `→ ⚠️ Owner holds ${goPlusData.ownerPercentage.toFixed(1)}%\n`;
-            risk += 0.2;
+        } else {
+          // Fallback to GoPlus holders
+          if (goPlusData?.holders > 0) {
+            output += `→ 👥 Holders: ${goPlusData.holders} (from GoPlus)\n`;
           }
+        }
+        
+        if (goPlusData?.ownerPercentage > 5) {
+          output += `→ ⚠️ Owner holds ${goPlusData.ownerPercentage.toFixed(1)}%\n`;
+          risk += 0.2;
         }
         
         if (liquidity.usd) {
@@ -1921,7 +1950,7 @@
       }
       
       // ================== GENERATE SCAN DATA (SAFE) ==================
-      function generateScanData(tokenData, goPlusData) {
+      function generateScanData(tokenData, goPlusData, heliusData) {
         let scan = '';
         const ticker = tokenData?.baseToken?.symbol || '';
         const isBlueChip = CONFIG.BLUE_CHIPS.some(chip => ticker.toLowerCase().includes(chip));
@@ -1944,7 +1973,7 @@
           }
           
           if (goPlusData.holders > 0) {
-            scan += `👥 Holders    : ${formatNumber(goPlusData.holders)}\n`;
+            scan += `👥 GoPlus holders: ${formatNumber(goPlusData.holders)}\n`;
           }
         }
         else if (isBlueChip) {
@@ -1977,6 +2006,22 @@
           scan += `📊 Insufficient on-chain data\n`;
         }
         
+        // Add Helius holder verification (NEW!)
+        if (heliusData) {
+          scan += `\n🔍 HOLDER VERIFICATION (Helius)\n`;
+          scan += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+          scan += `📊 Source     : Helius (Solana RPC)\n`;
+          scan += `👥 Total holders: ${heliusData.holderCount}\n`;
+          
+          if (heliusData.topHolders && heliusData.topHolders.length > 0) {
+            scan += `\n🏆 Top 5 Holders:\n`;
+            heliusData.topHolders.slice(0, 5).forEach((holder, i) => {
+              scan += `   ${i+1}. ${holder.address.slice(0, 8)}... : ${holder.percentage.toFixed(2)}%\n`;
+            });
+          }
+          scan += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+        }
+        
         if (tokenData?.baseToken?.address) {
           const address = tokenData.baseToken.address;
           scan += `\n📝 Contract   : ${address.substring(0, 8)}...${address.substring(Math.max(0, address.length-4))}\n`;
@@ -1986,12 +2031,20 @@
         return scan;
       }
       
-      function generateWarning(goPlusData, tokenData) {
+      function generateWarning(goPlusData, tokenData, heliusData) {
         const ticker = tokenData?.baseToken?.symbol || '';
         const isBlueChip = CONFIG.BLUE_CHIPS.some(chip => ticker.toLowerCase().includes(chip));
         
         if (goPlusData?.creationTimestamp && goPlusData.creationTimestamp > 0) {
-          return `<div class="success-box">✅ Verified contract data from GoPlus Labs</div>`;
+          let warning = `<div class="success-box">✅ Verified contract data from GoPlus Labs`;
+          
+          // Add Helius verification if available
+          if (heliusData) {
+            warning += `<br>✅ Verified holder data from Helius (${heliusData.holderCount} holders)`;
+          }
+          
+          warning += `</div>`;
+          return warning;
         }
         else if (isBlueChip) {
           return `<div class="success-box">✅ Verified blue chip asset with known history</div>`;
@@ -2009,7 +2062,7 @@
       }
       
       // ================== SHOW VERDICT ==================
-      function showVerdict(moderator, token, tokenData, goPlusData) {
+      function showVerdict(moderator, token, tokenData, goPlusData, heliusData) {
         // Cancel any ongoing animation
         if (currentAnimation) {
           cancelAnimationFrame(currentAnimation);
@@ -2072,8 +2125,8 @@
         }
         
         // Generate safe content with proper escaping
-        const scan = generateScanData(tokenData, goPlusData);
-        const warning = generateWarning(goPlusData, tokenData);
+        const scan = generateScanData(tokenData, goPlusData, heliusData);
+        const warning = generateWarning(goPlusData, tokenData, heliusData);
         
         // Escape everything before inserting into HTML
         const escapedScan = escapeHTML(scan);
@@ -2140,9 +2193,9 @@
             throw new Error(result.error || 'Failed to fetch token data');
           }
           
-          const { tokenData, goPlusData } = result;
+          const { tokenData, goPlusData, heliusData } = result;
           
-          const onChain = analyzeOnChain(token, tokenData, goPlusData);
+          const onChain = analyzeOnChain(token, tokenData, goPlusData, heliusData);
           const sentiment = analyzeSentiment(token, tokenData);
           const price = analyzePrice(token, tokenData);
           
@@ -2195,7 +2248,7 @@
             modStatus.classList.remove('analyzing'); 
           }
           
-          showVerdict(moderator, token, tokenData, goPlusData);
+          showVerdict(moderator, token, tokenData, goPlusData, heliusData);
           
           if (soundsEnabled) {
             playBeep();
@@ -2378,6 +2431,79 @@
           
           if (soundsEnabled) {
             playBeep();
+          }
+        }
+      }
+      
+      // ================== THEME ==================
+      function toggleTheme() {
+        isDayMode = !isDayMode;
+        document.body.classList.toggle('day-mode', isDayMode);
+        document.getElementById('themeToggle').textContent = isDayMode ? '☀️' : '🌙';
+        localStorage.setItem('tribunalTheme', isDayMode ? 'day' : 'night');
+        
+        const pc = document.getElementById('particles-container');
+        
+        if (!isDayMode) {
+          pc.style.display = 'block';
+          if (!particlesInitialized) {
+            initParticles().then(() => { particlesInitialized = true; });
+          }
+        } else {
+          pc.style.display = 'none';
+          if (particlesInitialized && typeof tsParticles !== 'undefined' && tsParticles.domItem(0)) {
+            tsParticles.domItem(0).destroy();
+            particlesInitialized = false;
+          }
+        }
+      }
+      
+      function toggleSound() {
+        soundsEnabled = !soundsEnabled;
+        localStorage.setItem('tribunalSounds', soundsEnabled);
+        document.getElementById('soundToggle').textContent = soundsEnabled ? '🔊' : '🔇';
+        if (soundsEnabled) {
+          initAudio();
+          playBeep();
+        }
+      }
+      
+      async function initParticles() {
+        if (isDayMode || typeof tsParticles === 'undefined' || particlesInitialized) return;
+        
+        try {
+          await tsParticles.load("particles-container", {
+            particles: { 
+              number: { value: 60 }, 
+              color: { value: ["#0047FF", "#00F0FF", "#9D00FF"] }, 
+              shape: { type: "circle" }, 
+              opacity: { value: 0.3, random: true }, 
+              size: { value: 2, random: true }, 
+              move: { enable: true, speed: 0.5, out_mode: "out" }, 
+              links: { enable: true, distance: 150, color: "#0047FF", opacity: 0.2, width: 1 } 
+            }
+          });
+          particlesInitialized = true;
+        } catch(e) { 
+          console.log('Particles failed:', e);
+          document.getElementById('particles-container').style.display = 'none';
+        }
+      }
+      
+      // ================== TILT INITIALIZATION ==================
+      function initTilt() {
+        if (window.innerWidth <= 768 || ('ontouchstart' in window)) return;
+        if (typeof VanillaTilt !== 'undefined') {
+          // Only initialize visible cards
+          const cards = document.querySelectorAll('.agent-card:not([data-tilt-initialized])');
+          if (cards.length > 0 && cards[0].offsetParent !== null) {
+            VanillaTilt.init(cards, { 
+              max: 8, 
+              speed: 400, 
+              glare: true, 
+              'max-glare': 0.3 
+            });
+            cards.forEach(card => card.setAttribute('data-tilt-initialized', 'true'));
           }
         }
       }
