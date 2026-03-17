@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FRESH SOLANA LAUNCHES — CryptoBros</title>
+  <title>Fresh Pumps! — CryptoBros</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --neon-cyan: #00F0FF;
@@ -93,7 +92,7 @@
     .back-btn {
       padding: 0.8rem 1.6rem;
       background: rgba(10, 14, 39, 0.8);
-      border: var(--border);
+      border: 2px solid var(--neon-cyan);
       border-radius: 50px;
       color: var(--neon-cyan);
       font-weight: 700;
@@ -105,44 +104,39 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      font-size: 1rem;
     }
     .back-btn:hover {
       transform: translateX(-4px);
       box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+      background: rgba(0, 240, 255, 0.1);
     }
     
     h1 {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 2.8rem;
+      font-size: 3.5rem;
       text-align: center;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      background: linear-gradient(135deg, #FFD700, #FFA500, var(--neon-cyan), var(--neon-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin: 0;
+      margin: 0.5rem 0;
       flex: 1;
-      text-shadow: 0 0 30px rgba(0,240,255,0.3);
-      animation: titleGlow 3s ease-in-out infinite;
+      text-shadow: 0 0 30px rgba(255,215,0,0.3);
+      animation: titlePulse 3s ease-in-out infinite;
+      letter-spacing: 2px;
+      font-weight: 800;
     }
     
-    @keyframes titleGlow {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.2); }
-    }
-    
-    .subtitle {
-      text-align: center;
-      color: var(--neon-cyan);
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      opacity: 0.9;
-      text-shadow: 0 0 10px rgba(0,240,255,0.5);
+    @keyframes titlePulse {
+      0%, 100% { filter: brightness(1); transform: scale(1); }
+      50% { filter: brightness(1.2); transform: scale(1.02); }
     }
     
     .theme-toggle {
       width: 48px;
       height: 48px;
       background: rgba(10, 14, 39, 0.8);
-      border: var(--border);
+      border: 2px solid var(--neon-cyan);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -154,9 +148,9 @@
       box-shadow: var(--glow);
     }
     .theme-toggle:hover {
-      transform: scale(1.1);
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 25px rgba(0,240,255,0.6);
+      transform: scale(1.1) rotate(15deg);
+      border-color: var(--neon-gold);
+      box-shadow: 0 0 25px rgba(255,215,0,0.6);
     }
     
     .filter-bar {
@@ -165,12 +159,13 @@
       flex-wrap: wrap;
       justify-content: center;
       margin: 1.5rem 0;
-      padding: 1rem;
+      padding: 1rem 1.5rem;
       background: rgba(0, 240, 255, 0.05);
       border-radius: 60px;
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(0, 240, 255, 0.2);
+      border: 2px solid rgba(255, 215, 0, 0.3);
       transition: opacity 0.3s ease;
+      box-shadow: 0 0 30px rgba(255,215,0,0.2);
     }
     
     .filter-bar.loading {
@@ -185,39 +180,47 @@
     }
     
     select, button.filter-btn {
-      padding: 0.6rem 1.2rem;
-      background: rgba(0, 240, 255, 0.1);
+      padding: 0.7rem 1.4rem;
+      background: rgba(0, 0, 0, 0.5);
       border: 2px solid var(--neon-cyan);
-      border-radius: 30px;
-      color: var(--neon-cyan);
+      border-radius: 40px;
+      color: white;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s;
-      min-width: 120px;
+      min-width: 130px;
       font-family: 'Quicksand', sans-serif;
       backdrop-filter: blur(5px);
+      font-size: 0.95rem;
+      box-shadow: 0 0 15px rgba(0,240,255,0.2);
     }
     select:hover, button.filter-btn:hover, select:focus {
       background: rgba(0, 240, 255, 0.3);
       transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
       outline: none;
+      border-color: var(--neon-gold);
+    }
+    
+    select option {
+      background: var(--deep-bg);
+      color: white;
     }
     
     .token-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 1.2rem;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
       margin: 2rem 0;
     }
     
     .token-card {
       background: var(--card-bg);
-      border: var(--border);
-      border-radius: 16px;
-      padding: 1.2rem;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 24px;
+      padding: 1.5rem;
       backdrop-filter: blur(10px);
-      box-shadow: var(--glow);
+      box-shadow: 0 0 30px rgba(0,240,255,0.2);
       cursor: pointer;
       transition: all 0.3s;
       position: relative;
@@ -227,33 +230,37 @@
       content: '';
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-      animation: scan 3s linear infinite;
+      left: -100%;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--neon-gold), var(--neon-cyan), transparent);
+      animation: scan 4s linear infinite;
     }
     @keyframes scan {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
     .token-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.6);
+      transform: translateY(-8px);
+      box-shadow: 0 0 40px rgba(255,215,0,0.4);
+      border-color: var(--neon-gold);
     }
     
     .token-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.8rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,215,0,0.3);
+      padding-bottom: 0.8rem;
     }
     
     .token-symbol {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--neon-cyan);
-      text-shadow: 0 0 10px rgba(0,240,255,0.5);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--neon-gold);
+      text-shadow: 0 0 15px rgba(255,215,0,0.5);
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
     .token-tags {
@@ -263,124 +270,136 @@
     }
     
     .tag {
-      padding: 0.3rem 0.7rem;
-      border-radius: 20px;
+      padding: 0.4rem 0.9rem;
+      border-radius: 30px;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
     .tag-pump {
       background: rgba(255, 153, 0, 0.2);
       border: 1px solid #FF9900;
       color: #FF9900;
-      box-shadow: 0 0 10px rgba(255,153,0,0.3);
+      box-shadow: 0 0 15px rgba(255,153,0,0.4);
     }
     .tag-raydium {
       background: rgba(0, 240, 255, 0.2);
       border: 1px solid var(--neon-cyan);
       color: var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(0,240,255,0.3);
+      box-shadow: 0 0 15px rgba(0,240,255,0.4);
     }
     
     .token-info {
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: var(--text2);
-      line-height: 1.6;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 0.8rem;
+      line-height: 1.8;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      border-radius: 16px;
+      margin: 1rem 0;
+      border: 1px solid rgba(255,215,0,0.2);
+    }
+    
+    .token-age-display {
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+      padding: 0.5rem 0.8rem;
       border-radius: 12px;
-      margin: 0.5rem 0;
+      background: rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
+      font-weight: 600;
+      border-left: 4px solid var(--neon-cyan);
     }
     
     .token-ca {
       font-family: 'Space Grotesk', monospace;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       word-break: break-all;
-      margin: 0.5rem 0;
+      margin: 0.8rem 0;
       color: var(--text2);
       background: rgba(0, 240, 255, 0.1);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
       display: inline-block;
       cursor: pointer;
       transition: all 0.3s;
+      border: 1px solid rgba(255,215,0,0.3);
     }
     .token-ca:hover {
       background: rgba(0, 240, 255, 0.2);
-      color: var(--neon-cyan);
+      color: var(--neon-gold);
+      border-color: var(--neon-gold);
     }
     
     .token-actions {
       display: flex;
       gap: 0.8rem;
-      margin-top: 1rem;
+      margin-top: 1.2rem;
       flex-wrap: wrap;
     }
     
     .action-btn {
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1.2rem;
       background: transparent;
-      border: 1px solid var(--neon-cyan);
-      border-radius: 30px;
-      color: var(--neon-cyan);
+      border: 2px solid var(--neon-gold);
+      border-radius: 40px;
+      color: var(--neon-gold);
       cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.9rem;
+      font-weight: 700;
       transition: all 0.3s;
       flex: 1;
-      min-width: 80px;
+      min-width: 90px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .action-btn:hover {
-      background: rgba(0, 240, 255, 0.15);
+      background: rgba(255, 215, 0, 0.2);
       transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-    }
-    
-    .sparkline-canvas {
-      width: 100%;
-      height: 40px;
-      margin-top: 0.8rem;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      padding: 4px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
     }
     
     .no-data-placeholder {
-      height: 40px;
-      margin-top: 0.8rem;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 8px;
+      height: 50px;
+      margin-top: 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text2);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
+      border: 1px dashed rgba(255,215,0,0.3);
     }
     
     .loader, .empty {
       text-align: center;
-      padding: 3rem;
-      color: var(--neon-cyan);
-      font-size: 1.2rem;
+      padding: 4rem;
+      color: var(--neon-gold);
+      font-size: 1.4rem;
       grid-column: 1 / -1;
       background: var(--card-bg);
-      border-radius: 30px;
-      border: var(--border);
+      border-radius: 40px;
+      border: 2px solid rgba(255,215,0,0.4);
       backdrop-filter: blur(10px);
+      font-weight: 600;
     }
     
     .loader {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
+      gap: 1.2rem;
     }
     
     .loader::after {
       content: '';
-      width: 24px;
-      height: 24px;
-      border: 3px solid rgba(0, 240, 255, 0.3);
-      border-top-color: var(--neon-cyan);
+      width: 28px;
+      height: 28px;
+      border: 4px solid rgba(255,215,0,0.3);
+      border-top-color: var(--neon-gold);
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
@@ -392,38 +411,47 @@
     .update-info {
       text-align: center;
       color: var(--text2);
-      margin: 1.5rem 0;
-      font-size: 0.95rem;
+      margin: 2rem 0 1rem;
+      font-size: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
+      gap: 1.5rem;
       flex-wrap: wrap;
+      padding: 0.8rem;
+      background: rgba(0,0,0,0.3);
+      border-radius: 60px;
+      border: 1px solid rgba(255,215,0,0.3);
     }
     
     .update-timer {
-      color: var(--neon-cyan);
-      font-weight: 600;
-      background: rgba(0, 240, 255, 0.1);
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      border: 1px solid var(--neon-cyan);
+      color: var(--neon-gold);
+      font-weight: 700;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      border: 2px solid var(--neon-cyan);
+      font-size: 1rem;
+      box-shadow: 0 0 20px rgba(0,240,255,0.3);
     }
     
     .refresh-now {
       background: transparent;
-      border: 1px solid var(--neon-cyan);
-      border-radius: 30px;
-      color: var(--neon-cyan);
-      padding: 0.3rem 1rem;
+      border: 2px solid var(--neon-gold);
+      border-radius: 40px;
+      color: var(--neon-gold);
+      padding: 0.5rem 1.5rem;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
       transition: all 0.3s;
+      font-size: 1rem;
     }
     .refresh-now:hover {
-      background: rgba(0, 240, 255, 0.15);
+      background: rgba(255, 215, 0, 0.15);
       transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
     }
     .refresh-now:disabled {
       opacity: 0.5;
@@ -442,56 +470,52 @@
     }
     
     @media (max-width: 768px) {
-      h1 { font-size: 2.2rem; }
+      h1 { font-size: 2.5rem; }
       .token-grid { grid-template-columns: 1fr; }
       .filter-bar { 
         flex-direction: column; 
         align-items: stretch;
         border-radius: 30px;
-        padding: 1rem;
+        padding: 1.2rem;
       }
       select, button.filter-btn { width: 100%; }
-      .update-info { flex-direction: column; gap: 0.5rem; }
+      .update-info { flex-direction: column; gap: 0.8rem; }
+      .back-btn { font-size: 0.9rem; padding: 0.6rem 1.2rem; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <a href="https://www.cryptobros.pro/tribunal.html" class="back-btn" target="_self">← Back to Tribunal</a>
-      <h1>🆕 FRESH SOLANA LAUNCHES</h1>
-      <div class="theme-toggle" id="themeToggle">🌙</div>
+      <a href="https://www.cryptobros.pro/tribunal.html" class="back-btn" target="_self">← Back</a>
+      <h1>Fresh Pumps!</h1>
+      <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</div>
     </div>
-
-    <p class="subtitle">
-      <span class="update-timer" id="platformIndicator">⚡ pump.fun + Raydium</span> • 
-      Auto-refresh every <span id="updateInterval">60</span> sec
-    </p>
 
     <div class="filter-bar" id="filterBar">
       <div class="filter-group">
-        <select id="timeFilter">
-          <option value="all">⏱️ All launches</option>
-          <option value="5m">🔥 Up to 5 min</option>
-          <option value="30m">⚡ Up to 30 min</option>
-          <option value="1h">🕐 Up to 1 hour</option>
+        <select id="timeFilter" aria-label="Time filter">
+          <option value="all">⏱️ All time</option>
+          <option value="5m">🔥 5 min</option>
+          <option value="30m">⚡ 30 min</option>
+          <option value="1h">🕐 1 hour</option>
         </select>
-        <select id="liqFilter">
-          <option value="all">💰 Any liquidity</option>
+        <select id="liqFilter" aria-label="Liquidity filter">
+          <option value="all">💰 All liq</option>
           <option value="5k">💎 >$5K</option>
           <option value="10k">💎 >$10K</option>
           <option value="50k">💎 >$50K</option>
         </select>
       </div>
       <div class="filter-group">
-        <select id="platformFilter">
-          <option value="all">🌐 All platforms</option>
+        <select id="platformFilter" aria-label="Platform filter">
+          <option value="all">🌐 All</option>
           <option value="pump">🎯 pump.fun</option>
           <option value="raydium">💧 Raydium</option>
         </select>
-        <select id="sortFilter">
+        <select id="sortFilter" aria-label="Sort by">
           <option value="newest">🆕 Newest</option>
-          <option value="growth">📈 5m growth</option>
+          <option value="growth">📈 Growth</option>
           <option value="volume">📊 Volume</option>
           <option value="holders">👥 Holders</option>
         </select>
@@ -499,13 +523,13 @@
     </div>
 
     <div id="tokenGrid" class="token-grid">
-      <div class="loader">Loading fresh launches</div>
+      <div class="loader">Loading fresh pumps...</div>
     </div>
 
     <div class="update-info">
-      <span class="update-timer" id="updateTimer">⏱️ Refresh in 60 sec</span>
-      <button class="refresh-now" id="refreshBtn">⟳ Refresh now</button>
-      <span id="cacheInfo" style="color: var(--text2); font-size: 0.9rem;"></span>
+      <span class="update-timer" id="updateTimer">⏱️ 60 sec</span>
+      <button class="refresh-now" id="refreshBtn" aria-label="Refresh">⟳ Refresh</button>
+      <span id="cacheInfo" style="color: var(--text2); font-size: 0.95rem;"></span>
     </div>
   </div>
 
@@ -513,435 +537,281 @@
     (function() {
       "use strict";
       
-      // ==================== STATE ====================
-      let currentTimeFilter = 'all';
-      let currentLiqFilter = 'all';
-      let currentPlatformFilter = 'all';
-      let currentSort = 'newest';
-      let updateCountdown = 60;
-      let updateInterval = null;
-      let allTokens = [];
-      let isRateLimited = false;
-      let filterTimeout = null;
-      let isRefreshing = false;
-      const chartInstances = new Map();
+      // ==================== CONSTANTS ====================
+      const STORAGE = {
+        TOKENS: 'freshTokensCache',
+        TOKENS_TIME: 'freshTokensCacheTime',
+        AGE: 'tokenAgeCache',
+        THEME: 'tribunalTheme',
+        PENDING: 'pendingAnalysis'
+      };
       
-      // Cache settings
-      const CACHE_KEY = 'freshTokensCache';
-      const CACHE_TIME_KEY = 'freshTokensCacheTime';
       const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+      const AGE_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+      const REFRESH_INTERVAL = 60; // seconds
+      const API_TIMEOUT = 10000; // 10 seconds
+      
+      // ==================== STATE ====================
+      const state = {
+        timeFilter: 'all',
+        liqFilter: 'all',
+        platformFilter: 'all',
+        sort: 'newest',
+        countdown: REFRESH_INTERVAL,
+        intervalId: null,
+        tokens: [],
+        isRateLimited: false,
+        isRefreshing: false,
+        abortController: null,
+        ageCache: new Map() // In-memory cache for ages
+      };
       
       // ==================== UTILITY FUNCTIONS ====================
-      function safeLocalStorageSet(key, value) {
-        try {
-          localStorage.setItem(key, value);
-          return true;
-        } catch (e) {
-          console.warn('LocalStorage not available:', e);
-          return false;
-        }
-      }
-      
-      function safeLocalStorageGet(key) {
-        try {
-          return localStorage.getItem(key);
-        } catch (e) {
-          console.warn('LocalStorage not available:', e);
-          return null;
-        }
-      }
-      
-      function showError(message) {
-        const grid = document.getElementById('tokenGrid');
-        if (grid) {
-          grid.innerHTML = `<div class="empty error-message">❌ ${message}</div>`;
-        }
-      }
-      
-      function setFilterBarLoading(isLoading) {
-        const filterBar = document.getElementById('filterBar');
-        if (filterBar) {
-          if (isLoading) {
-            filterBar.classList.add('loading');
-          } else {
-            filterBar.classList.remove('loading');
-          }
-        }
-      }
-      
-      function destroyAllCharts() {
-        // Destroy all chart instances from Map with proper checks
-        chartInstances.forEach((chart, id) => {
-          try { 
-            if (chart && typeof chart.destroy === 'function') {
-              chart.destroy(); 
+      const safeStorage = {
+        set: (key, value) => {
+          try {
+            const serialized = typeof value === 'string' ? value : JSON.stringify(value);
+            if (serialized.length > 4 * 1024 * 1024) { // 4MB limit
+              console.warn('Storage quota warning: Data too large');
+              return false;
             }
+            localStorage.setItem(key, serialized);
+            return true;
           } catch (e) {
-            console.warn('Error destroying chart:', e);
-          }
-        });
-        chartInstances.clear();
-        
-        // Also destroy any charts attached to canvas elements in DOM
-        if (typeof Chart !== 'undefined') {
-          document.querySelectorAll('canvas.sparkline-canvas').forEach(canvas => {
-            try {
-              const chart = Chart.getChart(canvas);
-              if (chart) {
-                chart.destroy();
-              }
-            } catch (e) {
-              // Ignore errors when Chart.getChart doesn't exist
+            if (e.name === 'QuotaExceededError') {
+              // Clear old data and retry
+              localStorage.removeItem(STORAGE.TOKENS);
+              localStorage.removeItem(STORAGE.AGE);
             }
-          });
+            return false;
+          }
+        },
+        get: (key) => {
+          try {
+            return localStorage.getItem(key);
+          } catch (e) {
+            return null;
+          }
+        },
+        remove: (key) => {
+          try {
+            localStorage.removeItem(key);
+          } catch (e) {}
         }
-      }
+      };
       
-      function debounce(func, wait) {
+      const escapeHtml = (text) => {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      };
+      
+      const safeId = (str) => {
+        if (!str) return 'unknown';
+        return 'age-' + str.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 20);
+      };
+      
+      const formatNumber = (num) => {
+        if (num === undefined || num === null) return '0';
+        if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+        if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+        return num.toString();
+      };
+      
+      const debounce = (func, wait) => {
         let timeout;
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-          };
+        return (...args) => {
           clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
+          timeout = setTimeout(() => func.apply(this, args), wait);
         };
-      }
+      };
       
-      function isValidToken(token) {
-        return token && 
-               typeof token === 'object' &&
-               (token.symbol || token.address) &&
-               (!token.created_timestamp || !isNaN(token.created_timestamp));
-      }
+      // ==================== DOM HELPERS ====================
+      const getElement = (id) => document.getElementById(id);
+      const showLoader = (message = 'Loading...') => {
+        const grid = getElement('tokenGrid');
+        if (grid) grid.innerHTML = `<div class="loader">${escapeHtml(message)}</div>`;
+      };
+      
+      const showError = (message, isRateLimit = false) => {
+        const grid = getElement('tokenGrid');
+        if (grid) {
+          grid.innerHTML = `<div class="empty ${isRateLimit ? 'rate-limit' : 'error-message'}">❌ ${escapeHtml(message)}</div>`;
+        }
+      };
+      
+      const setFilterBarLoading = (isLoading) => {
+        const filterBar = getElement('filterBar');
+        if (filterBar) {
+          filterBar.classList.toggle('loading', isLoading);
+        }
+      };
+      
+      const setRefreshButtonDisabled = (disabled) => {
+        const btn = getElement('refreshBtn');
+        if (btn) btn.disabled = disabled;
+      };
       
       // ==================== TOKEN AGE CALCULATION ====================
-      function calculateTokenAge(createdTimestamp) {
+      const calculateTokenAge = (createdTimestamp) => {
         if (!createdTimestamp || isNaN(createdTimestamp)) return 0;
         
         try {
           const now = Date.now();
-          // Check if timestamp is in seconds (10 digits) or milliseconds (13 digits)
           const timestamp = createdTimestamp > 1e12 ? createdTimestamp : createdTimestamp * 1000;
           
-          // Validate timestamp is reasonable (after 2020 and not in future)
           if (timestamp > now || timestamp < 1600000000000) {
             return 0;
           }
           
           return Math.round((now - timestamp) / 60000);
-        } catch (e) {
-          console.warn('Age calculation error:', e);
+        } catch {
           return 0;
         }
-      }
+      };
       
-      // ==================== THEME ====================
-      function toggleTheme() {
-        document.body.classList.toggle('day-mode');
-        const isDay = document.body.classList.contains('day-mode');
-        safeLocalStorageSet('tribunalTheme', isDay ? 'day' : 'night');
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-          themeToggle.textContent = isDay ? '☀️' : '🌙';
-        }
+      const fetchTokenAge = async (address) => {
+        if (!address || address === 'address_not_available') return null;
         
-        // Redraw charts with new theme
-        if (allTokens.length) {
-          applyFilters();
-        }
-      }
-      
-      // Initialize theme
-      (function initTheme() {
-        const savedTheme = safeLocalStorageGet('tribunalTheme');
-        if (savedTheme === 'day') {
-          document.body.classList.add('day-mode');
-          const themeToggle = document.getElementById('themeToggle');
-          if (themeToggle) {
-            themeToggle.textContent = '☀️';
+        // Check in-memory cache first
+        const addressLower = address.toLowerCase();
+        if (state.ageCache.has(addressLower)) {
+          const cached = state.ageCache.get(addressLower);
+          if (Date.now() - cached.timestamp < AGE_CACHE_TTL) {
+            return cached.age;
           }
         }
-      })();
-      
-      // ==================== LOAD TOKENS ====================
-      async function loadFreshTokens(force = false) {
-        const grid = document.getElementById('tokenGrid');
-        if (!grid) return;
         
-        // CRITICAL FIX: Block multiple requests during rate limit or refresh
-        if (isRateLimited || isRefreshing) {
-          grid.innerHTML = '<div class="loader rate-limit">⏱️ Already refreshing or rate-limited. Please wait...</div>';
-          return;
-        }
-        
-        if (isRefreshing) return;
-        
-        isRefreshing = true;
-        setFilterBarLoading(true);
-        const refreshBtn = document.getElementById('refreshBtn');
-        if (refreshBtn) refreshBtn.disabled = true;
-        
-        grid.innerHTML = '<div class="loader">Loading fresh launches</div>';
-        
-        // Check cache
-        const cached = safeLocalStorageGet(CACHE_KEY);
-        const cacheTime = safeLocalStorageGet(CACHE_TIME_KEY);
-        
-        if (!force && cached && cacheTime) {
-          const cacheAge = Date.now() - parseInt(cacheTime);
-          if (cacheAge < CACHE_TTL) {
-            try {
-              const parsed = JSON.parse(cached);
-              if (Array.isArray(parsed) && parsed.length) {
-                allTokens = parsed.filter(isValidToken);
-                applyFilters();
-                const cacheInfo = document.getElementById('cacheInfo');
-                if (cacheInfo) {
-                  cacheInfo.textContent = `📦 from cache • ${new Date(parseInt(cacheTime)).toLocaleTimeString()}`;
-                }
-                startCountdown();
-                isRefreshing = false;
-                setFilterBarLoading(false);
-                if (refreshBtn) refreshBtn.disabled = false;
-                return;
-              }
-            } catch (e) {
-              console.error('Cache parse error:', e);
-              // Continue to fetch new data
+        // Check localStorage cache
+        try {
+          const cacheData = safeStorage.get(STORAGE.AGE);
+          if (cacheData) {
+            const ageCache = JSON.parse(cacheData);
+            const cached = ageCache[addressLower];
+            if (cached && Date.now() - cached.timestamp < AGE_CACHE_TTL) {
+              state.ageCache.set(addressLower, cached);
+              return cached.age;
             }
           }
+        } catch (e) {
+          console.warn('Age cache parse error:', e);
         }
         
+        // Fetch from API
         try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
           
-          const res = await fetch('https://public-api.birdeye.so/defi/v2/tokens/new_listing?limit=60&meme_platform_enabled=true', {
-            headers: { 
-              'x-chain': 'solana', 
-              'accept': 'application/json'
-            },
+          const res = await fetch('https://cryptobros-backend.onrender.com/api/goplus/token-security', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              chain_id: 'solana', 
+              contract_addresses: address 
+            }),
             signal: controller.signal
           });
           
           clearTimeout(timeoutId);
           
-          // Rate limit handling
-          if (res.status === 429) {
-            isRateLimited = true;
-            grid.innerHTML = '<div class="loader rate-limit">⏱️ Rate limited by Birdeye. Waiting 60 seconds...</div>';
-            setTimeout(() => {
-              isRateLimited = false;
-              loadFreshTokens(true);
-            }, 60000);
-            isRefreshing = false;
-            setFilterBarLoading(false);
-            if (refreshBtn) refreshBtn.disabled = false;
-            return;
-          }
-          
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
+          if (!res.ok) throw new Error('API error');
           
           const data = await res.json();
+          const result = data.result?.[addressLower];
           
-          if (data.success && data.data?.items?.length) {
-            // Reset rate limit on success
-            isRateLimited = false;
-            allTokens = data.data.items.filter(isValidToken);
-            safeLocalStorageSet(CACHE_KEY, JSON.stringify(allTokens));
-            safeLocalStorageSet(CACHE_TIME_KEY, Date.now().toString());
-            applyFilters();
-            const cacheInfo = document.getElementById('cacheInfo');
-            if (cacheInfo) {
-              cacheInfo.textContent = `🔄 updated ${new Date().toLocaleTimeString()}`;
-            }
-          } else {
-            grid.innerHTML = '<div class="empty">✨ No fresh tokens found</div>';
-          }
-        } catch(e) {
-          console.error('Loading error:', e);
-          
-          if (e.name === 'AbortError') {
-            showError('Request timeout. Check your connection.');
-          } else {
-            showError('Network error. Check connection.');
-          }
-          
-          // Try to load from cache even if expired
-          const cached = safeLocalStorageGet(CACHE_KEY);
-          if (cached) {
+          if (result?.creation_timestamp && result.creation_timestamp > 0) {
+            const age = result.creation_timestamp * 1000;
+            const cacheEntry = { age, timestamp: Date.now() };
+            
+            // Update caches
+            state.ageCache.set(addressLower, cacheEntry);
+            
             try {
-              const parsed = JSON.parse(cached);
-              if (Array.isArray(parsed) && parsed.length) {
-                allTokens = parsed.filter(isValidToken);
-                applyFilters();
-                const cacheInfo = document.getElementById('cacheInfo');
-                if (cacheInfo) {
-                  cacheInfo.textContent = `📦 old cache • offline mode`;
-                }
-              }
-            } catch (parseError) {
-              // Error already shown
-            }
+              const storageCache = JSON.parse(safeStorage.get(STORAGE.AGE) || '{}');
+              storageCache[addressLower] = cacheEntry;
+              safeStorage.set(STORAGE.AGE, JSON.stringify(storageCache));
+            } catch (e) {}
+            
+            return age;
           }
+          return null;
+        } catch (e) {
+          console.warn('Error fetching token age:', e);
+          return null;
         }
-        
-        startCountdown();
-        isRefreshing = false;
-        setFilterBarLoading(false);
-        if (refreshBtn) refreshBtn.disabled = false;
-      }
+      };
       
-      // ==================== APPLY FILTERS ====================
-      function applyFilters() {
-        const grid = document.getElementById('tokenGrid');
+      // ==================== THEME ====================
+      const toggleTheme = () => {
+        const body = document.body;
+        body.classList.toggle('day-mode');
+        const isDay = body.classList.contains('day-mode');
+        safeStorage.set(STORAGE.THEME, isDay ? 'day' : 'night');
+        
+        const toggle = getElement('themeToggle');
+        if (toggle) toggle.textContent = isDay ? '☀️' : '🌙';
+      };
+      
+      const initTheme = () => {
+        const savedTheme = safeStorage.get(STORAGE.THEME);
+        if (savedTheme === 'day') {
+          document.body.classList.add('day-mode');
+          const toggle = getElement('themeToggle');
+          if (toggle) toggle.textContent = '☀️';
+        }
+      };
+      
+      // ==================== TOKEN RENDERING ====================
+      const renderTokens = (tokens) => {
+        const grid = getElement('tokenGrid');
         if (!grid) return;
         
-        setFilterBarLoading(true);
-        
-        // Show loading indicator for filter with visual feedback
-        grid.innerHTML = '<div class="loader">Filtering tokens...</div>';
-        
-        if (!allTokens || !allTokens.length) {
-          grid.innerHTML = '<div class="empty">✨ No tokens available</div>';
-          setFilterBarLoading(false);
-          return;
-        }
-        
-        // Use setTimeout to allow UI to update before heavy filtering
-        setTimeout(() => {
-          // Filter
-          let filtered = allTokens.filter(t => {
-            const ageMin = calculateTokenAge(t.created_timestamp);
-            const platform = (t.platform || '').toLowerCase();
-            
-            // Time filter
-            if (currentTimeFilter !== 'all') {
-              const maxMin = currentTimeFilter === '5m' ? 5 : currentTimeFilter === '30m' ? 30 : 60;
-              if (ageMin > maxMin) return false;
-            }
-            
-            // Liquidity filter
-            if (currentLiqFilter !== 'all') {
-              const minLiq = currentLiqFilter === '5k' ? 5000 : currentLiqFilter === '10k' ? 10000 : 50000;
-              if ((t.liquidity || 0) < minLiq) return false;
-            }
-            
-            // Platform filter - fixed to match exact platform names
-            if (currentPlatformFilter !== 'all') {
-              if (currentPlatformFilter === 'pump' && !platform.includes('pump.fun')) return false;
-              if (currentPlatformFilter === 'raydium' && !platform.includes('raydium')) return false;
-            }
-            
-            return true;
-          });
-          
-          // Sort
-          if (currentSort === 'growth') {
-            filtered.sort((a, b) => (b.price_change_5m || 0) - (a.price_change_5m || 0));
-          } else if (currentSort === 'volume') {
-            filtered.sort((a, b) => (b.volume_5m || 0) - (a.volume_5m || 0));
-          } else if (currentSort === 'holders') {
-            filtered.sort((a, b) => (b.holder_count || 0) - (a.holder_count || 0));
-          } else {
-            filtered.sort((a, b) => (b.created_timestamp || 0) - (a.created_timestamp || 0));
-          }
-          
-          renderTokens(filtered);
-          setFilterBarLoading(false);
-          
-          // FIX: Always restart countdown after filter
-          startCountdown();
-        }, 50);
-      }
-      
-      // ==================== RENDER TOKENS ====================
-      function renderTokens(tokens) {
-        const grid = document.getElementById('tokenGrid');
-        if (!grid) return;
-        
-        // FIX: Destroy all canvas charts before clearing grid to prevent memory leaks
-        document.querySelectorAll('canvas.sparkline-canvas').forEach(canvas => {
-          try {
-            if (typeof Chart !== 'undefined') {
-              const chart = Chart.getChart(canvas);
-              if (chart) {
-                chart.destroy();
-              }
-            }
-          } catch (e) {
-            // Ignore errors
-          }
-        });
-        
-        // Destroy all existing charts from Map before re-rendering
-        destroyAllCharts();
-        
-        if (tokens.length === 0) {
-          grid.innerHTML = '<div class="empty">🔍 No tokens match your filters</div>';
+        if (!tokens || tokens.length === 0) {
+          grid.innerHTML = '<div class="empty">🔍 No matches found</div>';
           return;
         }
         
         const fragment = document.createDocumentFragment();
         
-        // Get current theme color for charts
-        const isDay = document.body.classList.contains('day-mode');
-        const chartColor = isDay ? '#1a1a2e' : '#00F0FF';
-        
         tokens.forEach((item, index) => {
-          // Generate unique ID for each chart
-          const uniqueId = `chart-${Date.now()}-${Math.random().toString(36).substr(2, 8)}-${index}`;
-          
-          // Safe address handling
-          const safeAddress = item.address ? 
-            item.address.replace(/'/g, "\\'") : 
-            'address_not_available';
-          
-          const displayAddress = item.address ? 
-            `${item.address.slice(0,8)}...${item.address.slice(-6)}` : 
-            'Address N/A';
+          const address = item.address || 'address_not_available';
+          const safeAddress = escapeHtml(address);
+          const displayAddress = address !== 'address_not_available' 
+            ? `${address.slice(0, 8)}...${address.slice(-6)}` 
+            : 'Address N/A';
           
           const ageMin = calculateTokenAge(item.created_timestamp);
           const platform = (item.platform || '').toLowerCase();
           
-          // Build tags HTML
+          // Build tags
           let tagsHtml = '';
-          if (platform.includes('pump.fun')) {
+          if (platform.includes('pump')) {
             tagsHtml += '<span class="tag tag-pump">pump.fun</span>';
           }
           if (platform.includes('raydium')) {
             tagsHtml += '<span class="tag tag-raydium">Raydium</span>';
           }
           
-          // Safe price change calculation with NaN check
+          // Format price change
           let priceChangeHtml = '<div>📈 5m: N/A</div>';
           if (item.price_change_5m && !isNaN(item.price_change_5m)) {
             const priceChangeValue = (item.price_change_5m * 100).toFixed(2);
-            priceChangeHtml = `<div>📈 5m: ${priceChangeValue}%</div>`;
+            const changeClass = item.price_change_5m >= 0 ? 'positive' : 'negative';
+            priceChangeHtml = `<div>📈 5m: <span class="${changeClass}">${priceChangeValue}%</span></div>`;
           }
           
-          // Check if chart data is valid (minimum 2 points needed for a line chart)
-          const hasChartData = item.price_change_history && 
-                              Array.isArray(item.price_change_history) && 
-                              item.price_change_history.length >= 2 &&
-                              item.price_change_history.every(v => !isNaN(v) && v !== null);
-          
-          // Add placeholder when no chart data
-          const sparklineHtml = hasChartData ? 
-            `<canvas class="sparkline-canvas" id="${uniqueId}"></canvas>` : 
-            '<div class="no-data-placeholder">📊 No price data</div>';
-          
+          // Create card element safely
           const card = document.createElement('div');
           card.className = 'token-card';
+          card.dataset.address = address;
+          card.dataset.index = index;
           
+          // Use createElement for content to avoid XSS
           card.innerHTML = `
             <div class="token-header">
               <div class="token-symbol">
-                ${item.symbol || '???'} 
+                ${escapeHtml(item.symbol || '???')} 
                 ${ageMin < 10 ? '🔥' : ageMin < 30 ? '⚡' : '🆕'}
               </div>
               <div class="token-tags">
@@ -949,31 +819,22 @@
               </div>
             </div>
             <div class="token-info">
-              <div>⏱️ Age: ${ageMin} min</div>
-              <div>💰 MC: $${(item.mc || 0).toLocaleString()}</div>
-              <div>💧 Liquidity: $${(item.liquidity || 0).toLocaleString()}</div>
-              <div>👥 Holders: ${item.holder_count || '?'}</div>
+              <div class="token-age-display" data-age-for="${escapeHtml(address)}">⏱️ Loading mint age...</div>
+              <div>💰 MC: $${formatNumber(item.mc || 0)}</div>
+              <div>💧 Liq: $${formatNumber(item.liquidity || 0)}</div>
+              <div>👥 Holders: ${escapeHtml(item.holder_count?.toString() || '?')}</div>
               ${priceChangeHtml}
             </div>
-            <div class="token-ca" title="Click to copy">
-              📋 ${displayAddress}
+            <div class="token-ca" data-ca="${escapeHtml(address)}" title="Click to copy">
+              📋 ${escapeHtml(displayAddress)}
             </div>
-            ${sparklineHtml}
+            <div class="no-data-placeholder">📊 No chart data</div>
             <div class="token-actions">
-              <button class="action-btn analyze-btn">🔍 ANALYZE</button>
-              <button class="action-btn dexscreener-btn">📊 DS</button>
-              <button class="action-btn copy-btn">📋 COPY</button>
+              <button class="action-btn" data-action="analyze" data-ca="${escapeHtml(address)}">🔍 ANALYZE</button>
+              <button class="action-btn" data-action="dexscreener" data-ca="${escapeHtml(address)}">📊 DS</button>
+              <button class="action-btn" data-action="copy" data-ca="${escapeHtml(address)}">📋 COPY</button>
             </div>
           `;
-          
-          // Store data in dataset
-          card.dataset.address = safeAddress;
-          if (hasChartData) {
-            card.dataset.chartId = uniqueId;
-            // Store only last 5 points for sparkline
-            const lastFivePoints = item.price_change_history.slice(-5).filter(v => !isNaN(v) && v !== null);
-            card.dataset.priceHistory = JSON.stringify(lastFivePoints);
-          }
           
           fragment.appendChild(card);
         });
@@ -981,290 +842,432 @@
         grid.innerHTML = '';
         grid.appendChild(fragment);
         
-        // Initialize charts
-        requestAnimationFrame(() => {
-          document.querySelectorAll('.token-card').forEach(card => {
-            const chartId = card.dataset.chartId;
-            const priceHistory = card.dataset.priceHistory;
-            
-            if (chartId && priceHistory) {
-              const canvas = document.getElementById(chartId);
-              if (canvas) {
-                try {
-                  const data = JSON.parse(priceHistory).filter(v => !isNaN(v) && v !== null);
-                  // Need at least 2 points for a line chart
-                  if (data.length >= 2) {
-                    // Check if chart already exists using our Map
-                    let existingChart = chartInstances.get(chartId);
-                    if (existingChart) {
-                      try {
-                        existingChart.destroy();
-                      } catch (e) {
-                        console.warn('Error destroying existing chart:', e);
-                      }
-                    }
-                    
-                    // Double-check if Chart is available
-                    if (typeof Chart !== 'undefined') {
-                      const chart = new Chart(canvas, {
-                        type: 'line',
-                        data: { 
-                          labels: Array(data.length).fill(''),
-                          datasets: [{ 
-                            data: data, 
-                            borderColor: chartColor,
-                            borderWidth: 2,
-                            tension: 0.4,
-                            pointRadius: 0,
-                            fill: false
-                          }] 
-                        },
-                        options: { 
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          animation: false, // Disable animation for performance
-                          scales: { 
-                            x: { display: false, grid: { display: false } }, 
-                            y: { display: false, grid: { display: false } } 
-                          }, 
-                          elements: { point: { radius: 0 } }, 
-                          plugins: { legend: { display: false } } 
-                        }
-                      });
-                      
-                      chartInstances.set(chartId, chart);
-                    }
-                  }
-                } catch (e) {
-                  console.warn('Chart init error:', e);
-                }
-              }
+        // Fetch ages for tokens
+        tokens.forEach(item => {
+          if (!item.address || item.address === 'address_not_available') return;
+          
+          const ageElement = document.querySelector(`[data-age-for="${escapeHtml(item.address)}"]`);
+          if (!ageElement) return;
+          
+          fetchTokenAge(item.address).then(creationTimestamp => {
+            if (creationTimestamp) {
+              const ageMinutes = Math.round((Date.now() - creationTimestamp) / 60000);
+              ageElement.textContent = `⏱️ Mint: ${ageMinutes} min ago`;
+              ageElement.style.color = ageMinutes < 60 ? 'var(--neon-red)' : 'var(--neon-green)';
+              ageElement.style.borderLeftColor = ageMinutes < 60 ? 'var(--neon-red)' : 'var(--neon-green)';
+            } else {
+              ageElement.textContent = '⏱️ Age unknown';
+              ageElement.style.color = 'var(--text2)';
             }
-            
-            // Attach event listeners
-            const address = card.dataset.address;
-            
-            // CA click for copying
-            const caElement = card.querySelector('.token-ca');
-            if (caElement) {
-              caElement.addEventListener('click', (e) => {
-                e.stopPropagation();
-                copyCA(address);
-              });
-            }
-            
-            // Action buttons
-            const analyzeBtn = card.querySelector('.analyze-btn');
-            if (analyzeBtn) {
-              analyzeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                analyzeToken(address);
-              });
-            }
-            
-            const dexscreenerBtn = card.querySelector('.dexscreener-btn');
-            if (dexscreenerBtn) {
-              dexscreenerBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (address && address !== 'address_not_available') {
-                  window.open(`https://dexscreener.com/solana/${address}`, '_blank');
-                } else {
-                  alert('❌ Address not available');
-                }
-              });
-            }
-            
-            const copyBtn = card.querySelector('.copy-btn');
-            if (copyBtn) {
-              copyBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                copyCA(address);
-              });
-            }
-            
-            // Card click for analyze
-            card.addEventListener('click', (e) => {
-              if (!e.target.closest('button') && !e.target.closest('.token-ca')) {
-                analyzeToken(address);
-              }
-            });
+          }).catch(() => {
+            ageElement.textContent = '⏱️ Age error';
+            ageElement.style.color = 'var(--text2)';
           });
         });
-      }
+      };
       
-      // ==================== ACTIONS ====================
-      function analyzeToken(ca) {
-        if (!ca || ca === 'address_not_available') {
-          alert('❌ No address to analyze');
+      // ==================== FILTERING ====================
+      const filterAndSortTokens = () => {
+        if (!state.tokens || !state.tokens.length) return [];
+        
+        let filtered = state.tokens.filter(t => {
+          const ageMin = calculateTokenAge(t.created_timestamp);
+          const platform = (t.platform || '').toLowerCase();
+          
+          // Time filter
+          if (state.timeFilter !== 'all') {
+            const maxMin = state.timeFilter === '5m' ? 5 : state.timeFilter === '30m' ? 30 : 60;
+            if (ageMin > maxMin) return false;
+          }
+          
+          // Liquidity filter
+          if (state.liqFilter !== 'all') {
+            const minLiq = state.liqFilter === '5k' ? 5000 : state.liqFilter === '10k' ? 10000 : 50000;
+            if ((t.liquidity || 0) < minLiq) return false;
+          }
+          
+          // Platform filter
+          if (state.platformFilter !== 'all') {
+            if (state.platformFilter === 'pump' && !platform.includes('pump')) return false;
+            if (state.platformFilter === 'raydium' && !platform.includes('raydium')) return false;
+          }
+          
+          return true;
+        });
+        
+        // Sort
+        filtered.sort((a, b) => {
+          switch (state.sort) {
+            case 'growth':
+              return (b.price_change_5m || 0) - (a.price_change_5m || 0);
+            case 'volume':
+              return (b.volume_24h || 0) - (a.volume_24h || 0);
+            case 'holders': {
+              const aHolders = typeof a.holder_count === 'number' ? a.holder_count : 0;
+              const bHolders = typeof b.holder_count === 'number' ? b.holder_count : 0;
+              return bHolders - aHolders;
+            }
+            default: // newest
+              return (b.created_timestamp || 0) - (a.created_timestamp || 0);
+          }
+        });
+        
+        return filtered;
+      };
+      
+      const applyFilters = debounce(() => {
+        setFilterBarLoading(true);
+        
+        // Use setTimeout to prevent UI blocking
+        setTimeout(() => {
+          const filtered = filterAndSortTokens();
+          renderTokens(filtered);
+          setFilterBarLoading(false);
+        }, 50);
+      }, 300);
+      
+      // ==================== API CALLS ====================
+      const loadFreshTokens = async (force = false) => {
+        const grid = getElement('tokenGrid');
+        if (!grid) return;
+        
+        if (state.isRateLimited || state.isRefreshing) {
+          showLoader('Please wait...', true);
           return;
         }
         
+        // Cancel previous request if any
+        if (state.abortController) {
+          state.abortController.abort();
+        }
+        
+        state.isRefreshing = true;
+        setFilterBarLoading(true);
+        setRefreshButtonDisabled(true);
+        
+        showLoader('Loading fresh pumps...');
+        
+        // Check cache
+        if (!force) {
+          const cached = safeStorage.get(STORAGE.TOKENS);
+          const cacheTime = safeStorage.get(STORAGE.TOKENS_TIME);
+          
+          if (cached && cacheTime) {
+            const cacheAge = Date.now() - parseInt(cacheTime);
+            if (cacheAge < CACHE_TTL) {
+              try {
+                const parsed = JSON.parse(cached);
+                if (Array.isArray(parsed) && parsed.length) {
+                  state.tokens = parsed.filter(t => t && t.address);
+                  const filtered = filterAndSortTokens();
+                  renderTokens(filtered);
+                  
+                  const cacheInfo = getElement('cacheInfo');
+                  if (cacheInfo) {
+                    cacheInfo.textContent = `📦 Cached ${new Date(parseInt(cacheTime)).toLocaleTimeString()}`;
+                  }
+                  
+                  state.isRefreshing = false;
+                  setFilterBarLoading(false);
+                  setRefreshButtonDisabled(false);
+                  return;
+                }
+              } catch (e) {
+                console.warn('Cache parse error:', e);
+              }
+            }
+          }
+        }
+        
+        // Fetch new data
+        state.abortController = new AbortController();
+        
         try {
-          const saved = safeLocalStorageSet('pendingAnalysis', ca);
-          if (!saved) {
-            // If localStorage fails, pass via URL
-            window.location.href = `https://www.cryptobros.pro/tribunal.html?ca=${encodeURIComponent(ca)}`;
+          const timeoutId = setTimeout(() => state.abortController.abort(), API_TIMEOUT);
+          
+          const res = await fetch('https://api.dexscreener.com/latest/dex/pairs/new?chainId=solana&limit=60', {
+            headers: { 'accept': 'application/json' },
+            signal: state.abortController.signal
+          });
+          
+          clearTimeout(timeoutId);
+          
+          if (res.status === 429) {
+            state.isRateLimited = true;
+            showError('Rate limited. Waiting 60s...', true);
+            
+            setTimeout(() => {
+              state.isRateLimited = false;
+              loadFreshTokens(true);
+            }, 60000);
+            
+            return;
+          }
+          
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+          }
+          
+          const data = await res.json();
+          
+          if (data.pairs && Array.isArray(data.pairs) && data.pairs.length) {
+            state.isRateLimited = false;
+            
+            state.tokens = data.pairs
+              .map(p => ({
+                address: p.baseToken?.address || '',
+                symbol: p.baseToken?.symbol || '???',
+                created_timestamp: p.pairCreatedAt ? Math.floor(p.pairCreatedAt / 1000) : null,
+                mc: p.fdv || 0,
+                liquidity: p.liquidity?.usd || 0,
+                volume_24h: p.volume?.h24 || 0,
+                holder_count: p.holder_count || '?',
+                platform: p.dexId || 'unknown',
+                price_change_5m: p.priceChange?.m5 || 0,
+                price_change_history: []
+              }))
+              .filter(t => t.address && t.symbol !== '???');
+            
+            // Save to cache
+            safeStorage.set(STORAGE.TOKENS, JSON.stringify(state.tokens));
+            safeStorage.set(STORAGE.TOKENS_TIME, Date.now().toString());
+            
+            const filtered = filterAndSortTokens();
+            renderTokens(filtered);
+            
+            const cacheInfo = getElement('cacheInfo');
+            if (cacheInfo) {
+              cacheInfo.textContent = `🔄 DexScreener • ${new Date().toLocaleTimeString()}`;
+            }
           } else {
-            window.location.href = 'https://www.cryptobros.pro/tribunal.html';
+            showError('No fresh pumps found');
           }
         } catch (e) {
-          console.error('Analysis error:', e);
-          window.location.href = `https://www.cryptobros.pro/tribunal.html?ca=${encodeURIComponent(ca)}`;
+          if (e.name === 'AbortError') {
+            showError('Request timeout');
+          } else {
+            console.error('Loading error:', e);
+            showError('Network error');
+          }
+          
+          // Try to use cache as fallback
+          const cached = safeStorage.get(STORAGE.TOKENS);
+          if (cached) {
+            try {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length) {
+                state.tokens = parsed.filter(t => t && t.address);
+                const filtered = filterAndSortTokens();
+                renderTokens(filtered);
+                
+                const cacheInfo = getElement('cacheInfo');
+                if (cacheInfo) {
+                  cacheInfo.textContent = `📦 Offline mode (cached)`;
+                }
+              }
+            } catch (parseError) {}
+          }
+        } finally {
+          state.isRefreshing = false;
+          setFilterBarLoading(false);
+          setRefreshButtonDisabled(false);
+          state.abortController = null;
         }
-      }
+      };
       
-      function copyCA(ca) {
-        if (!ca || ca === 'address_not_available') {
-          alert('❌ No address to copy');
+      // ==================== ACTIONS ====================
+      const handleCardClick = (e) => {
+        const card = e.target.closest('.token-card');
+        if (!card) return;
+        
+        const address = card.dataset.address;
+        if (!address || address === 'address_not_available') return;
+        
+        // Handle button clicks
+        if (e.target.closest('[data-action]')) {
+          const button = e.target.closest('[data-action]');
+          const action = button.dataset.action;
+          const ca = button.dataset.ca || address;
+          
+          e.stopPropagation();
+          
+          switch (action) {
+            case 'analyze':
+              analyzeToken(ca);
+              break;
+            case 'dexscreener':
+              window.open(`https://dexscreener.com/solana/${encodeURIComponent(ca)}`, '_blank');
+              break;
+            case 'copy':
+              copyCA(ca);
+              break;
+          }
           return;
         }
         
-        // Modern clipboard API
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(ca).then(() => {
-            alert('✅ CA copied!');
-          }).catch(() => {
-            fallbackCopy(ca);
-          });
-        } else {
-          fallbackCopy(ca);
+        // Handle CA click
+        if (e.target.closest('.token-ca')) {
+          e.stopPropagation();
+          copyCA(address);
+          return;
         }
-      }
+        
+        // Default: analyze
+        analyzeToken(address);
+      };
       
-      function fallbackCopy(text) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        textarea.style.left = '-999px';
-        document.body.appendChild(textarea);
-        textarea.select();
+      const analyzeToken = (ca) => {
+        if (!ca || ca === 'address_not_available') {
+          alert('❌ No address available');
+          return;
+        }
         
         try {
-          const success = document.execCommand('copy');
-          if (success) {
-            alert('✅ CA copied!');
+          safeStorage.set(STORAGE.PENDING, ca);
+          window.location.href = 'https://www.cryptobros.pro/tribunal.html';
+        } catch (e) {
+          window.location.href = `https://www.cryptobros.pro/tribunal.html?ca=${encodeURIComponent(ca)}`;
+        }
+      };
+      
+      const copyCA = async (ca) => {
+        if (!ca || ca === 'address_not_available') {
+          alert('❌ No address available');
+          return;
+        }
+        
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(ca);
+            alert('✅ Copied to clipboard!');
           } else {
-            alert('❌ Copy failed. Manual copy: ' + text);
+            // Fallback
+            const textarea = document.createElement('textarea');
+            textarea.value = ca;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('✅ Copied to clipboard!');
           }
         } catch (err) {
-          alert('❌ Copy error. Manual copy: ' + text);
+          alert('❌ Failed to copy');
         }
-        
-        document.body.removeChild(textarea);
-      }
+      };
       
-      // ==================== FILTER HANDLERS ====================
-      function setupFilterListeners() {
-        const timeFilter = document.getElementById('timeFilter');
-        if (timeFilter) {
-          timeFilter.addEventListener('change', (e) => {
-            currentTimeFilter = e.target.value;
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(applyFilters, 300);
-          });
+      // ==================== COUNTDOWN ====================
+      const updateTimerDisplay = () => {
+        const timer = getElement('updateTimer');
+        if (timer) {
+          timer.textContent = `⏱️ ${state.countdown} sec`;
         }
-        
-        const liqFilter = document.getElementById('liqFilter');
-        if (liqFilter) {
-          liqFilter.addEventListener('change', (e) => {
-            currentLiqFilter = e.target.value;
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(applyFilters, 300);
-          });
-        }
-        
-        const platformFilter = document.getElementById('platformFilter');
-        if (platformFilter) {
-          platformFilter.addEventListener('change', (e) => {
-            currentPlatformFilter = e.target.value;
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(applyFilters, 300);
-          });
-        }
-        
-        const sortFilter = document.getElementById('sortFilter');
-        if (sortFilter) {
-          sortFilter.addEventListener('change', (e) => {
-            currentSort = e.target.value;
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(applyFilters, 300);
-          });
-        }
-      }
+      };
       
-      // ==================== AUTO REFRESH ====================
-      function startCountdown() {
-        if (updateInterval) {
-          clearInterval(updateInterval);
+      const startCountdown = () => {
+        if (state.intervalId) {
+          clearInterval(state.intervalId);
         }
         
-        updateCountdown = 60;
+        state.countdown = REFRESH_INTERVAL;
         updateTimerDisplay();
         
-        updateInterval = setInterval(() => {
-          updateCountdown--;
+        state.intervalId = setInterval(() => {
+          state.countdown--;
           updateTimerDisplay();
           
-          if (updateCountdown <= 0) {
-            updateCountdown = 60; // Reset counter
-            loadFreshTokens();
+          if (state.countdown <= 0) {
+            state.countdown = REFRESH_INTERVAL;
+            if (!state.isRefreshing && !state.isRateLimited) {
+              loadFreshTokens();
+            }
           }
         }, 1000);
-      }
+      };
       
-      function updateTimerDisplay() {
-        const timer = document.getElementById('updateTimer');
-        if (timer) {
-          timer.textContent = `⏱️ Refresh in ${updateCountdown} sec`;
+      const stopCountdown = () => {
+        if (state.intervalId) {
+          clearInterval(state.intervalId);
+          state.intervalId = null;
         }
-      }
+      };
       
-      // ==================== INITIALIZATION ====================
-      function init() {
-        // Check if Chart.js is loaded
-        if (typeof Chart === 'undefined') {
-          console.error('Chart.js not loaded');
-          // Show warning but continue
+      // ==================== FILTER LISTENERS ====================
+      const setupFilterListeners = () => {
+        const timeFilter = getElement('timeFilter');
+        const liqFilter = getElement('liqFilter');
+        const platformFilter = getElement('platformFilter');
+        const sortFilter = getElement('sortFilter');
+        
+        if (timeFilter) {
+          timeFilter.addEventListener('change', (e) => {
+            state.timeFilter = e.target.value;
+            applyFilters();
+          });
         }
         
-        // Setup theme toggle
-        const themeToggle = document.getElementById('themeToggle');
+        if (liqFilter) {
+          liqFilter.addEventListener('change', (e) => {
+            state.liqFilter = e.target.value;
+            applyFilters();
+          });
+        }
+        
+        if (platformFilter) {
+          platformFilter.addEventListener('change', (e) => {
+            state.platformFilter = e.target.value;
+            applyFilters();
+          });
+        }
+        
+        if (sortFilter) {
+          sortFilter.addEventListener('change', (e) => {
+            state.sort = e.target.value;
+            applyFilters();
+          });
+        }
+      };
+      
+      // ==================== INITIALIZATION ====================
+      const init = () => {
+        initTheme();
+        
+        // Event listeners
+        const themeToggle = getElement('themeToggle');
         if (themeToggle) {
           themeToggle.addEventListener('click', toggleTheme);
         }
         
-        // Debounced refresh button
-        const refreshBtn = document.getElementById('refreshBtn');
+        const refreshBtn = getElement('refreshBtn');
         if (refreshBtn) {
           refreshBtn.addEventListener('click', debounce(() => {
-            updateCountdown = 60; // Reset counter
+            state.countdown = REFRESH_INTERVAL;
             loadFreshTokens(true);
           }, 1000));
         }
         
-        // Setup filters
+        const grid = getElement('tokenGrid');
+        if (grid) {
+          grid.addEventListener('click', handleCardClick);
+        }
+        
         setupFilterListeners();
         
-        // Load initial data
+        // Load data
         loadFreshTokens();
-      }
+        startCountdown();
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', stopCountdown);
+      };
       
-      // Start when DOM is ready
+      // Start when ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
         init();
       }
-      
-      // Cleanup on page unload
-      window.addEventListener('beforeunload', () => {
-        if (updateInterval) {
-          clearInterval(updateInterval);
-        }
-        
-        destroyAllCharts();
-      });
       
     })();
   </script>
