@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fresh Pumps! — CryptoBros</title>
+  <title>Fresh Pumps — CryptoBros</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src https://fonts.gstatic.com; connect-src 'self' https://cryptobros-backend.onrender.com https://api.dexscreener.com; frame-ancestors 'none';">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js loaded conditionally - will be initialized only when needed -->
   <style>
+    /* ALL STYLES MOVED TO EXTERNAL CSS FILE WOULD BE BETTER, BUT KEEPING INLINE FOR THIS EXAMPLE */
     :root {
       --neon-cyan: #00F0FF;
       --neon-purple: #9D00FF;
@@ -16,46 +19,39 @@
       --neon-green: #00FF9D;
       --neon-orange: #FF9900;
       --deep-bg: #0a0e27;
-      --card-bg: rgba(10, 14, 39, 0.8);
-      --glass-border: rgba(255, 255, 255, 0.1);
+      --card-bg: rgba(10, 14, 39, 0.95);
+      --glass-border: rgba(255, 215, 0, 0.2);
       --text: #e0e0ff;
       --text2: #a0a0c0;
-      --glow: 0 0 20px rgba(0, 240, 255, 0.5);
-      --border: 3px solid rgba(255, 255, 255, 0.1);
-      --gradient-1: rgba(0, 240, 255, 0.05);
-      --gradient-2: rgba(157, 0, 255, 0.05);
+      --glow: 0 0 30px rgba(255, 215, 0, 0.3);
+      --border: 3px solid rgba(255, 215, 0, 0.2);
+      --gradient-1: rgba(255, 215, 0, 0.1);
+      --gradient-2: rgba(0, 240, 255, 0.1);
+    }
+    
+    * {
+      box-sizing: border-box;
     }
     
     body {
       margin: 0;
       font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(135deg, var(--deep-bg) 0%, #0f1338 50%, #1a1a3a 100%);
+      background: radial-gradient(circle at 50% 50%, #0a0e27, #030514);
       color: var(--text);
       min-height: 100vh;
       padding: 20px;
-      box-sizing: border-box;
       position: relative;
       overflow-x: hidden;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, color 0.3s ease;
     }
     
     body.day-mode {
-      --deep-bg: #fff8e7;
-      --card-bg: rgba(255, 255, 255, 0.95);
+      background: radial-gradient(circle at 50% 50%, #f0f4ff, #ffffff);
+      color: #1a1a2e;
       --text: #1a1a2e;
       --text2: #4a4a6a;
-      --glass-border: rgba(255, 215, 0, 0.3);
-      --glow: 0 0 25px rgba(255, 215, 0, 0.5);
-      --gradient-1: rgba(255, 215, 0, 0.1);
-      --gradient-2: rgba(255, 165, 0, 0.1);
-      background: linear-gradient(135deg, #FFD700 0%, #FFA500 25%, #FFF8DC 50%, #FFD700 75%, #FFA500 100%);
-      background-size: 400% 400%;
-      animation: goldSilk 15s ease infinite;
-    }
-    
-    @keyframes goldSilk {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --deep-bg: #f0f4ff;
     }
     
     body::before {
@@ -66,9 +62,8 @@
       width: 100%;
       height: 100%;
       background: 
-        radial-gradient(circle at 20% 30%, var(--gradient-1) 0%, transparent 30%),
-        radial-gradient(circle at 80% 70%, var(--gradient-2) 0%, transparent 30%),
-        repeating-linear-gradient(45deg, rgba(0,240,255,0.02) 0px, rgba(0,240,255,0.02) 2px, transparent 2px, transparent 8px);
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.03) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(0, 240, 255, 0.03) 0%, transparent 30%);
       pointer-events: none;
       z-index: 0;
     }
@@ -87,56 +82,77 @@
       margin-bottom: 2rem;
       flex-wrap: wrap;
       gap: 1rem;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      border-radius: 100px;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
     }
     
     .back-btn {
       padding: 0.8rem 1.6rem;
-      background: rgba(10, 14, 39, 0.8);
-      border: 2px solid var(--neon-cyan);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(10, 14, 39, 0.9));
+      border: 2px solid var(--neon-gold);
       border-radius: 50px;
-      color: var(--neon-cyan);
+      color: var(--neon-gold);
       font-weight: 700;
       cursor: pointer;
       text-decoration: none;
       backdrop-filter: blur(10px);
-      box-shadow: var(--glow);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
       transition: all 0.3s;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       font-size: 1rem;
+      letter-spacing: 1px;
     }
     .back-btn:hover {
-      transform: translateX(-4px);
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
-      background: rgba(0, 240, 255, 0.1);
+      transform: translateX(-4px) scale(1.05);
+      box-shadow: 0 0 50px rgba(255, 215, 0, 0.6);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(255, 215, 0, 0.2));
+    }
+    .back-btn:focus-visible {
+      outline: 3px solid var(--neon-cyan);
+      outline-offset: 2px;
     }
     
     h1 {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 3.5rem;
+      font-size: 4rem;
       text-align: center;
-      background: linear-gradient(135deg, #FFD700, #FFA500, var(--neon-cyan), var(--neon-purple));
+      background: linear-gradient(135deg, #FFD700, #FFA500, #00F0FF, #FFD700);
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin: 0.5rem 0;
+      margin: 0;
       flex: 1;
-      text-shadow: 0 0 30px rgba(255,215,0,0.3);
-      animation: titlePulse 3s ease-in-out infinite;
-      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+      animation: softBreathing 4s ease-in-out infinite;
+      letter-spacing: 4px;
       font-weight: 800;
+      line-height: 1.2;
     }
     
-    @keyframes titlePulse {
-      0%, 100% { filter: brightness(1); transform: scale(1); }
-      50% { filter: brightness(1.2); transform: scale(1.02); }
+    @keyframes softBreathing {
+      0%, 100% { 
+        opacity: 1;
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 30px rgba(0, 240, 255, 0.2);
+        background-position: 0% 50%;
+      }
+      50% { 
+        opacity: 0.95;
+        text-shadow: 0 0 25px rgba(255, 215, 0, 0.5), 0 0 45px rgba(0, 240, 255, 0.3);
+        background-position: 100% 50%;
+      }
     }
     
     .theme-toggle {
       width: 48px;
       height: 48px;
-      background: rgba(10, 14, 39, 0.8);
-      border: 2px solid var(--neon-cyan);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(10, 14, 39, 0.9));
+      border: 2px solid var(--neon-gold);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -145,127 +161,131 @@
       font-size: 1.5rem;
       backdrop-filter: blur(10px);
       transition: all 0.3s;
-      box-shadow: var(--glow);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
     }
     .theme-toggle:hover {
-      transform: scale(1.1) rotate(15deg);
-      border-color: var(--neon-gold);
-      box-shadow: 0 0 25px rgba(255,215,0,0.6);
+      transform: scale(1.1) rotate(180deg);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.8);
+    }
+    .theme-toggle:focus-visible {
+      outline: 3px solid var(--neon-cyan);
+      outline-offset: 2px;
     }
     
     .filter-bar {
       display: flex;
-      gap: 0.8rem;
+      gap: 1rem;
       flex-wrap: wrap;
       justify-content: center;
-      margin: 1.5rem 0;
-      padding: 1rem 1.5rem;
-      background: rgba(0, 240, 255, 0.05);
+      margin: 2rem 0;
+      padding: 1.5rem 2rem;
+      background: var(--card-bg);
       border-radius: 60px;
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 215, 0, 0.3);
-      transition: opacity 0.3s ease;
-      box-shadow: 0 0 30px rgba(255,215,0,0.2);
+      border: 2px solid rgba(255, 215, 0, 0.4);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
+      transition: opacity 0.3s;
     }
     
     .filter-bar.loading {
-      opacity: 0.6;
+      opacity: 0.7;
       pointer-events: none;
+      filter: grayscale(0.5);
     }
     
     .filter-group {
       display: flex;
-      gap: 0.5rem;
+      gap: 1rem;
       flex-wrap: wrap;
     }
     
-    select, button.filter-btn {
-      padding: 0.7rem 1.4rem;
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid var(--neon-cyan);
+    select {
+      padding: 0.8rem 1.6rem;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid var(--neon-gold);
       border-radius: 40px;
-      color: white;
+      color: var(--neon-gold);
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s;
-      min-width: 130px;
+      min-width: 140px;
       font-family: 'Quicksand', sans-serif;
       backdrop-filter: blur(5px);
-      font-size: 0.95rem;
-      box-shadow: 0 0 15px rgba(0,240,255,0.2);
+      font-size: 1rem;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
     }
-    select:hover, button.filter-btn:hover, select:focus {
-      background: rgba(0, 240, 255, 0.3);
+    select:hover, select:focus {
+      background: rgba(255, 215, 0, 0.2);
       transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
       outline: none;
-      border-color: var(--neon-gold);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+    select:focus-visible {
+      outline: 3px solid var(--neon-cyan);
+      outline-offset: 2px;
     }
     
     select option {
-      background: var(--deep-bg);
-      color: white;
+      background: #0a0e27;
+      color: var(--neon-gold);
     }
     
     .token-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 2rem;
       margin: 2rem 0;
+      position: relative;
     }
     
     .token-card {
       background: var(--card-bg);
       border: 2px solid rgba(255, 215, 0, 0.3);
-      border-radius: 24px;
-      padding: 1.5rem;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 30px rgba(0,240,255,0.2);
+      border-radius: 32px;
+      padding: 1.8rem;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.4s;
       position: relative;
       overflow: hidden;
     }
-    .token-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--neon-gold), var(--neon-cyan), transparent);
-      animation: scan 4s linear infinite;
-    }
-    @keyframes scan {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
     .token-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 0 40px rgba(255,215,0,0.4);
-      border-color: var(--neon-gold);
+      transform: translateY(-6px);
+      box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+      border-color: rgba(255, 215, 0, 0.5);
+    }
+    .token-card:focus-within {
+      outline: 3px solid var(--neon-cyan);
+      outline-offset: 2px;
     }
     
     .token-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
-      border-bottom: 1px solid rgba(255,215,0,0.3);
-      padding-bottom: 0.8rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+      padding-bottom: 1rem;
     }
     
     .token-symbol {
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       font-weight: 800;
       color: var(--neon-gold);
-      text-shadow: 0 0 15px rgba(255,215,0,0.5);
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
       font-family: 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: 1px;
+      word-break: break-word;
+      max-width: 200px;
     }
     
     .token-tags {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
     }
     
@@ -277,63 +297,120 @@
       letter-spacing: 0.5px;
     }
     .tag-pump {
-      background: rgba(255, 153, 0, 0.2);
+      background: rgba(255, 153, 0, 0.15);
       border: 1px solid #FF9900;
       color: #FF9900;
-      box-shadow: 0 0 15px rgba(255,153,0,0.4);
     }
     .tag-raydium {
-      background: rgba(0, 240, 255, 0.2);
+      background: rgba(0, 240, 255, 0.15);
       border: 1px solid var(--neon-cyan);
       color: var(--neon-cyan);
-      box-shadow: 0 0 15px rgba(0,240,255,0.4);
     }
     
     .token-info {
       font-size: 1rem;
-      color: var(--text2);
-      line-height: 1.8;
+      color: var(--text);
+      line-height: 1.9;
       background: rgba(0, 0, 0, 0.3);
-      padding: 1rem;
-      border-radius: 16px;
-      margin: 1rem 0;
-      border: 1px solid rgba(255,215,0,0.2);
+      padding: 1.2rem;
+      border-radius: 20px;
+      margin: 1.2rem 0;
+      border: 1px solid rgba(255, 215, 0, 0.2);
     }
     
-    .token-age-display {
-      font-size: 1rem;
-      margin-bottom: 0.8rem;
-      padding: 0.5rem 0.8rem;
-      border-radius: 12px;
-      background: rgba(0, 0, 0, 0.4);
-      transition: all 0.3s ease;
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.7rem;
+      font-weight: 500;
+    }
+    
+    .info-label {
+      color: var(--text2);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .info-value {
       font-weight: 600;
-      border-left: 4px solid var(--neon-cyan);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .source-badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--text2);
+      margin-left: 4px;
+    }
+    
+    .source-goplus {
+      color: #FFD700;
+    }
+    .source-helius {
+      color: #00F0FF;
+    }
+    .source-dex {
+      color: #00FF9D;
+    }
+    
+    .risk-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+    .risk-high {
+      background: rgba(255, 77, 77, 0.15);
+      border: 1px solid #FF4D4D;
+      color: #FF4D4D;
+    }
+    .risk-medium {
+      background: rgba(255, 153, 0, 0.15);
+      border: 1px solid #FF9900;
+      color: #FF9900;
+    }
+    .risk-low {
+      background: rgba(0, 255, 157, 0.15);
+      border: 1px solid #00FF9D;
+      color: #00FF9D;
     }
     
     .token-ca {
       font-family: 'Space Grotesk', monospace;
       font-size: 0.9rem;
       word-break: break-all;
-      margin: 0.8rem 0;
+      margin: 1rem 0;
       color: var(--text2);
-      background: rgba(0, 240, 255, 0.1);
-      padding: 0.5rem 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.6rem 1rem;
       border-radius: 30px;
-      display: inline-block;
       cursor: pointer;
       transition: all 0.3s;
-      border: 1px solid rgba(255,215,0,0.3);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      text-align: center;
     }
     .token-ca:hover {
-      background: rgba(0, 240, 255, 0.2);
+      background: rgba(255, 215, 0, 0.1);
       color: var(--neon-gold);
       border-color: var(--neon-gold);
+    }
+    .token-ca:focus-visible {
+      outline: 3px solid var(--neon-cyan);
+      outline-offset: 2px;
     }
     
     .token-actions {
       display: flex;
-      gap: 0.8rem;
+      gap: 1rem;
       margin-top: 1.2rem;
       flex-wrap: wrap;
     }
@@ -352,37 +429,28 @@
       min-width: 90px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      backdrop-filter: blur(5px);
     }
     .action-btn:hover {
-      background: rgba(255, 215, 0, 0.2);
+      background: rgba(255, 215, 0, 0.15);
       transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
       border-color: var(--neon-cyan);
       color: var(--neon-cyan);
     }
-    
-    .no-data-placeholder {
-      height: 50px;
-      margin-top: 1rem;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text2);
-      font-size: 0.9rem;
-      border: 1px dashed rgba(255,215,0,0.3);
+    .action-btn:focus-visible {
+      outline: 3px solid var(--neon-cyan);
+      outline-offset: 2px;
     }
     
     .loader, .empty {
       text-align: center;
       padding: 4rem;
       color: var(--neon-gold);
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       grid-column: 1 / -1;
       background: var(--card-bg);
-      border-radius: 40px;
-      border: 2px solid rgba(255,215,0,0.4);
+      border-radius: 50px;
+      border: 2px solid rgba(255, 215, 0, 0.3);
       backdrop-filter: blur(10px);
       font-weight: 600;
     }
@@ -396,9 +464,9 @@
     
     .loader::after {
       content: '';
-      width: 28px;
-      height: 28px;
-      border: 4px solid rgba(255,215,0,0.3);
+      width: 30px;
+      height: 30px;
+      border: 4px solid rgba(255, 215, 0, 0.2);
       border-top-color: var(--neon-gold);
       border-radius: 50%;
       animation: spin 1s linear infinite;
@@ -411,17 +479,18 @@
     .update-info {
       text-align: center;
       color: var(--text2);
-      margin: 2rem 0 1rem;
+      margin: 3rem 0 1rem;
       font-size: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
+      gap: 2rem;
       flex-wrap: wrap;
-      padding: 0.8rem;
-      background: rgba(0,0,0,0.3);
+      padding: 1rem 2rem;
+      background: var(--card-bg);
       border-radius: 60px;
-      border: 1px solid rgba(255,215,0,0.3);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      backdrop-filter: blur(10px);
     }
     
     .update-timer {
@@ -432,7 +501,7 @@
       border-radius: 40px;
       border: 2px solid var(--neon-cyan);
       font-size: 1rem;
-      box-shadow: 0 0 20px rgba(0,240,255,0.3);
+      box-shadow: 0 0 20px rgba(0,240,255,0.2);
     }
     
     .refresh-now {
@@ -442,26 +511,26 @@
       color: var(--neon-gold);
       padding: 0.5rem 1.5rem;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 600;
       transition: all 0.3s;
       font-size: 1rem;
-    }
-    .refresh-now:hover {
-      background: rgba(255, 215, 0, 0.15);
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-      border-color: var(--neon-cyan);
-      color: var(--neon-cyan);
     }
     .refresh-now:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       pointer-events: none;
+      border-color: var(--text2);
+      color: var(--text2);
     }
-    
-    .rate-limit {
-      color: var(--neon-orange);
-      border-color: var(--neon-orange);
+    .refresh-now:hover:not(:disabled) {
+      background: rgba(255, 215, 0, 0.1);
+      transform: scale(1.05);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+    .refresh-now:focus-visible {
+      outline: 3px solid var(--neon-cyan);
+      outline-offset: 2px;
     }
     
     .error-message {
@@ -469,800 +538,1222 @@
       border-color: var(--neon-red);
     }
     
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .toast {
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: bold;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      border: 2px solid;
+      animation: slideIn 0.3s ease;
+      max-width: 350px;
+    }
+    
+    .toast-success {
+      background: rgba(0, 255, 157, 0.2);
+      border-color: #00FF9D;
+      color: #00FF9D;
+    }
+    
+    .toast-error {
+      background: rgba(255, 77, 77, 0.2);
+      border-color: #FF4D4D;
+      color: #FF4D4D;
+    }
+    
+    .toast-info {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: #00F0FF;
+      color: #00F0FF;
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    
+    .infinite-scroll-trigger {
+      height: 20px;
+      width: 100%;
+      grid-column: 1 / -1;
+    }
+    
+    .filter-loader {
+      text-align: center;
+      padding: 2rem;
+      color: var(--neon-gold);
+      font-size: 1.2rem;
+      grid-column: 1 / -1;
+    }
+    
+    /* Virtual scroll optimization - limit visible cards */
+    .token-grid {
+      contain: content;
+    }
+    
     @media (max-width: 768px) {
-      h1 { font-size: 2.5rem; }
+      h1 { font-size: 2.8rem; }
+      .header { border-radius: 40px; padding: 1rem; }
       .token-grid { grid-template-columns: 1fr; }
       .filter-bar { 
         flex-direction: column; 
         align-items: stretch;
-        border-radius: 30px;
-        padding: 1.2rem;
+        border-radius: 40px;
+        padding: 1.5rem;
       }
-      select, button.filter-btn { width: 100%; }
-      .update-info { flex-direction: column; gap: 0.8rem; }
-      .back-btn { font-size: 0.9rem; padding: 0.6rem 1.2rem; }
+      select { width: 100%; }
+      .info-row { 
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 4px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <a href="https://www.cryptobros.pro/tribunal.html" class="back-btn" target="_self">← Back</a>
-      <h1>Fresh Pumps!</h1>
-      <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</div>
+      <a href="https://www.cryptobros.pro/" class="back-btn" aria-label="Go back">← BACK</a>
+      <h1>FRESH PUMPS</h1>
+      <div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme" aria-pressed="false">🌙</div>
     </div>
 
     <div class="filter-bar" id="filterBar">
       <div class="filter-group">
-        <select id="timeFilter" aria-label="Time filter">
-          <option value="all">⏱️ All time</option>
-          <option value="5m">🔥 5 min</option>
-          <option value="30m">⚡ 30 min</option>
-          <option value="1h">🕐 1 hour</option>
+        <select id="timeFilter" aria-label="Filter by time">
+          <option value="all">⏱️ ALL TIME</option>
+          <option value="5m">🔥 5 MIN</option>
+          <option value="30m">⚡ 30 MIN</option>
+          <option value="1h">🕐 1 HOUR</option>
         </select>
-        <select id="liqFilter" aria-label="Liquidity filter">
-          <option value="all">💰 All liq</option>
+        <select id="liqFilter" aria-label="Filter by liquidity">
+          <option value="all">💰 ALL LIQ</option>
           <option value="5k">💎 >$5K</option>
           <option value="10k">💎 >$10K</option>
           <option value="50k">💎 >$50K</option>
         </select>
       </div>
       <div class="filter-group">
-        <select id="platformFilter" aria-label="Platform filter">
-          <option value="all">🌐 All</option>
-          <option value="pump">🎯 pump.fun</option>
-          <option value="raydium">💧 Raydium</option>
+        <select id="platformFilter" aria-label="Filter by platform">
+          <option value="all">🌐 ALL</option>
+          <option value="pump">🎯 PUMP.FUN</option>
+          <option value="raydium">💧 RAYDIUM</option>
         </select>
         <select id="sortFilter" aria-label="Sort by">
-          <option value="newest">🆕 Newest</option>
-          <option value="growth">📈 Growth</option>
-          <option value="volume">📊 Volume</option>
-          <option value="holders">👥 Holders</option>
+          <option value="newest">🆕 NEWEST</option>
+          <option value="holders">👥 HOLDERS</option>
+          <option value="growth">📈 GROWTH</option>
         </select>
       </div>
     </div>
 
-    <div id="tokenGrid" class="token-grid">
-      <div class="loader">Loading fresh pumps...</div>
+    <div id="tokenGrid" class="token-grid" role="region" aria-label="Token list">
+      <div class="loader">LOADING FRESH TOKENS...</div>
     </div>
 
     <div class="update-info">
-      <span class="update-timer" id="updateTimer">⏱️ 60 sec</span>
-      <button class="refresh-now" id="refreshBtn" aria-label="Refresh">⟳ Refresh</button>
-      <span id="cacheInfo" style="color: var(--text2); font-size: 0.95rem;"></span>
+      <span class="update-timer" id="updateTimer" aria-label="Time until next update">⏱️ 60 SEC</span>
+      <button class="refresh-now" id="refreshBtn" aria-label="Refresh now">⟳ REFRESH</button>
+      <span id="cacheInfo" style="color: var(--text2);" aria-label="Cache status"></span>
     </div>
   </div>
+
+  <div class="toast-container" id="toastContainer"></div>
 
   <script>
     (function() {
       "use strict";
       
-      // ==================== CONSTANTS ====================
-      const STORAGE = {
-        TOKENS: 'freshTokensCache',
-        TOKENS_TIME: 'freshTokensCacheTime',
-        AGE: 'tokenAgeCache',
-        THEME: 'tribunalTheme',
-        PENDING: 'pendingAnalysis'
+      // ================== CONFIG ==================
+      const CONFIG = {
+        BACKEND_URL: 'https://cryptobros-backend.onrender.com',
+        STORAGE: {
+          TOKENS: 'freshTokensCache',
+          TOKENS_TIME: 'freshTokensCacheTime',
+          AGE: 'tokenAgeCache',
+          THEME: 'freshTheme'
+        },
+        CACHE_TTL: 5 * 60 * 1000,
+        AGE_CACHE_TTL: 30 * 60 * 1000,
+        REFRESH_INTERVAL: 60,
+        MAX_CACHE_SIZE: 200,
+        MAX_VISIBLE_CARDS: 150,
+        BATCH_SIZE: 5,
+        VIRTUAL_SCROLL_THRESHOLD: 50,
+        REQUEST_TIMEOUT: 10000,
+        RATE_LIMIT_COOLDOWN: 60000,
+        MAX_RETRIES: 3
       };
       
-      const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-      const AGE_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
-      const REFRESH_INTERVAL = 60; // seconds
-      const API_TIMEOUT = 10000; // 10 seconds
+      // ================== SECURE ESCAPE FUNCTIONS ==================
+      const escapeHtml = (text) => {
+        if (!text) return '';
+        return String(text)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;')
+          .replace(/`/g, '&#96;')
+          .replace(/\$/g, '&#36;');
+      };
       
-      // ==================== STATE ====================
+      const escapeAttr = (text) => {
+        if (!text) return '';
+        return String(text)
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/`/g, '&#96;')
+          .replace(/\$/g, '&#36;');
+      };
+      
+      // ================== TIMESTAMP VALIDATION ==================
+      const validateTimestamp = (ts) => {
+        if (!ts || isNaN(ts)) return null;
+        const now = Date.now();
+        // Token cannot be from the future (> now + 1 day) and cannot be older than 10 years
+        if (ts > now + 86400000 || ts < now - 10 * 365 * 24 * 60 * 60 * 1000) {
+          return null;
+        }
+        return ts;
+      };
+      
+      // ================== DEBOUNCE UTILITY ==================
+      const debounce = (func, wait) => {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      };
+      
+      // ================== STATE ==================
       const state = {
         timeFilter: 'all',
         liqFilter: 'all',
         platformFilter: 'all',
         sort: 'newest',
-        countdown: REFRESH_INTERVAL,
+        countdown: CONFIG.REFRESH_INTERVAL,
         intervalId: null,
         tokens: [],
-        isRateLimited: false,
         isRefreshing: false,
+        isRateLimited: false,
         abortController: null,
-        ageCache: new Map() // In-memory cache for ages
+        ageCache: new Map(),
+        heliusCache: new Map(),
+        currentPage: 1,
+        isLoadingMore: false,
+        hasMore: true,
+        observer: null,
+        lastRefreshTime: 0,
+        charts: new Map(), // Track chart instances
+        chartJsLoaded: false
       };
       
-      // ==================== UTILITY FUNCTIONS ====================
-      const safeStorage = {
-        set: (key, value) => {
-          try {
-            const serialized = typeof value === 'string' ? value : JSON.stringify(value);
-            if (serialized.length > 4 * 1024 * 1024) { // 4MB limit
-              console.warn('Storage quota warning: Data too large');
-              return false;
-            }
-            localStorage.setItem(key, serialized);
-            return true;
-          } catch (e) {
-            if (e.name === 'QuotaExceededError') {
-              // Clear old data and retry
-              localStorage.removeItem(STORAGE.TOKENS);
-              localStorage.removeItem(STORAGE.AGE);
-            }
-            return false;
+      // ================== CHART.JS LAZY LOAD ==================
+      const loadChartJs = () => {
+        return new Promise((resolve, reject) => {
+          if (state.chartJsLoaded || typeof Chart !== 'undefined') {
+            state.chartJsLoaded = true;
+            resolve();
+            return;
           }
-        },
-        get: (key) => {
-          try {
-            return localStorage.getItem(key);
-          } catch (e) {
-            return null;
-          }
-        },
-        remove: (key) => {
-          try {
-            localStorage.removeItem(key);
-          } catch (e) {}
+          
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+          script.onload = () => {
+            state.chartJsLoaded = true;
+            resolve();
+          };
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      };
+      
+      // ================== VALIDATION ==================
+      const isValidSolanaAddress = (address) => {
+        if (!address || typeof address !== 'string') return false;
+        // Base58 alphabet: 1-9, A-H, J-N, P-Z, a-k, m-z (no 0, O, I, l)
+        return address.length >= 32 && address.length <= 44 && 
+               /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
+      };
+      
+      const isValidUrl = (url) => {
+        if (!url) return false;
+        try {
+          const parsed = new URL(url);
+          return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+        } catch {
+          return false;
         }
       };
       
-      const escapeHtml = (text) => {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-      };
-      
-      const safeId = (str) => {
-        if (!str) return 'unknown';
-        return 'age-' + str.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 20);
-      };
-      
+      // ================== UTILS ==================
       const formatNumber = (num) => {
-        if (num === undefined || num === null) return '0';
-        if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+        if (num === null || num === undefined) return '0';
+        if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+        if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
         if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
         return num.toString();
       };
       
-      const debounce = (func, wait) => {
-        let timeout;
-        return (...args) => {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => func.apply(this, args), wait);
-        };
+      const formatAge = (minutes) => {
+        if (minutes === null || minutes === undefined || isNaN(minutes)) return '?';
+        if (minutes < 1) return '<1m';
+        if (minutes < 60) return `${Math.round(minutes)}m`;
+        const hours = Math.floor(minutes / 60);
+        const mins = Math.round(minutes % 60);
+        return `${hours}h ${mins}m`;
       };
       
-      // ==================== DOM HELPERS ====================
       const getElement = (id) => document.getElementById(id);
-      const showLoader = (message = 'Loading...') => {
-        const grid = getElement('tokenGrid');
-        if (grid) grid.innerHTML = `<div class="loader">${escapeHtml(message)}</div>`;
-      };
       
-      const showError = (message, isRateLimit = false) => {
-        const grid = getElement('tokenGrid');
-        if (grid) {
-          grid.innerHTML = `<div class="empty ${isRateLimit ? 'rate-limit' : 'error-message'}">❌ ${escapeHtml(message)}</div>`;
-        }
-      };
-      
-      const setFilterBarLoading = (isLoading) => {
-        const filterBar = getElement('filterBar');
-        if (filterBar) {
-          filterBar.classList.toggle('loading', isLoading);
-        }
-      };
-      
-      const setRefreshButtonDisabled = (disabled) => {
-        const btn = getElement('refreshBtn');
-        if (btn) btn.disabled = disabled;
-      };
-      
-      // ==================== TOKEN AGE CALCULATION ====================
-      const calculateTokenAge = (createdTimestamp) => {
-        if (!createdTimestamp || isNaN(createdTimestamp)) return 0;
-        
-        try {
-          const now = Date.now();
-          const timestamp = createdTimestamp > 1e12 ? createdTimestamp : createdTimestamp * 1000;
-          
-          if (timestamp > now || timestamp < 1600000000000) {
-            return 0;
+      const checkOnline = () => {
+        if (!navigator.onLine) {
+          try {
+            const cached = localStorage.getItem(CONFIG.STORAGE.TOKENS);
+            if (cached) {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                state.tokens = parsed;
+                renderTokens(getCurrentFilteredTokens().slice(0, 50));
+                Toast.show('Offline mode - showing cached data', 'info');
+                return true;
+              }
+            }
+          } catch (e) {
+            console.warn('Cache read failed:', e);
           }
+          Toast.show('No internet connection', 'error');
+          return false;
+        }
+        return true;
+      };
+      
+      // ================== CACHE CLEANUP ==================
+      const cleanupCaches = () => {
+        if (state.ageCache.size > CONFIG.MAX_CACHE_SIZE) {
+          const entries = Array.from(state.ageCache.entries())
+            .sort((a, b) => b[1].timestamp - a[1].timestamp);
           
-          return Math.round((now - timestamp) / 60000);
-        } catch {
-          return 0;
+          const newCache = new Map(entries.slice(0, CONFIG.MAX_CACHE_SIZE));
+          state.ageCache = newCache;
+        }
+        
+        if (state.heliusCache.size > CONFIG.MAX_CACHE_SIZE) {
+          const entries = Array.from(state.heliusCache.entries())
+            .sort((a, b) => b[1].timestamp - a[1].timestamp);
+          
+          const newCache = new Map(entries.slice(0, CONFIG.MAX_CACHE_SIZE));
+          state.heliusCache = newCache;
         }
       };
       
-      const fetchTokenAge = async (address) => {
-        if (!address || address === 'address_not_available') return null;
+      // ================== DESTROY ALL CHARTS ==================
+      const destroyAllCharts = () => {
+        if (typeof Chart === 'undefined') return;
         
-        // Check in-memory cache first
-        const addressLower = address.toLowerCase();
-        if (state.ageCache.has(addressLower)) {
-          const cached = state.ageCache.get(addressLower);
-          if (Date.now() - cached.timestamp < AGE_CACHE_TTL) {
-            return cached.age;
+        document.querySelectorAll('canvas.sparkline-canvas').forEach(canvas => {
+          try {
+            const chart = Chart.getChart(canvas);
+            if (chart) {
+              chart.destroy();
+            }
+          } catch (e) {
+            console.warn('Failed to destroy chart:', e);
           }
+        });
+        state.charts.clear();
+      };
+      
+      // ================== TOAST ==================
+      class Toast {
+        static show(message, type = 'success', duration = 3000) {
+          // Escape message to prevent XSS
+          const safeMessage = escapeHtml(message);
+          
+          const container = getElement('toastContainer') || (() => {
+            const div = document.createElement('div');
+            div.className = 'toast-container';
+            div.id = 'toastContainer';
+            document.body.appendChild(div);
+            return div;
+          })();
+          
+          const toast = document.createElement('div');
+          toast.className = `toast toast-${type}`;
+          toast.setAttribute('role', 'alert');
+          toast.textContent = safeMessage; // Use textContent instead of innerHTML
+          
+          container.appendChild(toast);
+          
+          const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+              toast.style.animation = 'slideOut 0.3s ease forwards';
+              setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+              }, 300);
+              document.removeEventListener('keydown', handleEscape);
+            }
+          };
+          document.addEventListener('keydown', handleEscape);
+          
+          setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease forwards';
+            setTimeout(() => {
+              if (toast.parentNode) toast.remove();
+              document.removeEventListener('keydown', handleEscape);
+            }, 300);
+          }, duration);
         }
-        
-        // Check localStorage cache
+      }
+      
+      // ================== THEME ==================
+      const initTheme = () => {
         try {
-          const cacheData = safeStorage.get(STORAGE.AGE);
-          if (cacheData) {
-            const ageCache = JSON.parse(cacheData);
-            const cached = ageCache[addressLower];
-            if (cached && Date.now() - cached.timestamp < AGE_CACHE_TTL) {
-              state.ageCache.set(addressLower, cached);
-              return cached.age;
+          const saved = localStorage.getItem(CONFIG.STORAGE.THEME);
+          const themeToggle = getElement('themeToggle');
+          
+          if (saved === 'day') {
+            document.body.classList.add('day-mode');
+            if (themeToggle) {
+              themeToggle.textContent = '☀️';
+              themeToggle.setAttribute('aria-pressed', 'true');
+            }
+          } else {
+            if (themeToggle) {
+              themeToggle.textContent = '🌙';
+              themeToggle.setAttribute('aria-pressed', 'false');
             }
           }
         } catch (e) {
-          console.warn('Age cache parse error:', e);
+          console.warn('Theme initialization failed, using default');
+        }
+      };
+      
+      function toggleTheme() {
+        try {
+          document.body.classList.toggle('day-mode');
+          const isDay = document.body.classList.contains('day-mode');
+          localStorage.setItem(CONFIG.STORAGE.THEME, isDay ? 'day' : 'night');
+          
+          const themeToggle = getElement('themeToggle');
+          if (themeToggle) {
+            themeToggle.textContent = isDay ? '☀️' : '🌙';
+            themeToggle.setAttribute('aria-pressed', isDay ? 'true' : 'false');
+          }
+        } catch (e) {
+          console.warn('Theme toggle failed:', e);
+        }
+      }
+      
+      // ================== SPARKLINE CREATION (lazy loaded) ==================
+      const createSparkline = async (canvasId, data) => {
+        try {
+          await loadChartJs();
+        } catch (e) {
+          console.warn('Failed to load Chart.js:', e);
+          return null;
         }
         
-        // Fetch from API
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return null;
+        
         try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
+          // Destroy existing chart if any
+          const existingChart = Chart.getChart(canvas);
+          if (existingChart) {
+            existingChart.destroy();
+          }
           
-          const res = await fetch('https://cryptobros-backend.onrender.com/api/goplus/token-security', {
+          const chart = new Chart(canvas, {
+            type: 'line',
+            data: {
+              labels: data.map((_, i) => i),
+              datasets: [{
+                data: data,
+                borderColor: '#FFD700',
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.4
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: { x: { display: false }, y: { display: false } }
+            }
+          });
+          state.charts.set(canvasId, chart);
+          return chart;
+        } catch (e) {
+          console.warn('Failed to create sparkline:', e);
+          return null;
+        }
+      };
+      
+      // ================== API CALLS WITH RETRY ==================
+      const fetchWithRetry = async (url, options = {}, retries = CONFIG.MAX_RETRIES) => {
+        for (let i = 0; i < retries; i++) {
+          try {
+            return await fetchWithTimeout(url, options);
+          } catch (error) {
+            if (i === retries - 1) throw error;
+            await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)));
+          }
+        }
+      };
+      
+      const fetchWithTimeout = async (url, options = {}, externalSignal = null) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
+        
+        try {
+          const response = await fetch(url, {
+            ...options,
+            signal: externalSignal || controller.signal,
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+              ...options.headers
+            }
+          });
+          clearTimeout(timeoutId);
+          return response;
+        } catch (error) {
+          clearTimeout(timeoutId);
+          if (error.name === 'AbortError') {
+            throw new Error('Request timeout');
+          }
+          throw error;
+        }
+      };
+      
+      const fetchGoPlusAge = async (address) => {
+        if (!address || !isValidSolanaAddress(address)) return null;
+        
+        const cacheKey = `goplus_${address}`;
+        if (state.ageCache.has(cacheKey)) {
+          return state.ageCache.get(cacheKey).value;
+        }
+        
+        try {
+          const response = await fetchWithRetry(`${CONFIG.BACKEND_URL}/api/goplus/token-security`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              chain_id: 'solana', 
-              contract_addresses: address 
-            }),
-            signal: controller.signal
+            body: JSON.stringify({
+              chain_id: 'solana',
+              contract_addresses: address
+            })
           });
           
-          clearTimeout(timeoutId);
-          
-          if (!res.ok) throw new Error('API error');
-          
-          const data = await res.json();
-          const result = data.result?.[addressLower];
-          
-          if (result?.creation_timestamp && result.creation_timestamp > 0) {
-            const age = result.creation_timestamp * 1000;
-            const cacheEntry = { age, timestamp: Date.now() };
-            
-            // Update caches
-            state.ageCache.set(addressLower, cacheEntry);
-            
-            try {
-              const storageCache = JSON.parse(safeStorage.get(STORAGE.AGE) || '{}');
-              storageCache[addressLower] = cacheEntry;
-              safeStorage.set(STORAGE.AGE, JSON.stringify(storageCache));
-            } catch (e) {}
-            
-            return age;
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
           }
-          return null;
+          
+          const data = await response.json();
+          if (data.code === 1 && data.result?.[address]) {
+            const ts = data.result[address].creation_timestamp;
+            if (ts && !isNaN(parseInt(ts))) {
+              const timestamp = parseInt(ts) * 1000;
+              const validated = validateTimestamp(timestamp);
+              if (validated) {
+                state.ageCache.set(cacheKey, {
+                  value: validated,
+                  timestamp: Date.now()
+                });
+                cleanupCaches();
+                return validated;
+              }
+            }
+          }
         } catch (e) {
-          console.warn('Error fetching token age:', e);
-          return null;
+          console.warn('GoPlus error:', e.message);
         }
+        return null;
       };
       
-      // ==================== THEME ====================
-      const toggleTheme = () => {
-        const body = document.body;
-        body.classList.toggle('day-mode');
-        const isDay = body.classList.contains('day-mode');
-        safeStorage.set(STORAGE.THEME, isDay ? 'day' : 'night');
+      const fetchHeliusHolders = async (address) => {
+        if (!address || !isValidSolanaAddress(address)) return null;
         
-        const toggle = getElement('themeToggle');
-        if (toggle) toggle.textContent = isDay ? '☀️' : '🌙';
+        const cacheKey = `helius_${address}`;
+        if (state.heliusCache.has(cacheKey)) {
+          const cached = state.heliusCache.get(cacheKey);
+          if (Date.now() - cached.timestamp < CONFIG.AGE_CACHE_TTL) {
+            return cached.value;
+          }
+        }
+        
+        try {
+          const response = await fetchWithRetry(`${CONFIG.BACKEND_URL}/api/helius/token-accounts`, {
+            method: 'POST',
+            body: JSON.stringify({ mint: address })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          
+          const data = await response.json();
+          if (data.result) {
+            const result = {
+              count: data.result.holderCount || 0,
+              topConcentration: data.result.topConcentration || 0
+            };
+            state.heliusCache.set(cacheKey, {
+              value: result,
+              timestamp: Date.now()
+            });
+            cleanupCaches();
+            return result;
+          }
+        } catch (e) {
+          console.warn('Helius error:', e.message);
+        }
+        return null;
       };
       
-      const initTheme = () => {
-        const savedTheme = safeStorage.get(STORAGE.THEME);
-        if (savedTheme === 'day') {
-          document.body.classList.add('day-mode');
-          const toggle = getElement('themeToggle');
-          if (toggle) toggle.textContent = '☀️';
+      const fetchTokens = async () => {
+        if (!checkOnline()) return [];
+        
+        try {
+          const response = await fetchWithRetry('https://api.dexscreener.com/latest/dex/search?q=Solana');
+          
+          if (!response.ok) {
+            if (response.status === 429) {
+              state.isRateLimited = true;
+              setTimeout(() => { state.isRateLimited = false; }, CONFIG.RATE_LIMIT_COOLDOWN);
+              throw new Error('Rate limit exceeded');
+            }
+            throw new Error(`HTTP ${response.status}`);
+          }
+          
+          const data = await response.json();
+          
+          if (!data.pairs) return [];
+          
+          return data.pairs
+            .filter(p => p.chainId === 'solana')
+            .slice(0, 50)
+            .map(p => ({
+              address: p.baseToken?.address,
+              symbol: String(p.baseToken?.symbol || '???').substring(0, 20),
+              pairCreatedAt: p.pairCreatedAt ? validateTimestamp(p.pairCreatedAt) : null,
+              liquidity: p.liquidity?.usd || 0,
+              volume24h: p.volume?.h24 || 0,
+              priceChange5m: p.priceChange?.m5 || 0,
+              fdv: p.fdv || 0,
+              platform: p.dexId || 'unknown',
+              url: p.url || ''
+            }))
+            .filter(t => t.address && isValidSolanaAddress(t.address));
+        } catch (error) {
+          console.error('DexScreener error:', error);
+          if (error.message === 'Rate limit exceeded') {
+            Toast.show('Rate limit reached. Please wait...', 'info');
+          } else {
+            Toast.show(error.message === 'Request timeout' ? 'Request timeout' : 'Failed to fetch tokens', 'error');
+          }
+          return [];
         }
       };
       
-      // ==================== TOKEN RENDERING ====================
-      const renderTokens = (tokens) => {
+      // ================== LOAD TOKENS ==================
+      const loadTokens = async (force = false) => {
+        // Complete blocking for rate limit and concurrent refreshes
+        if (state.isRateLimited || state.isRefreshing) {
+          Toast.show('Already refreshing or rate limited. Please wait...', 'info');
+          return;
+        }
+        
+        if (!checkOnline()) return;
+        
+        state.isRefreshing = true;
+        state.lastRefreshTime = Date.now();
+        state.abortController = new AbortController();
+        
+        const grid = getElement('tokenGrid');
+        const filterBar = getElement('filterBar');
+        const refreshBtn = getElement('refreshBtn');
+        
+        if (filterBar) filterBar.classList.add('loading');
+        if (refreshBtn) refreshBtn.disabled = true;
+        
+        try {
+          if (grid) grid.innerHTML = '<div class="loader">LOADING FRESH TOKENS...</div>';
+          
+          const tokens = await fetchTokens();
+          const enriched = [];
+          
+          for (let i = 0; i < tokens.length; i += CONFIG.BATCH_SIZE) {
+            if (state.abortController.signal.aborted) {
+              throw new Error('Request aborted');
+            }
+            
+            const batch = tokens.slice(i, i + CONFIG.BATCH_SIZE);
+            
+            const batchPromises = batch.map(async (token) => {
+              try {
+                const [exactAge, holders] = await Promise.allSettled([
+                  fetchGoPlusAge(token.address),
+                  fetchHeliusHolders(token.address)
+                ]);
+                
+                return {
+                  ...token,
+                  exactAge: exactAge.status === 'fulfilled' ? exactAge.value : null,
+                  holders: holders.status === 'fulfilled' ? holders.value?.count : null,
+                  topHolder: holders.status === 'fulfilled' ? holders.value?.topConcentration : null,
+                  ageSource: exactAge.status === 'fulfilled' && exactAge.value ? 'goplus' : 'dex',
+                  ageMinutes: token.pairCreatedAt ? 
+                    Math.round((Date.now() - token.pairCreatedAt) / 60000) : null
+                };
+              } catch (e) {
+                console.warn(`Failed to enrich ${token.address}:`, e);
+                return token;
+              }
+            });
+            
+            if (state.abortController.signal.aborted) {
+              throw new Error('Request aborted');
+            }
+            
+            const batchResults = await Promise.allSettled(batchPromises);
+            batchResults.forEach(result => {
+              if (result.status === 'fulfilled') {
+                enriched.push(result.value);
+              }
+            });
+            
+            if (grid && i + CONFIG.BATCH_SIZE < tokens.length) {
+              grid.innerHTML = `<div class="loader">PROCESSING ${Math.min(i + CONFIG.BATCH_SIZE, tokens.length)}/${tokens.length} TOKENS...</div>`;
+            }
+          }
+          
+          state.tokens = enriched;
+          state.currentPage = 1;
+          state.hasMore = enriched.length > 50;
+          
+          try {
+            // Store only first 100 tokens to avoid localStorage quota issues
+            localStorage.setItem(CONFIG.STORAGE.TOKENS, JSON.stringify(enriched.slice(0, 100)));
+            localStorage.setItem(CONFIG.STORAGE.TOKENS_TIME, Date.now().toString());
+          } catch (e) {
+            console.warn('Failed to cache tokens:', e);
+          }
+          
+          renderTokens(getCurrentFilteredTokens().slice(0, 50));
+          Toast.show(`Loaded ${enriched.length} tokens`, 'success');
+          
+        } catch (error) {
+          if (error.message !== 'Request aborted') {
+            console.error('Failed to load tokens:', error);
+            if (grid) grid.innerHTML = '<div class="empty error-message">❌ ERROR LOADING TOKENS</div>';
+            Toast.show('Failed to load tokens', 'error');
+          }
+        } finally {
+          state.isRefreshing = false;
+          state.abortController = null;
+          if (filterBar) filterBar.classList.remove('loading');
+          if (refreshBtn) refreshBtn.disabled = false;
+        }
+      };
+      
+      // ================== LOAD MORE ==================
+      const loadMoreTokens = async () => {
+        if (state.isLoadingMore || !state.hasMore || state.isRefreshing) return;
+        if (!state.tokens || state.tokens.length === 0) {
+          state.hasMore = false;
+          return;
+        }
+        
+        state.isLoadingMore = true;
+        
+        try {
+          const start = state.currentPage * 50;
+          const end = start + 50;
+          const filtered = getCurrentFilteredTokens();
+          const nextBatch = filtered.slice(start, end);
+          
+          if (nextBatch.length > 0) {
+            state.currentPage++;
+            renderTokens(nextBatch, true);
+          } else {
+            state.hasMore = false;
+          }
+        } catch (error) {
+          console.error('Error loading more tokens:', error);
+          Toast.show('Failed to load more tokens', 'error');
+        } finally {
+          state.isLoadingMore = false;
+        }
+      };
+      
+      // ================== FILTER ==================
+      const getCurrentFilteredTokens = () => {
+        return state.tokens.filter(t => {
+          let age = null;
+          if (t.exactAge && typeof t.exactAge === 'number') {
+            age = Math.round((Date.now() - t.exactAge) / 60000);
+          } else if (t.ageMinutes !== null && t.ageMinutes !== undefined) {
+            age = t.ageMinutes;
+          }
+          
+          if (state.timeFilter !== 'all' && age !== null) {
+            const max = state.timeFilter === '5m' ? 5 : state.timeFilter === '30m' ? 30 : 60;
+            if (age > max) return false;
+          }
+          
+          if (state.liqFilter !== 'all') {
+            const min = state.liqFilter === '5k' ? 5000 : state.liqFilter === '10k' ? 10000 : 50000;
+            if (t.liquidity < min) return false;
+          }
+          
+          if (state.platformFilter !== 'all') {
+            const plat = String(t.platform).toLowerCase();
+            if (state.platformFilter === 'pump' && !plat.includes('pump')) return false;
+            if (state.platformFilter === 'raydium' && !plat.includes('raydium')) return false;
+          }
+          
+          return true;
+        }).sort((a, b) => {
+          if (state.sort === 'holders') {
+            return (b.holders || 0) - (a.holders || 0);
+          }
+          if (state.sort === 'growth') {
+            return (b.priceChange5m || 0) - (a.priceChange5m || 0);
+          }
+          const aTime = a.exactAge || a.pairCreatedAt || 0;
+          const bTime = b.exactAge || b.pairCreatedAt || 0;
+          return bTime - aTime;
+        });
+      };
+      
+      const debouncedRender = debounce(() => {
+        // Destroy old canvases before rendering
+        destroyAllCharts();
+        
+        const filtered = getCurrentFilteredTokens();
+        
+        const grid = getElement('tokenGrid');
+        if (grid) {
+          grid.innerHTML = '<div class="loader">FILTERING TOKENS...</div>';
+        }
+        
+        renderTokens(filtered.slice(0, 50));
+        state.hasMore = filtered.length > 50;
+        state.currentPage = 1;
+        
+        // Restart countdown after filter
+        startCountdown();
+      }, 300);
+      
+      // ================== RENDER ==================
+      const renderTokens = (tokensToRender, append = false) => {
         const grid = getElement('tokenGrid');
         if (!grid) return;
         
-        if (!tokens || tokens.length === 0) {
-          grid.innerHTML = '<div class="empty">🔍 No matches found</div>';
+        // Destroy old canvases before rendering to prevent memory leaks
+        destroyAllCharts();
+        
+        const oldTriggers = document.querySelectorAll('.infinite-scroll-trigger');
+        oldTriggers.forEach(trigger => trigger.remove());
+        
+        if (state.observer) {
+          state.observer.disconnect();
+          state.observer = null;
+        }
+        
+        if (!tokensToRender.length) {
+          if (!append) {
+            grid.innerHTML = '<div class="empty">✨ NO TOKENS FOUND</div>';
+          }
           return;
+        }
+        
+        // Limit total cards to prevent memory issues
+        if (!append) {
+          grid.innerHTML = '';
+        } else {
+          const cards = grid.querySelectorAll('.token-card');
+          if (cards.length > CONFIG.MAX_VISIBLE_CARDS) {
+            for (let i = 0; i < 30; i++) {
+              cards[i]?.remove();
+            }
+          }
         }
         
         const fragment = document.createDocumentFragment();
         
-        tokens.forEach((item, index) => {
-          const address = item.address || 'address_not_available';
-          const safeAddress = escapeHtml(address);
-          const displayAddress = address !== 'address_not_available' 
-            ? `${address.slice(0, 8)}...${address.slice(-6)}` 
-            : 'Address N/A';
+        tokensToRender.forEach(t => {
+          let ageValue = null;
           
-          const ageMin = calculateTokenAge(item.created_timestamp);
-          const platform = (item.platform || '').toLowerCase();
-          
-          // Build tags
-          let tagsHtml = '';
-          if (platform.includes('pump')) {
-            tagsHtml += '<span class="tag tag-pump">pump.fun</span>';
-          }
-          if (platform.includes('raydium')) {
-            tagsHtml += '<span class="tag tag-raydium">Raydium</span>';
+          if (t.exactAge && typeof t.exactAge === 'number') {
+            ageValue = Math.round((Date.now() - t.exactAge) / 60000);
+          } else if (t.ageMinutes !== null && t.ageMinutes !== undefined) {
+            ageValue = t.ageMinutes;
           }
           
-          // Format price change
-          let priceChangeHtml = '<div>📈 5m: N/A</div>';
-          if (item.price_change_5m && !isNaN(item.price_change_5m)) {
-            const priceChangeValue = (item.price_change_5m * 100).toFixed(2);
-            const changeClass = item.price_change_5m >= 0 ? 'positive' : 'negative';
-            priceChangeHtml = `<div>📈 5m: <span class="${changeClass}">${priceChangeValue}%</span></div>`;
+          // Escape all user-provided content
+          const safeSymbol = escapeHtml(t.symbol);
+          const safeAddress = escapeAttr(t.address);
+          const safeUrl = escapeAttr(t.url);
+          
+          // Build age display safely
+          let ageDisplay;
+          if (t.exactAge && typeof t.exactAge === 'number') {
+            const ageText = ageValue !== null ? formatAge(ageValue) : '?';
+            ageDisplay = `<span style="color: #FFD700">${escapeHtml(ageText)} ⭐</span>`;
+          } else {
+            ageDisplay = escapeHtml(ageValue === null ? '? (est)' : formatAge(ageValue) + ' (est)');
           }
           
-          // Create card element safely
+          const ageSourceBadge = t.exactAge && typeof t.exactAge === 'number' 
+            ? '<span class="source-badge source-goplus">GoPlus</span>' 
+            : '<span class="source-badge source-dex">Dex</span>';
+          
+          const riskClass = t.topHolder && t.topHolder > 20 ? 'risk-high' : 
+                           t.topHolder && t.topHolder > 10 ? 'risk-medium' : 'risk-low';
+          
+          const topHolderDisplay = t.topHolder ? 
+            `<span class="risk-badge ${riskClass}">top ${escapeHtml(t.topHolder.toFixed(1))}%</span>` : '';
+          
+          const holdersDisplay = t.holders ? formatNumber(t.holders) : '?';
+          
+          const platformLower = String(t.platform).toLowerCase();
+          const pumpTag = platformLower.includes('pump') ? '<span class="tag tag-pump">PUMP</span>' : '';
+          const raydiumTag = platformLower.includes('raydium') ? '<span class="tag tag-raydium">RAY</span>' : '';
+          
+          const priceChange = t.priceChange5m || 0;
+          const priceChangeFormatted = (priceChange * 100).toFixed(1);
+          const priceChangeColor = priceChange > 0 ? '#00FF9D' : '#FF4D4D';
+          const priceSign = priceChange > 0 ? '+' : '';
+          
           const card = document.createElement('div');
           card.className = 'token-card';
-          card.dataset.address = address;
-          card.dataset.index = index;
+          card.setAttribute('role', 'article');
+          card.setAttribute('tabindex', '0');
+          card.setAttribute('aria-label', `Token ${safeSymbol}, age ${ageValue !== null ? ageValue : 'unknown'} minutes`);
           
-          // Use createElement for content to avoid XSS
+          // Use innerHTML with all content properly escaped
           card.innerHTML = `
             <div class="token-header">
-              <div class="token-symbol">
-                ${escapeHtml(item.symbol || '???')} 
-                ${ageMin < 10 ? '🔥' : ageMin < 30 ? '⚡' : '🆕'}
-              </div>
+              <div class="token-symbol">${safeSymbol}</div>
               <div class="token-tags">
-                ${tagsHtml}
+                ${pumpTag}
+                ${raydiumTag}
               </div>
             </div>
             <div class="token-info">
-              <div class="token-age-display" data-age-for="${escapeHtml(address)}">⏱️ Loading mint age...</div>
-              <div>💰 MC: $${formatNumber(item.mc || 0)}</div>
-              <div>💧 Liq: $${formatNumber(item.liquidity || 0)}</div>
-              <div>👥 Holders: ${escapeHtml(item.holder_count?.toString() || '?')}</div>
-              ${priceChangeHtml}
+              <div class="info-row">
+                <span class="info-label">⏱️ Age ${ageSourceBadge}</span>
+                <span class="info-value">${ageDisplay}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">👥 Holders <span class="source-badge source-helius">Helius</span></span>
+                <span class="info-value">
+                  ${holdersDisplay}
+                  ${topHolderDisplay}
+                </span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">💰 MC <span class="source-badge source-dex">Dex</span></span>
+                <span class="info-value">$${formatNumber(t.fdv)}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">💧 Liquidity</span>
+                <span class="info-value">$${formatNumber(t.liquidity)}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">📈 5m Change</span>
+                <span class="info-value" style="color: ${priceChangeColor}">
+                  ${priceSign}${priceChangeFormatted}%
+                </span>
+              </div>
             </div>
-            <div class="token-ca" data-ca="${escapeHtml(address)}" title="Click to copy">
-              📋 ${escapeHtml(displayAddress)}
+            <div class="token-ca" data-address="${safeAddress}" role="button" tabindex="0" aria-label="Copy address">
+              📋 ${safeAddress.slice(0, 8)}...${safeAddress.slice(-6)}
             </div>
-            <div class="no-data-placeholder">📊 No chart data</div>
             <div class="token-actions">
-              <button class="action-btn" data-action="analyze" data-ca="${escapeHtml(address)}">🔍 ANALYZE</button>
-              <button class="action-btn" data-action="dexscreener" data-ca="${escapeHtml(address)}">📊 DS</button>
-              <button class="action-btn" data-action="copy" data-ca="${escapeHtml(address)}">📋 COPY</button>
+              <button type="button" class="action-btn analyze-btn" data-address="${safeAddress}" aria-label="Analyze token">ANALYZE</button>
+              <button type="button" class="action-btn dex-btn" data-url="${safeUrl}" aria-label="View on DEX">DEX</button>
             </div>
           `;
           
           fragment.appendChild(card);
         });
         
-        grid.innerHTML = '';
         grid.appendChild(fragment);
+        addCardEventListeners();
+        setupInfiniteScroll();
+      };
+      
+      const addCardEventListeners = () => {
+        document.querySelectorAll('.token-ca').forEach(el => {
+          el.removeEventListener('click', handleCopyAddress);
+          el.removeEventListener('keydown', handleCopyKeydown);
+          el.addEventListener('click', handleCopyAddress);
+          el.addEventListener('keydown', handleCopyKeydown);
+        });
         
-        // Fetch ages for tokens
-        tokens.forEach(item => {
-          if (!item.address || item.address === 'address_not_available') return;
-          
-          const ageElement = document.querySelector(`[data-age-for="${escapeHtml(item.address)}"]`);
-          if (!ageElement) return;
-          
-          fetchTokenAge(item.address).then(creationTimestamp => {
-            if (creationTimestamp) {
-              const ageMinutes = Math.round((Date.now() - creationTimestamp) / 60000);
-              ageElement.textContent = `⏱️ Mint: ${ageMinutes} min ago`;
-              ageElement.style.color = ageMinutes < 60 ? 'var(--neon-red)' : 'var(--neon-green)';
-              ageElement.style.borderLeftColor = ageMinutes < 60 ? 'var(--neon-red)' : 'var(--neon-green)';
-            } else {
-              ageElement.textContent = '⏱️ Age unknown';
-              ageElement.style.color = 'var(--text2)';
-            }
+        document.querySelectorAll('.analyze-btn').forEach(btn => {
+          btn.removeEventListener('click', handleAnalyze);
+          btn.addEventListener('click', handleAnalyze);
+        });
+        
+        document.querySelectorAll('.dex-btn').forEach(btn => {
+          btn.removeEventListener('click', handleDexClick);
+          btn.addEventListener('click', handleDexClick);
+        });
+      };
+      
+      const handleCopyKeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleCopyAddress.call(e.currentTarget, e);
+        }
+      };
+      
+      const fallbackCopy = (text) => {
+        try {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          const success = document.execCommand('copy');
+          document.body.removeChild(textarea);
+          if (success) {
+            Toast.show('Address copied!', 'success');
+            return true;
+          }
+          Toast.show('Failed to copy', 'error');
+          return false;
+        } catch (e) {
+          Toast.show('Failed to copy', 'error');
+          return false;
+        }
+      };
+      
+      const handleCopyAddress = (e) => {
+        e.stopPropagation();
+        const el = e.currentTarget;
+        const addr = el.dataset.address;
+        
+        if (!addr) return;
+        
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(addr).then(() => {
+            Toast.show('Address copied!', 'success');
+            setTimeout(() => el.focus(), 100);
           }).catch(() => {
-            ageElement.textContent = '⏱️ Age error';
-            ageElement.style.color = 'var(--text2)';
+            fallbackCopy(addr);
+            setTimeout(() => el.focus(), 100);
           });
-        });
+        } else {
+          fallbackCopy(addr);
+          setTimeout(() => el.focus(), 100);
+        }
       };
       
-      // ==================== FILTERING ====================
-      const filterAndSortTokens = () => {
-        if (!state.tokens || !state.tokens.length) return [];
+      const handleAnalyze = (e) => {
+        e.stopPropagation();
+        const btn = e.currentTarget;
+        const addr = btn.dataset.address;
         
-        let filtered = state.tokens.filter(t => {
-          const ageMin = calculateTokenAge(t.created_timestamp);
-          const platform = (t.platform || '').toLowerCase();
-          
-          // Time filter
-          if (state.timeFilter !== 'all') {
-            const maxMin = state.timeFilter === '5m' ? 5 : state.timeFilter === '30m' ? 30 : 60;
-            if (ageMin > maxMin) return false;
+        if (addr) {
+          try {
+            sessionStorage.setItem('pendingAnalysis', addr);
+            window.location.href = 'https://www.cryptobros.pro/tribunal.html';
+          } catch (e) {
+            window.location.href = `https://www.cryptobros.pro/tribunal.html?address=${encodeURIComponent(addr)}`;
           }
-          
-          // Liquidity filter
-          if (state.liqFilter !== 'all') {
-            const minLiq = state.liqFilter === '5k' ? 5000 : state.liqFilter === '10k' ? 10000 : 50000;
-            if ((t.liquidity || 0) < minLiq) return false;
-          }
-          
-          // Platform filter
-          if (state.platformFilter !== 'all') {
-            if (state.platformFilter === 'pump' && !platform.includes('pump')) return false;
-            if (state.platformFilter === 'raydium' && !platform.includes('raydium')) return false;
-          }
-          
-          return true;
-        });
-        
-        // Sort
-        filtered.sort((a, b) => {
-          switch (state.sort) {
-            case 'growth':
-              return (b.price_change_5m || 0) - (a.price_change_5m || 0);
-            case 'volume':
-              return (b.volume_24h || 0) - (a.volume_24h || 0);
-            case 'holders': {
-              const aHolders = typeof a.holder_count === 'number' ? a.holder_count : 0;
-              const bHolders = typeof b.holder_count === 'number' ? b.holder_count : 0;
-              return bHolders - aHolders;
-            }
-            default: // newest
-              return (b.created_timestamp || 0) - (a.created_timestamp || 0);
-          }
-        });
-        
-        return filtered;
+        }
       };
       
-      const applyFilters = debounce(() => {
-        setFilterBarLoading(true);
+      const handleDexClick = (e) => {
+        e.stopPropagation();
+        const btn = e.currentTarget;
+        const url = btn.dataset.url;
         
-        // Use setTimeout to prevent UI blocking
-        setTimeout(() => {
-          const filtered = filterAndSortTokens();
-          renderTokens(filtered);
-          setFilterBarLoading(false);
-        }, 50);
-      }, 300);
+        if (url && isValidUrl(url)) {
+          window.open(url, '_blank', 'noopener,noreferrer');
+        } else {
+          Toast.show('Invalid DEX URL', 'error');
+        }
+      };
       
-      // ==================== API CALLS ====================
-      const loadFreshTokens = async (force = false) => {
+      const setupInfiniteScroll = () => {
         const grid = getElement('tokenGrid');
         if (!grid) return;
         
-        if (state.isRateLimited || state.isRefreshing) {
-          showLoader('Please wait...', true);
-          return;
+        if (state.observer) {
+          state.observer.disconnect();
         }
         
-        // Cancel previous request if any
-        if (state.abortController) {
-          state.abortController.abort();
-        }
+        const trigger = document.createElement('div');
+        trigger.className = 'infinite-scroll-trigger';
+        grid.appendChild(trigger);
         
-        state.isRefreshing = true;
-        setFilterBarLoading(true);
-        setRefreshButtonDisabled(true);
-        
-        showLoader('Loading fresh pumps...');
-        
-        // Check cache
-        if (!force) {
-          const cached = safeStorage.get(STORAGE.TOKENS);
-          const cacheTime = safeStorage.get(STORAGE.TOKENS_TIME);
-          
-          if (cached && cacheTime) {
-            const cacheAge = Date.now() - parseInt(cacheTime);
-            if (cacheAge < CACHE_TTL) {
-              try {
-                const parsed = JSON.parse(cached);
-                if (Array.isArray(parsed) && parsed.length) {
-                  state.tokens = parsed.filter(t => t && t.address);
-                  const filtered = filterAndSortTokens();
-                  renderTokens(filtered);
-                  
-                  const cacheInfo = getElement('cacheInfo');
-                  if (cacheInfo) {
-                    cacheInfo.textContent = `📦 Cached ${new Date(parseInt(cacheTime)).toLocaleTimeString()}`;
-                  }
-                  
-                  state.isRefreshing = false;
-                  setFilterBarLoading(false);
-                  setRefreshButtonDisabled(false);
-                  return;
-                }
-              } catch (e) {
-                console.warn('Cache parse error:', e);
-              }
+        state.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && state.hasMore && !state.isLoadingMore && !state.isRefreshing) {
+              loadMoreTokens();
             }
-          }
-        }
-        
-        // Fetch new data
-        state.abortController = new AbortController();
-        
-        try {
-          const timeoutId = setTimeout(() => state.abortController.abort(), API_TIMEOUT);
-          
-          const res = await fetch('https://api.dexscreener.com/latest/dex/pairs/new?chainId=solana&limit=60', {
-            headers: { 'accept': 'application/json' },
-            signal: state.abortController.signal
           });
-          
-          clearTimeout(timeoutId);
-          
-          if (res.status === 429) {
-            state.isRateLimited = true;
-            showError('Rate limited. Waiting 60s...', true);
-            
-            setTimeout(() => {
-              state.isRateLimited = false;
-              loadFreshTokens(true);
-            }, 60000);
-            
-            return;
-          }
-          
-          if (!res.ok) {
-            throw new Error(`HTTP ${res.status}`);
-          }
-          
-          const data = await res.json();
-          
-          if (data.pairs && Array.isArray(data.pairs) && data.pairs.length) {
-            state.isRateLimited = false;
-            
-            state.tokens = data.pairs
-              .map(p => ({
-                address: p.baseToken?.address || '',
-                symbol: p.baseToken?.symbol || '???',
-                created_timestamp: p.pairCreatedAt ? Math.floor(p.pairCreatedAt / 1000) : null,
-                mc: p.fdv || 0,
-                liquidity: p.liquidity?.usd || 0,
-                volume_24h: p.volume?.h24 || 0,
-                holder_count: p.holder_count || '?',
-                platform: p.dexId || 'unknown',
-                price_change_5m: p.priceChange?.m5 || 0,
-                price_change_history: []
-              }))
-              .filter(t => t.address && t.symbol !== '???');
-            
-            // Save to cache
-            safeStorage.set(STORAGE.TOKENS, JSON.stringify(state.tokens));
-            safeStorage.set(STORAGE.TOKENS_TIME, Date.now().toString());
-            
-            const filtered = filterAndSortTokens();
-            renderTokens(filtered);
-            
-            const cacheInfo = getElement('cacheInfo');
-            if (cacheInfo) {
-              cacheInfo.textContent = `🔄 DexScreener • ${new Date().toLocaleTimeString()}`;
-            }
-          } else {
-            showError('No fresh pumps found');
-          }
-        } catch (e) {
-          if (e.name === 'AbortError') {
-            showError('Request timeout');
-          } else {
-            console.error('Loading error:', e);
-            showError('Network error');
-          }
-          
-          // Try to use cache as fallback
-          const cached = safeStorage.get(STORAGE.TOKENS);
-          if (cached) {
-            try {
-              const parsed = JSON.parse(cached);
-              if (Array.isArray(parsed) && parsed.length) {
-                state.tokens = parsed.filter(t => t && t.address);
-                const filtered = filterAndSortTokens();
-                renderTokens(filtered);
-                
-                const cacheInfo = getElement('cacheInfo');
-                if (cacheInfo) {
-                  cacheInfo.textContent = `📦 Offline mode (cached)`;
-                }
-              }
-            } catch (parseError) {}
-          }
-        } finally {
-          state.isRefreshing = false;
-          setFilterBarLoading(false);
-          setRefreshButtonDisabled(false);
-          state.abortController = null;
-        }
+        }, { threshold: 0.5, rootMargin: '100px' });
+        
+        state.observer.observe(trigger);
       };
       
-      // ==================== ACTIONS ====================
-      const handleCardClick = (e) => {
-        const card = e.target.closest('.token-card');
-        if (!card) return;
-        
-        const address = card.dataset.address;
-        if (!address || address === 'address_not_available') return;
-        
-        // Handle button clicks
-        if (e.target.closest('[data-action]')) {
-          const button = e.target.closest('[data-action]');
-          const action = button.dataset.action;
-          const ca = button.dataset.ca || address;
-          
-          e.stopPropagation();
-          
-          switch (action) {
-            case 'analyze':
-              analyzeToken(ca);
-              break;
-            case 'dexscreener':
-              window.open(`https://dexscreener.com/solana/${encodeURIComponent(ca)}`, '_blank');
-              break;
-            case 'copy':
-              copyCA(ca);
-              break;
-          }
-          return;
-        }
-        
-        // Handle CA click
-        if (e.target.closest('.token-ca')) {
-          e.stopPropagation();
-          copyCA(address);
-          return;
-        }
-        
-        // Default: analyze
-        analyzeToken(address);
-      };
-      
-      const analyzeToken = (ca) => {
-        if (!ca || ca === 'address_not_available') {
-          alert('❌ No address available');
-          return;
-        }
-        
-        try {
-          safeStorage.set(STORAGE.PENDING, ca);
-          window.location.href = 'https://www.cryptobros.pro/tribunal.html';
-        } catch (e) {
-          window.location.href = `https://www.cryptobros.pro/tribunal.html?ca=${encodeURIComponent(ca)}`;
-        }
-      };
-      
-      const copyCA = async (ca) => {
-        if (!ca || ca === 'address_not_available') {
-          alert('❌ No address available');
-          return;
-        }
-        
-        try {
-          if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(ca);
-            alert('✅ Copied to clipboard!');
-          } else {
-            // Fallback
-            const textarea = document.createElement('textarea');
-            textarea.value = ca;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            alert('✅ Copied to clipboard!');
-          }
-        } catch (err) {
-          alert('❌ Failed to copy');
-        }
-      };
-      
-      // ==================== COUNTDOWN ====================
-      const updateTimerDisplay = () => {
-        const timer = getElement('updateTimer');
-        if (timer) {
-          timer.textContent = `⏱️ ${state.countdown} sec`;
-        }
-      };
-      
+      // ================== COUNTDOWN ==================
       const startCountdown = () => {
         if (state.intervalId) {
           clearInterval(state.intervalId);
         }
         
-        state.countdown = REFRESH_INTERVAL;
-        updateTimerDisplay();
-        
         state.intervalId = setInterval(() => {
+          const timer = getElement('updateTimer');
+          if (!timer) return;
+          
           state.countdown--;
-          updateTimerDisplay();
+          timer.textContent = `⏱️ ${state.countdown} SEC`;
           
           if (state.countdown <= 0) {
-            state.countdown = REFRESH_INTERVAL;
-            if (!state.isRefreshing && !state.isRateLimited) {
-              loadFreshTokens();
+            state.countdown = CONFIG.REFRESH_INTERVAL;
+            if (!document.hidden && !state.isRefreshing && !state.isRateLimited) {
+              loadTokens();
             }
           }
         }, 1000);
       };
       
-      const stopCountdown = () => {
-        if (state.intervalId) {
-          clearInterval(state.intervalId);
-          state.intervalId = null;
-        }
-      };
-      
-      // ==================== FILTER LISTENERS ====================
-      const setupFilterListeners = () => {
-        const timeFilter = getElement('timeFilter');
-        const liqFilter = getElement('liqFilter');
-        const platformFilter = getElement('platformFilter');
-        const sortFilter = getElement('sortFilter');
-        
-        if (timeFilter) {
-          timeFilter.addEventListener('change', (e) => {
-            state.timeFilter = e.target.value;
-            applyFilters();
-          });
-        }
-        
-        if (liqFilter) {
-          liqFilter.addEventListener('change', (e) => {
-            state.liqFilter = e.target.value;
-            applyFilters();
-          });
-        }
-        
-        if (platformFilter) {
-          platformFilter.addEventListener('change', (e) => {
-            state.platformFilter = e.target.value;
-            applyFilters();
-          });
-        }
-        
-        if (sortFilter) {
-          sortFilter.addEventListener('change', (e) => {
-            state.sort = e.target.value;
-            applyFilters();
-          });
-        }
-      };
-      
-      // ==================== INITIALIZATION ====================
+      // ================== INIT ==================
       const init = () => {
         initTheme();
         
-        // Event listeners
+        const timeFilterEl = getElement('timeFilter');
+        const liqFilterEl = getElement('liqFilter');
+        const platformFilterEl = getElement('platformFilter');
+        const sortFilterEl = getElement('sortFilter');
+        
+        if (timeFilterEl) state.timeFilter = timeFilterEl.value;
+        if (liqFilterEl) state.liqFilter = liqFilterEl.value;
+        if (platformFilterEl) state.platformFilter = platformFilterEl.value;
+        if (sortFilterEl) state.sort = sortFilterEl.value;
+        
         const themeToggle = getElement('themeToggle');
         if (themeToggle) {
           themeToggle.addEventListener('click', toggleTheme);
+          themeToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggleTheme();
+            }
+          });
+        }
+        
+        if (timeFilterEl) {
+          timeFilterEl.addEventListener('change', (e) => {
+            state.timeFilter = e.target.value;
+            debouncedRender();
+          });
+        }
+        
+        if (liqFilterEl) {
+          liqFilterEl.addEventListener('change', (e) => {
+            state.liqFilter = e.target.value;
+            debouncedRender();
+          });
+        }
+        
+        if (platformFilterEl) {
+          platformFilterEl.addEventListener('change', (e) => {
+            state.platformFilter = e.target.value;
+            debouncedRender();
+          });
+        }
+        
+        if (sortFilterEl) {
+          sortFilterEl.addEventListener('change', (e) => {
+            state.sort = e.target.value;
+            debouncedRender();
+          });
         }
         
         const refreshBtn = getElement('refreshBtn');
         if (refreshBtn) {
-          refreshBtn.addEventListener('click', debounce(() => {
-            state.countdown = REFRESH_INTERVAL;
-            loadFreshTokens(true);
-          }, 1000));
+          refreshBtn.addEventListener('click', () => {
+            // Check rate limit before allowing refresh
+            if (state.isRateLimited || state.isRefreshing) {
+              Toast.show('Already refreshing or rate limited. Please wait...', 'info');
+              return;
+            }
+            state.countdown = CONFIG.REFRESH_INTERVAL;
+            loadTokens(true);
+          });
         }
         
-        const grid = getElement('tokenGrid');
-        if (grid) {
-          grid.addEventListener('click', handleCardClick);
-        }
+        window.addEventListener('online', () => {
+          Toast.show('Back online', 'success');
+        });
         
-        setupFilterListeners();
+        window.addEventListener('offline', () => {
+          Toast.show('Offline mode', 'error');
+        });
         
-        // Load data
-        loadFreshTokens();
+        window.addEventListener('beforeunload', () => {
+          if (state.intervalId) {
+            clearInterval(state.intervalId);
+          }
+          if (state.abortController) {
+            state.abortController.abort();
+          }
+          if (state.observer) {
+            state.observer.disconnect();
+          }
+          destroyAllCharts();
+        });
+        
+        loadTokens();
         startCountdown();
-        
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', stopCountdown);
       };
       
-      // Start when ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
