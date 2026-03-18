@@ -3,7 +3,7 @@
   
   // ================== CONFIG ==================
   const CONFIG = {
-    API_PROXY: 'https://cryptobros-proxy.workers.dev/?url=',
+    API_PROXY: 'https://api.allorigins.win/raw?url=',
     FALLBACK_PROXY: 'https://api.allorigins.win/raw?url=',
     DEXSCREENER_API: 'https://api.dexscreener.com/latest/dex/search',
     REFRESH_INTERVAL: 60,
@@ -23,7 +23,13 @@
     VIRTUAL_SCROLL_BUFFER: 10,
     ESTIMATION_MULTIPLIER: 1.5,
     RATE_LIMIT_CALLS: 10,
-    RATE_LIMIT_WINDOW: 1000
+    RATE_LIMIT_WINDOW: 1000,
+    MAX_HOLDERS_BY_LIQUIDITY: {
+      1000: 100,
+      5000: 500,
+      10000: 1000,
+      50000: 5000
+    }
   };
   
   // ================== STATE ==================
@@ -60,6 +66,7 @@
     nextControllerId: 0,
     ws: null,
     wsReconnectTimer: null,
+    wsPingInterval: null,
     clickHandler: null,
     rateLimit: {
       calls: [],
@@ -74,10 +81,11 @@
     },
     virtualScroll: {
       container: null,
-      itemHeight: 100,
+      itemHeight: 400,
       visibleItems: 0,
       scrollTop: 0,
-      renderTimer: null
+      renderTimer: null,
+      cardHeightMeasured: false
     }
   };
   
@@ -235,14 +243,23 @@
            /^[1-9A-HJ-NP-Za-km-z]+$/.test(address);
   };
   
-  const sleep = (ms) => new Promise(resolve => {
+  const sleep = (ms) => new Promise((resolve) => {
+    if (!state.isMounted) {
+      resolve();
+      return;
+    }
     const timeout = setTimeout(resolve, ms);
     return () => clearTimeout(timeout);
   });
   
   const generateHash = (obj) => {
     try {
-      return btoa(JSON.stringify(obj)).slice(0, 32);
+      if (!obj || typeof obj !== 'object') return Date.now().toString();
+      const str = JSON.stringify(obj);
+      if (str.length > 10000) {
+        return btoa(str.slice(0, 1000)).slice(0, 32);
+      }
+      return btoa(str).slice(0, 32);
     } catch {
       return Date.now().toString();
     }
@@ -424,12 +441,14 @@
           const retryAfter = parseInt(response.headers.get('Retry-After')) || 
                             Math.min(baseDelay * Math.pow(2, i), maxDelay) / 1000;
           await sleep(retryAfter * 1000);
+          if (!state.isMounted) throw new Error('Component unmounted');
           continue;
         }
         
         if (response.status >= 500 && i < retries - 1) {
           const delay = Math.min(baseDelay * Math.pow(2, i) + Math.random() * 1000, maxDelay);
           await sleep(delay);
+          if (!state.isMounted) throw new Error('Component unmounted');
           continue;
         }
         
@@ -453,6 +472,7 @@
         
         const delay = Math.min(baseDelay * Math.pow(2, i) + Math.random() * 1000, maxDelay);
         await sleep(delay);
+        if (!state.isMounted) throw new Error('Component unmounted');
       }
     }
     throw new Error('Max retries exceeded');
@@ -530,6 +550,14 @@
   };
   
   // ================== FIXED processApiQueue ==================
+  const clearQueueAndReject = () => {
+    state.apiQueue.forEach(req => {
+      clearTimeout(req.timeout);
+      req.reject(new Error('Component unmounted'));
+    });
+    state.apiQueue = [];
+  };
+  
   const processApiQueue = async () => {
     if (state.processingQueue || !state.isMounted) return;
     
@@ -540,20 +568,24 @@
         const waitTime = checkRateLimit();
         if (waitTime > 0) {
           await sleep(waitTime);
+          if (!state.isMounted) {
+            clearQueueAndReject();
+            return;
+          }
           continue;
         }
         
         const batch = state.apiQueue.splice(0, CONFIG.BATCH_SIZE);
         
-        const results = await Promise.allSettled(batch.map(async ({ fn, resolve, reject, key, timeout }) => {
+        await Promise.allSettled(batch.map(async ({ fn, resolve, reject, key, timeout }) => {
           clearTimeout(timeout);
           
+          if (!state.isMounted) {
+            reject(new Error('Component unmounted'));
+            return;
+          }
+          
           try {
-            if (!state.isMounted) {
-              reject(new Error('Component unmounted'));
-              return;
-            }
-            
             const result = await fn();
             
             if (!state.isMounted) {
@@ -572,6 +604,10 @@
         
         if (state.isMounted && state.apiQueue.length > 0) {
           await sleep(300);
+          if (!state.isMounted) {
+            clearQueueAndReject();
+            return;
+          }
         }
       }
     } finally {
@@ -675,14 +711,15 @@
     const MAX_RETRIES = 3;
     
     if (!address || !isValidSolanaAddress(address)) return null;
-    if (!state.apiKeys?.GOPLUS_API_KEY) return null;
+    if (!state.apiKeys?.GOPLUS_API) return null;
     if (!state.isMounted) return null;
     
     const cacheKey = `age_${address}`;
     
     if (state.ageCache.has(cacheKey)) {
       const cached = state.ageCache.get(cacheKey);
-      if (Date.now() - cached.timestamp < CONFIG.CACHE_MAX_AGE) {
+      if (cached.value !== null && cached.value !== undefined && 
+          Date.now() - cached.timestamp < CONFIG.CACHE_MAX_AGE) {
         state.metrics.cacheHits++;
         return cached.value;
       }
@@ -698,7 +735,7 @@
         const response = await fetch(url, {
           signal: controller.signal,
           headers: {
-            'X-API-Key': state.apiKeys.GOPLUS_API_KEY
+            'X-API-Key': state.apiKeys.GOPLUS_API
           }
         });
         
@@ -711,6 +748,7 @@
             const waitTime = 5000 * Math.pow(2, retryCount);
             showToast(`Rate limited, retrying in ${waitTime/1000}s...`, 'warning');
             await sleep(waitTime);
+            if (!state.isMounted) return null;
             return fetchTokenAge(address, retryCount + 1);
           }
           showToast('GoPlus rate limit exceeded', 'error');
@@ -762,7 +800,7 @@
   }
   
   // ================== FETCH TOKEN HOLDERS (Helius) ==================
-  async function fetchTokenHolders(address, retryCount = 0) {
+  async function fetchTokenHolders(address, retryCount = 0, liquidity = 0) {
     const MAX_RETRIES = 3;
     
     if (!address || !isValidSolanaAddress(address)) return null;
@@ -799,7 +837,8 @@
             const waitTime = 5000 * Math.pow(2, retryCount);
             showToast(`Helius rate limited, retrying in ${waitTime/1000}s...`, 'warning');
             await sleep(waitTime);
-            return fetchTokenHolders(address, retryCount + 1);
+            if (!state.isMounted) return null;
+            return fetchTokenHolders(address, retryCount + 1, liquidity);
           }
           showToast('Helius rate limit exceeded', 'error');
           return { count: 0, topConcentration: 0, isEstimate: true };
@@ -848,16 +887,23 @@
           const top20Sum = accounts.reduce((sum, acc) => sum + (acc.uiAmount || 0), 0);
           const top20Percentage = (top20Sum / totalSupply) * 100;
           
+          // Apply liquidity-based cap
+          let maxEstimate = CONFIG.MAX_HOLDERS_ESTIMATE;
+          if (liquidity < 1000) maxEstimate = 100;
+          else if (liquidity < 5000) maxEstimate = 500;
+          else if (liquidity < 10000) maxEstimate = 1000;
+          else if (liquidity < 50000) maxEstimate = 5000;
+          
           if (top20Percentage < 50) {
             estimatedHolders = Math.min(
               Math.round(20 + (totalSupply - top20Sum) / (top20Sum / 20) * CONFIG.ESTIMATION_MULTIPLIER),
-              CONFIG.MAX_HOLDERS_ESTIMATE
+              maxEstimate
             );
             confidence = 'low';
           } else if (top20Percentage < 80) {
             estimatedHolders = Math.min(
               Math.round(20 + (totalSupply - top20Sum) / (top20Sum / 20) * (CONFIG.ESTIMATION_MULTIPLIER / 2)),
-              CONFIG.MAX_HOLDERS_ESTIMATE
+              maxEstimate
             );
             confidence = 'medium';
           } else {
@@ -888,73 +934,102 @@
     }, cacheKey);
   }
   
-  // ================== FIXED WebSocket with cleanup ==================
+  // ================== FIXED WebSocket with proper Helius URL ==================
   function initWebSocket() {
-    if (!state.apiKeys?.HELIUS_WS) return;
+    if (!state.apiKeys?.HELIUS_RPC) return;
+    if (!state.isMounted) return;
+    
+    // Convert HTTPS to WSS
+    const wsUrl = state.apiKeys.HELIUS_RPC.replace('https://', 'wss://');
+    
+    try {
+      new URL(wsUrl);
+    } catch (e) {
+      console.warn('Invalid WebSocket URL:', e.message);
+      return;
+    }
     
     if (state.wsReconnectTimer) {
       clearTimeout(state.wsReconnectTimer);
       state.wsReconnectTimer = null;
     }
     
+    if (state.wsPingInterval) {
+      clearInterval(state.wsPingInterval);
+      state.wsPingInterval = null;
+    }
+    
     if (state.ws) {
       try {
-        state.ws.close(1000, 'Component unmounting');
+        state.ws.close(1000, 'Reconnecting');
       } catch (e) {}
       state.ws = null;
     }
     
     try {
-      const urlObj = new URL(state.apiKeys.HELIUS_WS);
-      if (urlObj.protocol !== 'wss:') {
-        console.warn('WebSocket URL must use wss:// protocol, got:', urlObj.protocol);
-        return;
-      }
-    } catch (e) {
-      console.warn('Invalid WebSocket URL:', e.message);
-      return;
-    }
-    
-    try {
-      const ws = new WebSocket(state.apiKeys.HELIUS_WS);
+      console.log('Connecting to WebSocket:', wsUrl);
+      const ws = new WebSocket(wsUrl);
       
       const connectionTimeout = setTimeout(() => {
         if (ws.readyState !== WebSocket.OPEN) {
+          console.warn('WebSocket connection timeout');
           ws.close();
         }
       }, 5000);
       
       ws.onopen = () => {
         clearTimeout(connectionTimeout);
-        console.log('WebSocket connected');
+        if (!state.isMounted) {
+          ws.close(1000, 'Component unmounted');
+          return;
+        }
+        console.log('✅ WebSocket connected');
         
+        // Subscribe to token creation logs
         const subscribeMsg = {
           jsonrpc: '2.0',
           id: 1,
-          method: 'programSubscribe',
+          method: 'logsSubscribe',
           params: [
-            'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
             {
-              encoding: 'jsonParsed',
+              mentions: ['TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA']
+            },
+            {
               commitment: 'processed'
             }
           ]
         };
         
         ws.send(JSON.stringify(subscribeMsg));
+        console.log('Subscribed to token creation logs');
+        
+        // Setup ping interval to keep connection alive
+        state.wsPingInterval = setInterval(() => {
+          if (ws.readyState === WebSocket.OPEN && state.isMounted) {
+            ws.send(JSON.stringify({ jsonrpc: '2.0', method: 'ping', id: Date.now() }));
+          }
+        }, 30000);
       };
       
       ws.onmessage = (event) => {
+        if (!state.isMounted) return;
+        
         try {
           const data = JSON.parse(event.data);
           
-          if (data.method === 'programNotification' && 
-              data.params?.result?.value?.account?.data?.parsed?.info) {
+          if (data.method === 'logsNotification' && data.params?.result?.value) {
+            const log = data.params.result.value;
             
-            const info = data.params.result.value.account.data.parsed.info;
-            
-            if (info.mint && isValidSolanaAddress(info.mint)) {
-              console.log('New token detected:', info.mint);
+            if (log.logs && log.logs.some(l => 
+              l.includes('initialize mint') || 
+              l.includes('create mint') ||
+              l.includes('Program log: Instruction: MintToChecked')
+            )) {
+              console.log('New token detected!', log.signature);
+              
+              if (!state.isRefreshing && !state.isLoading) {
+                loadTokens();
+              }
             }
           }
         } catch (e) {
@@ -965,14 +1040,16 @@
       ws.onerror = (error) => {
         console.warn('WebSocket error:', error);
         clearTimeout(connectionTimeout);
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.close(1000, 'Error occurred');
-        }
       };
       
       ws.onclose = (event) => {
         clearTimeout(connectionTimeout);
         console.log('WebSocket closed:', event.code, event.reason);
+        
+        if (state.wsPingInterval) {
+          clearInterval(state.wsPingInterval);
+          state.wsPingInterval = null;
+        }
         
         if (state.ws === ws) {
           state.ws = null;
@@ -980,11 +1057,13 @@
         
         if (state.wsReconnectTimer) {
           clearTimeout(state.wsReconnectTimer);
+          state.wsReconnectTimer = null;
         }
         
-        if (state.isMounted && !state.ws && event.code !== 1000) {
+        if (state.isMounted && event.code !== 1000) {
           state.wsReconnectTimer = setTimeout(() => {
             if (state.isMounted && !state.ws) {
+              console.log('Reconnecting WebSocket...');
               initWebSocket();
             }
           }, CONFIG.WS_RECONNECT_DELAY);
@@ -998,7 +1077,7 @@
     }
   }
   
-  // ================== FETCH WITH PROXY ==================
+  // ================== FETCH WITH PROXY (FIXED - NO RECURSION) ==================
   async function fetchWithProxy(url) {
     if (!state.isMounted) throw new Error('Component unmounted');
     
@@ -1068,7 +1147,10 @@
         }
       }
       
-      await sleep(1000 * Math.pow(2, attempt));
+      if (attempt < CONFIG.MAX_PROXY_RETRIES - 1) {
+        await sleep(1000 * Math.pow(2, attempt));
+        if (!state.isMounted) throw new Error('Component unmounted');
+      }
     }
     
     throw new Error('All proxies failed');
@@ -1206,7 +1288,7 @@
           try {
             const [ageResult, holdersResult] = await Promise.allSettled([
               fetchTokenAge(token.address),
-              fetchTokenHolders(token.address)
+              fetchTokenHolders(token.address, 0, token.liquidity)
             ]);
             
             if (!state.isMounted) return null;
@@ -1250,6 +1332,7 @@
       state.lastTokensHash = generateHash(enriched);
       state.filteredTokens = getFilteredTokens();
       
+      measureCardHeight();
       renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
       
       showToast(`Loaded ${enriched.length} tokens`, 'success');
@@ -1268,6 +1351,45 @@
       if (refreshBtn) refreshBtn.disabled = false;
       if (loadMoreBtn) loadMoreBtn.disabled = false;
     }
+  };
+  
+  // ================== MEASURE CARD HEIGHT FOR VIRTUAL SCROLL ==================
+  const measureCardHeight = () => {
+    if (state.virtualScroll.cardHeightMeasured) return;
+    
+    const grid = getElement('tokenGrid');
+    if (!grid) return;
+    
+    const testCard = createTokenCard({
+      address: 'test',
+      symbol: 'TEST',
+      pairCreatedAt: Date.now(),
+      liquidity: 10000,
+      priceChange5m: 5,
+      fdv: 100000,
+      platform: 'raydium',
+      url: '#',
+      holders: 100,
+      topHolder: 15,
+      holdersIsEstimate: true,
+      holdersConfidence: 'medium'
+    });
+    
+    testCard.style.visibility = 'hidden';
+    testCard.style.position = 'absolute';
+    grid.appendChild(testCard);
+    
+    const height = testCard.offsetHeight;
+    if (height > 0) {
+      state.virtualScroll.itemHeight = height;
+      state.virtualScroll.cardHeightMeasured = true;
+    }
+    
+    testCard.remove();
+    
+    const containerHeight = grid.clientHeight;
+    state.virtualScroll.visibleItems = Math.ceil(containerHeight / state.virtualScroll.itemHeight) + 
+                                       CONFIG.VIRTUAL_SCROLL_BUFFER * 2;
   };
   
   // ================== OPTIMIZED FILTER WITH MEMOIZATION ==================
@@ -1348,13 +1470,13 @@
     
     state.virtualScroll.container = grid;
     
-    const updateVisibleItems = () => {
+    if (!state.virtualScroll.cardHeightMeasured) {
+      measureCardHeight();
+    } else {
       const containerHeight = grid.clientHeight;
       state.virtualScroll.visibleItems = Math.ceil(containerHeight / state.virtualScroll.itemHeight) + 
                                          CONFIG.VIRTUAL_SCROLL_BUFFER * 2;
-    };
-    
-    updateVisibleItems();
+    }
     
     const handleScroll = throttle(() => {
       if (!state.isMounted) return;
@@ -1504,8 +1626,9 @@
     let holdersClass = 'source-estimate';
     let holdersTooltip = 'Estimated holders count';
     let confidenceIndicator = '';
+    let confidenceClass = '';
     
-    if (t.holders !== undefined && t.holders !== null) {
+    if (t.holders !== undefined && t.holders !== null && !isNaN(t.holders)) {
       holdersDisplay = formatNumber(t.holders);
       if (t.holdersIsEstimate) {
         holdersClass = 'source-estimate';
@@ -1514,24 +1637,31 @@
         
         if (t.holdersConfidence === 'low') {
           confidenceIndicator = ' ⚠️';
+          confidenceClass = 'confidence-low';
           holdersTooltip += ' - Low confidence estimate';
         } else if (t.holdersConfidence === 'medium') {
           confidenceIndicator = ' 📊';
+          confidenceClass = 'confidence-medium';
           holdersTooltip += ' - Medium confidence';
+        } else {
+          confidenceClass = 'confidence-high';
         }
       } else {
         holdersClass = 'source-helius';
         holdersTooltip = t.holders === 0 ? 'No holders found' : 'Exact holders count';
+        confidenceClass = 'confidence-exact';
       }
     }
     
-    let riskClass = 'risk-low';
-    if (t.topHolder && t.topHolder > 20) riskClass = 'risk-high';
-    else if (t.topHolder && t.topHolder > 10) riskClass = 'risk-medium';
-    
-    const topHolderDisplay = t.topHolder 
-      ? `<span class="risk-badge ${riskClass}" title="Top 10 holders concentration">top ${escapeHtml(t.topHolder.toFixed(1))}%</span>` 
-      : '';
+    let topHolderDisplay = '';
+    if (t.topHolder && !isNaN(t.topHolder) && t.topHolder > 0) {
+      const topHolderValue = Number(t.topHolder).toFixed(1);
+      let riskClass = 'risk-low';
+      if (t.topHolder > 20) riskClass = 'risk-high';
+      else if (t.topHolder > 10) riskClass = 'risk-medium';
+      
+      topHolderDisplay = `<span class="risk-badge ${riskClass}" title="Top 10 holders concentration">top ${escapeHtml(topHolderValue)}%</span>`;
+    }
     
     const card = document.createElement('div');
     card.className = 'token-card';
@@ -1576,7 +1706,7 @@
     const holdersRow = document.createElement('div');
     holdersRow.className = 'info-row';
     holdersRow.innerHTML = `
-      <span class="info-label">👥 Holders <span class="source-badge ${holdersClass}" title="${escapeTooltip(holdersTooltip)}">${t.holdersIsEstimate ? 'est' : 'exact'}${escapeHtml(confidenceIndicator)}</span></span>
+      <span class="info-label">👥 Holders <span class="source-badge ${holdersClass} ${confidenceClass}" title="${escapeTooltip(holdersTooltip)}">${t.holdersIsEstimate ? 'est' : 'exact'}${escapeHtml(confidenceIndicator)}</span></span>
       <span class="info-value">
         ${escapeHtml(holdersDisplay)}
         ${topHolderDisplay}
@@ -1829,17 +1959,18 @@
     
     abortAllRequests();
     
-    state.apiQueue.forEach(req => {
-      if (req.timeout) clearTimeout(req.timeout);
-    });
-    state.apiQueue = [];
-    state.pendingRequests.clear();
+    clearQueueAndReject();
     
     if (state.ws) {
       try {
         state.ws.close(1000, 'Component unmounting');
       } catch (e) {}
       state.ws = null;
+    }
+    
+    if (state.wsPingInterval) {
+      clearInterval(state.wsPingInterval);
+      state.wsPingInterval = null;
     }
     
     if (state.wsReconnectTimer) {
@@ -1873,6 +2004,7 @@
       }
     }
     
+    state.rateLimit.calls = [];
     state.ageCache.clear();
     state.holdersCache.clear();
     state.tokens = [];
@@ -1915,11 +2047,16 @@
     initFilters();
     setupEventDelegation();
     
-    setTimeout(() => {
-      if (state.isMounted) {
-        initVirtualScroll();
-      }
-    }, 100);
+    // Initialize virtual scroll after DOM is ready
+    if (document.readyState === 'complete') {
+      initVirtualScroll();
+    } else {
+      window.addEventListener('load', () => {
+        if (state.isMounted) {
+          initVirtualScroll();
+        }
+      });
+    }
     
     await loadApiKeys();
     loadTokens();
