@@ -647,31 +647,70 @@
         const response = await fetchWithTimeout(url);
         const html = await response.text();
         
-        const match = html.match(/API_KEYS\s*=\s*(\{[\s\S]*?\});/);
-        if (match) {
-          let jsonStr = match[1]
-            .replace(/\/\/.*$/gm, '')
-            .replace(/\/\*[\s\S]*?\*\//g, '');
-          
-          const keys = JSON.parse(jsonStr);
-          
-          if (keys && keys.GOPLUS_API && keys.HELIUS_RPC) {
-            console.log('✅ API keys loaded via proxy');
-            
-            const encrypted = encryptKeys(keys);
-            if (encrypted) {
-              safeLocalStorage.setItem('api_keys_enc', encrypted);
-            }
-            
-            state.apiKeys = keys;
-            return keys;
-          }
+        // Pattern 1: const API_KEYS = { ... };
+        let match = html.match(/const\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/);
+        
+        // Pattern 2: let API_KEYS = { ... };
+        if (!match) {
+          match = html.match(/let\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/);
         }
+        
+        // Pattern 3: var API_KEYS = { ... };
+        if (!match) {
+          match = html.match(/var\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/);
+        }
+        
+        // Pattern 4: API_KEYS = { ... };
+        if (!match) {
+          match = html.match(/API_KEYS\s*=\s*(\{[\s\S]*?\});/);
+        }
+        
+        if (!match) {
+          console.warn('No API_KEYS pattern found in HTML');
+          continue;
+        }
+        
+        // Clean up the JSON string
+        let jsonStr = match[1]
+          .replace(/\/\/.*$/gm, '') // Remove single line comments
+          .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
+          .replace(/'/g, '"') // Replace single quotes with double quotes
+          .replace(/(\w+):/g, '"$1":') // Add quotes to property names
+          .replace(/,\s*}/g, '}') // Remove trailing commas
+          .replace(/,\s*]/g, ']'); // Remove trailing commas in arrays
+        
+        // Parse the cleaned JSON
+        const rawKeys = JSON.parse(jsonStr);
+        
+        // Format keys for our app
+        const formattedKeys = {
+          GOPLUS_API: rawKeys.GOPLUS_API_KEY || rawKeys.GOPLUS_API || rawKeys.GOPLUS,
+          HELIUS_RPC: rawKeys.HELIUS_RPC || rawKeys.HELIUS_API_KEY || rawKeys.HELIUS
+        };
+        
+        // Validate
+        if (!formattedKeys.GOPLUS_API || !formattedKeys.HELIUS_RPC) {
+          console.warn('Missing required API keys');
+          continue;
+        }
+        
+        console.log('✅ API keys loaded successfully');
+        
+        // Store encrypted in localStorage
+        const encrypted = encryptKeys(formattedKeys);
+        if (encrypted) {
+          safeLocalStorage.setItem('api_keys_enc', encrypted);
+        }
+        
+        state.apiKeys = formattedKeys;
+        return formattedKeys;
+        
       } catch (e) {
         console.warn(`Failed to load from ${url}:`, e.message);
       }
     }
     
+    // Try localStorage
     const stored = safeLocalStorage.getItem('api_keys_enc');
     if (stored) {
       try {
