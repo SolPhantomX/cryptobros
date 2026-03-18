@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fresh Pumps — CryptoBros</title>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-random123' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src https://fonts.gstatic.com; connect-src 'self' https://api.gopluslabs.io https://mainnet.helius-rpc.com https://api.dexscreener.com wss://atlas-mainnet.helius-rpc.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:; font-src https://fonts.gstatic.com; connect-src *;">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ALL STYLES - same as before */
+    /* ================== ALL STYLES ================== */
     :root {
       --neon-cyan: #00F0FF;
       --neon-purple: #9D00FF;
@@ -39,6 +39,7 @@
       min-height: 100vh;
       padding: 20px;
       overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
     }
     
     body.day-mode {
@@ -82,11 +83,17 @@
       text-decoration: none;
       backdrop-filter: blur(10px);
       transition: all 0.3s;
+      display: inline-block;
+    }
+    
+    .back-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px var(--neon-gold);
     }
     
     h1 {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 4rem;
+      font-size: clamp(2rem, 8vw, 4rem);
       background: linear-gradient(135deg, #FFD700, #FFA500, #00F0FF, #FFD700);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -131,6 +138,22 @@
       font-weight: 600;
       min-width: 140px;
       font-family: 'Quicksand', sans-serif;
+      outline: none;
+    }
+    
+    select option {
+      background: #0a0e27;
+      color: var(--neon-gold);
+    }
+    
+    body.day-mode select {
+      background: rgba(255, 255, 255, 0.9);
+      color: #1a1a2e;
+    }
+    
+    body.day-mode select option {
+      background: #ffffff;
+      color: #1a1a2e;
     }
     
     .token-grid {
@@ -147,6 +170,7 @@
       padding: 1.8rem;
       backdrop-filter: blur(15px);
       transition: all 0.4s;
+      will-change: transform;
     }
     
     .token-card:hover {
@@ -159,6 +183,7 @@
       font-weight: 800;
       color: var(--neon-gold);
       font-family: 'Plus Jakarta Sans', sans-serif;
+      word-break: break-word;
     }
     
     .tag {
@@ -185,6 +210,10 @@
       margin: 1.2rem 0;
     }
     
+    body.day-mode .token-info {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    
     .info-row {
       display: flex;
       justify-content: space-between;
@@ -202,6 +231,10 @@
     .source-goplus { color: #FFD700; }
     .source-helius { color: #00F0FF; }
     .source-dex { color: #00FF9D; }
+    .source-estimate { 
+      background: rgba(255, 153, 0, 0.3);
+      color: #FF9900;
+    }
     
     .risk-badge {
       padding: 0.2rem 0.6rem;
@@ -234,6 +267,17 @@
       cursor: pointer;
       text-align: center;
       margin: 1rem 0;
+      transition: all 0.3s;
+      user-select: all;
+    }
+    
+    .token-ca:hover {
+      background: rgba(255, 215, 0, 0.2);
+    }
+    
+    .token-actions {
+      display: flex;
+      gap: 1rem;
     }
     
     .action-btn {
@@ -246,6 +290,18 @@
       font-weight: 700;
       flex: 1;
       text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    
+    .action-btn:hover:not(:disabled) {
+      background: rgba(255, 215, 0, 0.1);
+      transform: scale(1.02);
+    }
+    
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
     }
     
     .loader, .empty {
@@ -301,6 +357,16 @@
       color: var(--neon-gold);
       padding: 0.5rem 1.5rem;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .refresh-now:hover:not(:disabled) {
+      background: rgba(255, 215, 0, 0.1);
+    }
+    
+    .refresh-now:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     
     .toast-container {
@@ -320,6 +386,8 @@
       backdrop-filter: blur(10px);
       border: 2px solid;
       animation: slideIn 0.3s ease;
+      max-width: 300px;
+      word-break: break-word;
     }
     
     .toast-success {
@@ -340,6 +408,12 @@
       color: #FF9900;
     }
     
+    .toast-info {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: #00F0FF;
+      color: #00F0FF;
+    }
+    
     @keyframes slideIn {
       from {
         transform: translateX(100%);
@@ -349,11 +423,6 @@
         transform: translateX(0);
         opacity: 1;
       }
-    }
-    
-    .token-loading {
-      opacity: 0.6;
-      pointer-events: none;
     }
     
     .load-more-btn {
@@ -366,36 +435,71 @@
       font-weight: 700;
       cursor: pointer;
       margin: 1rem 0;
+      transition: all 0.3s;
+    }
+    
+    .load-more-btn:hover:not(:disabled) {
+      background: rgba(255, 215, 0, 0.1);
+    }
+    
+    .load-more-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .error-message {
+      color: var(--neon-red);
+      font-size: 1.2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .token-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .filter-bar {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      
+      select {
+        width: 100%;
+      }
+      
+      .header {
+        padding: 1rem;
+        border-radius: 30px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <a href="https://www.cryptobros.pro/" class="back-btn" id="backBtn">← BACK</a>
+      <button class="back-btn" id="backBtn">← BACK</button>
       <h1>FRESH PUMPS</h1>
-      <div class="theme-toggle" id="themeToggle">🌙</div>
+      <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</div>
     </div>
 
     <div class="filter-bar">
-      <select id="timeFilter">
+      <select id="timeFilter" aria-label="Time filter">
         <option value="all">⏱️ ALL TIME</option>
         <option value="5m">🔥 5 MIN</option>
         <option value="30m">⚡ 30 MIN</option>
         <option value="1h">🕐 1 HOUR</option>
       </select>
-      <select id="liqFilter">
+      <select id="liqFilter" aria-label="Liquidity filter">
         <option value="all">💰 ALL LIQ</option>
         <option value="5k">💎 >$5K</option>
         <option value="10k">💎 >$10K</option>
         <option value="50k">💎 >$50K</option>
       </select>
-      <select id="platformFilter">
+      <select id="platformFilter" aria-label="Platform filter">
         <option value="all">🌐 ALL</option>
         <option value="pump">🎯 PUMP.FUN</option>
         <option value="raydium">💧 RAYDIUM</option>
       </select>
-      <select id="sortFilter">
+      <select id="sortFilter" aria-label="Sort by">
         <option value="newest">🆕 NEWEST</option>
         <option value="holders">👥 HOLDERS</option>
         <option value="growth">📈 GROWTH</option>
@@ -408,860 +512,12 @@
 
     <div class="update-info">
       <span class="update-timer" id="updateTimer">⏱️ 60 SEC</span>
-      <button class="refresh-now" id="refreshBtn">⟳ REFRESH</button>
+      <button class="refresh-now" id="refreshBtn" aria-label="Refresh tokens">⟳ REFRESH</button>
     </div>
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
-
-  <script nonce="random123">
-    (function() {
-      "use strict";
-      
-      // ================== CONFIG ==================
-      const CONFIG = {
-        HELIUS_API_KEY: 'ba8b3e33-db86-45d3-a693-3a581c79e71f',
-        HELIUS_RPC: 'https://mainnet.helius-rpc.com/?api-key=ba8b3e33-db86-45d3-a693-3a581c79e71f',
-        HELIUS_WS: 'wss://atlas-mainnet.helius-rpc.com?api-key=ba8b3e33-db86-45d3-a693-3a581c79e71f',
-        REFRESH_INTERVAL: 60,
-        REQUEST_TIMEOUT: 8000,
-        BATCH_SIZE: 3,
-        MAX_RETRIES: 2,
-        API_LIMITS: {
-          GOPLUS: { maxPerMinute: 30, count: 0, resetTime: Date.now() + 60000 },
-          HELIUS: { maxPerMinute: 50, count: 0, resetTime: Date.now() + 60000 }
-        },
-        CACHE_MAX_AGE: 15 * 60 * 1000, // 15 minutes
-        TOKENS_PER_PAGE: 20
-      };
-      
-      // ================== STATE ==================
-      const state = {
-        timeFilter: 'all',
-        liqFilter: 'all',
-        platformFilter: 'all',
-        sort: 'newest',
-        countdown: CONFIG.REFRESH_INTERVAL,
-        intervalId: null,
-        tokens: [],
-        filteredTokens: [],
-        displayedTokens: 20,
-        isRefreshing: false,
-        isLoadingMore: false,
-        ageCache: new Map(),
-        heliusCache: new Map(),
-        ws: null,
-        wsReconnectTimer: null,
-        apiQueue: [],
-        processingQueue: false
-      };
-      
-      // ================== SAFE ESCAPE HTML ==================
-      const escapeHtml = (text) => {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-      };
-      
-      // ================== DEBOUNCE WITH ASYNC SUPPORT ==================
-      const debounceAsync = (func, wait) => {
-        let timeout;
-        return function executedFunction(...args) {
-          clearTimeout(timeout);
-          return new Promise((resolve) => {
-            timeout = setTimeout(async () => {
-              resolve(await func.apply(this, args));
-            }, wait);
-          });
-        };
-      };
-      
-      // ================== UTILS ==================
-      const formatNumber = (num) => {
-        if (!num && num !== 0) return '0';
-        if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
-        if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
-        if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
-        return num.toString();
-      };
-      
-      const formatAge = (minutes) => {
-        if (minutes === null || minutes === undefined || isNaN(minutes)) return '?';
-        if (minutes < 1) return '<1m';
-        if (minutes < 60) return Math.round(minutes) + 'm';
-        const hours = Math.floor(minutes / 60);
-        const mins = Math.round(minutes % 60);
-        return `${hours}h ${mins}m`;
-      };
-      
-      const getElement = (id) => document.getElementById(id);
-      
-      const isValidSolanaAddress = (address) => {
-        return address && typeof address === 'string' && 
-               address.length >= 32 && address.length <= 44 && 
-               /^[1-9A-HJ-NP-Za-km-z]+$/.test(address);
-      };
-      
-      // ================== HELIOS API HEALTH CHECK ==================
-      const checkHeliusApiKey = async () => {
-        try {
-          const response = await fetch(CONFIG.HELIUS_RPC, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              jsonrpc: '2.0',
-              id: 'health-check',
-              method: 'getHealth'
-            })
-          });
-          return response.ok;
-        } catch {
-          return false;
-        }
-      };
-      
-      // ================== CACHE CLEANUP ==================
-      const cleanupCache = () => {
-        const now = Date.now();
-        
-        for (const [key, value] of state.ageCache) {
-          if (now - value.timestamp > CONFIG.CACHE_MAX_AGE) {
-            state.ageCache.delete(key);
-          }
-        }
-        
-        for (const [key, value] of state.heliusCache) {
-          if (now - value.timestamp > CONFIG.CACHE_MAX_AGE) {
-            state.heliusCache.delete(key);
-          }
-        }
-      };
-      
-      // Run cache cleanup every 5 minutes
-      setInterval(cleanupCache, 5 * 60 * 1000);
-      
-      // ================== API RATE LIMITER ==================
-      const checkRateLimit = (api) => {
-        const limit = CONFIG.API_LIMITS[api];
-        const now = Date.now();
-        
-        if (now > limit.resetTime) {
-          limit.count = 0;
-          limit.resetTime = now + 60000;
-        }
-        
-        return limit.count < limit.maxPerMinute;
-      };
-      
-      const incrementRateLimit = (api) => {
-        CONFIG.API_LIMITS[api].count++;
-      };
-      
-      // ================== TOAST ==================
-      const showToast = (message, type = 'success') => {
-        const container = getElement('toastContainer');
-        if (!container) return;
-        
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-        container.appendChild(toast);
-        
-        setTimeout(() => {
-          if (toast.parentNode) toast.remove();
-        }, 3000);
-      };
-      
-      window.showToast = showToast;
-      
-      // Safe copy function
-      window.copyAddress = (address) => {
-        navigator.clipboard.writeText(address).then(() => {
-          showToast('Address copied!');
-        }).catch(() => {
-          showToast('Failed to copy', 'error');
-        });
-      };
-      
-      // ================== THEME ==================
-      const initTheme = () => {
-        const themeToggle = getElement('themeToggle');
-        if (!themeToggle) return;
-        
-        const savedTheme = localStorage.getItem('freshTheme');
-        if (savedTheme === 'day') {
-          document.body.classList.add('day-mode');
-          themeToggle.textContent = '☀️';
-        }
-        
-        themeToggle.addEventListener('click', () => {
-          document.body.classList.toggle('day-mode');
-          const isDay = document.body.classList.contains('day-mode');
-          themeToggle.textContent = isDay ? '☀️' : '🌙';
-          localStorage.setItem('freshTheme', isDay ? 'day' : 'night');
-        });
-      };
-      
-      // ================== FETCH WITH TIMEOUT AND RETRY ==================
-      const fetchWithTimeout = async (url, options = {}, retries = CONFIG.MAX_RETRIES) => {
-        for (let i = 0; i < retries; i++) {
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
-          
-          try {
-            const response = await fetch(url, { 
-              ...options, 
-              signal: controller.signal 
-            });
-            clearTimeout(timeout);
-            
-            if (response.status === 429) {
-              const retryAfter = response.headers.get('Retry-After') || 5;
-              await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-              continue;
-            }
-            
-            return response;
-          } catch (error) {
-            clearTimeout(timeout);
-            if (error.name === 'AbortError') {
-              console.warn('Request timeout:', url);
-            }
-            if (i === retries - 1) throw error;
-            await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)));
-          }
-        }
-        throw new Error('Max retries exceeded');
-      };
-      
-      // ================== API QUEUE ==================
-      const processApiQueue = async () => {
-        if (state.processingQueue || state.apiQueue.length === 0) return;
-        
-        state.processingQueue = true;
-        
-        while (state.apiQueue.length > 0) {
-          const { api, fn, resolve, reject } = state.apiQueue.shift();
-          
-          if (!checkRateLimit(api)) {
-            await new Promise(r => setTimeout(r, 1000));
-            state.apiQueue.unshift({ api, fn, resolve, reject });
-            continue;
-          }
-          
-          try {
-            const result = await fn();
-            incrementRateLimit(api);
-            resolve(result);
-          } catch (error) {
-            reject(error);
-          }
-          
-          await new Promise(r => setTimeout(r, 200));
-        }
-        
-        state.processingQueue = false;
-      };
-      
-      const queueApiCall = (api, fn) => {
-        return new Promise((resolve, reject) => {
-          state.apiQueue.push({ api, fn, resolve, reject });
-          processApiQueue();
-        });
-      };
-      
-      // ================== GOPLUS API ==================
-      const fetchGoPlusAge = async (address) => {
-        if (!isValidSolanaAddress(address)) return null;
-        
-        const cacheKey = `goplus_${address}`;
-        if (state.ageCache.has(cacheKey)) {
-          const cached = state.ageCache.get(cacheKey);
-          if (Date.now() - cached.timestamp < CONFIG.CACHE_MAX_AGE) {
-            return cached.value;
-          }
-        }
-        
-        return queueApiCall('GOPLUS', async () => {
-          try {
-            const response = await fetchWithTimeout(
-              `https://api.gopluslabs.io/api/v1/token_security/solana?contract_addresses=${address}`
-            );
-            
-            if (!response.ok) return null;
-            
-            const data = await response.json();
-            const tokenData = data.result?.[address];
-            const ts = tokenData?.creation_timestamp;
-            
-            if (ts && !isNaN(parseInt(ts))) {
-              const timestamp = parseInt(ts) * 1000;
-              const now = Date.now();
-              
-              if (timestamp > now - 10*365*24*60*60*1000 && timestamp < now + 86400000) {
-                state.ageCache.set(cacheKey, {
-                  value: timestamp,
-                  timestamp: now
-                });
-                return timestamp;
-              }
-            }
-          } catch (e) {
-            console.warn('GoPlus error:', address, e.message);
-          }
-          return null;
-        });
-      };
-      
-      // ================== FIXED HELIUS API ==================
-      const fetchHeliusHolders = async (address) => {
-        if (!isValidSolanaAddress(address)) return null;
-        
-        const cacheKey = `helius_${address}`;
-        if (state.heliusCache.has(cacheKey)) {
-          const cached = state.heliusCache.get(cacheKey);
-          if (Date.now() - cached.timestamp < CONFIG.CACHE_MAX_AGE) {
-            return cached.value;
-          }
-        }
-        
-        return queueApiCall('HELIUS', async () => {
-          try {
-            const response = await fetchWithTimeout(CONFIG.HELIUS_RPC, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                jsonrpc: '2.0',
-                id: `holders-${address}`,
-                method: 'getTokenAccounts',
-                params: {
-                  mint: address
-                }
-              })
-            });
-            
-            if (!response.ok) {
-              if (response.status === 429) {
-                showToast('Helius rate limit reached, using DexScreener only', 'warning');
-              }
-              return null;
-            }
-            
-            const data = await response.json();
-            
-            if (data.error) {
-              console.warn('Helius RPC error:', data.error);
-              return null;
-            }
-            
-            const accounts = data.result?.token_accounts || [];
-            
-            if (!accounts.length) return { count: 0, topConcentration: 0 };
-            
-            const holders = accounts.length;
-            
-            const sorted = [...accounts].sort((a, b) => 
-              (b.amount || 0) - (a.amount || 0)
-            );
-            
-            const top10 = sorted.slice(0, Math.min(10, sorted.length));
-            
-            const totalSupply = sorted.reduce((sum, acc) => sum + (acc.amount || 0), 0);
-            const top10Supply = top10.reduce((sum, acc) => sum + (acc.amount || 0), 0);
-            
-            const topConcentration = totalSupply > 0 ? (top10Supply / totalSupply) * 100 : 0;
-            
-            const result = { count: holders, topConcentration };
-            
-            state.heliusCache.set(cacheKey, {
-              value: result,
-              timestamp: Date.now()
-            });
-            
-            return result;
-          } catch (e) {
-            console.warn('Helius error:', address, e.message);
-          }
-          return null;
-        });
-      };
-      
-      // ================== FIXED WEBSOCKET ==================
-      const initWebSocket = () => {
-        if (state.wsReconnectTimer) {
-          clearTimeout(state.wsReconnectTimer);
-          state.wsReconnectTimer = null;
-        }
-        
-        if (state.ws && state.ws.readyState === WebSocket.OPEN) {
-          state.ws.close();
-        }
-        
-        try {
-          state.ws = new WebSocket(CONFIG.HELIUS_WS);
-          
-          state.ws.onopen = () => {
-            console.log('✅ WebSocket connected');
-            showToast('Real-time updates active', 'success');
-            
-            const subscribeMsg = {
-              jsonrpc: '2.0',
-              id: 1,
-              method: 'programSubscribe',
-              params: [
-                'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
-                {
-                  encoding: 'jsonParsed',
-                  commitment: 'processed',
-                  filters: [
-                    {
-                      memcmp: {
-                        offset: 0,
-                        bytes: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
-                      }
-                    }
-                  ]
-                }
-              ]
-            };
-            
-            state.ws.send(JSON.stringify(subscribeMsg));
-          };
-          
-          state.ws.onmessage = (event) => {
-            try {
-              const data = JSON.parse(event.data);
-              
-              if (data.params?.result?.value?.account?.data?.parsed?.info?.mint) {
-                console.log('🆕 New token detected!');
-                if (!state.isRefreshing) {
-                  loadTokens();
-                }
-              }
-            } catch (e) {
-              console.warn('WebSocket message error:', e);
-            }
-          };
-          
-          state.ws.onerror = (error) => {
-            console.warn('WebSocket error:', error);
-          };
-          
-          state.ws.onclose = (event) => {
-            console.log('WebSocket closed, reconnecting in 5s...');
-            
-            state.wsReconnectTimer = setTimeout(() => {
-              initWebSocket();
-            }, 5000);
-          };
-          
-        } catch (e) {
-          console.warn('WebSocket init failed:', e);
-          state.wsReconnectTimer = setTimeout(() => {
-            initWebSocket();
-          }, 5000);
-        }
-      };
-      
-      // ================== DEXSCREENER API (FALLBACK) ==================
-      const fetchTokens = async () => {
-        try {
-          const response = await fetchWithTimeout('https://api.dexscreener.com/latest/dex/search?q=Solana');
-          if (!response.ok) return [];
-          
-          const data = await response.json();
-          
-          return (data.pairs || [])
-            .filter(p => p.chainId === 'solana')
-            .slice(0, 100)
-            .map(p => ({
-              address: p.baseToken?.address,
-              symbol: String(p.baseToken?.symbol || '???').substring(0, 20),
-              pairCreatedAt: p.pairCreatedAt,
-              liquidity: p.liquidity?.usd || 0,
-              priceChange5m: p.priceChange?.m5 || 0,
-              fdv: p.fdv || 0,
-              platform: p.dexId || 'unknown',
-              url: p.url || ''
-            }))
-            .filter(t => t.address && isValidSolanaAddress(t.address));
-        } catch (error) {
-          console.error('DexScreener error:', error);
-          return [];
-        }
-      };
-      
-      // ================== LOAD TOKENS ==================
-      const loadTokens = async () => {
-        if (state.isRefreshing) return;
-        
-        if (document.hidden) return;
-        
-        state.isRefreshing = true;
-        const grid = getElement('tokenGrid');
-        const refreshBtn = getElement('refreshBtn');
-        
-        if (refreshBtn) refreshBtn.disabled = true;
-        
-        try {
-          if (grid) {
-            grid.innerHTML = '<div class="loader">LOADING FRESH TOKENS...</div>';
-          }
-          
-          const heliusWorking = await checkHeliusApiKey();
-          if (!heliusWorking) {
-            showToast('Helius API unavailable, using DexScreener only', 'warning');
-          }
-          
-          const tokens = await fetchTokens();
-          
-          if (!tokens.length) {
-            grid.innerHTML = '<div class="empty">✨ NO TOKENS FOUND</div>';
-            return;
-          }
-          
-          const enriched = [];
-          
-          for (let i = 0; i < tokens.length; i += CONFIG.BATCH_SIZE) {
-            const batch = tokens.slice(i, i + CONFIG.BATCH_SIZE);
-            
-            if (grid && i + CONFIG.BATCH_SIZE < tokens.length) {
-              grid.innerHTML = `<div class="loader">PROCESSING ${Math.min(i + CONFIG.BATCH_SIZE, tokens.length)}/${tokens.length} TOKENS...</div>`;
-            }
-            
-            const batchPromises = batch.map(async (token) => {
-              try {
-                const [exactAge, holders] = await Promise.allSettled([
-                  fetchGoPlusAge(token.address),
-                  heliusWorking ? fetchHeliusHolders(token.address) : Promise.resolve(null)
-                ]);
-                
-                return {
-                  ...token,
-                  exactAge: exactAge.status === 'fulfilled' ? exactAge.value : null,
-                  holders: holders.status === 'fulfilled' ? holders.value?.count : null,
-                  topHolder: holders.status === 'fulfilled' ? holders.value?.topConcentration : null,
-                  ageMinutes: token.pairCreatedAt ? 
-                    Math.round((Date.now() - token.pairCreatedAt) / 60000) : null
-                };
-              } catch (e) {
-                console.warn('Token enrichment failed:', token.address);
-                return token;
-              }
-            });
-            
-            const results = await Promise.allSettled(batchPromises);
-            results.forEach(r => {
-              if (r.status === 'fulfilled' && r.value) {
-                enriched.push(r.value);
-              }
-            });
-          }
-          
-          state.tokens = enriched;
-          state.displayedTokens = CONFIG.TOKENS_PER_PAGE;
-          state.filteredTokens = getFilteredTokens();
-          renderTokens(state.filteredTokens.slice(0, state.displayedTokens));
-          
-          showToast(`Loaded ${enriched.length} tokens`);
-          
-        } catch (error) {
-          console.error('Failed to load:', error);
-          if (grid) {
-            grid.innerHTML = '<div class="empty error-message">❌ ERROR LOADING TOKENS</div>';
-          }
-          showToast('Failed to load tokens', 'error');
-        } finally {
-          state.isRefreshing = false;
-          if (refreshBtn) refreshBtn.disabled = false;
-        }
-      };
-      
-      // ================== FILTER ==================
-      const getFilteredTokens = () => {
-        return state.tokens.filter(t => {
-          let age = null;
-          if (t.exactAge && typeof t.exactAge === 'number') {
-            age = Math.round((Date.now() - t.exactAge) / 60000);
-          } else if (t.ageMinutes !== null && t.ageMinutes !== undefined) {
-            age = t.ageMinutes;
-          }
-          
-          if (state.timeFilter !== 'all' && age !== null) {
-            const max = state.timeFilter === '5m' ? 5 : state.timeFilter === '30m' ? 30 : 60;
-            if (age > max) return false;
-          }
-          
-          if (state.liqFilter !== 'all') {
-            const min = state.liqFilter === '5k' ? 5000 : state.liqFilter === '10k' ? 10000 : 50000;
-            if (t.liquidity < min) return false;
-          }
-          
-          if (state.platformFilter !== 'all') {
-            const plat = String(t.platform).toLowerCase();
-            if (state.platformFilter === 'pump' && !plat.includes('pump')) return false;
-            if (state.platformFilter === 'raydium' && !plat.includes('raydium')) return false;
-          }
-          
-          return true;
-        }).sort((a, b) => {
-          if (state.sort === 'holders') {
-            return (b.holders || 0) - (a.holders || 0);
-          }
-          if (state.sort === 'growth') {
-            return (b.priceChange5m || 0) - (a.priceChange5m || 0);
-          }
-          const aTime = a.exactAge || a.pairCreatedAt || 0;
-          const bTime = b.exactAge || b.pairCreatedAt || 0;
-          return bTime - aTime;
-        });
-      };
-      
-      // ================== LOAD MORE ==================
-      const loadMoreTokens = async () => {
-        if (state.isLoadingMore) return;
-        
-        state.isLoadingMore = true;
-        
-        const newDisplayCount = Math.min(
-          state.displayedTokens + CONFIG.TOKENS_PER_PAGE,
-          state.filteredTokens.length
-        );
-        
-        if (newDisplayCount > state.displayedTokens) {
-          renderTokens(state.filteredTokens.slice(0, newDisplayCount));
-          state.displayedTokens = newDisplayCount;
-        }
-        
-        state.isLoadingMore = false;
-      };
-      
-      // ================== RENDER ==================
-      const renderTokens = (tokensToRender) => {
-        const grid = getElement('tokenGrid');
-        if (!grid) return;
-        
-        if (!tokensToRender.length) {
-          grid.innerHTML = '<div class="empty">✨ NO TOKENS FOUND</div>';
-          return;
-        }
-        
-        const fragment = document.createDocumentFragment();
-        
-        tokensToRender.forEach(t => {
-          let ageValue = null;
-          if (t.exactAge && typeof t.exactAge === 'number') {
-            ageValue = Math.round((Date.now() - t.exactAge) / 60000);
-          } else if (t.ageMinutes !== null && t.ageMinutes !== undefined) {
-            ageValue = t.ageMinutes;
-          }
-          
-          const safeSymbol = escapeHtml(t.symbol);
-          const safeAddress = escapeHtml(t.address);
-          const safePlatform = escapeHtml(t.platform || '');
-          
-          let ageDisplay;
-          if (t.exactAge && typeof t.exactAge === 'number') {
-            ageDisplay = `<span style="color: #FFD700">${escapeHtml(formatAge(ageValue))} ⭐</span>`;
-          } else {
-            ageDisplay = escapeHtml(ageValue ? formatAge(ageValue) + ' (est)' : '? (est)');
-          }
-          
-          const ageSourceBadge = t.exactAge 
-            ? '<span class="source-badge source-goplus">GoPlus</span>' 
-            : '<span class="source-badge source-dex">Dex</span>';
-          
-          let riskClass = 'risk-low';
-          if (t.topHolder && t.topHolder > 20) riskClass = 'risk-high';
-          else if (t.topHolder && t.topHolder > 10) riskClass = 'risk-medium';
-          
-          const topHolderDisplay = t.topHolder 
-            ? `<span class="risk-badge ${riskClass}">top ${escapeHtml(t.topHolder.toFixed(1))}%</span>` 
-            : '';
-          
-          const card = document.createElement('div');
-          card.className = 'token-card';
-          
-          card.innerHTML = `
-            <div class="token-header">
-              <div class="token-symbol">${safeSymbol}</div>
-              <div class="token-tags">
-                ${safePlatform.includes('pump') ? '<span class="tag tag-pump">PUMP</span>' : ''}
-                ${safePlatform.includes('raydium') ? '<span class="tag tag-raydium">RAY</span>' : ''}
-              </div>
-            </div>
-            <div class="token-info">
-              <div class="info-row">
-                <span class="info-label">⏱️ Age ${ageSourceBadge}</span>
-                <span class="info-value">${ageDisplay}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">👥 Holders <span class="source-badge source-helius">Helius</span></span>
-                <span class="info-value">
-                  ${t.holders ? formatNumber(t.holders) : '?'}
-                  ${topHolderDisplay}
-                </span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">💰 MC</span>
-                <span class="info-value">$${formatNumber(t.fdv)}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">💧 Liquidity</span>
-                <span class="info-value">$${formatNumber(t.liquidity)}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">📈 5m Change</span>
-                <span class="info-value" style="color: ${t.priceChange5m > 0 ? '#00FF9D' : '#FF4D4D'}">
-                  ${t.priceChange5m > 0 ? '+' : ''}${(t.priceChange5m * 100).toFixed(1)}%
-                </span>
-              </div>
-            </div>
-            <div class="token-ca" onclick="copyAddress('${safeAddress}')">
-              📋 ${safeAddress.slice(0, 8)}...${safeAddress.slice(-6)}
-            </div>
-            <div class="token-actions">
-              <button class="action-btn" onclick="window.location.href='https://www.cryptobros.pro/tribunal.html?address=${encodeURIComponent(t.address)}'">ANALYZE</button>
-              <button class="action-btn" onclick="window.open('${t.url ? escapeHtml(t.url) : '#'}', '_blank', 'noopener')">DEX</button>
-            </div>
-          `;
-          
-          fragment.appendChild(card);
-        });
-        
-        if (state.displayedTokens < state.filteredTokens.length) {
-          const loadMoreBtn = document.createElement('button');
-          loadMoreBtn.className = 'load-more-btn';
-          loadMoreBtn.textContent = `LOAD MORE (${state.filteredTokens.length - state.displayedTokens} LEFT)`;
-          loadMoreBtn.onclick = loadMoreTokens;
-          fragment.appendChild(loadMoreBtn);
-        }
-        
-        grid.innerHTML = '';
-        grid.appendChild(fragment);
-      };
-      
-      // ================== FILTER EVENT LISTENERS ==================
-      const initFilters = () => {
-        const timeFilter = getElement('timeFilter');
-        const liqFilter = getElement('liqFilter');
-        const platformFilter = getElement('platformFilter');
-        const sortFilter = getElement('sortFilter');
-        
-        if (timeFilter) state.timeFilter = timeFilter.value;
-        if (liqFilter) state.liqFilter = liqFilter.value;
-        if (platformFilter) state.platformFilter = platformFilter.value;
-        if (sortFilter) state.sort = sortFilter.value;
-        
-        const handleFilterChange = debounceAsync(async () => {
-          state.filteredTokens = getFilteredTokens();
-          state.displayedTokens = CONFIG.TOKENS_PER_PAGE;
-          renderTokens(state.filteredTokens.slice(0, state.displayedTokens));
-        }, 300);
-        
-        if (timeFilter) {
-          timeFilter.addEventListener('change', (e) => {
-            state.timeFilter = e.target.value;
-            handleFilterChange();
-          });
-        }
-        
-        if (liqFilter) {
-          liqFilter.addEventListener('change', (e) => {
-            state.liqFilter = e.target.value;
-            handleFilterChange();
-          });
-        }
-        
-        if (platformFilter) {
-          platformFilter.addEventListener('change', (e) => {
-            state.platformFilter = e.target.value;
-            handleFilterChange();
-          });
-        }
-        
-        if (sortFilter) {
-          sortFilter.addEventListener('change', (e) => {
-            state.sort = e.target.value;
-            handleFilterChange();
-          });
-        }
-      };
-      
-      // ================== COUNTDOWN ==================
-      const startCountdown = () => {
-        if (state.intervalId) {
-          clearInterval(state.intervalId);
-        }
-        
-        state.intervalId = setInterval(() => {
-          const timer = getElement('updateTimer');
-          if (!timer) return;
-          
-          state.countdown--;
-          timer.textContent = `⏱️ ${state.countdown} SEC`;
-          
-          if (state.countdown <= 0) {
-            state.countdown = CONFIG.REFRESH_INTERVAL;
-            
-            if (!document.hidden && !state.isRefreshing) {
-              loadTokens();
-            }
-          }
-        }, 1000);
-      };
-      
-      // ================== INIT ==================
-      const init = () => {
-        initTheme();
-        initFilters();
-        initWebSocket();
-        loadTokens();
-        startCountdown();
-        
-        const refreshBtn = getElement('refreshBtn');
-        if (refreshBtn) {
-          refreshBtn.addEventListener('click', () => {
-            state.countdown = CONFIG.REFRESH_INTERVAL;
-            loadTokens();
-          });
-        }
-        
-        const backBtn = getElement('backBtn');
-        if (backBtn) {
-          backBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.location.href = 'https://www.cryptobros.pro/';
-          });
-        }
-        
-        document.addEventListener('visibilitychange', () => {
-          if (!document.hidden && !state.isRefreshing) {
-            // Optional: refresh when tab becomes visible
-          }
-        });
-        
-        window.addEventListener('beforeunload', () => {
-          if (state.intervalId) {
-            clearInterval(state.intervalId);
-          }
-          if (state.ws) {
-            state.ws.close();
-          }
-          if (state.wsReconnectTimer) {
-            clearTimeout(state.wsReconnectTimer);
-          }
-        });
-      };
-      
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
-      }
-      
-    })();
-  </script>
+  
+  <script src="fresh-tokens.js" defer></script>
 </body>
 </html>
