@@ -3,13 +3,14 @@
   
   // ================== CONFIG ==================
   const CONFIG = {
-    API_PROXY: 'https://cryptobros-proxy.workers.dev/?url=',
+    API_PROXY: 'https://cryptobros-proxy.workers.dev/?url=', // CHANGE THIS
     FALLBACK_PROXY: 'https://api.allorigins.win/raw?url=',
     DEXSCREENER_API: 'https://api.dexscreener.com/latest/dex/search',
     REFRESH_INTERVAL: 60,
     REQUEST_TIMEOUT: 10000,
     BATCH_SIZE: 3,
     MAX_RETRIES: 2,
+    MAX_PROXY_RETRIES: 5,
     CACHE_MAX_AGE: 5 * 60 * 1000,
     TOKENS_PER_PAGE: 20,
     MAX_HOLDERS_ESTIMATE: 5000,
@@ -33,7 +34,7 @@
     holdersCache: new Map(),
     apiQueue: [],
     processingQueue: false,
-    abortControllers: new Set(),
+    abortControllers: new Map(),
     pendingRequests: new Map(),
     lastCacheCleanup: Date.now(),
     apiKeys: null,
@@ -42,7 +43,8 @@
     loadMoreBtnInstance: null,
     proxyIndex: 0,
     proxyFailures: 0,
-    isMounted: true
+    isMounted: true,
+    nextControllerId: 0
   };
   
   // ================== SECURE ESCAPE FUNCTIONS ==================
@@ -77,7 +79,7 @@
       if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
         return '#';
       }
-      return encodeURI(url);
+      return parsed.toString();
     } catch {
       return '#';
     }
@@ -88,7 +90,11 @@
     let timeout;
     return function executedFunction(...args) {
       clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), wait);
+      timeout = setTimeout(() => {
+        if (state.isMounted) {
+          func.apply(this, args);
+        }
+      }, wait);
     };
   };
   
@@ -96,7 +102,9 @@
     let inThrottle;
     return function(...args) {
       if (!inThrottle) {
-        func.apply(this, args);
+        if (state.isMounted) {
+          func.apply(this, args);
+        }
         inThrottle = true;
         setTimeout(() => inThrottle = false, limit);
       }
@@ -104,7 +112,7 @@
   };
   
   const formatNumber = (num) => {
-    if (num === null || num === undefined || isNaN(num)) return '0';
+    if (num == null || isNaN(num)) return '0';
     if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
     if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
     if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
@@ -112,7 +120,7 @@
   };
   
   const formatAge = (minutes) => {
-    if (minutes === null || minutes === undefined || isNaN(minutes)) return '?';
+    if (minutes == null || isNaN(minutes)) return '?';
     if (minutes < 0) return 'just now';
     if (minutes < 1) return '<1m';
     if (minutes < 60) return Math.round(minutes) + 'm';
@@ -150,35 +158,27 @@
     state.lastCacheCleanup = now;
   };
   
-  // ================== ABORT CONTROLLER MANAGEMENT ==================
+  // ================== FIXED ABORT CONTROLLER ==================
   const createAbortController = () => {
+    const id = state.nextControllerId++;
     const controller = new AbortController();
     
-    const cleanup = () => {
-      state.abortControllers.delete(controller);
-    };
+    state.abortControllers.set(id, controller);
     
-    controller.signal.addEventListener('abort', cleanup);
-    state.abortControllers.add(controller);
+    controller.signal.addEventListener('abort', () => {
+      state.abortControllers.delete(id);
+    });
     
     return controller;
   };
   
   const abortAllRequests = () => {
-    state.abortControllers.forEach(controller => {
-      try { 
-        if (!controller.signal.aborted) {
-          controller.abort(); 
-        }
-      } catch (e) {}
+    state.abortControllers.forEach((controller, id) => {
+      if (!controller.signal.aborted) {
+        controller.abort();
+      }
+      state.abortControllers.delete(id);
     });
-    state.abortControllers.clear();
-  };
-  
-  const markRequestComplete = (controller) => {
-    if (controller && state.abortControllers.has(controller)) {
-      state.abortControllers.delete(controller);
-    }
   };
   
   // ================== TOAST NOTIFICATIONS ==================
@@ -225,72 +225,13 @@
     });
   };
   
-  // ================== SECURE FETCH WITH PROXY ==================
-  async function fetchWithProxy(url, retryCount = 0) {
-    if (!state.isMounted) throw new Error('Component unmounted');
-    
-    const proxies = [
-      CONFIG.API_PROXY + encodeURIComponent(url),
-      CONFIG.FALLBACK_PROXY + encodeURIComponent(url)
-    ];
-    
-    const startProxy = state.proxyIndex;
-    
-    for (let i = 0; i < proxies.length; i++) {
-      const proxyIndex = (startProxy + i) % proxies.length;
-      const proxyUrl = proxies[proxyIndex];
-      
-      try {
-        const controller = createAbortController();
-        const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
-        
-        const response = await fetch(proxyUrl, {
-          signal: controller.signal,
-          headers: {
-            'Origin': window.location.origin,
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        });
-        
-        clearTimeout(timeoutId);
-        markRequestComplete(controller);
-        
-        if (!state.isMounted) throw new Error('Component unmounted');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        
-        const text = await response.text();
-        
-        try {
-          const data = JSON.parse(text);
-          state.proxyIndex = proxyIndex;
-          state.proxyFailures = 0;
-          return data;
-        } catch (e) {
-          console.warn(`Proxy ${proxyIndex} returned non-JSON:`, text.substring(0, 100));
-          continue;
-        }
-      } catch (error) {
-        console.warn(`Proxy ${proxyIndex} failed:`, error.message);
-        state.proxyFailures++;
-        
-        if (state.proxyFailures > proxies.length * 2) {
-          showToast('API proxy issues, please refresh', 'warning');
-        }
-      }
-    }
-    
-    throw new Error('All proxies failed');
-  }
-  
-  // ================== FETCH API KEYS ==================
+  // ================== FIXED LOAD API KEYS ==================
   async function loadApiKeys() {
-    if (!state.isMounted) return null;
+    console.log('Loading API keys...');
     
+    // TRY LOCALSTORAGE FIRST
     try {
-      const stored = localStorage.getItem('api_keys_encrypted');
+      const stored = localStorage.getItem('api_keys');
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed.timestamp && (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000)) {
@@ -305,47 +246,37 @@
       console.warn('Failed to load keys from localStorage');
     }
     
+    // TRY TO LOAD FROM SECURE ENDPOINT
     try {
       const response = await fetch('/api/config', {
         cache: 'no-cache',
-        headers: {
-          'Cache-Control': 'no-cache',
-          'X-Requested-With': 'XMLHttpRequest'
-        }
+        headers: { 'Cache-Control': 'no-cache' }
       });
       
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      
-      const data = await response.json();
-      
-      if (!state.isMounted) return null;
-      
-      if (data.keys && data.keys.GOPLUS_API) {
-        try {
-          localStorage.setItem('api_keys_encrypted', JSON.stringify({
-            keys: data.keys,
-            timestamp: Date.now()
-          }));
-        } catch (e) {}
-        
-        state.apiKeys = data.keys;
-        return data.keys;
+      if (response.ok) {
+        const data = await response.json();
+        if (data.keys && data.keys.GOPLUS_API) {
+          console.log('✅ API keys loaded from server');
+          
+          // Save to localStorage
+          try {
+            localStorage.setItem('api_keys', JSON.stringify({
+              keys: data.keys,
+              timestamp: Date.now()
+            }));
+          } catch (e) {}
+          
+          state.apiKeys = data.keys;
+          return data.keys;
+        }
       }
-    } catch (error) {
-      console.warn('Failed to load keys from server:', error);
+    } catch (e) {
+      console.warn('Failed to load keys from server:', e.message);
     }
     
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      console.warn('⚠️ Using development API keys');
-      return {
-        GOPLUS_API: 'https://api.gopluslabs.io/api/v1/token_security',
-        HELIUS_RPC: 'https://rpc.helius.xyz/?api-key=demo',
-        GOPLUS_API_KEY: 'demo'
-      };
-    }
-    
+    // PRODUCTION: NO FALLBACK KEYS - show error
     console.error('❌ Could not load API keys');
-    showToast('Failed to load API keys', 'error');
+    showToast('Failed to load API keys. Please refresh.', 'error');
     return null;
   }
   
@@ -358,6 +289,8 @@
     
     try {
       for (let i = 0; i < retries; i++) {
+        if (!state.isMounted) throw new Error('Component unmounted');
+        
         if (timeoutId) clearTimeout(timeoutId);
         
         timeoutId = setTimeout(() => {
@@ -387,7 +320,6 @@
             throw new Error(`HTTP ${response.status}`);
           }
           
-          markRequestComplete(controller);
           return response;
           
         } catch (error) {
@@ -396,12 +328,10 @@
           if (error.name === 'AbortError') {
             console.warn('Request timeout:', url);
             if (i === retries - 1) {
-              markRequestComplete(controller);
               throw new Error('Request timeout');
             }
           } else {
             if (i === retries - 1) {
-              markRequestComplete(controller);
               throw error;
             }
           }
@@ -410,36 +340,129 @@
         }
       }
       
-      markRequestComplete(controller);
       throw new Error('Max retries exceeded');
       
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
+      if (!controller.signal.aborted) {
+        controller.abort();
+      }
     }
   };
   
-  // ================== API QUEUE ==================
+  // ================== FIXED FETCH WITH PROXY (NO RECURSION) ==================
+  async function fetchWithProxy(url) {
+    if (!state.isMounted) throw new Error('Component unmounted');
+    
+    const proxies = [
+      CONFIG.API_PROXY + encodeURIComponent(url),
+      CONFIG.FALLBACK_PROXY + encodeURIComponent(url)
+    ];
+    
+    for (let attempt = 0; attempt < CONFIG.MAX_PROXY_RETRIES; attempt++) {
+      if (!state.isMounted) throw new Error('Component unmounted');
+      
+      const startProxy = state.proxyIndex;
+      
+      for (let i = 0; i < proxies.length; i++) {
+        if (!state.isMounted) throw new Error('Component unmounted');
+        
+        const proxyIndex = (startProxy + i) % proxies.length;
+        const proxyUrl = proxies[proxyIndex];
+        
+        try {
+          const controller = createAbortController();
+          const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
+          
+          const response = await fetch(proxyUrl, {
+            signal: controller.signal,
+            headers: {
+              'Origin': window.location.origin,
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+          
+          clearTimeout(timeoutId);
+          controller.abort();
+          
+          if (!state.isMounted) throw new Error('Component unmounted');
+          
+          if (response.status === 403 || response.status === 429) {
+            console.warn(`Proxy ${proxyIndex} returned ${response.status}`);
+            continue;
+          }
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          
+          const text = await response.text();
+          
+          // Check if response is HTML (error page)
+          if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+            console.warn(`Proxy ${proxyIndex} returned HTML`);
+            continue;
+          }
+          
+          try {
+            const data = JSON.parse(text);
+            state.proxyIndex = proxyIndex;
+            state.proxyFailures = 0;
+            return data;
+          } catch (e) {
+            console.warn(`Proxy ${proxyIndex} returned non-JSON:`, text.substring(0, 100));
+            continue;
+          }
+        } catch (error) {
+          console.warn(`Proxy ${proxyIndex} failed:`, error.message);
+          state.proxyFailures++;
+          
+          if (state.proxyFailures > proxies.length * 2) {
+            showToast('API proxy issues, please refresh', 'warning');
+          }
+        }
+      }
+      
+      // Wait before next retry
+      await sleep(1000 * Math.pow(2, attempt));
+    }
+    
+    showToast('All proxies failed after multiple retries', 'error');
+    throw new Error('All proxies failed');
+  }
+  
+  // ================== FIXED API QUEUE ==================
   const processApiQueue = async () => {
-    if (state.processingQueue || state.apiQueue.length === 0) return;
+    if (state.processingQueue) return;
     
     state.processingQueue = true;
     
-    while (state.apiQueue.length > 0) {
-      const { fn, resolve, reject, key } = state.apiQueue.shift();
-      
-      try {
-        const result = await fn();
-        if (key) state.pendingRequests.delete(key);
-        if (state.isMounted) resolve(result);
-      } catch (error) {
-        if (key) state.pendingRequests.delete(key);
-        if (state.isMounted) reject(error);
+    const processBatch = async () => {
+      while (state.apiQueue.length > 0 && state.isMounted) {
+        const batch = state.apiQueue.splice(0, CONFIG.BATCH_SIZE);
+        
+        await Promise.allSettled(batch.map(async ({ fn, resolve, reject, key }) => {
+          try {
+            const result = await fn();
+            if (key) state.pendingRequests.delete(key);
+            if (state.isMounted) resolve(result);
+          } catch (error) {
+            if (key) state.pendingRequests.delete(key);
+            if (state.isMounted) reject(error);
+          }
+        }));
+        
+        if (state.isMounted) await sleep(300);
       }
-      
-      await sleep(300);
-    }
+    };
     
+    await processBatch();
     state.processingQueue = false;
+    
+    // Check if new items were added while processing
+    if (state.apiQueue.length > 0 && state.isMounted) {
+      processApiQueue();
+    }
   };
   
   const queueApiCall = (fn, key = null) => {
@@ -493,7 +516,7 @@
         const data = await response.json();
         
         if (data.code !== 1) {
-          console.warn('GoPlus returned error code:', data.code, data.message);
+          console.warn('GoPlus returned error code:', data.code);
           return null;
         }
         
@@ -512,8 +535,6 @@
           } catch (e) {}
           
           return result;
-        } else {
-          console.warn('GoPlus: no creation timestamp for', address);
         }
       } catch (e) {
         console.warn('GoPlus error:', e.message);
@@ -571,22 +592,41 @@
         accounts.sort((a, b) => (b.uiAmount || 0) - (a.uiAmount || 0));
         
         const totalSupply = accounts.reduce((sum, acc) => sum + (acc.uiAmount || 0), 0);
+        
+        if (totalSupply === 0) {
+          return { count: 0, topConcentration: 0, isEstimate: false };
+        }
+        
         const top10Supply = accounts.slice(0, 10).reduce((sum, acc) => sum + (acc.uiAmount || 0), 0);
-        const topConcentration = totalSupply > 0 ? (top10Supply / totalSupply) * 100 : 0;
+        const topConcentration = (top10Supply / totalSupply) * 100;
         
         let estimatedHolders = accounts.length;
+        let confidence = 'high';
         
         if (accounts.length === 20) {
-          const avgTop20 = accounts.reduce((sum, acc) => sum + (acc.uiAmount || 0), 0) / 20;
-          const remainingSupply = 1 - (accounts.reduce((sum, acc) => sum + (acc.uiAmount || 0), 0) / totalSupply);
+          const top20Sum = accounts.reduce((sum, acc) => sum + (acc.uiAmount || 0), 0);
+          const top20Percentage = (top20Sum / totalSupply) * 100;
           
-          if (remainingSupply > 0.1) {
+          if (top20Percentage < 50) {
+            // Widely distributed - use log scale
+            const distributionFactor = (100 - top20Percentage) / 50;
             estimatedHolders = Math.min(
-              Math.round(20 + (remainingSupply * totalSupply) / (avgTop20 * 0.5)),
+              Math.round(20 + (totalSupply - top20Sum) / (top20Sum / 20) * 2 * distributionFactor),
               CONFIG.MAX_HOLDERS_ESTIMATE
             );
+            confidence = 'low';
+          } else if (top20Percentage < 80) {
+            // Moderately distributed
+            const distributionFactor = (100 - top20Percentage) / 20;
+            estimatedHolders = Math.min(
+              Math.round(20 + (totalSupply - top20Sum) / (top20Sum / 20) * 1.2 * distributionFactor),
+              CONFIG.MAX_HOLDERS_ESTIMATE
+            );
+            confidence = 'medium';
           } else {
+            // Highly concentrated
             estimatedHolders = 20;
+            confidence = 'high';
           }
         }
         
@@ -594,8 +634,8 @@
           count: estimatedHolders, 
           topConcentration, 
           isEstimate: accounts.length === 20,
-          rawCount: accounts.length,
-          totalSupply
+          confidence,
+          rawCount: accounts.length
         };
         
         try {
@@ -609,14 +649,16 @@
         
       } catch (e) {
         console.warn('Helius error:', e.message);
-        return { count: 0, topConcentration: 0, isEstimate: true };
+        return { count: 0, topConcentration: 0, isEstimate: true, confidence: 'low' };
       }
     }, cacheKey);
   }
   
-  // ================== DEXSCREENER API ==================
+  // ================== FIXED DEXSCREENER API ==================
   const fetchNewTokens = async () => {
     if (!state.isMounted) return [];
+    
+    const controller = createAbortController();
     
     try {
       const searchQueries = [
@@ -626,21 +668,19 @@
         '?q=new'
       ];
       
+      const results = await Promise.allSettled(
+        searchQueries.map(q => fetchWithProxy(`${CONFIG.DEXSCREENER_API}${q}`))
+      );
+      
+      if (!state.isMounted) return [];
+      
       const allPairs = [];
       
-      for (const query of searchQueries) {
-        if (!state.isMounted) return [];
-        try {
-          await sleep(500);
-          const data = await fetchWithProxy(`${CONFIG.DEXSCREENER_API}${query}`);
-          
-          if (data.pairs && Array.isArray(data.pairs)) {
-            allPairs.push(...data.pairs);
-          }
-        } catch (e) {
-          console.warn(`DexScreener query ${query} failed:`, e.message);
+      results.forEach(result => {
+        if (result.status === 'fulfilled' && result.value.pairs) {
+          allPairs.push(...result.value.pairs);
         }
-      }
+      });
       
       const uniquePairs = new Map();
       
@@ -672,6 +712,8 @@
       console.error('DexScreener error:', error);
       showToast('Failed to fetch tokens', 'error');
       return [];
+    } finally {
+      controller.abort();
     }
   };
   
@@ -746,9 +788,10 @@
               holders: holdersData?.count,
               topHolder: holdersData?.topConcentration,
               holdersIsEstimate: holdersData?.isEstimate || false,
+              holdersConfidence: holdersData?.confidence || 'low',
               holdersRawCount: holdersData?.rawCount,
               ageMinutes: token.pairCreatedAt ? 
-                Math.round((Date.now() - token.pairCreatedAt) / 60000) : null
+                Math.max(0, Math.round((Date.now() - token.pairCreatedAt) / 60000)) : null
             };
           } catch (e) {
             console.warn('Token enrichment failed:', token.address);
@@ -762,8 +805,6 @@
             enriched.push(r.value);
           }
         });
-        
-        await sleep(500);
       }
       
       if (!state.isMounted) return;
@@ -795,7 +836,7 @@
       let age = null;
       
       if (t.exactAge !== null && t.exactAge !== undefined) {
-        age = Math.round((Date.now() - t.exactAge) / 60000);
+        age = Math.max(0, Math.round((Date.now() - t.exactAge) / 60000));
       } else if (t.ageMinutes !== null && t.ageMinutes !== undefined) {
         age = t.ageMinutes;
       }
@@ -883,11 +924,11 @@
       let ageIsEstimate = true;
       
       if (t.exactAge !== null && t.exactAge !== undefined) {
-        ageValue = Math.round((Date.now() - t.exactAge) / 60000);
+        ageValue = Math.max(0, Math.round((Date.now() - t.exactAge) / 60000));
         ageSource = t.ageSource || 'goplus';
         ageIsEstimate = false;
       } else if (t.ageMinutes != null) {
-        ageValue = t.ageMinutes;
+        ageValue = Math.max(0, t.ageMinutes);
         ageSource = 'dex';
         ageIsEstimate = true;
       }
@@ -912,12 +953,21 @@
       let holdersDisplay = '?';
       let holdersClass = 'source-estimate';
       let holdersTooltip = 'Estimated holders count';
+      let confidenceIndicator = '';
       
       if (t.holders !== undefined && t.holders !== null) {
         holdersDisplay = formatNumber(t.holders);
         if (t.holdersIsEstimate) {
           holdersClass = 'source-estimate';
           holdersTooltip = `Estimated based on top ${t.holdersRawCount || 20} holders`;
+          
+          if (t.holdersConfidence === 'low') {
+            confidenceIndicator = ' ⚠️';
+            holdersTooltip += ' - Low confidence estimate';
+          } else if (t.holdersConfidence === 'medium') {
+            confidenceIndicator = ' 📊';
+            holdersTooltip += ' - Medium confidence';
+          }
         } else {
           holdersClass = 'source-helius';
           holdersTooltip = t.holders === 0 ? 'No holders found' : 'Exact holders count';
@@ -974,7 +1024,7 @@
       const holdersRow = document.createElement('div');
       holdersRow.className = 'info-row';
       holdersRow.innerHTML = `
-        <span class="info-label">👥 Holders <span class="source-badge ${holdersClass}" title="${escapeHtml(holdersTooltip)}">${t.holdersIsEstimate ? 'est' : 'exact'}</span></span>
+        <span class="info-label">👥 Holders <span class="source-badge ${holdersClass}" title="${escapeHtml(holdersTooltip)}">${t.holdersIsEstimate ? 'est' : 'exact'}${confidenceIndicator}</span></span>
         <span class="info-value">
           ${escapeHtml(holdersDisplay)}
           ${topHolderDisplay}
@@ -1193,7 +1243,7 @@
     
     state.intervalId = setInterval(() => {
       const timer = getElement('updateTimer');
-      if (!timer) return;
+      if (!timer || !state.isMounted) return;
       
       state.countdown--;
       timer.textContent = `⏱️ ${state.countdown} SEC`;
@@ -1226,7 +1276,7 @@
         if (state.isRefreshing) return;
         state.countdown = CONFIG.REFRESH_INTERVAL;
         loadTokens();
-      }, 2000));
+      }, 1000));
     }
     
     document.addEventListener('visibilitychange', () => {
@@ -1236,12 +1286,12 @@
     });
     
     window.addEventListener('beforeunload', () => {
+      abortAllRequests();
       state.isMounted = false;
       if (state.intervalId) {
         clearInterval(state.intervalId);
         state.intervalId = null;
       }
-      abortAllRequests();
     });
     
     setInterval(cleanupCache, CONFIG.CLEANUP_INTERVAL);
