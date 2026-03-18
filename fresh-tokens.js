@@ -24,12 +24,10 @@
     ESTIMATION_MULTIPLIER: 1.5,
     RATE_LIMIT_CALLS: 10,
     RATE_LIMIT_WINDOW: 1000,
-    MAX_HOLDERS_BY_LIQUIDITY: {
-      1000: 100,
-      5000: 500,
-      10000: 1000,
-      50000: 5000
-    }
+    CONFIG_URLS: [
+      'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/SolPhantomX/cryptobros-backend/main/config.html'),
+      'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://solphantomx.github.io/cryptobros-backend/config.html')
+    ]
   };
   
   // ================== STATE ==================
@@ -60,14 +58,13 @@
     apiKeys: null,
     isLoading: false,
     loadMoreBtnInstance: null,
-    proxyIndex: 0,
-    proxyFailures: 0,
     isMounted: true,
     nextControllerId: 0,
     ws: null,
     wsReconnectTimer: null,
     wsPingInterval: null,
     clickHandler: null,
+    resizeObserver: null,
     rateLimit: {
       calls: [],
       queue: []
@@ -643,43 +640,31 @@
   
   // ================== LOAD API KEYS ==================
   async function loadApiKeys() {
-    console.log('Loading API keys from backend...');
+    console.log('Loading API keys via proxy...');
     
-    const urls = [
-      '/api/config',
-      'https://raw.githubusercontent.com/SolPhantomX/cryptobros-backend/main/config.html',
-      'https://solphantomx.github.io/cryptobros-backend/config.html'
-    ];
-    
-    for (const url of urls) {
+    for (const url of CONFIG.CONFIG_URLS) {
       try {
-        const response = await fetch(url, {
-          cache: 'no-cache',
-          headers: { 'Cache-Control': 'no-cache' }
-        });
+        const response = await fetchWithTimeout(url);
+        const html = await response.text();
         
-        if (response.ok) {
-          const html = await response.text();
+        const match = html.match(/API_KEYS\s*=\s*(\{[\s\S]*?\});/);
+        if (match) {
+          let jsonStr = match[1]
+            .replace(/\/\/.*$/gm, '')
+            .replace(/\/\*[\s\S]*?\*\//g, '');
           
-          const match = html.match(/API_KEYS\s*=\s*(\{[\s\S]*?\});/);
-          if (match) {
-            let jsonStr = match[1]
-              .replace(/\/\/.*$/gm, '')
-              .replace(/\/\*[\s\S]*?\*\//g, '');
+          const keys = JSON.parse(jsonStr);
+          
+          if (keys && keys.GOPLUS_API && keys.HELIUS_RPC) {
+            console.log('✅ API keys loaded via proxy');
             
-            const keys = JSON.parse(jsonStr);
-            
-            if (keys && keys.GOPLUS_API && keys.HELIUS_RPC) {
-              console.log(`✅ API keys loaded from ${url}`);
-              
-              const encrypted = encryptKeys(keys);
-              if (encrypted) {
-                safeLocalStorage.setItem('api_keys_enc', encrypted);
-              }
-              
-              state.apiKeys = keys;
-              return keys;
+            const encrypted = encryptKeys(keys);
+            if (encrypted) {
+              safeLocalStorage.setItem('api_keys_enc', encrypted);
             }
+            
+            state.apiKeys = keys;
+            return keys;
           }
         }
       } catch (e) {
@@ -887,7 +872,6 @@
           const top20Sum = accounts.reduce((sum, acc) => sum + (acc.uiAmount || 0), 0);
           const top20Percentage = (top20Sum / totalSupply) * 100;
           
-          // Apply liquidity-based cap
           let maxEstimate = CONFIG.MAX_HOLDERS_ESTIMATE;
           if (liquidity < 1000) maxEstimate = 100;
           else if (liquidity < 5000) maxEstimate = 500;
@@ -939,7 +923,6 @@
     if (!state.apiKeys?.HELIUS_RPC) return;
     if (!state.isMounted) return;
     
-    // Convert HTTPS to WSS
     const wsUrl = state.apiKeys.HELIUS_RPC.replace('https://', 'wss://');
     
     try {
@@ -985,7 +968,6 @@
         }
         console.log('✅ WebSocket connected');
         
-        // Subscribe to token creation logs
         const subscribeMsg = {
           jsonrpc: '2.0',
           id: 1,
@@ -1003,7 +985,6 @@
         ws.send(JSON.stringify(subscribeMsg));
         console.log('Subscribed to token creation logs');
         
-        // Setup ping interval to keep connection alive
         state.wsPingInterval = setInterval(() => {
           if (ws.readyState === WebSocket.OPEN && state.isMounted) {
             ws.send(JSON.stringify({ jsonrpc: '2.0', method: 'ping', id: Date.now() }));
@@ -1506,8 +1487,24 @@
     
     grid.addEventListener('scroll', handleScroll);
     
+    if (window.ResizeObserver) {
+      state.resizeObserver = new ResizeObserver(debounce(() => {
+        if (state.isMounted && grid) {
+          const containerHeight = grid.clientHeight;
+          state.virtualScroll.visibleItems = Math.ceil(containerHeight / state.virtualScroll.itemHeight) + 
+                                             CONFIG.VIRTUAL_SCROLL_BUFFER * 2;
+          renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
+        }
+      }, 200));
+      
+      state.resizeObserver.observe(grid);
+    }
+    
     return () => {
       grid.removeEventListener('scroll', handleScroll);
+      if (state.resizeObserver) {
+        state.resizeObserver.disconnect();
+      }
     };
   };
   
@@ -1997,6 +1994,11 @@
       cancelAnimationFrame(state.virtualScroll.renderTimer);
     }
     
+    if (state.resizeObserver) {
+      state.resizeObserver.disconnect();
+      state.resizeObserver = null;
+    }
+    
     if (state.clickHandler) {
       const grid = getElement('tokenGrid');
       if (grid) {
@@ -2047,7 +2049,6 @@
     initFilters();
     setupEventDelegation();
     
-    // Initialize virtual scroll after DOM is ready
     if (document.readyState === 'complete') {
       initVirtualScroll();
     } else {
