@@ -1,10 +1,14 @@
 (function() {
   "use strict";
   
+  // ================== VERSION ==================
+  const VERSION = '1.0.2';
+  console.log(`🚀 Fresh Pumps v${VERSION} initializing...`);
+  
   // ================== CONFIG ==================
   const CONFIG = {
     API_PROXY: 'https://api.allorigins.win/raw?url=',
-    FALLBACK_PROXY: 'https://api.allorigins.win/raw?url=',
+    FALLBACK_PROXY: 'https://api.codetabs.com/v1/proxy/?quest=',
     DEXSCREENER_API: 'https://api.dexscreener.com/latest/dex/search',
     REFRESH_INTERVAL: 60,
     REQUEST_TIMEOUT: 15000,
@@ -27,7 +31,10 @@
     CONFIG_URLS: [
       'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/SolPhantomX/cryptobros-backend/main/config.html'),
       'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://solphantomx.github.io/cryptobros-backend/config.html')
-    ]
+    ],
+    MAX_TOKEN_AGE_DAYS: 365,
+    ESCAPE_CACHE_MAX_SIZE: 500,
+    ESCAPE_CACHE_TTL: 3600000 // 1 hour
   };
   
   // ================== STATE ==================
@@ -57,18 +64,14 @@
     lastCacheCleanup: Date.now(),
     apiKeys: null,
     isLoading: false,
-    loadMoreBtnInstance: null,
+    loadPromise: null,
     isMounted: true,
     nextControllerId: 0,
     ws: null,
     wsReconnectTimer: null,
     wsPingInterval: null,
     clickHandler: null,
-    resizeObserver: null,
-    rateLimit: {
-      calls: [],
-      queue: []
-    },
+    resizeHandler: null,
     metrics: {
       apiCalls: 0,
       cacheHits: 0,
@@ -83,15 +86,50 @@
       scrollTop: 0,
       renderTimer: null,
       cardHeightMeasured: false
+    },
+    rateLimit: {
+      calls: []
     }
   };
   
-  // ================== SECURE ESCAPE FUNCTIONS ==================
+  // ================== CACHED ESCAPE FUNCTIONS ==================
+  const escapeCache = new Map();
+  
   const escapeHtml = (text) => {
     if (text === null || text === undefined) return '';
+    const key = String(text);
+    
+    // Check cache with TTL
+    if (escapeCache.has(key)) {
+      const cached = escapeCache.get(key);
+      if (Date.now() - cached.timestamp < CONFIG.ESCAPE_CACHE_TTL) {
+        return cached.value;
+      }
+      escapeCache.delete(key);
+    }
+    
     const div = document.createElement('div');
-    div.textContent = String(text);
-    return div.innerHTML;
+    div.textContent = key;
+    const escaped = div.innerHTML;
+    
+    // Cache with size limit
+    if (escapeCache.size < CONFIG.ESCAPE_CACHE_MAX_SIZE) {
+      escapeCache.set(key, {
+        value: escaped,
+        timestamp: Date.now()
+      });
+    } else {
+      // Clean old entries
+      const now = Date.now();
+      for (const [k, v] of escapeCache) {
+        if (now - v.timestamp > CONFIG.ESCAPE_CACHE_TTL) {
+          escapeCache.delete(k);
+        }
+        if (escapeCache.size < CONFIG.ESCAPE_CACHE_MAX_SIZE) break;
+      }
+    }
+    
+    return escaped;
   };
   
   const escapeAttribute = (text) => {
@@ -125,22 +163,11 @@
     }
   };
   
-  const escapeTooltip = (text) => {
+  // Simple sanitizer for tooltips - avoid using user data in title attributes
+  const sanitizeForTooltip = (text) => {
     if (!text) return '';
-    return String(text)
-      .replace(/[&<>"'\n\r\t]/g, (match) => {
-        const map = {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;',
-          '\n': '&#10;',
-          '\r': '&#13;',
-          '\t': '&#9;'
-        };
-        return map[match];
-      });
+    // Remove any HTML and limit length
+    return String(text).replace(/[<>]/g, '').substring(0, 100);
   };
   
   // ================== SAFE UTILITIES ==================
@@ -182,7 +209,23 @@
     
     const num = str.length === 10 ? Number(str) * 1000 : Number(str);
     const now = Date.now();
-    return (!isNaN(num) && num > 0 && num < now + 86400000 && num > now - 31536000000) ? num : null;
+    const maxAge = CONFIG.MAX_TOKEN_AGE_DAYS * 24 * 60 * 60 * 1000;
+    
+    return (!isNaN(num) && num > 0 && num < now + 86400000 && num > now - maxAge) ? num : null;
+  };
+  
+  const calculateAgeMinutes = (timestamp) => {
+    if (!timestamp) return null;
+    
+    const now = Date.now();
+    const ageMs = now - timestamp;
+    const ageMinutes = Math.round(ageMs / 60000);
+    const maxAgeMinutes = CONFIG.MAX_TOKEN_AGE_DAYS * 24 * 60;
+    
+    if (ageMinutes > maxAgeMinutes) return null;
+    if (ageMinutes < -1) return null;
+    
+    return Math.max(0, ageMinutes);
   };
   
   const debounce = (func, wait) => {
@@ -224,7 +267,7 @@
   
   const formatAge = (minutes) => {
     if (minutes == null || isNaN(minutes)) return '?';
-    if (minutes < 1) return '<1m';
+    if (minutes < 1) return '< 1m';
     if (minutes < 60) return Math.round(minutes) + 'm';
     const hours = Math.floor(minutes / 60);
     const mins = Math.round(minutes % 60);
@@ -253,12 +296,59 @@
     try {
       if (!obj || typeof obj !== 'object') return Date.now().toString();
       const str = JSON.stringify(obj);
-      if (str.length > 10000) {
-        return btoa(str.slice(0, 1000)).slice(0, 32);
-      }
-      return btoa(str).slice(0, 32);
+      // Safe base64 encoding for Unicode
+      const utf8Str = unescape(encodeURIComponent(str));
+      return btoa(utf8Str).slice(0, 32);
     } catch {
       return Date.now().toString();
+    }
+  };
+  
+  // API Key validation
+  const isValidGoPlusKey = (key) => {
+    return typeof key === 'string' && 
+           /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(key);
+  };
+  
+  const isValidHeliusUrl = (url) => {
+    return typeof url === 'string' && 
+           url.includes('rpc.helius.xyz') && 
+           url.includes('api-key=');
+  };
+  
+  const parseApiKeys = (jsonStr) => {
+    try {
+      const cleaned = jsonStr
+        .replace(/\/\/.*$/gm, '')
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/'/g, '"')
+        .replace(/(\w+):/g, '"$1":')
+        .replace(/,\s*}/g, '}')
+        .replace(/,\s*]/g, ']')
+        .trim();
+      
+      const raw = JSON.parse(cleaned);
+      
+      const keys = {
+        GOPLUS_API: raw.GOPLUS_API_KEY || raw.GOPLUS_API || raw.GOPLUS,
+        HELIUS_RPC: raw.HELIUS_RPC || raw.HELIUS_API_KEY || raw.HELIUS
+      };
+      
+      // Validate keys format
+      if (!isValidGoPlusKey(keys.GOPLUS_API)) {
+        console.warn('Invalid GoPlus API key format');
+        return null;
+      }
+      
+      if (!isValidHeliusUrl(keys.HELIUS_RPC)) {
+        console.warn('Invalid Helius RPC URL format');
+        return null;
+      }
+      
+      return keys;
+    } catch (e) {
+      console.warn('Failed to parse API keys:', e);
+      return null;
     }
   };
   
@@ -300,6 +390,7 @@
           if (usagePercent > 90) {
             state.ageCache.clear();
             state.holdersCache.clear();
+            escapeCache.clear();
           }
         }
       }
@@ -328,6 +419,10 @@
       if (promise._timestamp && now - promise._timestamp > maxAge) {
         state.pendingRequests.delete(key);
       }
+    }
+    
+    if (aggressive && escapeCache.size > 100) {
+      escapeCache.clear();
     }
     
     state.lastCacheCleanup = now;
@@ -442,6 +537,19 @@
           continue;
         }
         
+        if (response.status === 404) {
+          throw new Error('Not found');
+        }
+        
+        // Handle proxy blocking
+        if (response.status === 403) {
+          if (i < retries - 1) {
+            await sleep(1000);
+            continue;
+          }
+          throw new Error('Proxy blocked');
+        }
+        
         if (response.status >= 500 && i < retries - 1) {
           const delay = Math.min(baseDelay * Math.pow(2, i) + Math.random() * 1000, maxDelay);
           await sleep(delay);
@@ -494,11 +602,15 @@
     if (key && state.pendingRequests.has(key)) {
       state.metrics.cacheHits++;
       const existing = state.pendingRequests.get(key);
-      return existing.catch(err => {
-        state.pendingRequests.delete(key);
-        throw err;
+      
+      return existing.finally(() => {
+        if (state.pendingRequests.get(key) === existing) {
+          state.pendingRequests.delete(key);
+        }
       });
     }
+    
+    const requestId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
     
     const promise = new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -515,6 +627,7 @@
         resolve, 
         reject, 
         key, 
+        id: requestId,
         timestamp: Date.now(),
         timeout
       };
@@ -531,6 +644,7 @@
     });
     
     promise._timestamp = Date.now();
+    promise._id = requestId;
     
     if (key) {
       state.pendingRequests.set(key, promise);
@@ -556,25 +670,26 @@
   };
   
   const processApiQueue = async () => {
-    if (state.processingQueue || !state.isMounted) return;
+    if (state.processingQueue) return;
     
     state.processingQueue = true;
     
     try {
-      while (state.apiQueue.length > 0 && state.isMounted) {
+      while (state.apiQueue.length > 0) {
+        if (!state.isMounted) {
+          clearQueueAndReject();
+          return;
+        }
+        
         const waitTime = checkRateLimit();
         if (waitTime > 0) {
           await sleep(waitTime);
-          if (!state.isMounted) {
-            clearQueueAndReject();
-            return;
-          }
           continue;
         }
         
         const batch = state.apiQueue.splice(0, CONFIG.BATCH_SIZE);
         
-        await Promise.allSettled(batch.map(async ({ fn, resolve, reject, key, timeout }) => {
+        await Promise.allSettled(batch.map(async ({ fn, resolve, reject, key, id, timeout }) => {
           clearTimeout(timeout);
           
           if (!state.isMounted) {
@@ -582,29 +697,32 @@
             return;
           }
           
+          const pendingCheck = key ? state.pendingRequests.get(key) : null;
+          if (key && pendingCheck && pendingCheck._id !== id) {
+            try {
+              const result = await pendingCheck;
+              resolve(result);
+            } catch (error) {
+              reject(error);
+            }
+            return;
+          }
+          
           try {
             const result = await fn();
-            
-            if (!state.isMounted) {
+            if (state.isMounted) {
+              resolve(result);
+            } else {
               reject(new Error('Component unmounted'));
-              return;
             }
-            
-            if (key) state.pendingRequests.delete(key);
-            resolve(result);
           } catch (error) {
-            if (key) state.pendingRequests.delete(key);
             state.metrics.errors++;
             reject(error);
           }
         }));
         
-        if (state.isMounted && state.apiQueue.length > 0) {
+        if (state.apiQueue.length > 0 && state.isMounted) {
           await sleep(300);
-          if (!state.isMounted) {
-            clearQueueAndReject();
-            return;
-          }
         }
       }
     } finally {
@@ -616,118 +734,226 @@
     }
   };
   
-  // ================== ENCRYPTED API KEYS STORAGE ==================
-  const encryptKeys = (keys) => {
+  // ================== IMPROVED KEY OBFUSCATION ==================
+  const obfuscateKeys = (keys) => {
     try {
-      const encoded = btoa(JSON.stringify(keys));
-      const salted = encoded + '.' + Date.now().toString(36);
-      return salted.split('').reverse().join('');
+      const str = JSON.stringify(keys);
+      const mask = 'fresh-pumps-2024';
+      let result = '';
+      
+      for (let i = 0; i < str.length; i++) {
+        result += String.fromCharCode(str.charCodeAt(i) ^ mask.charCodeAt(i % mask.length));
+      }
+      
+      return btoa(result);
     } catch {
       return null;
     }
   };
   
-  const decryptKeys = (encrypted) => {
+  const deobfuscateKeys = (obfuscated) => {
     try {
-      if (!encrypted) return null;
-      const reversed = encrypted.split('').reverse().join('');
-      const [encoded] = reversed.split('.');
-      return JSON.parse(atob(encoded));
+      if (!obfuscated) return null;
+      
+      const decoded = atob(obfuscated);
+      const mask = 'fresh-pumps-2024';
+      let result = '';
+      
+      for (let i = 0; i < decoded.length; i++) {
+        result += String.fromCharCode(decoded.charCodeAt(i) ^ mask.charCodeAt(i % mask.length));
+      }
+      
+      return JSON.parse(result);
     } catch {
       return null;
     }
   };
   
-  // ================== LOAD API KEYS ==================
+  // ================== FIXED LOAD API KEYS ==================
+  let loadingKeys = false;
+  
   async function loadApiKeys() {
-    console.log('Loading API keys via proxy...');
+    console.log('Loading API keys...');
     
-    for (const url of CONFIG.CONFIG_URLS) {
-      try {
-        const response = await fetchWithTimeout(url);
-        const html = await response.text();
-        
-        // Pattern 1: const API_KEYS = { ... };
-        let match = html.match(/const\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/);
-        
-        // Pattern 2: let API_KEYS = { ... };
-        if (!match) {
-          match = html.match(/let\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/);
+    if (loadingKeys) {
+      console.log('Already loading keys, waiting...');
+      while (loadingKeys) {
+        await sleep(100);
+      }
+      return state.apiKeys;
+    }
+    
+    loadingKeys = true;
+    
+    try {
+      // Try localStorage first
+      const stored = safeLocalStorage.getItem('api_keys_enc');
+      if (stored) {
+        try {
+          const keys = deobfuscateKeys(stored);
+          if (keys?.GOPLUS_API && keys?.HELIUS_RPC) {
+            if (isValidGoPlusKey(keys.GOPLUS_API) && isValidHeliusUrl(keys.HELIUS_RPC)) {
+              console.log('✅ API keys loaded from localStorage');
+              state.apiKeys = keys;
+              return keys;
+            }
+          }
+        } catch (e) {
+          console.warn('Failed to decrypt stored keys:', e);
         }
-        
-        // Pattern 3: var API_KEYS = { ... };
-        if (!match) {
-          match = html.match(/var\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/);
+      }
+      
+      // Try loading from config URLs
+      for (const url of CONFIG.CONFIG_URLS) {
+        try {
+          console.log('Trying to load from:', url);
+          
+          const controller = createAbortController();
+          const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
+          
+          const response = await fetch(url, {
+            signal: controller.signal,
+            headers: { 'Accept': 'text/plain' }
+          });
+          
+          clearTimeout(timeoutId);
+          
+          if (!response.ok) {
+            console.warn(`HTTP ${response.status} from ${url}`);
+            continue;
+          }
+          
+          const text = await response.text();
+          
+          // Try different patterns to find API_KEYS
+          const patterns = [
+            /const\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/,
+            /let\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/,
+            /var\s+API_KEYS\s*=\s*(\{[\s\S]*?\});/,
+            /API_KEYS\s*=\s*(\{[\s\S]*?\});/,
+            /<script>[\s\S]*?API_KEYS\s*=\s*(\{[\s\S]*?\});/
+          ];
+          
+          let match = null;
+          for (const pattern of patterns) {
+            match = text.match(pattern);
+            if (match) break;
+          }
+          
+          if (!match) {
+            console.warn('No API_KEYS pattern found');
+            continue;
+          }
+          
+          const keys = parseApiKeys(match[1]);
+          
+          if (keys?.GOPLUS_API && keys?.HELIUS_RPC) {
+            console.log('✅ API keys loaded from config URL');
+            
+            const obfuscated = obfuscateKeys(keys);
+            if (obfuscated) {
+              safeLocalStorage.setItem('api_keys_enc', obfuscated);
+            }
+            
+            state.apiKeys = keys;
+            return keys;
+          }
+          
+        } catch (e) {
+          console.warn(`Failed to load from ${url}:`, e.message);
         }
-        
-        // Pattern 4: API_KEYS = { ... };
-        if (!match) {
-          match = html.match(/API_KEYS\s*=\s*(\{[\s\S]*?\});/);
+      }
+      
+      console.error('❌ Could not load API keys');
+      showToast('Failed to load API keys. Please refresh.', 'error');
+      return null;
+      
+    } finally {
+      loadingKeys = false;
+    }
+  }
+  
+  // ================== FETCH WITH PROXY ==================
+  async function fetchWithProxy(url) {
+    if (!state.isMounted) throw new Error('Component unmounted');
+    
+    let cleanUrl;
+    try {
+      cleanUrl = new URL(url).toString();
+    } catch {
+      throw new Error('Invalid URL');
+    }
+    
+    const proxies = [
+      CONFIG.API_PROXY + encodeURIComponent(cleanUrl),
+      CONFIG.FALLBACK_PROXY + encodeURIComponent(cleanUrl)
+    ].filter(p => p && p.startsWith('http'));
+    
+    if (proxies.length === 0) {
+      throw new Error('No valid proxies available');
+    }
+    
+    let lastError = null;
+    
+    for (let attempt = 0; attempt < CONFIG.MAX_PROXY_RETRIES; attempt++) {
+      if (!state.isMounted) throw new Error('Component unmounted');
+      
+      for (let i = 0; i < proxies.length; i++) {
+        try {
+          const controller = createAbortController();
+          const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
+          
+          const response = await fetch(proxies[i], {
+            signal: controller.signal,
+            headers: {
+              'Origin': window.location.origin,
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+          
+          clearTimeout(timeoutId);
+          
+          if (!state.isMounted) throw new Error('Component unmounted');
+          
+          // Handle 403 immediately - try next proxy
+          if (response.status === 403) {
+            console.warn('Proxy 403, trying next...');
+            continue;
+          }
+          
+          const contentType = response.headers.get('content-type') || '';
+          
+          if (!contentType.includes('application/json') && !contentType.includes('text/plain')) {
+            console.warn('Proxy returned unexpected content type:', contentType);
+            continue;
+          }
+          
+          const text = await response.text();
+          
+          if (!text || text.trim() === '') {
+            console.warn('Empty response from proxy');
+            continue;
+          }
+          
+          try {
+            return JSON.parse(text);
+          } catch {
+            return text;
+          }
+          
+        } catch (error) {
+          lastError = error;
+          console.warn(`Proxy attempt ${attempt + 1} failed:`, error.message);
         }
-        
-        if (!match) {
-          console.warn('No API_KEYS pattern found in HTML');
-          continue;
-        }
-        
-        // Clean up the JSON string
-        let jsonStr = match[1]
-          .replace(/\/\/.*$/gm, '') // Remove single line comments
-          .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-          .replace(/'/g, '"') // Replace single quotes with double quotes
-          .replace(/(\w+):/g, '"$1":') // Add quotes to property names
-          .replace(/,\s*}/g, '}') // Remove trailing commas
-          .replace(/,\s*]/g, ']'); // Remove trailing commas in arrays
-        
-        // Parse the cleaned JSON
-        const rawKeys = JSON.parse(jsonStr);
-        
-        // Format keys for our app
-        const formattedKeys = {
-          GOPLUS_API: rawKeys.GOPLUS_API_KEY || rawKeys.GOPLUS_API || rawKeys.GOPLUS,
-          HELIUS_RPC: rawKeys.HELIUS_RPC || rawKeys.HELIUS_API_KEY || rawKeys.HELIUS
-        };
-        
-        // Validate
-        if (!formattedKeys.GOPLUS_API || !formattedKeys.HELIUS_RPC) {
-          console.warn('Missing required API keys');
-          continue;
-        }
-        
-        console.log('✅ API keys loaded successfully');
-        
-        // Store encrypted in localStorage
-        const encrypted = encryptKeys(formattedKeys);
-        if (encrypted) {
-          safeLocalStorage.setItem('api_keys_enc', encrypted);
-        }
-        
-        state.apiKeys = formattedKeys;
-        return formattedKeys;
-        
-      } catch (e) {
-        console.warn(`Failed to load from ${url}:`, e.message);
+      }
+      
+      if (attempt < CONFIG.MAX_PROXY_RETRIES - 1) {
+        const delay = Math.min(1000 * Math.pow(2, attempt), 10000);
+        await sleep(delay);
       }
     }
     
-    // Try localStorage
-    const stored = safeLocalStorage.getItem('api_keys_enc');
-    if (stored) {
-      try {
-        const keys = decryptKeys(stored);
-        if (keys && keys.GOPLUS_API && keys.HELIUS_RPC) {
-          console.log('✅ API keys loaded from encrypted localStorage');
-          state.apiKeys = keys;
-          return keys;
-        }
-      } catch (e) {
-        console.warn('Failed to decrypt stored keys:', e.message);
-      }
-    }
-    
-    console.error('❌ Could not load API keys from any source');
-    showToast('Failed to load API keys. Please refresh.', 'error');
-    return null;
+    throw lastError || new Error('All proxies failed');
   }
   
   // ================== FETCH TOKEN AGE (GoPlus) ==================
@@ -742,8 +968,7 @@
     
     if (state.ageCache.has(cacheKey)) {
       const cached = state.ageCache.get(cacheKey);
-      if (cached.value !== null && cached.value !== undefined && 
-          Date.now() - cached.timestamp < CONFIG.CACHE_MAX_AGE) {
+      if (cached.value && Date.now() - cached.timestamp < CONFIG.CACHE_MAX_AGE) {
         state.metrics.cacheHits++;
         return cached.value;
       }
@@ -758,9 +983,7 @@
         
         const response = await fetch(url, {
           signal: controller.signal,
-          headers: {
-            'X-API-Key': state.apiKeys.GOPLUS_API
-          }
+          headers: { 'x-api-key': state.apiKeys.GOPLUS_API } // Fixed header case
         });
         
         clearTimeout(timeoutId);
@@ -770,34 +993,22 @@
         if (response.status === 429) {
           if (retryCount < MAX_RETRIES) {
             const waitTime = 5000 * Math.pow(2, retryCount);
-            showToast(`Rate limited, retrying in ${waitTime/1000}s...`, 'warning');
             await sleep(waitTime);
             if (!state.isMounted) return null;
             return fetchTokenAge(address, retryCount + 1);
           }
-          showToast('GoPlus rate limit exceeded', 'error');
           return null;
         }
         
-        if (!response.ok) {
-          console.warn(`GoPlus HTTP error: ${response.status}`);
-          return null;
-        }
+        if (response.status === 404) return null;
+        if (!response.ok) return null;
         
-        let data;
-        try {
-          data = await response.json();
-        } catch (e) {
-          console.warn('Failed to parse GoPlus response:', e);
-          return null;
-        }
+        const data = await response.json();
         
         if (data.code === 1 && data.result) {
-          const tokenData = data.result;
-          
-          const creationTime = tokenData.creation_time || 
-                             tokenData.create_time || 
-                             tokenData.created_at;
+          const creationTime = data.result.creation_time || 
+                             data.result.create_time || 
+                             data.result.created_at;
           
           const timestamp = safeParseTimestamp(creationTime);
           
@@ -813,10 +1024,10 @@
           }
         }
         
-        console.warn('GoPlus: No creation time found');
         return null;
         
       } catch (e) {
+        if (e.name === 'AbortError') return null;
         console.warn('GoPlus error:', e.message);
         return null;
       }
@@ -836,8 +1047,13 @@
     if (state.holdersCache.has(cacheKey)) {
       const cached = state.holdersCache.get(cacheKey);
       if (Date.now() - cached.timestamp < CONFIG.CACHE_MAX_AGE) {
-        state.metrics.cacheHits++;
-        return cached.value;
+        const isValid = cached.value && 
+                       (typeof cached.value.count === 'number') &&
+                       (cached.value.count >= 0);
+        if (isValid) {
+          state.metrics.cacheHits++;
+          return cached.value;
+        }
       }
     }
     
@@ -859,44 +1075,31 @@
         if (response.status === 429) {
           if (retryCount < MAX_RETRIES) {
             const waitTime = 5000 * Math.pow(2, retryCount);
-            showToast(`Helius rate limited, retrying in ${waitTime/1000}s...`, 'warning');
             await sleep(waitTime);
             if (!state.isMounted) return null;
             return fetchTokenHolders(address, retryCount + 1, liquidity);
           }
-          showToast('Helius rate limit exceeded', 'error');
           return { count: 0, topConcentration: 0, isEstimate: true };
         }
         
         const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          console.warn('Helius returned non-JSON response');
+        if (!contentType?.includes('application/json')) {
           return { count: 0, topConcentration: 0, isEstimate: true };
         }
         
-        let data;
-        try {
-          data = await response.json();
-        } catch (e) {
-          console.warn('Failed to parse Helius response:', e);
-          return { count: 0, topConcentration: 0, isEstimate: true };
-        }
+        const data = await response.json();
         
         if (data.error) {
-          console.warn('Helius RPC error:', data.error);
+          if (data.error.code === -32602) return null;
           return { count: 0, topConcentration: 0, isEstimate: true };
         }
         
         const accounts = data.result?.value || [];
-        
-        if (!accounts.length) {
-          return { count: 0, topConcentration: 0, isEstimate: false };
-        }
+        if (!accounts.length) return { count: 0, topConcentration: 0, isEstimate: false };
         
         accounts.sort((a, b) => (b.uiAmount || 0) - (a.uiAmount || 0));
         
         const totalSupply = accounts.reduce((sum, acc) => sum + (acc.uiAmount || 0), 0);
-        
         if (totalSupply === 0) {
           return { count: accounts.length, topConcentration: 0, isEstimate: false };
         }
@@ -908,7 +1111,7 @@
         let confidence = 'high';
         
         if (accounts.length === 20) {
-          const top20Sum = accounts.reduce((sum, acc) => sum + (acc.uiAmount || 0), 0);
+          const top20Sum = accounts.slice(0, 20).reduce((sum, acc) => sum + (acc.uiAmount || 0), 0);
           const top20Percentage = (top20Sum / totalSupply) * 100;
           
           let maxEstimate = CONFIG.MAX_HOLDERS_ESTIMATE;
@@ -929,9 +1132,6 @@
               maxEstimate
             );
             confidence = 'medium';
-          } else {
-            estimatedHolders = 20;
-            confidence = 'high';
           }
         }
         
@@ -957,44 +1157,43 @@
     }, cacheKey);
   }
   
-  // ================== FIXED WebSocket with proper Helius URL ==================
+  // ================== FIXED WebSocket ==================
   function initWebSocket() {
     if (!state.apiKeys?.HELIUS_RPC) return;
     if (!state.isMounted) return;
     
-    const wsUrl = state.apiKeys.HELIUS_RPC.replace('https://', 'wss://');
-    
     try {
-      new URL(wsUrl);
-    } catch (e) {
-      console.warn('Invalid WebSocket URL:', e.message);
-      return;
-    }
-    
-    if (state.wsReconnectTimer) {
-      clearTimeout(state.wsReconnectTimer);
-      state.wsReconnectTimer = null;
-    }
-    
-    if (state.wsPingInterval) {
-      clearInterval(state.wsPingInterval);
-      state.wsPingInterval = null;
-    }
-    
-    if (state.ws) {
-      try {
-        state.ws.close(1000, 'Reconnecting');
-      } catch (e) {}
-      state.ws = null;
-    }
-    
-    try {
-      console.log('Connecting to WebSocket:', wsUrl);
+      // Fix WebSocket URL conversion
+      const url = new URL(state.apiKeys.HELIUS_RPC);
+      url.protocol = 'wss:';
+      const wsUrl = url.toString();
+      
+      // Clean up existing WebSocket
+      if (state.ws) {
+        try {
+          state.ws.onclose = null;
+          state.ws.onerror = null;
+          state.ws.onopen = null;
+          state.ws.onmessage = null;
+          state.ws.close(1000, 'Reconnecting');
+        } catch (e) {}
+        state.ws = null;
+      }
+      
+      if (state.wsReconnectTimer) {
+        clearTimeout(state.wsReconnectTimer);
+        state.wsReconnectTimer = null;
+      }
+      
+      if (state.wsPingInterval) {
+        clearInterval(state.wsPingInterval);
+        state.wsPingInterval = null;
+      }
+      
       const ws = new WebSocket(wsUrl);
       
       const connectionTimeout = setTimeout(() => {
         if (ws.readyState !== WebSocket.OPEN) {
-          console.warn('WebSocket connection timeout');
           ws.close();
         }
       }, 5000);
@@ -1005,24 +1204,22 @@
           ws.close(1000, 'Component unmounted');
           return;
         }
+        
         console.log('✅ WebSocket connected');
+        state.ws = ws;
         
         const subscribeMsg = {
           jsonrpc: '2.0',
           id: 1,
           method: 'logsSubscribe',
-          params: [
-            {
-              mentions: ['TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA']
-            },
-            {
-              commitment: 'processed'
-            }
-          ]
+          params: [{
+            mentions: ['TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA']
+          }, {
+            commitment: 'processed'
+          }]
         };
         
         ws.send(JSON.stringify(subscribeMsg));
-        console.log('Subscribed to token creation logs');
         
         state.wsPingInterval = setInterval(() => {
           if (ws.readyState === WebSocket.OPEN && state.isMounted) {
@@ -1040,13 +1237,10 @@
           if (data.method === 'logsNotification' && data.params?.result?.value) {
             const log = data.params.result.value;
             
-            if (log.logs && log.logs.some(l => 
+            if (log.logs?.some(l => 
               l.includes('initialize mint') || 
-              l.includes('create mint') ||
-              l.includes('Program log: Instruction: MintToChecked')
+              l.includes('create mint')
             )) {
-              console.log('New token detected!', log.signature);
-              
               if (!state.isRefreshing && !state.isLoading) {
                 loadTokens();
               }
@@ -1057,123 +1251,36 @@
         }
       };
       
-      ws.onerror = (error) => {
-        console.warn('WebSocket error:', error);
+      ws.onerror = () => {
         clearTimeout(connectionTimeout);
       };
       
       ws.onclose = (event) => {
         clearTimeout(connectionTimeout);
-        console.log('WebSocket closed:', event.code, event.reason);
+        
+        if (state.ws === ws) {
+          state.ws = null;
+        }
         
         if (state.wsPingInterval) {
           clearInterval(state.wsPingInterval);
           state.wsPingInterval = null;
         }
         
-        if (state.ws === ws) {
-          state.ws = null;
-        }
-        
-        if (state.wsReconnectTimer) {
-          clearTimeout(state.wsReconnectTimer);
-          state.wsReconnectTimer = null;
-        }
-        
-        if (state.isMounted && event.code !== 1000) {
+        // Don't reconnect on auth error (4001) or normal close (1000)
+        if (state.isMounted && event.code !== 1000 && event.code !== 4001) {
+          if (state.wsReconnectTimer) clearTimeout(state.wsReconnectTimer);
           state.wsReconnectTimer = setTimeout(() => {
             if (state.isMounted && !state.ws) {
-              console.log('Reconnecting WebSocket...');
               initWebSocket();
             }
           }, CONFIG.WS_RECONNECT_DELAY);
         }
       };
       
-      state.ws = ws;
-      
     } catch (e) {
       console.warn('WebSocket init failed:', e);
     }
-  }
-  
-  // ================== FETCH WITH PROXY (FIXED - NO RECURSION) ==================
-  async function fetchWithProxy(url) {
-    if (!state.isMounted) throw new Error('Component unmounted');
-    
-    let cleanUrl;
-    try {
-      cleanUrl = new URL(url).toString();
-    } catch {
-      throw new Error('Invalid URL');
-    }
-    
-    const proxies = [
-      CONFIG.API_PROXY + encodeURIComponent(cleanUrl),
-      CONFIG.FALLBACK_PROXY + encodeURIComponent(cleanUrl)
-    ].filter(p => p && p.startsWith('http'));
-    
-    if (proxies.length === 0) {
-      throw new Error('No valid proxies available');
-    }
-    
-    for (let attempt = 0; attempt < CONFIG.MAX_PROXY_RETRIES; attempt++) {
-      if (!state.isMounted) throw new Error('Component unmounted');
-      
-      for (let i = 0; i < proxies.length; i++) {
-        try {
-          const controller = createAbortController();
-          const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
-          
-          const response = await fetch(proxies[i], {
-            signal: controller.signal,
-            headers: {
-              'Origin': window.location.origin,
-              'X-Requested-With': 'XMLHttpRequest'
-            }
-          });
-          
-          clearTimeout(timeoutId);
-          
-          if (!state.isMounted) throw new Error('Component unmounted');
-          
-          const contentType = response.headers.get('content-type');
-          if (!contentType || !contentType.includes('application/json')) {
-            console.warn('Proxy returned non-JSON response');
-            continue;
-          }
-          
-          const text = await response.text();
-          
-          if (!text || text.trim() === '') {
-            console.warn('Empty response from proxy');
-            continue;
-          }
-          
-          if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
-            console.warn('Proxy returned HTML error page');
-            continue;
-          }
-          
-          try {
-            return JSON.parse(text);
-          } catch (e) {
-            console.warn('Proxy returned invalid JSON');
-            continue;
-          }
-          
-        } catch (error) {
-          console.warn(`Proxy attempt ${attempt + 1} failed:`, error.message);
-        }
-      }
-      
-      if (attempt < CONFIG.MAX_PROXY_RETRIES - 1) {
-        await sleep(1000 * Math.pow(2, attempt));
-        if (!state.isMounted) throw new Error('Component unmounted');
-      }
-    }
-    
-    throw new Error('All proxies failed');
   }
   
   // ================== DEXSCREENER API ==================
@@ -1181,12 +1288,7 @@
     if (!state.isMounted) return [];
     
     try {
-      const searchQueries = [
-        '?q=created',
-        '?q=pump.fun',
-        '?q=raydium',
-        '?q=new'
-      ];
+      const searchQueries = ['?q=created', '?q=pump.fun', '?q=raydium', '?q=new'];
       
       const results = await Promise.allSettled(
         searchQueries.map(q => fetchWithProxy(`${CONFIG.DEXSCREENER_API}${q}`))
@@ -1197,9 +1299,7 @@
       const allPairs = [];
       
       results.forEach(result => {
-        if (result.status === 'fulfilled' && 
-            result.value && 
-            Array.isArray(result.value.pairs)) {
+        if (result.status === 'fulfilled' && result.value?.pairs) {
           allPairs.push(...result.value.pairs);
         }
       });
@@ -1207,173 +1307,164 @@
       const uniquePairs = new Map();
       
       allPairs
-        .filter(p => p && p.chainId === 'solana')
+        .filter(p => p?.chainId === 'solana')
         .forEach(p => {
           if (p.baseToken?.address && !uniquePairs.has(p.baseToken.address)) {
             uniquePairs.set(p.baseToken.address, p);
           }
         });
       
-      const sortedPairs = Array.from(uniquePairs.values())
+      return Array.from(uniquePairs.values())
         .sort((a, b) => (b.pairCreatedAt || 0) - (a.pairCreatedAt || 0))
-        .slice(0, 100);
-      
-      return sortedPairs.map(p => ({
-        address: safeGet(p, 'baseToken.address'),
-        symbol: String(safeGet(p, 'baseToken.symbol', '???')).substring(0, 20),
-        pairCreatedAt: p.pairCreatedAt || 0,
-        liquidity: safeGet(p, 'liquidity.usd', 0),
-        priceChange5m: safeGet(p, 'priceChange.m5', 0),
-        fdv: p.fdv || 0,
-        platform: String(p.dexId || 'unknown').toLowerCase(),
-        url: p.url || ''
-      }))
-      .filter(t => t.address && isValidSolanaAddress(t.address));
+        .slice(0, 100)
+        .map(p => ({
+          address: safeGet(p, 'baseToken.address'),
+          symbol: String(safeGet(p, 'baseToken.symbol', '???')).substring(0, 20),
+          pairCreatedAt: p.pairCreatedAt || 0,
+          liquidity: safeGet(p, 'liquidity.usd', 0),
+          priceChange5m: safeGet(p, 'priceChange.m5', 0),
+          fdv: p.fdv || 0,
+          platform: String(p.dexId || 'unknown').toLowerCase(),
+          url: p.url || ''
+        }))
+        .filter(t => t.address && isValidSolanaAddress(t.address));
       
     } catch (error) {
       console.error('DexScreener error:', error);
-      showToast('Failed to fetch tokens', 'error');
       return [];
     }
   };
   
-  // ================== FIXED loadTokens with proper abort order ==================
+  // ================== FIXED loadTokens ==================
   const loadTokens = async () => {
+    // Prevent multiple simultaneous loads
+    if (state.loadPromise) {
+      return state.loadPromise;
+    }
+    
     if (state.isRefreshing || state.isLoading) {
       console.log('Already loading tokens, skipping...');
       return;
     }
-    if (!state.isMounted) return;
     
-    state.isRefreshing = true;
-    state.isLoading = true;
-    
-    abortAllRequests();
-    
-    const grid = getElement('tokenGrid');
-    const refreshBtn = getElement('refreshBtn');
-    const loadMoreBtn = document.querySelector('.load-more-btn');
-    
-    if (refreshBtn) refreshBtn.disabled = true;
-    if (loadMoreBtn) loadMoreBtn.disabled = true;
-    
-    try {
-      if (!state.apiKeys) {
-        const keys = await loadApiKeys();
-        if (!keys) {
-          if (grid && state.isMounted) {
-            grid.innerHTML = '<div class="empty error-message">❌ Failed to load API keys. Please refresh.</div>';
+    state.loadPromise = (async () => {
+      if (!state.isMounted) return;
+      
+      state.isRefreshing = true;
+      state.isLoading = true;
+      
+      abortAllRequests();
+      
+      const grid = getElement('tokenGrid');
+      const refreshBtn = getElement('refreshBtn');
+      
+      if (refreshBtn) refreshBtn.disabled = true;
+      
+      try {
+        if (!state.apiKeys) {
+          const keys = await loadApiKeys();
+          if (!keys) {
+            if (grid && state.isMounted) {
+              grid.innerHTML = '<div class="empty error-message">❌ Failed to load API keys. Please refresh.</div>';
+            }
+            return;
           }
+          initWebSocket();
+        }
+        
+        if (!state.isMounted) return;
+        
+        if (grid) grid.innerHTML = '<div class="loader">LOADING FRESH TOKENS...</div>';
+        
+        const tokens = await fetchNewTokens();
+        
+        if (!state.isMounted) return;
+        
+        if (!tokens.length) {
+          if (grid) grid.innerHTML = '<div class="empty">✨ NO TOKENS FOUND</div>';
           return;
         }
         
-        if (state.ws) {
-          try {
-            state.ws.close();
-          } catch (e) {}
-          state.ws = null;
+        const enriched = [];
+        
+        for (let i = 0; i < tokens.length; i += CONFIG.BATCH_SIZE) {
+          if (!state.isMounted) return;
+          
+          const batch = tokens.slice(i, i + CONFIG.BATCH_SIZE);
+          
+          if (grid) {
+            grid.innerHTML = `<div class="loader">PROCESSING ${Math.min(i + CONFIG.BATCH_SIZE, tokens.length)}/${tokens.length} TOKENS...</div>`;
+          }
+          
+          const batchPromises = batch.map(async (token) => {
+            try {
+              const [ageResult, holdersResult] = await Promise.allSettled([
+                fetchTokenAge(token.address),
+                fetchTokenHolders(token.address, 0, token.liquidity)
+              ]);
+              
+              if (!state.isMounted) return null;
+              
+              const ageData = ageResult.status === 'fulfilled' ? ageResult.value : null;
+              const holdersData = holdersResult.status === 'fulfilled' ? holdersResult.value : null;
+              
+              return {
+                ...token,
+                exactAge: ageData?.timestamp || null,
+                ageSource: ageData?.source || null,
+                holders: holdersData?.count,
+                topHolder: holdersData?.topConcentration,
+                holdersIsEstimate: holdersData?.isEstimate || false,
+                holdersConfidence: holdersData?.confidence || 'low',
+                holdersRawCount: holdersData?.rawCount,
+                ageMinutes: token.pairCreatedAt ? 
+                  Math.max(0, Math.round((Date.now() - token.pairCreatedAt) / 60000)) : null
+              };
+            } catch {
+              return token;
+            }
+          });
+          
+          const results = await Promise.allSettled(batchPromises);
+          
+          results.forEach(r => {
+            if (r.status === 'fulfilled' && r.value) {
+              enriched.push(r.value);
+            }
+          });
         }
-        initWebSocket();
-      }
-      
-      if (!state.isMounted) return;
-      
-      if (grid && state.isMounted) {
-        grid.innerHTML = '<div class="loader">LOADING FRESH TOKENS...</div>';
-      }
-      
-      const tokens = await fetchNewTokens();
-      
-      if (!state.isMounted) return;
-      
-      if (!tokens.length) {
-        if (grid) {
-          grid.innerHTML = '<div class="empty">✨ NO TOKENS FOUND</div>';
-        }
-        return;
-      }
-      
-      const enriched = [];
-      
-      for (let i = 0; i < tokens.length; i += CONFIG.BATCH_SIZE) {
+        
         if (!state.isMounted) return;
         
-        const batch = tokens.slice(i, i + CONFIG.BATCH_SIZE);
+        state.tokens = enriched;
+        state.displayedTokens = CONFIG.TOKENS_PER_PAGE;
+        state.filteredTokensCache = null;
+        state.lastTokensHash = generateHash(enriched);
+        state.filteredTokens = getFilteredTokens();
         
+        measureCardHeight();
+        renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
+        
+        showToast(`Loaded ${enriched.length} tokens`, 'success');
+        
+      } catch (error) {
+        console.error('Failed to load:', error);
         if (grid && state.isMounted) {
-          grid.innerHTML = `<div class="loader">PROCESSING ${Math.min(i + CONFIG.BATCH_SIZE, tokens.length)}/${tokens.length} TOKENS...</div>`;
+          grid.innerHTML = '<div class="empty error-message">❌ ERROR LOADING TOKENS</div>';
         }
-        
-        const batchPromises = batch.map(async (token) => {
-          try {
-            const [ageResult, holdersResult] = await Promise.allSettled([
-              fetchTokenAge(token.address),
-              fetchTokenHolders(token.address, 0, token.liquidity)
-            ]);
-            
-            if (!state.isMounted) return null;
-            
-            const ageData = ageResult.status === 'fulfilled' ? ageResult.value : null;
-            const holdersData = holdersResult.status === 'fulfilled' ? holdersResult.value : null;
-            
-            return {
-              ...token,
-              exactAge: ageData?.timestamp || null,
-              ageSource: ageData?.source || null,
-              holders: holdersData?.count,
-              topHolder: holdersData?.topConcentration,
-              holdersIsEstimate: holdersData?.isEstimate || false,
-              holdersConfidence: holdersData?.confidence || 'low',
-              holdersRawCount: holdersData?.rawCount,
-              ageMinutes: token.pairCreatedAt ? 
-                Math.max(0, Math.round((Date.now() - token.pairCreatedAt) / 60000)) : null
-            };
-          } catch (e) {
-            console.warn('Token enrichment failed:', token.address);
-            return token;
-          }
-        });
-        
-        const results = await Promise.allSettled(batchPromises);
-        if (!state.isMounted) return;
-        
-        results.forEach(r => {
-          if (r.status === 'fulfilled' && r.value) {
-            enriched.push(r.value);
-          }
-        });
+        state.metrics.errors++;
+      } finally {
+        state.isRefreshing = false;
+        state.isLoading = false;
+        if (refreshBtn) refreshBtn.disabled = false;
+        state.loadPromise = null;
       }
-      
-      if (!state.isMounted) return;
-      
-      state.tokens = enriched;
-      state.displayedTokens = CONFIG.TOKENS_PER_PAGE;
-      state.filteredTokensCache = null;
-      state.lastTokensHash = generateHash(enriched);
-      state.filteredTokens = getFilteredTokens();
-      
-      measureCardHeight();
-      renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
-      
-      showToast(`Loaded ${enriched.length} tokens`, 'success');
-      
-    } catch (error) {
-      console.error('Failed to load:', error);
-      if (grid && state.isMounted) {
-        grid.innerHTML = '<div class="empty error-message">❌ ERROR LOADING TOKENS</div>';
-      }
-      showToast('Failed to load tokens', 'error');
-      state.metrics.errors++;
-    } finally {
-      state.isRefreshing = false;
-      state.isLoading = false;
-      
-      if (refreshBtn) refreshBtn.disabled = false;
-      if (loadMoreBtn) loadMoreBtn.disabled = false;
-    }
+    })();
+    
+    return state.loadPromise;
   };
   
-  // ================== MEASURE CARD HEIGHT FOR VIRTUAL SCROLL ==================
+  // ================== MEASURE CARD HEIGHT ==================
   const measureCardHeight = () => {
     if (state.virtualScroll.cardHeightMeasured) return;
     
@@ -1390,9 +1481,7 @@
       platform: 'raydium',
       url: '#',
       holders: 100,
-      topHolder: 15,
-      holdersIsEstimate: true,
-      holdersConfidence: 'medium'
+      topHolder: 15
     });
     
     testCard.style.visibility = 'hidden';
@@ -1412,7 +1501,7 @@
                                        CONFIG.VIRTUAL_SCROLL_BUFFER * 2;
   };
   
-  // ================== OPTIMIZED FILTER WITH MEMOIZATION ==================
+  // ================== OPTIMIZED FILTER ==================
   const getFilteredTokens = () => {
     const currentFilters = {
       time: state.timeFilter,
@@ -1421,10 +1510,8 @@
       sort: state.sort
     };
     
-    const currentTokensHash = state.lastTokensHash;
-    
     const filtersChanged = JSON.stringify(state.lastFilters) !== JSON.stringify(currentFilters);
-    const tokensChanged = state.lastTokensHash !== currentTokensHash;
+    const tokensChanged = state.lastTokensHash !== generateHash(state.tokens);
     
     if (!filtersChanged && !tokensChanged && state.filteredTokensCache) {
       return state.filteredTokensCache;
@@ -1435,9 +1522,9 @@
       
       let age = null;
       
-      if (t.exactAge !== null && t.exactAge !== undefined) {
-        age = Math.max(0, Math.round((Date.now() - t.exactAge) / 60000));
-      } else if (t.ageMinutes !== null && t.ageMinutes !== undefined) {
+      if (t.exactAge) {
+        age = calculateAgeMinutes(t.exactAge);
+      } else if (t.ageMinutes != null) {
         age = t.ageMinutes;
       }
       
@@ -1483,7 +1570,7 @@
     return sorted;
   };
   
-  // ================== VIRTUAL SCROLLING ==================
+  // ================== VIRTUAL SCROLL ==================
   const initVirtualScroll = () => {
     const grid = getElement('tokenGrid');
     if (!grid) return;
@@ -1492,10 +1579,6 @@
     
     if (!state.virtualScroll.cardHeightMeasured) {
       measureCardHeight();
-    } else {
-      const containerHeight = grid.clientHeight;
-      state.virtualScroll.visibleItems = Math.ceil(containerHeight / state.virtualScroll.itemHeight) + 
-                                         CONFIG.VIRTUAL_SCROLL_BUFFER * 2;
     }
     
     const handleScroll = throttle(() => {
@@ -1526,100 +1609,64 @@
     
     grid.addEventListener('scroll', handleScroll);
     
-    if (window.ResizeObserver) {
-      state.resizeObserver = new ResizeObserver(debounce(() => {
-        if (state.isMounted && grid) {
-          const containerHeight = grid.clientHeight;
-          state.virtualScroll.visibleItems = Math.ceil(containerHeight / state.virtualScroll.itemHeight) + 
-                                             CONFIG.VIRTUAL_SCROLL_BUFFER * 2;
-          renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
-        }
-      }, 200));
-      
-      state.resizeObserver.observe(grid);
-    }
-    
-    return () => {
-      grid.removeEventListener('scroll', handleScroll);
-      if (state.resizeObserver) {
-        state.resizeObserver.disconnect();
-      }
-    };
+    return () => grid.removeEventListener('scroll', handleScroll);
   };
+  
+  // ================== RESIZE HANDLER ==================
+  const handleResize = debounce(() => {
+    if (state.isMounted) {
+      state.virtualScroll.cardHeightMeasured = false;
+      measureCardHeight();
+      renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
+    }
+  }, 250);
   
   // ================== VIRTUAL RENDER ==================
   const renderTokensVirtual = (allTokens) => {
     const grid = getElement('tokenGrid');
     if (!grid || !state.isMounted) return;
     
-    if (!allTokens || !allTokens.length) {
+    if (!allTokens?.length) {
       grid.innerHTML = '<div class="empty">✨ NO TOKENS FOUND</div>';
-      if (state.loadMoreBtnInstance && state.loadMoreBtnInstance.parentNode) {
-        state.loadMoreBtnInstance.remove();
-      }
-      state.loadMoreBtnInstance = null;
       return;
     }
     
     const startTime = performance.now();
     
-    const { scrollTop, container, itemHeight, visibleItems } = state.virtualScroll;
+    const { scrollTop, itemHeight } = state.virtualScroll;
+    const containerHeight = grid.clientHeight;
     
     const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - CONFIG.VIRTUAL_SCROLL_BUFFER);
     const endIndex = Math.min(allTokens.length, 
-                              Math.ceil((scrollTop + container.clientHeight) / itemHeight) + 
+                              Math.ceil((scrollTop + containerHeight) / itemHeight) + 
                               CONFIG.VIRTUAL_SCROLL_BUFFER);
     
     const visibleTokens = allTokens.slice(startIndex, endIndex);
     
-    const topPlaceholder = document.createElement('div');
-    topPlaceholder.style.height = `${startIndex * itemHeight}px`;
-    topPlaceholder.style.width = '100%';
-    
-    const bottomPlaceholder = document.createElement('div');
-    bottomPlaceholder.style.height = `${(allTokens.length - endIndex) * itemHeight}px`;
-    bottomPlaceholder.style.width = '100%';
-    
     const fragment = document.createDocumentFragment();
     
     if (startIndex > 0) {
+      const topPlaceholder = document.createElement('div');
+      topPlaceholder.style.height = `${startIndex * itemHeight}px`;
+      topPlaceholder.style.width = '100%';
       fragment.appendChild(topPlaceholder);
     }
     
     visibleTokens.forEach(t => {
-      if (!t) return;
-      
-      const card = createTokenCard(t);
-      fragment.appendChild(card);
+      if (t) fragment.appendChild(createTokenCard(t));
     });
     
     if (endIndex < allTokens.length) {
+      const bottomPlaceholder = document.createElement('div');
+      bottomPlaceholder.style.height = `${(allTokens.length - endIndex) * itemHeight}px`;
+      bottomPlaceholder.style.width = '100%';
       fragment.appendChild(bottomPlaceholder);
-    }
-    
-    if (state.displayedTokens < state.filteredTokens.length) {
-      if (!state.loadMoreBtnInstance) {
-        state.loadMoreBtnInstance = document.createElement('button');
-        state.loadMoreBtnInstance.className = 'load-more-btn';
-        state.loadMoreBtnInstance.onclick = loadMoreTokens;
-      }
-      state.loadMoreBtnInstance.textContent = `LOAD MORE (${state.filteredTokens.length - state.displayedTokens} LEFT)`;
-      state.loadMoreBtnInstance.disabled = state.isRefreshing || state.isLoadingMore;
-      fragment.appendChild(state.loadMoreBtnInstance);
-    } else {
-      if (state.loadMoreBtnInstance && state.loadMoreBtnInstance.parentNode) {
-        state.loadMoreBtnInstance.remove();
-      }
-      state.loadMoreBtnInstance = null;
     }
     
     grid.innerHTML = '';
     grid.appendChild(fragment);
     
     state.metrics.renderTime = performance.now() - startTime;
-    if (state.metrics.renderTime > 100) {
-      console.warn(`Slow render: ${state.metrics.renderTime.toFixed(2)}ms`);
-    }
   };
   
   // ================== CREATE TOKEN CARD ==================
@@ -1628,15 +1675,15 @@
     let ageSource = 'dex';
     let ageIsEstimate = true;
     
-    if (t.exactAge !== null && t.exactAge !== undefined) {
-      const timestamp = Number(t.exactAge);
-      if (!isNaN(timestamp) && timestamp > 0) {
-        ageValue = Math.max(0, Math.round((Date.now() - timestamp) / 60000));
+    if (t.exactAge) {
+      const age = calculateAgeMinutes(t.exactAge);
+      if (age !== null) {
+        ageValue = age;
         ageSource = t.ageSource || 'goplus';
         ageIsEstimate = false;
       }
     } else if (t.ageMinutes != null) {
-      ageValue = Math.max(0, t.ageMinutes);
+      ageValue = t.ageMinutes;
       ageSource = 'dex';
       ageIsEstimate = true;
     }
@@ -1645,167 +1692,91 @@
     const safeAddress = escapeHtml(t.address || '');
     const safeAddressAttr = escapeAttribute(t.address || '');
     const platform = String(t.platform || '').toLowerCase();
-    const safePlatform = escapeHtml(platform);
     const safeDexUrl = escapeUrl(t.url);
     
-    let ageDisplay;
-    let ageClass = '';
-    if (ageIsEstimate) {
-      ageDisplay = ageValue ? formatAge(ageValue) + ' (est)' : '? (est)';
-      ageClass = 'source-estimate';
-    } else {
-      ageDisplay = ageValue ? formatAge(ageValue) : '?';
-      ageClass = 'source-goplus';
-    }
+    const ageDisplay = ageValue ? formatAge(ageValue) + (ageIsEstimate ? ' (est)' : '') : '?';
+    const ageClass = ageSource === 'goplus' ? 'source-goplus' : 'source-estimate';
     
     let holdersDisplay = '?';
     let holdersClass = 'source-estimate';
     let holdersTooltip = 'Estimated holders count';
     let confidenceIndicator = '';
-    let confidenceClass = '';
     
     if (t.holders !== undefined && t.holders !== null && !isNaN(t.holders)) {
       holdersDisplay = formatNumber(t.holders);
       if (t.holdersIsEstimate) {
         holdersClass = 'source-estimate';
-        const rawCount = t.holdersRawCount || 20;
-        holdersTooltip = `Estimated based on top ${rawCount} holders`;
+        holdersTooltip = `Estimated based on top ${t.holdersRawCount || 20} holders`;
         
         if (t.holdersConfidence === 'low') {
           confidenceIndicator = ' ⚠️';
-          confidenceClass = 'confidence-low';
-          holdersTooltip += ' - Low confidence estimate';
+          holdersTooltip += ' - Low confidence';
         } else if (t.holdersConfidence === 'medium') {
           confidenceIndicator = ' 📊';
-          confidenceClass = 'confidence-medium';
           holdersTooltip += ' - Medium confidence';
-        } else {
-          confidenceClass = 'confidence-high';
         }
       } else {
         holdersClass = 'source-helius';
         holdersTooltip = t.holders === 0 ? 'No holders found' : 'Exact holders count';
-        confidenceClass = 'confidence-exact';
       }
     }
     
     let topHolderDisplay = '';
     if (t.topHolder && !isNaN(t.topHolder) && t.topHolder > 0) {
-      const topHolderValue = Number(t.topHolder).toFixed(1);
+      const value = Number(t.topHolder).toFixed(1);
       let riskClass = 'risk-low';
       if (t.topHolder > 20) riskClass = 'risk-high';
       else if (t.topHolder > 10) riskClass = 'risk-medium';
       
-      topHolderDisplay = `<span class="risk-badge ${riskClass}" title="Top 10 holders concentration">top ${escapeHtml(topHolderValue)}%</span>`;
+      topHolderDisplay = `<span class="risk-badge ${riskClass}">top ${escapeHtml(value)}%</span>`;
     }
     
     const card = document.createElement('div');
     card.className = 'token-card';
     card.setAttribute('data-address', safeAddressAttr);
     
-    const headerDiv = document.createElement('div');
-    headerDiv.className = 'token-header';
-    
-    const symbolDiv = document.createElement('div');
-    symbolDiv.className = 'token-symbol';
-    symbolDiv.textContent = safeSymbol;
-    headerDiv.appendChild(symbolDiv);
-    
-    const tagsDiv = document.createElement('div');
-    tagsDiv.className = 'token-tags';
-    if (safePlatform.includes('pump')) {
-      const tag = document.createElement('span');
-      tag.className = 'tag tag-pump';
-      tag.textContent = 'PUMP';
-      tagsDiv.appendChild(tag);
-    }
-    if (safePlatform.includes('raydium')) {
-      const tag = document.createElement('span');
-      tag.className = 'tag tag-raydium';
-      tag.textContent = 'RAY';
-      tagsDiv.appendChild(tag);
-    }
-    headerDiv.appendChild(tagsDiv);
-    card.appendChild(headerDiv);
-    
-    const infoDiv = document.createElement('div');
-    infoDiv.className = 'token-info';
-    
-    const ageRow = document.createElement('div');
-    ageRow.className = 'info-row';
-    ageRow.innerHTML = `
-      <span class="info-label">⏱️ Age <span class="source-badge ${ageClass}">${escapeHtml(ageSource)}</span></span>
-      <span class="info-value" ${ageIsEstimate ? 'title="Estimated from DEX data"' : ''}>${escapeHtml(ageDisplay)}</span>
+    card.innerHTML = `
+      <div class="token-header">
+        <div class="token-symbol">${safeSymbol}</div>
+        <div class="token-tags">
+          ${platform.includes('pump') ? '<span class="tag tag-pump">PUMP</span>' : ''}
+          ${platform.includes('raydium') ? '<span class="tag tag-raydium">RAY</span>' : ''}
+        </div>
+      </div>
+      <div class="token-info">
+        <div class="info-row">
+          <span class="info-label">⏱️ Age <span class="source-badge ${ageClass}">${escapeHtml(ageSource)}</span></span>
+          <span class="info-value">${escapeHtml(ageDisplay)}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">👥 Holders <span class="source-badge ${holdersClass}" title="${sanitizeForTooltip(holdersTooltip)}">${t.holdersIsEstimate ? 'est' : 'exact'}${escapeHtml(confidenceIndicator)}</span></span>
+          <span class="info-value">${escapeHtml(holdersDisplay)} ${topHolderDisplay}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">💰 MC</span>
+          <span class="info-value">$${escapeHtml(formatNumber(t.fdv))}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">💧 Liquidity</span>
+          <span class="info-value">$${escapeHtml(formatNumber(t.liquidity))}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">📈 5m Change</span>
+          <span class="info-value" style="color: ${t.priceChange5m > 0 ? '#00FF9D' : '#FF4D4D'}">
+            ${t.priceChange5m > 0 ? '+' : ''}${((t.priceChange5m || 0) * 100).toFixed(1)}%
+          </span>
+        </div>
+      </div>
+      <div class="token-ca" data-address="${safeAddressAttr}" title="Click to copy address">
+        📋 ${safeAddress.slice(0, 8)}...${safeAddress.slice(-6)}
+      </div>
+      <div class="token-actions">
+        <button class="action-btn analyze-btn" data-address="${safeAddressAttr}">ANALYZE</button>
+        ${safeDexUrl !== '#' ? 
+          `<button class="action-btn dex-btn" data-url="${escapeAttribute(safeDexUrl)}">DEX</button>` : 
+          '<button class="action-btn dex-btn" disabled>DEX</button>'}
+      </div>
     `;
-    infoDiv.appendChild(ageRow);
-    
-    const holdersRow = document.createElement('div');
-    holdersRow.className = 'info-row';
-    holdersRow.innerHTML = `
-      <span class="info-label">👥 Holders <span class="source-badge ${holdersClass} ${confidenceClass}" title="${escapeTooltip(holdersTooltip)}">${t.holdersIsEstimate ? 'est' : 'exact'}${escapeHtml(confidenceIndicator)}</span></span>
-      <span class="info-value">
-        ${escapeHtml(holdersDisplay)}
-        ${topHolderDisplay}
-      </span>
-    `;
-    infoDiv.appendChild(holdersRow);
-    
-    const mcRow = document.createElement('div');
-    mcRow.className = 'info-row';
-    mcRow.innerHTML = `
-      <span class="info-label">💰 MC</span>
-      <span class="info-value">$${escapeHtml(formatNumber(t.fdv))}</span>
-    `;
-    infoDiv.appendChild(mcRow);
-    
-    const liqRow = document.createElement('div');
-    liqRow.className = 'info-row';
-    liqRow.innerHTML = `
-      <span class="info-label">💧 Liquidity</span>
-      <span class="info-value">$${escapeHtml(formatNumber(t.liquidity))}</span>
-    `;
-    infoDiv.appendChild(liqRow);
-    
-    const changeRow = document.createElement('div');
-    changeRow.className = 'info-row';
-    const changeColor = t.priceChange5m > 0 ? '#00FF9D' : '#FF4D4D';
-    changeRow.innerHTML = `
-      <span class="info-label">📈 5m Change</span>
-      <span class="info-value" style="color: ${changeColor}">
-        ${t.priceChange5m > 0 ? '+' : ''}${((t.priceChange5m || 0) * 100).toFixed(1)}%
-      </span>
-    `;
-    infoDiv.appendChild(changeRow);
-    
-    card.appendChild(infoDiv);
-    
-    const caDiv = document.createElement('div');
-    caDiv.className = 'token-ca';
-    caDiv.setAttribute('data-address', safeAddressAttr);
-    caDiv.setAttribute('title', 'Click to copy address');
-    caDiv.textContent = `📋 ${safeAddress.slice(0, 8)}...${safeAddress.slice(-6)}`;
-    card.appendChild(caDiv);
-    
-    const actionsDiv = document.createElement('div');
-    actionsDiv.className = 'token-actions';
-    
-    const analyzeBtn = document.createElement('button');
-    analyzeBtn.className = 'action-btn analyze-btn';
-    analyzeBtn.setAttribute('data-address', safeAddressAttr);
-    analyzeBtn.textContent = 'ANALYZE';
-    actionsDiv.appendChild(analyzeBtn);
-    
-    const dexBtn = document.createElement('button');
-    dexBtn.className = 'action-btn dex-btn';
-    if (safeDexUrl && safeDexUrl !== '#') {
-      dexBtn.setAttribute('data-url', safeDexUrl);
-    } else {
-      dexBtn.disabled = true;
-    }
-    dexBtn.textContent = 'DEX';
-    actionsDiv.appendChild(dexBtn);
-    
-    card.appendChild(actionsDiv);
     
     return card;
   };
@@ -1820,22 +1791,18 @@
     
     requestAnimationFrame(() => {
       try {
-        const newDisplayCount = Math.min(
+        state.displayedTokens = Math.min(
           state.displayedTokens + CONFIG.TOKENS_PER_PAGE,
           state.filteredTokens.length
         );
-        
-        if (newDisplayCount > state.displayedTokens) {
-          state.displayedTokens = newDisplayCount;
-          renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
-        }
+        renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
       } finally {
         state.isLoadingMore = false;
       }
     });
   }, 200);
   
-  // ================== FIXED EVENT DELEGATION ==================
+  // ================== EVENT DELEGATION ==================
   const setupEventDelegation = () => {
     const grid = getElement('tokenGrid');
     if (!grid) return;
@@ -1845,30 +1812,29 @@
     }
     
     state.clickHandler = (e) => {
-      const caElement = e.target.closest('.token-ca');
-      if (caElement) {
-        const address = caElement.getAttribute('data-address');
-        if (address) copyAddress(address);
+      const ca = e.target.closest('.token-ca');
+      if (ca) {
+        const addr = ca.getAttribute('data-address');
+        if (addr) copyAddress(addr);
         e.preventDefault();
         return;
       }
       
-      const analyzeBtn = e.target.closest('.action-btn.analyze-btn');
-      if (analyzeBtn) {
-        const address = analyzeBtn.getAttribute('data-address');
-        if (address) {
-          const safeAddress = encodeURIComponent(address);
-          window.location.href = `https://www.cryptobros.pro/tribunal.html?address=${safeAddress}`;
+      const analyze = e.target.closest('.analyze-btn');
+      if (analyze) {
+        const addr = analyze.getAttribute('data-address');
+        if (addr) {
+          window.location.href = `https://www.cryptobros.pro/tribunal.html?address=${encodeURIComponent(addr)}`;
         }
         e.preventDefault();
         return;
       }
       
-      const dexBtn = e.target.closest('.action-btn.dex-btn');
-      if (dexBtn && !dexBtn.disabled) {
-        const url = dexBtn.getAttribute('data-url');
+      const dex = e.target.closest('.dex-btn');
+      if (dex && !dex.disabled) {
+        const url = dex.getAttribute('data-url');
         if (url && url !== '#') {
-          window.open(url, '_blank', 'noopener noreferrer');
+          window.open(url, '_blank', 'noopener');
         }
         e.preventDefault();
       }
@@ -1879,9 +1845,9 @@
   
   // ================== BACK BUTTON ==================
   const initBackButton = () => {
-    const backBtn = getElement('backBtn');
-    if (backBtn) {
-      backBtn.addEventListener('click', (e) => {
+    const btn = getElement('backBtn');
+    if (btn) {
+      btn.addEventListener('click', (e) => {
         e.preventDefault();
         if (document.referrer && document.referrer.includes(window.location.host)) {
           window.history.back();
@@ -1894,37 +1860,36 @@
   
   // ================== THEME ==================
   const initTheme = () => {
-    const themeToggle = getElement('themeToggle');
-    if (!themeToggle) return;
+    const toggle = getElement('themeToggle');
+    if (!toggle) return;
     
-    const savedTheme = safeLocalStorage.getItem('freshTheme');
-    if (savedTheme === 'day') {
+    const saved = safeLocalStorage.getItem('freshTheme');
+    if (saved === 'day') {
       document.body.classList.add('day-mode');
-      themeToggle.innerHTML = '☀️';
+      toggle.innerHTML = '☀️';
     }
     
-    themeToggle.addEventListener('click', () => {
+    toggle.addEventListener('click', () => {
       document.body.classList.toggle('day-mode');
       const isDay = document.body.classList.contains('day-mode');
-      themeToggle.innerHTML = isDay ? '☀️' : '🌙';
-      
+      toggle.innerHTML = isDay ? '☀️' : '🌙';
       safeLocalStorage.setItem('freshTheme', isDay ? 'day' : 'night');
     });
   };
   
-  // ================== FILTER EVENT LISTENERS ==================
+  // ================== FILTERS ==================
   const initFilters = () => {
-    const timeFilter = getElement('timeFilter');
-    const liqFilter = getElement('liqFilter');
-    const platformFilter = getElement('platformFilter');
-    const sortFilter = getElement('sortFilter');
+    const time = getElement('timeFilter');
+    const liq = getElement('liqFilter');
+    const platform = getElement('platformFilter');
+    const sort = getElement('sortFilter');
     
-    if (timeFilter) state.timeFilter = timeFilter.value;
-    if (liqFilter) state.liqFilter = liqFilter.value;
-    if (platformFilter) state.platformFilter = platformFilter.value;
-    if (sortFilter) state.sort = sortFilter.value;
+    if (time) state.timeFilter = time.value;
+    if (liq) state.liqFilter = liq.value;
+    if (platform) state.platformFilter = platform.value;
+    if (sort) state.sort = sort.value;
     
-    const handleFilterChange = debounce(() => {
+    const handleChange = debounce(() => {
       if (!state.tokens.length) return;
       
       state.filteredTokensCache = null;
@@ -1939,33 +1904,10 @@
       renderTokensVirtual(state.filteredTokens.slice(0, state.displayedTokens));
     }, 300);
     
-    if (timeFilter) {
-      timeFilter.addEventListener('change', (e) => {
-        state.timeFilter = e.target.value;
-        handleFilterChange();
-      });
-    }
-    
-    if (liqFilter) {
-      liqFilter.addEventListener('change', (e) => {
-        state.liqFilter = e.target.value;
-        handleFilterChange();
-      });
-    }
-    
-    if (platformFilter) {
-      platformFilter.addEventListener('change', (e) => {
-        state.platformFilter = e.target.value;
-        handleFilterChange();
-      });
-    }
-    
-    if (sortFilter) {
-      sortFilter.addEventListener('change', (e) => {
-        state.sort = e.target.value;
-        handleFilterChange();
-      });
-    }
+    if (time) time.addEventListener('change', (e) => { state.timeFilter = e.target.value; handleChange(); });
+    if (liq) liq.addEventListener('change', (e) => { state.liqFilter = e.target.value; handleChange(); });
+    if (platform) platform.addEventListener('change', (e) => { state.platformFilter = e.target.value; handleChange(); });
+    if (sort) sort.addEventListener('change', (e) => { state.sort = e.target.value; handleChange(); });
   };
   
   // ================== COUNTDOWN ==================
@@ -1988,86 +1930,63 @@
     }, 1000);
   };
   
-  // ================== CLEANUP FUNCTION ==================
+  // ================== FIXED CLEANUP ==================
   const cleanup = () => {
-    console.log('Cleaning up resources...');
+    console.log('🧹 Cleaning up Fresh Pumps...');
     state.isMounted = false;
     
     abortAllRequests();
-    
     clearQueueAndReject();
+    
+    // Clear rate limit
+    state.rateLimit.calls = [];
+    
+    // Proper timer cleanup
+    [state.wsPingInterval, state.wsReconnectTimer, state.intervalId, 
+     state.cleanupIntervalId, state.memoryMonitorId].forEach(id => {
+      if (id) {
+        if (typeof id === 'number') {
+          clearInterval(id);
+        } else {
+          clearTimeout(id);
+        }
+      }
+    });
     
     if (state.ws) {
       try {
-        state.ws.close(1000, 'Component unmounting');
+        state.ws.onclose = null;
+        state.ws.close(1000, 'Cleanup');
       } catch (e) {}
       state.ws = null;
-    }
-    
-    if (state.wsPingInterval) {
-      clearInterval(state.wsPingInterval);
-      state.wsPingInterval = null;
-    }
-    
-    if (state.wsReconnectTimer) {
-      clearTimeout(state.wsReconnectTimer);
-      state.wsReconnectTimer = null;
-    }
-    
-    if (state.intervalId) {
-      clearInterval(state.intervalId);
-      state.intervalId = null;
-    }
-    
-    if (state.cleanupIntervalId) {
-      clearInterval(state.cleanupIntervalId);
-      state.cleanupIntervalId = null;
-    }
-    
-    if (state.memoryMonitorId) {
-      clearInterval(state.memoryMonitorId);
-      state.memoryMonitorId = null;
     }
     
     if (state.virtualScroll.renderTimer) {
       cancelAnimationFrame(state.virtualScroll.renderTimer);
     }
     
-    if (state.resizeObserver) {
-      state.resizeObserver.disconnect();
-      state.resizeObserver = null;
-    }
-    
     if (state.clickHandler) {
-      const grid = getElement('tokenGrid');
-      if (grid) {
-        grid.removeEventListener('click', state.clickHandler);
-      }
+      getElement('tokenGrid')?.removeEventListener('click', state.clickHandler);
     }
     
-    state.rateLimit.calls = [];
+    if (state.resizeHandler) {
+      window.removeEventListener('resize', state.resizeHandler);
+    }
+    
     state.ageCache.clear();
     state.holdersCache.clear();
+    escapeCache.clear();
     state.tokens = [];
     state.filteredTokens = [];
-    state.filteredTokensCache = null;
-    state.loadMoreBtnInstance = null;
-    
-    console.log('Cleanup complete');
   };
   
-  // ================== UNHANDLED REJECTION HANDLER ==================
+  // ================== ERROR HANDLERS ==================
   const setupErrorHandlers = () => {
     window.addEventListener('unhandledrejection', (event) => {
-      console.error('Unhandled rejection:', event.reason);
-      
-      if (event.reason?.name === 'AbortError' || 
-          event.reason?.message?.includes('unmounted') ||
-          event.reason?.message?.includes('aborted')) {
-        return;
+      if (!event.reason?.message?.includes('unmounted')) {
+        console.error('Unhandled rejection:', event.reason);
+        showToast('An error occurred', 'error');
       }
-      
-      showToast('An error occurred', 'error');
     });
     
     window.addEventListener('error', (event) => {
@@ -2078,7 +1997,7 @@
   
   // ================== INIT ==================
   const init = async () => {
-    console.log('🚀 Fresh Pumps initializing...');
+    console.log(`🚀 Fresh Pumps v${VERSION} initializing...`);
     
     state.isMounted = true;
     
@@ -2091,12 +2010,12 @@
     if (document.readyState === 'complete') {
       initVirtualScroll();
     } else {
-      window.addEventListener('load', () => {
-        if (state.isMounted) {
-          initVirtualScroll();
-        }
-      });
+      window.addEventListener('load', () => state.isMounted && initVirtualScroll());
     }
+    
+    // Add resize handler
+    state.resizeHandler = handleResize;
+    window.addEventListener('resize', state.resizeHandler);
     
     await loadApiKeys();
     loadTokens();
@@ -2116,16 +2035,15 @@
     }
     
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && !state.isRefreshing && !state.isLoading && state.tokens.length === 0) {
+      if (!document.hidden && !state.isRefreshing && !state.isLoading && !state.tokens.length) {
         loadTokens();
       }
     });
     
-    state.cleanupIntervalId = setInterval(() => cleanupCache(false), CONFIG.CLEANUP_INTERVAL);
-    
+    state.cleanupIntervalId = setInterval(() => cleanupCache(), CONFIG.CLEANUP_INTERVAL);
     window.addEventListener('beforeunload', cleanup);
     
-    console.log('✅ Fresh Pumps initialized');
+    console.log('✅ Fresh Pumps initialized successfully');
   };
   
   if (document.readyState === 'loading') {
