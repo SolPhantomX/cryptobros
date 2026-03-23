@@ -259,10 +259,10 @@ margin-top: auto;
     <div class="invite-section">
       <div class="invite-title">Have an Invite Code?</div>
       <div class="invite-row">
-        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code" aria-label="Invite code input">
+        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code (MST-1234, PRO-5678, PRE-9012)" aria-label="Invite code input">
         <button class="invite-btn" id="inviteBtn" aria-label="Activate invite code">ACTIVATE INVITE</button>
       </div>
-      <div class="invite-examples">PRE-5421, MST-1234, PRO-9012</div>
+      <div class="invite-examples">MST-1234, PRO-5678, PRE-9012</div>
       <div id="inviteMessage" role="alert"></div>
     </div>
   </div>
@@ -319,271 +319,314 @@ const TREASURY = 'C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6';
 const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000;
 const PAYMENT_TIMEOUT = 15 * 60 * 1000;
 const TIER_PRICES = { 'MASTER': 500, 'PRO': 2000, 'PREMIUM': 10000 };
-const VALID_INVITES = Object.freeze({
-'PRE-5421': Object.freeze({ tier: 'PREMIUM', used: false }),
-'PRE-1234': Object.freeze({ tier: 'PREMIUM', used: false }),
-'MST-9012': Object.freeze({ tier: 'MASTER', used: false }),
-'MST-5678': Object.freeze({ tier: 'MASTER', used: false }),
-'PRO-3456': Object.freeze({ tier: 'PRO', used: false }),
-'PRO-7890': Object.freeze({ tier: 'PRO', used: false })
-});
 
-// Browser-compatible base64 helpers
-function toBase64(bytes) { let binary=''; bytes.forEach(b=>binary+=String.fromCharCode(b)); return btoa(binary); }
-function fromBase64(base64) { const binary=atob(base64); const bytes=new Uint8Array(binary.length); for(let i=0;i<binary.length;i++){bytes[i]=binary.charCodeAt(i);} return bytes; }
-
-// UUID with fallback
-function generateNonce() {
-if(typeof crypto!=='undefined'&&crypto.randomUUID){return crypto.randomUUID();}
-const arr=new Uint8Array(16);
-if(crypto&&crypto.getRandomValues){crypto.getRandomValues(arr);}else{for(let i=0;i<16;i++){arr[i]=Math.floor(Math.random()*256);}}
-arr[6]=(arr[6]&0x0f)|0x40; arr[8]=(arr[8]&0x3f)|0x80;
-return Array.from(arr,b=>b.toString(16).padStart(2,'0')).join('').replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/,'$1-$2-$3-$4-$5');
+// ========== INVITE CODE VALIDATION FROM localStorage ==========
+function isValidInviteCode(code) {
+  if (!code || typeof code !== 'string') return null;
+  const trimmed = code.trim().toUpperCase();
+  // Format: MST-1234, PRO-5678, PRE-9012
+  if (!/^(MST|PRO|PRE)-\d{4}$/.test(trimmed)) return null;
+  
+  const activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
+  const found = activeCodes.find(c => c.code === trimmed && !c.used);
+  
+  if (found) {
+    return { tier: found.tier, code: found.code };
+  }
+  return null;
 }
 
-let selectedTier=null, paymentStartTime=null, pollingTimeout=null, isPollingActive=false, connection=null, updateTimeout=null, paymentMemo=null, lastCheckedSig=null, verifyTimer=null;
+function markInviteCodeAsUsed(code) {
+  const activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
+  const updated = activeCodes.map(c => {
+    if (c.code === code && !c.used) {
+      return { ...c, used: true, usedAt: Date.now() };
+    }
+    return c;
+  });
+  localStorage.setItem('activeInviteCodes', JSON.stringify(updated));
+}
 
-const storage={
-get:(key,def=null)=>{try{const item=localStorage.getItem(key);return item?JSON.parse(item):def;}catch{return def;}},
-set:(key,val)=>{try{localStorage.setItem(key,JSON.stringify(val));return true;}catch{return false;}}
+function showMessage(elementId, text, type) {
+  const msgEl = document.getElementById(elementId);
+  if (!msgEl) return;
+  msgEl.textContent = text;
+  msgEl.className = type;
+  msgEl.style.display = 'block';
+  setTimeout(() => {
+    if (msgEl) msgEl.style.display = 'none';
+  }, 4000);
+}
+
+function activateInvite() {
+  const input = document.getElementById('inviteCode');
+  const code = input ? input.value.trim() : '';
+  if (!code) {
+    showMessage('inviteMessage', 'Please enter an invite code', 'error');
+    return;
+  }
+  
+  const valid = isValidInviteCode(code);
+  if (!valid) {
+    showMessage('inviteMessage', '❌ Invalid or already used invite code', 'error');
+    return;
+  }
+  
+  // Mark as used
+  markInviteCodeAsUsed(valid.code);
+  
+  // Show success and activate tier
+  showMessage('inviteMessage', `✅ ${valid.tier} invite activated!`, 'success');
+  
+  // Activate the tier (bypass payment)
+  activateTier(valid.tier);
+}
+
+let selectedTier = null, paymentStartTime = null, pollingTimeout = null, isPollingActive = false, connection = null, updateTimeout = null, paymentMemo = null, lastCheckedSig = null, verifyTimer = null;
+
+const storage = {
+  get: (key, def = null) => { try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : def; } catch { return def; } },
+  set: (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch { return false; } }
 };
 
-function showSolanaLoading(){document.getElementById('solanaLoading').style.display='block';}
-function hideSolanaLoading(){document.getElementById('solanaLoading').style.display='none';}
+function showSolanaLoading() { document.getElementById('solanaLoading').style.display = 'block'; }
+function hideSolanaLoading() { document.getElementById('solanaLoading').style.display = 'none'; }
 
-// Safe Solana connection
 showSolanaLoading();
-try{
-connection=new solanaWeb3.Connection(solanaWeb3.clusterApiUrl(IS_DEMO_MODE?'devnet':'mainnet-beta'),'confirmed');
-hideSolanaLoading();
-}catch(e){
-hideSolanaLoading();
-console.error('Solana connection failed:',e);
+try {
+  connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl(IS_DEMO_MODE ? 'devnet' : 'mainnet-beta'), 'confirmed');
+  hideSolanaLoading();
+} catch (e) {
+  hideSolanaLoading();
+  console.error('Solana connection failed:', e);
 }
 
-function hasPhantom(){return window.solana&&window.solana.isPhantom;}
+function hasPhantom() { return window.solana && window.solana.isPhantom; }
 
-async function createSignedCertificate(tier){
-if(!hasPhantom()){throw new Error('Phantom required');}
-try{
-const{publicKey,signMessage}=window.solana;
-const payload={wallet:publicKey.toString(),tier,activatedAt:Date.now(),nonce:generateNonce()};
-const message=new TextEncoder().encode(JSON.stringify(payload));
-const signature=await signMessage(message);
-return{...payload,signature:toBase64(signature)};
-}catch(e){console.error('Signing failed:',e);return null;}
-}
-
-function verifyCertificate(cert){
-if(IS_DEMO_MODE){
-const validTiers=['FREE','MASTER','PRO','PREMIUM'];
-const now=Date.now();
-return cert&&validTiers.includes(cert.tier)&&typeof cert.activatedAt==='number'&&cert.activatedAt<=now&&cert.activatedAt>now-TWO_WEEKS_MS*2&&cert.nonce&&cert.nonce.length>20;
-}
-try{
-const payload={wallet:cert.wallet,tier:cert.tier,activatedAt:cert.activatedAt,nonce:cert.nonce};
-const message=new TextEncoder().encode(JSON.stringify(payload));
-const signature=fromBase64(cert.signature);
-const pubkey=new solanaWeb3.PublicKey(cert.wallet);
-return window.nacl&&nacl.sign.detached.verify(message,signature,pubkey.toBytes());
-}catch(e){console.warn('Verification failed:',e);return false;}
+async function createSignedCertificate(tier) {
+  if (!hasPhantom()) { throw new Error('Phantom required'); }
+  try {
+    const { publicKey, signMessage } = window.solana;
+    const payload = { wallet: publicKey.toString(), tier, activatedAt: Date.now(), nonce: generateNonce() };
+    const message = new TextEncoder().encode(JSON.stringify(payload));
+    const signature = await signMessage(message);
+    return { ...payload, signature: toBase64(signature) };
+  } catch (e) { console.error('Signing failed:', e); return null; }
 }
 
-function getCurrentTier(){
-const cert=storage.get('tierCertificate');
-if(cert&&verifyCertificate(cert)){const elapsed=Date.now()-cert.activatedAt;if(elapsed<=TWO_WEEKS_MS){return cert.tier;}}
-const tier=storage.get('userTier'),activated=storage.get('tierActivatedAt');
-if(tier==='FREE'&&activated){const elapsed=Date.now()-activated;if(elapsed<=TWO_WEEKS_MS){return'FREE';}}
-storage.set('userTier',null);storage.set('tierActivatedAt',null);storage.set('tierCertificate',null);
-return'FREE';
+function verifyCertificate(cert) {
+  if (IS_DEMO_MODE) {
+    const validTiers = ['FREE', 'MASTER', 'PRO', 'PREMIUM'];
+    const now = Date.now();
+    return cert && validTiers.includes(cert.tier) && typeof cert.activatedAt === 'number' && cert.activatedAt <= now && cert.activatedAt > now - TWO_WEEKS_MS * 2 && cert.nonce && cert.nonce.length > 20;
+  }
+  try {
+    const payload = { wallet: cert.wallet, tier: cert.tier, activatedAt: cert.activatedAt, nonce: cert.nonce };
+    const message = new TextEncoder().encode(JSON.stringify(payload));
+    const signature = fromBase64(cert.signature);
+    const pubkey = new solanaWeb3.PublicKey(cert.wallet);
+    return window.nacl && nacl.sign.detached.verify(message, signature, pubkey.toBytes());
+  } catch (e) { console.warn('Verification failed:', e); return false; }
 }
 
-function getTierStatus(){
-const currentTier=getCurrentTier();
-if(currentTier==='FREE'){
-const activated=storage.get('tierActivatedAt');
-if(activated){const expires=activated+TWO_WEEKS_MS;const daysLeft=Math.max(0,Math.ceil((expires-Date.now())/(1000*60*60*24)));return{tier:'FREE',active:true,daysLeft};}
-return{tier:'FREE',active:false};
-}
-const cert=storage.get('tierCertificate');
-if(cert){const expires=cert.activatedAt+TWO_WEEKS_MS;const daysLeft=Math.max(0,Math.ceil((expires-Date.now())/(1000*60*60*24)));return{tier:cert.tier,active:true,daysLeft};}
-return{tier:'FREE',active:false};
+function getCurrentTier() {
+  const cert = storage.get('tierCertificate');
+  if (cert && verifyCertificate(cert)) { const elapsed = Date.now() - cert.activatedAt; if (elapsed <= TWO_WEEKS_MS) { return cert.tier; } }
+  const tier = storage.get('userTier'), activated = storage.get('tierActivatedAt');
+  if (tier === 'FREE' && activated) { const elapsed = Date.now() - activated; if (elapsed <= TWO_WEEKS_MS) { return 'FREE'; } }
+  storage.set('userTier', null); storage.set('tierActivatedAt', null); storage.set('tierCertificate', null);
+  return 'FREE';
 }
 
-function updateUI(){
-const status=getTierStatus();
-const displayEl=document.getElementById('currentTierDisplay'),expiryEl=document.getElementById('tierExpiryDisplay');
-displayEl.textContent=status.tier;displayEl.className='tier-status-value '+status.tier.toLowerCase();
-if(status.active&&status.tier!=='FREE'){expiryEl.textContent=`expires in ${status.daysLeft} days`;}
-else if(status.tier==='FREE'&&status.active){expiryEl.textContent=`expires in ${status.daysLeft} days`;}
-else{expiryEl.textContent='';}
+function getTierStatus() {
+  const currentTier = getCurrentTier();
+  if (currentTier === 'FREE') {
+    const activated = storage.get('tierActivatedAt');
+    if (activated) { const expires = activated + TWO_WEEKS_MS; const daysLeft = Math.max(0, Math.ceil((expires - Date.now()) / (1000 * 60 * 60 * 24))); return { tier: 'FREE', active: true, daysLeft }; }
+    return { tier: 'FREE', active: false };
+  }
+  const cert = storage.get('tierCertificate');
+  if (cert) { const expires = cert.activatedAt + TWO_WEEKS_MS; const daysLeft = Math.max(0, Math.ceil((expires - Date.now()) / (1000 * 60 * 60 * 24))); return { tier: cert.tier, active: true, daysLeft }; }
+  return { tier: 'FREE', active: false };
 }
 
-async function activateTier(tier){
-if(tier!=='FREE'){
-const cert=await createSignedCertificate(tier);
-if(cert){storage.set('tierCertificate',cert);showMessage('inviteMessage',`✅ ${tier} activated!`,'success');}
-else{showMessage('inviteMessage','❌ Failed to activate tier','error');return;}
-}else{storage.set('userTier',tier);storage.set('tierActivatedAt',Date.now());showMessage('inviteMessage',`✅ ${tier} activated!`,'success');}
-updateUI();
-if(tier==='PREMIUM'){setTimeout(()=>window.location.href='profile.html',1500);}
-else{setTimeout(()=>window.location.href='index.html',1500);}
+function updateUI() {
+  const status = getTierStatus();
+  const displayEl = document.getElementById('currentTierDisplay'), expiryEl = document.getElementById('tierExpiryDisplay');
+  displayEl.textContent = status.tier;
+  displayEl.className = 'tier-status-value ' + status.tier.toLowerCase();
+  if (status.active && status.tier !== 'FREE') { expiryEl.textContent = `expires in ${status.daysLeft} days`; }
+  else if (status.tier === 'FREE' && status.active) { expiryEl.textContent = `expires in ${status.daysLeft} days`; }
+  else { expiryEl.textContent = ''; }
 }
 
-function selectTier(tier){
-const status=getTierStatus();
-if(tier==='FREE'){if(status.tier==='FREE'&&status.active){showMessage('inviteMessage','You already have FREE tier','error');return;}activateTier('FREE');return;}
-selectedTier=tier;paymentStartTime=Date.now();
-paymentMemo=`CRYPTOBROS:${tier}:${Date.now()}:${generateNonce().substring(0,8)}`;
-lastCheckedSig=null;
-document.getElementById('modalText').textContent=`Send exactly ${TIER_PRICES[tier]} AUS to activate ${tier}`;
-document.getElementById('modalAmount').textContent=`${TIER_PRICES[tier]} AUS`;
-document.getElementById('paymentMemoDisplay').textContent=paymentMemo;
-document.getElementById('paymentModal').classList.add('active');
-document.getElementById('paymentModal').setAttribute('aria-hidden','false');
-const verifyBtn=document.getElementById('verifyPaymentBtn');
-verifyBtn.disabled=true;verifyBtn.textContent='✅ Wait 30s...';
-if(verifyTimer)clearTimeout(verifyTimer);
-verifyTimer=setTimeout(()=>{verifyBtn.disabled=false;verifyBtn.textContent='✅ I\'ve Sent Payment';},30000);
-setTimeout(()=>document.getElementById('copyTreasuryBtn')?.focus(),100);
+function activateTier(tier) {
+  if (tier !== 'FREE') {
+    createSignedCertificate(tier).then(cert => {
+      if (cert) { storage.set('tierCertificate', cert); showMessage('inviteMessage', `✅ ${tier} activated!`, 'success'); }
+      else { showMessage('inviteMessage', '❌ Failed to activate tier', 'error'); return; }
+      updateUI();
+      if (tier === 'PREMIUM') { setTimeout(() => window.location.href = 'profile.html', 1500); }
+      else { setTimeout(() => window.location.href = 'index.html', 1500); }
+    });
+  } else {
+    storage.set('userTier', tier);
+    storage.set('tierActivatedAt', Date.now());
+    showMessage('inviteMessage', `✅ ${tier} activated!`, 'success');
+    updateUI();
+    setTimeout(() => window.location.href = 'index.html', 1500);
+  }
 }
 
-function copyToClipboard(text){
-if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(()=>{showPaymentStatus('success','✓ Copied!');setTimeout(()=>hidePaymentStatus(),2000);}).catch(()=>fallbackCopy(text));}
-else{fallbackCopy(text);}
-}
-function fallbackCopy(text){
-const textarea=document.createElement('textarea');textarea.value=text;textarea.style.position='fixed';textarea.style.opacity='0';document.body.appendChild(textarea);textarea.select();
-try{document.execCommand('copy');showPaymentStatus('success','✓ Copied!');setTimeout(()=>hidePaymentStatus(),2000);}
-catch(err){showPaymentStatus('error','❌ Failed to copy');setTimeout(()=>hidePaymentStatus(),2000);}
-document.body.removeChild(textarea);
-}
-
-function showPaymentStatus(type,message){
-const statusEl=document.getElementById('paymentStatus');statusEl.className='payment-status '+type;statusEl.innerHTML='';
-if(message.includes('spinner')){const spinner=document.createElement('span');spinner.className='spinner';statusEl.appendChild(spinner);const textNode=document.createTextNode(message.replace(/<[^>]*>/g,''));statusEl.appendChild(textNode);}
-else{statusEl.textContent=message;}
-statusEl.style.display='block';
-}
-function hidePaymentStatus(){document.getElementById('paymentStatus').style.display='none';}
-
-// Phantom deep-link without spaces
-function openPhantomPayment(){
-if(!selectedTier)return;
-if(!hasPhantom()){showPaymentStatus('error','🦊 Phantom not detected.');setTimeout(()=>window.open('https://phantom.app/','_blank'),2000);return;}
-const amount=TIER_PRICES[selectedTier],lamports=IS_DEMO_MODE?amount*1e9:amount;
-const url=`https://phantom.app/ul/transfer?to=${TREASURY}&amount=${lamports}`;
-try{window.open(url,'_blank');showPaymentStatus('info','<span class="spinner"></span> Complete payment in Phantom with the memo');startPaymentPolling();}
-catch(e){showPaymentStatus('error','❌ Failed to open Phantom');}
+function selectTier(tier) {
+  const status = getTierStatus();
+  if (tier === 'FREE') {
+    if (status.tier === 'FREE' && status.active) { showMessage('inviteMessage', 'You already have FREE tier', 'error'); return; }
+    activateTier('FREE');
+    return;
+  }
+  selectedTier = tier;
+  paymentStartTime = Date.now();
+  paymentMemo = `CRYPTOBROS:${tier}:${Date.now()}:${generateNonce().substring(0, 8)}`;
+  lastCheckedSig = null;
+  document.getElementById('modalText').textContent = `Send exactly ${TIER_PRICES[tier]} AUS to activate ${tier}`;
+  document.getElementById('modalAmount').textContent = `${TIER_PRICES[tier]} AUS`;
+  document.getElementById('paymentMemoDisplay').textContent = paymentMemo;
+  document.getElementById('paymentModal').classList.add('active');
+  document.getElementById('paymentModal').setAttribute('aria-hidden', 'false');
+  const verifyBtn = document.getElementById('verifyPaymentBtn');
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = '✅ Wait 30s...';
+  if (verifyTimer) clearTimeout(verifyTimer);
+  verifyTimer = setTimeout(() => { verifyBtn.disabled = false; verifyBtn.textContent = '✅ I\'ve Sent Payment'; }, 30000);
 }
 
-function startPaymentPolling(){
-if(isPollingActive)return;isPollingActive=true;let attempts=0;const maxAttempts=60;
-async function poll(){
-if(!selectedTier||!isPollingActive)return;attempts++;
-const received=await checkPaymentReceived();
-if(received){handlePaymentSuccess();return;}
-if(Date.now()-paymentStartTime>PAYMENT_TIMEOUT||attempts>=maxAttempts){showPaymentStatus('error','⏰ Payment timeout.');stopPolling();return;}
-pollingTimeout=setTimeout(poll,5000);
-}
-if(pollingTimeout)clearTimeout(pollingTimeout);poll();
-}
-function stopPolling(){isPollingActive=false;if(pollingTimeout){clearTimeout(pollingTimeout);pollingTimeout=null;}}
-
-async function checkPaymentReceived(){
-if(!connection||!selectedTier)return false;
-let retries=0;const maxRetries=3;
-while(retries<maxRetries){
-try{
-const treasuryPubkey=new solanaWeb3.PublicKey(TREASURY);
-const options={limit:100};
-if(lastCheckedSig){options.until=lastCheckedSig;}
-const signatures=await connection.getSignaturesForAddress(treasuryPubkey,options);
-if(signatures.length>0){lastCheckedSig=signatures[signatures.length-1].signature;}
-for(const sig of signatures){
-if(sig.blockTime*1000<paymentStartTime-5000)continue;
-const tx=await connection.getParsedTransaction(sig.signature,{maxSupportedTransactionVersion:0});
-if(!tx||!tx.meta)continue;
-let hasCorrectMemo=false;
-if(tx.transaction.message.instructions){
-for(const ix of tx.transaction.message.instructions){
-if(ix.programId&&ix.programId.toString()==='MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr'){
-if(ix.data&&new TextDecoder().decode(ix.data).includes(paymentMemo)){hasCorrectMemo=true;break;}
-}
-}
-}
-if(!hasCorrectMemo)continue;
-const expectedAmount=TIER_PRICES[selectedTier]*1e9;let amountSent=0;
-const treasuryIndex=tx.transaction.message.accountKeys.findIndex(key=>key.equals(treasuryPubkey));
-if(treasuryIndex!==-1&&tx.meta.postBalances&&tx.meta.preBalances){amountSent=tx.meta.postBalances[treasuryIndex]-tx.meta.preBalances[treasuryIndex];}
-if(!IS_DEMO_MODE&&tx.meta.innerInstructions){
-for(const inner of tx.meta.innerInstructions){
-for(const ix of inner.instructions){
-if(ix.parsed?.type==='transfer'&&ix.parsed.info.destination===TREASURY){
-if(ix.parsed.info.amount>=expectedAmount*0.99){return true;}
-}
-}
-}
-}
-if(amountSent>=expectedAmount*0.99){return true;}
-}
-return false;
-}catch(err){
-if(err.message?.includes('429')&&retries<maxRetries-1){retries++;await new Promise(r=>setTimeout(r,5000*retries));continue;}
-console.error('Payment check error:',err);return false;
-}
-}
-return false;
+function generateNonce() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) { return crypto.randomUUID(); }
+  const arr = new Uint8Array(16);
+  if (crypto && crypto.getRandomValues) { crypto.getRandomValues(arr); } else { for (let i = 0; i < 16; i++) { arr[i] = Math.floor(Math.random() * 256); } }
+  arr[6] = (arr[6] & 0x0f) | 0x40; arr[8] = (arr[8] & 0x3f) | 0x80;
+  return Array.from(arr, b => b.toString(16).padStart(2, '0')).join('').replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
 }
 
-function handlePaymentSuccess(){stopPolling();showPaymentStatus('success','✅ Payment detected! Activating tier...');setTimeout(()=>{activateTier(selectedTier);closeModal();},2000);}
-async function verifyPayment(){showPaymentStatus('info','<span class="spinner"></span> Verifying...');const received=await checkPaymentReceived();if(received){handlePaymentSuccess();}else{showPaymentStatus('error','⏳ Payment not detected. Check memo and amount.');}}
-function closeModal(){
-document.getElementById('paymentModal').classList.remove('active');
-document.getElementById('paymentModal').setAttribute('aria-hidden','true');
-stopPolling();selectedTier=null;hidePaymentStatus();
-if(verifyTimer)clearTimeout(verifyTimer);
-}
-function showMessage(elementId,text,type){const msgEl=document.getElementById(elementId);msgEl.textContent=text;msgEl.className=type;msgEl.style.display='block';setTimeout(()=>{msgEl.style.display='none';},3000);}
+function toBase64(bytes) { let binary = ''; bytes.forEach(b => binary += String.fromCharCode(b)); return btoa(binary); }
+function fromBase64(base64) { const binary = atob(base64); const bytes = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) { bytes[i] = binary.charCodeAt(i); } return bytes; }
 
-function activateInvite(){
-const code=document.getElementById('inviteCode').value.trim();
-if(!code){showMessage('inviteMessage','Please enter an invite code','error');return;}
-if(!/^(PRE|MST|PRO)-\d{4}$/.test(code)){showMessage('inviteMessage','Invalid format. Use: PRE-1234, MST-5678, PRO-9012','error');return;}
-const invite=VALID_INVITES[code];if(!invite){showMessage('inviteMessage','Invalid invite code','error');return;}
-const usedInvites=storage.get('usedInvites',[]);if(usedInvites.includes(code)){showMessage('inviteMessage','Already used on this device','error');return;}
-usedInvites.push(code);storage.set('usedInvites',usedInvites);
-showMessage('inviteMessage',`✅ ${invite.tier} invite activated!`,'success');activateTier(invite.tier);
+function copyToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(() => { showPaymentStatus('success', '✓ Copied!'); setTimeout(() => hidePaymentStatus(), 2000); }).catch(() => fallbackCopy(text)); }
+  else { fallbackCopy(text); }
+}
+function fallbackCopy(text) {
+  const textarea = document.createElement('textarea'); textarea.value = text; textarea.style.position = 'fixed'; textarea.style.opacity = '0'; document.body.appendChild(textarea); textarea.select();
+  try { document.execCommand('copy'); showPaymentStatus('success', '✓ Copied!'); setTimeout(() => hidePaymentStatus(), 2000); } catch (err) { showPaymentStatus('error', '❌ Failed to copy'); setTimeout(() => hidePaymentStatus(), 2000); }
+  document.body.removeChild(textarea);
+}
+function showPaymentStatus(type, message) {
+  const statusEl = document.getElementById('paymentStatus'); statusEl.className = 'payment-status ' + type; statusEl.innerHTML = '';
+  if (message.includes('spinner')) { const spinner = document.createElement('span'); spinner.className = 'spinner'; statusEl.appendChild(spinner); const textNode = document.createTextNode(message.replace(/<[^>]*>/g, '')); statusEl.appendChild(textNode); }
+  else { statusEl.textContent = message; }
+  statusEl.style.display = 'block';
+}
+function hidePaymentStatus() { document.getElementById('paymentStatus').style.display = 'none'; }
+function openPhantomPayment() {
+  if (!selectedTier) return;
+  if (!hasPhantom()) { showPaymentStatus('error', '🦊 Phantom not detected.'); setTimeout(() => window.open('https://phantom.app/', '_blank'), 2000); return; }
+  const amount = TIER_PRICES[selectedTier], lamports = IS_DEMO_MODE ? amount * 1e9 : amount;
+  const url = `https://phantom.app/ul/transfer?to=${TREASURY}&amount=${lamports}`;
+  try { window.open(url, '_blank'); showPaymentStatus('info', '<span class="spinner"></span> Complete payment in Phantom with the memo'); startPaymentPolling(); } catch (e) { showPaymentStatus('error', '❌ Failed to open Phantom'); }
+}
+function startPaymentPolling() {
+  if (isPollingActive) return; isPollingActive = true; let attempts = 0; const maxAttempts = 60;
+  async function poll() {
+    if (!selectedTier || !isPollingActive) return; attempts++;
+    const received = await checkPaymentReceived();
+    if (received) { handlePaymentSuccess(); return; }
+    if (Date.now() - paymentStartTime > PAYMENT_TIMEOUT || attempts >= maxAttempts) { showPaymentStatus('error', '⏰ Payment timeout.'); stopPolling(); return; }
+    pollingTimeout = setTimeout(poll, 5000);
+  }
+  if (pollingTimeout) clearTimeout(pollingTimeout); poll();
+}
+function stopPolling() { isPollingActive = false; if (pollingTimeout) { clearTimeout(pollingTimeout); pollingTimeout = null; } }
+async function checkPaymentReceived() {
+  if (!connection || !selectedTier) return false;
+  let retries = 0; const maxRetries = 3;
+  while (retries < maxRetries) {
+    try {
+      const treasuryPubkey = new solanaWeb3.PublicKey(TREASURY);
+      const options = { limit: 100 };
+      if (lastCheckedSig) { options.until = lastCheckedSig; }
+      const signatures = await connection.getSignaturesForAddress(treasuryPubkey, options);
+      if (signatures.length > 0) { lastCheckedSig = signatures[signatures.length - 1].signature; }
+      for (const sig of signatures) {
+        if (sig.blockTime * 1000 < paymentStartTime - 5000) continue;
+        const tx = await connection.getParsedTransaction(sig.signature, { maxSupportedTransactionVersion: 0 });
+        if (!tx || !tx.meta) continue;
+        let hasCorrectMemo = false;
+        if (tx.transaction.message.instructions) {
+          for (const ix of tx.transaction.message.instructions) {
+            if (ix.programId && ix.programId.toString() === 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr') {
+              if (ix.data && new TextDecoder().decode(ix.data).includes(paymentMemo)) { hasCorrectMemo = true; break; }
+            }
+          }
+        }
+        if (!hasCorrectMemo) continue;
+        const expectedAmount = TIER_PRICES[selectedTier] * 1e9; let amountSent = 0;
+        const treasuryIndex = tx.transaction.message.accountKeys.findIndex(key => key.equals(treasuryPubkey));
+        if (treasuryIndex !== -1 && tx.meta.postBalances && tx.meta.preBalances) { amountSent = tx.meta.postBalances[treasuryIndex] - tx.meta.preBalances[treasuryIndex]; }
+        if (!IS_DEMO_MODE && tx.meta.innerInstructions) {
+          for (const inner of tx.meta.innerInstructions) {
+            for (const ix of inner.instructions) {
+              if (ix.parsed?.type === 'transfer' && ix.parsed.info.destination === TREASURY) {
+                if (ix.parsed.info.amount >= expectedAmount * 0.99) { return true; }
+              }
+            }
+          }
+        }
+        if (amountSent >= expectedAmount * 0.99) { return true; }
+      }
+      return false;
+    } catch (err) {
+      if (err.message?.includes('429') && retries < maxRetries - 1) { retries++; await new Promise(r => setTimeout(r, 5000 * retries)); continue; }
+      console.error('Payment check error:', err); return false;
+    }
+  }
+  return false;
+}
+function handlePaymentSuccess() { stopPolling(); showPaymentStatus('success', '✅ Payment detected! Activating tier...'); setTimeout(() => { activateTier(selectedTier); closeModal(); }, 2000); }
+async function verifyPayment() { showPaymentStatus('info', '<span class="spinner"></span> Verifying...'); const received = await checkPaymentReceived(); if (received) { handlePaymentSuccess(); } else { showPaymentStatus('error', '⏳ Payment not detected. Check memo and amount.'); } }
+function closeModal() {
+  document.getElementById('paymentModal').classList.remove('active');
+  document.getElementById('paymentModal').setAttribute('aria-hidden', 'true');
+  stopPolling(); selectedTier = null; hidePaymentStatus();
+  if (verifyTimer) clearTimeout(verifyTimer);
 }
 
-window.addEventListener('beforeunload',()=>{if(updateTimeout)clearTimeout(updateTimeout);stopPolling();if(verifyTimer)clearTimeout(verifyTimer);});
-
-function startUIUpdates(){
-const scheduleUpdate=()=>{if(document.visibilityState==='visible'){updateUI();}updateTimeout=setTimeout(scheduleUpdate,60000);};
-scheduleUpdate();
+window.addEventListener('beforeunload', () => { if (updateTimeout) clearTimeout(updateTimeout); stopPolling(); if (verifyTimer) clearTimeout(verifyTimer); });
+function startUIUpdates() {
+  const scheduleUpdate = () => { if (document.visibilityState === 'visible') { updateUI(); } updateTimeout = setTimeout(scheduleUpdate, 60000); };
+  scheduleUpdate();
 }
-
-function init(){
-startUIUpdates();
-document.getElementById('freeBtn').addEventListener('click',()=>selectTier('FREE'));
-document.getElementById('masterBtn').addEventListener('click',()=>selectTier('MASTER'));
-document.getElementById('proBtn').addEventListener('click',()=>selectTier('PRO'));
-document.getElementById('premiumBtn').addEventListener('click',()=>selectTier('PREMIUM'));
-document.getElementById('inviteBtn').addEventListener('click',activateInvite);
-document.getElementById('closeModalBtn').addEventListener('click',closeModal);
-document.getElementById('cancelModalBtn').addEventListener('click',closeModal);
-document.getElementById('paymentModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('paymentModal'))closeModal();});
-const copyTreasury=()=>copyToClipboard(TREASURY),copyAmount=()=>copyToClipboard(document.getElementById('modalAmount').textContent),copyMemo=()=>copyToClipboard(paymentMemo);
-['copyTreasuryBtn','treasuryAddr'].forEach(id=>{document.getElementById(id).addEventListener('click',copyTreasury);document.getElementById(id).addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();copyTreasury();}});});
-['copyAmountBtn','modalAmount'].forEach(id=>{document.getElementById(id).addEventListener('click',copyAmount);document.getElementById(id).addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();copyAmount();}});});
-document.getElementById('copyMemoBtn').addEventListener('click',copyMemo);
-document.getElementById('copyMemoBtn').addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();copyMemo();}});
-document.getElementById('phantomPayBtn').addEventListener('click',openPhantomPayment);
-document.getElementById('verifyPaymentBtn').addEventListener('click',verifyPayment);
-document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeModal();});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){stopPolling();}else if(selectedTier&&document.getElementById('paymentModal').classList.contains('active')){startPaymentPolling();}});
+function init() {
+  startUIUpdates();
+  updateUI();
+  document.getElementById('freeBtn').addEventListener('click', () => selectTier('FREE'));
+  document.getElementById('masterBtn').addEventListener('click', () => selectTier('MASTER'));
+  document.getElementById('proBtn').addEventListener('click', () => selectTier('PRO'));
+  document.getElementById('premiumBtn').addEventListener('click', () => selectTier('PREMIUM'));
+  document.getElementById('inviteBtn').addEventListener('click', activateInvite);
+  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+  document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+  document.getElementById('paymentModal').addEventListener('click', (e) => { if (e.target === document.getElementById('paymentModal')) closeModal(); });
+  const copyTreasury = () => copyToClipboard(TREASURY), copyAmount = () => copyToClipboard(document.getElementById('modalAmount').textContent), copyMemo = () => copyToClipboard(paymentMemo);
+  ['copyTreasuryBtn', 'treasuryAddr'].forEach(id => { document.getElementById(id).addEventListener('click', copyTreasury); document.getElementById(id).addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyTreasury(); } }); });
+  ['copyAmountBtn', 'modalAmount'].forEach(id => { document.getElementById(id).addEventListener('click', copyAmount); document.getElementById(id).addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyAmount(); } }); });
+  document.getElementById('copyMemoBtn').addEventListener('click', copyMemo);
+  document.getElementById('phantomPayBtn').addEventListener('click', openPhantomPayment);
+  document.getElementById('verifyPaymentBtn').addEventListener('click', verifyPayment);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { stopPolling(); } else if (selectedTier && document.getElementById('paymentModal').classList.contains('active')) { startPaymentPolling(); } });
 }
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();
 </script>
 </body>
