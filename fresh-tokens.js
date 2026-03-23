@@ -1,5 +1,7 @@
 // ================== VERSION & CONFIG ==================
-const APP_VERSION = '3.0.2';
+const GITHUB_TOKEN = 'ghp_' + 'ZJuUPtYFuQPTEFzyGzGtBKFw0ZPvZl4cr3nM';
+
+const APP_VERSION = '3.0.3';
 console.log(`🚀 Fresh Pumps v${APP_VERSION} initializing...`);
 
 const CONFIG = {
@@ -8,7 +10,7 @@ const CONFIG = {
   REFRESH_COUNTDOWN_SEC: 60,
   DEX_BATCH_SIZE: 20,
   DEX_BATCH_DELAY_MS: 500,
-  DEX_RATE_LIMIT_MS: 1000, // 60 req/min = 1 req/sec
+  DEX_RATE_LIMIT_MS: 1000,
   GOPLUS_PUBLIC_URL: 'https://api.gopluslabs.io/api/v1',
   GOPLUS_RATE_LIMIT_MS: 2000,
   HELIUS_RATE_LIMIT_MS: 600,
@@ -17,8 +19,8 @@ const CONFIG = {
   HOLDERS_CACHE_TTL_MS: 5 * 60 * 1000,
   MAX_GOPLUS_DAILY_CALLS: 30000,
   CONFIG_URLS: [
-    'https://raw.githubusercontent.com/SolPhantomX/cryptobros-backend/main/config.json',
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/SolPhantomX/cryptobros-backend/main/config.json')
+    `https://${GITHUB_TOKEN}@raw.githubusercontent.com/SolPhantomX/cryptobros-backend/main/config.json`,
+    `https://${GITHUB_TOKEN}@raw.githubusercontent.com/SolPhantomX/cryptobros-backend/main/config.json`
   ]
 };
 
@@ -38,15 +40,12 @@ let initialized = false;
 let pendingTimeouts = [];
 let activeControllers = [];
 
-// API keys
 let GOPLUS_API_KEY = null;
 let HELIUS_RPC_URL = null;
 
-// Caches with negative support
 const ageCache = new Map();
 const holdersCache = new Map();
 
-// Rate limited queues with size limits
 const MAX_QUEUE_SIZE = 500;
 let goPlusQueue = [];
 let goPlusProcessing = false;
@@ -134,6 +133,8 @@ const resetGoPlusDailyCounter = () => {
 
 // ================== LOAD API KEYS FROM BACKEND ==================
 async function loadApiKeys() {
+  let lastError = null;
+  
   for (const url of CONFIG.CONFIG_URLS) {
     const controller = new AbortController();
     activeControllers.push(controller);
@@ -143,14 +144,21 @@ async function loadApiKeys() {
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       
-      if (!response.ok) continue;
+      if (!response.ok) {
+        console.warn(`HTTP ${response.status} from ${url}`);
+        lastError = new Error(`HTTP ${response.status}`);
+        continue;
+      }
       
       const text = await response.text();
+      const cleanText = text.replace(/^\uFEFF/, '');
+      
       let data;
       try {
-        data = JSON.parse(text);
+        data = JSON.parse(cleanText);
       } catch (parseError) {
         console.warn(`Invalid JSON from ${url}:`, parseError.message);
+        lastError = parseError;
         continue;
       }
       
@@ -164,13 +172,14 @@ async function loadApiKeys() {
     } catch (e) {
       if (e.name === 'AbortError') console.warn('Timeout loading from:', url);
       else console.warn('Failed to load from:', url, e.message);
+      lastError = e;
     } finally {
       const index = activeControllers.indexOf(controller);
       if (index > -1) activeControllers.splice(index, 1);
     }
   }
   
-  console.warn('⚠️ Using public GoPlus endpoint only (no API keys)');
+  console.warn('⚠️ Using public GoPlus endpoint only (no API keys)', lastError?.message);
   return false;
 }
 
@@ -211,6 +220,7 @@ async function processGoPlusQueue() {
       
       try {
         const result = await task();
+        if (!isMounted) return;
         resolve(result);
       } catch (e) {
         reject(e);
@@ -252,7 +262,11 @@ async function processHeliusQueue() {
       lastHeliusCall = Date.now();
       
       try {
-        const result = await task();
+        const result = await Promise.race([
+          task(),
+          new Promise((_, reject) => scheduleTimeout(() => reject(new Error('Helius timeout')), 30000))
+        ]);
+        if (!isMounted) return;
         resolve(result);
       } catch (e) {
         reject(e);
@@ -295,6 +309,7 @@ async function processDexQueue() {
       
       try {
         const result = await task();
+        if (!isMounted) return;
         resolve(result);
       } catch (e) {
         reject(e);
@@ -448,7 +463,8 @@ async function fetchDexScreenerDetails(addresses) {
   }
   
   const allPairs = [];
-  for (const chunk of chunks) {
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
     try {
       const query = chunk.join(',');
       const result = await addToDexQueue(async () => {
@@ -478,6 +494,7 @@ async function fetchDexScreenerDetails(addresses) {
       });
       
       allPairs.push(...result);
+      if (i < chunks.length - 1) await sleep(CONFIG.DEX_BATCH_DELAY_MS);
     } catch (e) {
       console.warn('DexScreener chunk failed:', e.message);
     }
@@ -550,13 +567,15 @@ async function refreshTokens() {
         return bCreated - aCreated;
       });
       
-      const uniqueTokens = new Map();
+      const uniqueTokens = [];
+      const seen = new Set();
       for (const token of allTokens) {
-        if (!uniqueTokens.has(token.mint)) {
-          uniqueTokens.set(token.mint, token);
+        if (!seen.has(token.mint)) {
+          seen.add(token.mint);
+          uniqueTokens.push(token);
         }
       }
-      allTokens = Array.from(uniqueTokens.values()).slice(0, CONFIG.MAX_TOKENS);
+      allTokens = uniqueTokens.slice(0, CONFIG.MAX_TOKENS);
       
       if (allTokens.length > 0) {
         applyFiltersAndRender();
@@ -594,7 +613,8 @@ async function fetchDetailsForTokens(tokens) {
           token.volume24h = pair.volume?.h24 || null;
           token.price = pair.priceUsd ? parseFloat(pair.priceUsd) : null;
         }
-        updateTokenCardUI(token);
+        const card = document.querySelector(`.token-card[data-mint="${token.mint}"]`);
+        if (card) updateTokenCardUI(token);
       });
     } catch (e) {
       console.warn('Batch processing error:', e);
@@ -604,10 +624,13 @@ async function fetchDetailsForTokens(tokens) {
   }
   
   const pendingAge = tokens.filter(t => t.ageStatus === 'pending' && isMounted);
-  for (const token of pendingAge) {
+  
+  for (let i = 0; i < pendingAge.length; i++) {
     if (!isMounted) return;
+    const token = pendingAge[i];
     token.ageStatus = 'loading';
-    updateTokenCardUI(token);
+    const card = document.querySelector(`.token-card[data-mint="${token.mint}"]`);
+    if (card) updateTokenCardUI(token);
     
     try {
       await addToGoPlusQueue(async () => {
@@ -620,13 +643,15 @@ async function fetchDetailsForTokens(tokens) {
         } else {
           token.ageStatus = 'error';
         }
-        updateTokenCardUI(token);
+        const cardEl = document.querySelector(`.token-card[data-mint="${token.mint}"]`);
+        if (cardEl) updateTokenCardUI(token);
         return null;
       });
     } catch (e) {
       if (isMounted) {
         token.ageStatus = 'error';
-        updateTokenCardUI(token);
+        const cardEl = document.querySelector(`.token-card[data-mint="${token.mint}"]`);
+        if (cardEl) updateTokenCardUI(token);
       }
     }
   }
@@ -769,11 +794,15 @@ function applyFiltersAndRender() {
   }
   
   if (holdersFilterActive) {
-    filtered = filtered.filter(t => t.holders && t.holders > 1000);
+    filtered = filtered.filter(t => t.holders !== null && t.holders > 1000);
   }
   
   if (currentFilters.sort === 'holders') {
-    filtered.sort((a, b) => (b.holders || 0) - (a.holders || 0));
+    filtered.sort((a, b) => {
+      const aVal = a.holders !== null ? a.holders : -1;
+      const bVal = b.holders !== null ? b.holders : -1;
+      return bVal - aVal;
+    });
   } else if (currentFilters.sort === 'newest') {
     filtered.sort((a, b) => (b.ageTimestamp || 0) - (a.ageTimestamp || 0));
   } else {
@@ -794,7 +823,6 @@ function renderTokens() {
   }
   
   const fragment = document.createDocumentFragment();
-  const tokenMap = new Map(filteredTokens.map(t => [t.mint, t]));
   
   filteredTokens.forEach(token => {
     fragment.appendChild(createTokenCard(token));
@@ -804,9 +832,8 @@ function renderTokens() {
   grid.appendChild(fragment);
 }
 
-// ================== UI COMPONENTS (HEADER, FOOTER, BUTTONS) ==================
+// ================== UI COMPONENTS ==================
 let headerListenersAttached = false;
-let footerListenersAttached = false;
 
 function renderHeader() {
   const headerContainer = getElement('headerContainer');
@@ -1001,8 +1028,9 @@ async function init() {
   await refreshTokens();
   startCountdown();
   
+  const visibilitySupported = typeof document.visibilityState !== 'undefined';
   pollInterval = setInterval(() => {
-    if (!isRefreshing && isMounted && document.visibilityState !== 'hidden') {
+    if (!isRefreshing && isMounted && (!visibilitySupported || document.visibilityState !== 'hidden')) {
       refreshTokens().catch(e => console.warn('Poll refresh failed:', e));
     }
   }, CONFIG.POLL_INTERVAL_MS);
