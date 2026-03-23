@@ -32,7 +32,6 @@
     }
     .header.loaded { border: none; }
 
-    /* Camera icon for header */
     .header-camera-icon {
       position: absolute;
       bottom: 8px;
@@ -80,7 +79,6 @@
       cursor: pointer;
     }
 
-    /* Camera icon for avatar */
     .avatar-camera-icon {
       position: absolute;
       bottom: 15px;
@@ -117,7 +115,6 @@
       padding: 0 20px;
     }
 
-    /* Beautiful gear button */
     .edit-btn {
       position: absolute;
       top: 16px;
@@ -136,9 +133,7 @@
       font-size: 28px;
       transition: transform 0.3s ease;
       animation: spinSlow 8s infinite linear, colorPulse 12s infinite;
-      box-shadow: 
-        0 0 20px currentColor,
-        inset 0 0 15px currentColor;
+      box-shadow: 0 0 20px currentColor, inset 0 0 15px currentColor;
       text-shadow: 0 0 15px currentColor;
     }
 
@@ -285,17 +280,185 @@
       0%,19%,21%,23%,25%,54%,56%,80%,82%,84%,86%,100% { opacity:1; }
       20%,24%,55%,81%,85% { opacity:0.8; }
     }
+
+    /* ===== INVITE GENERATOR BUTTON (RIGHT CENTER, CYBERPUNK STYLE) ===== */
+    .invite-generator {
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .invite-trigger {
+      width: 60px;
+      height: 120px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+      border: 2px solid #ffcc00;
+      border-right: none;
+      border-radius: 30px 0 0 30px;
+      color: #ffcc00;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 28px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: -5px 0 20px rgba(255, 204, 0, 0.3);
+      backdrop-filter: blur(5px);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      letter-spacing: 4px;
+    }
+
+    .invite-trigger span {
+      transform: rotate(180deg);
+      font-size: 14px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .invite-trigger:hover {
+      width: 70px;
+      background: linear-gradient(135deg, #ffcc00 0%, #ffaa00 100%);
+      color: #000;
+      box-shadow: -5px 0 35px rgba(255, 204, 0, 0.8);
+    }
+
+    .invite-panel {
+      position: absolute;
+      right: 60px;
+      top: 50%;
+      transform: translateY(-50%) translateX(100%);
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(15px);
+      border: 2px solid #ffcc00;
+      border-radius: 20px;
+      padding: 20px;
+      min-width: 220px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 0 50px rgba(255, 204, 0, 0.3);
+      pointer-events: none;
+    }
+
+    .invite-panel.active {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+
+    .invite-panel h3 {
+      color: #ffcc00;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      text-shadow: 0 0 10px #ffcc00;
+    }
+
+    .invite-tier-btn {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .invite-tier-btn.master {
+      background: linear-gradient(135deg, #d700ff, #a500cc);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(215, 0, 255, 0.5);
+    }
+    .invite-tier-btn.pro {
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    }
+    .invite-tier-btn.premium {
+      background: linear-gradient(135deg, #ffd700, #ccaa00);
+      color: #000;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+
+    .invite-tier-btn:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    .invite-tier-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Toast notification */
+    .invite-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: linear-gradient(135deg, #00ff9d, #00cc88);
+      color: #000;
+      padding: 14px 28px;
+      border-radius: 60px;
+      font-family: monospace;
+      font-weight: bold;
+      font-size: 1.1rem;
+      z-index: 10000;
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 30px #00ff9d;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .invite-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .invite-trigger {
+        width: 45px;
+        height: 90px;
+        font-size: 20px;
+      }
+      .invite-trigger span {
+        font-size: 10px;
+      }
+      .invite-panel {
+        min-width: 180px;
+        padding: 15px;
+      }
+      .invite-tier-btn {
+        padding: 8px;
+        font-size: 0.85rem;
+      }
+      .invite-toast {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        white-space: normal;
+        text-align: center;
+        max-width: 85vw;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="top-section">
     <div class="header" id="header">
-      <!-- Camera icon for header -->
       <div class="header-camera-icon" id="headerCameraBtn">📷</div>
     </div>
     <div class="avatar-container">
       <div class="avatar" id="avatar"></div>
-      <!-- Camera icon for avatar -->
       <div class="avatar-camera-icon" id="avatarCameraBtn">📷</div>
     </div>
     <div class="theme-switch" id="themeSwitch">🌙</div>
@@ -305,19 +468,32 @@
 
   <div class="main-layout">
     <div class="sidebar">
-      <!-- UPDATED: Open newspaper emoji before CryptoNews -->
       <a href="news.html" class="nav-item">📖 CryptoNews</a>
-      <!-- REMOVED: My Profile -->
       <a href="feed.html" class="nav-item">📰 News Feed</a>
       <a href="messages.html" class="nav-item">💬 Messages</a>
       <a href="groups.html" class="nav-item">👥 My Groups</a>
       <a href="tribunal.html" class="nav-item">⚖️ Tribunal</a>
       <a href="friends.html" class="nav-item">👫 My Friends</a>
-      <!-- NEW: CryptoMerch with t-shirt emoji -->
       <a href="merch.html" class="nav-item">👕 CryptoMerch</a>
     </div>
     <div class="main" id="profileContent"></div>
   </div>
+
+  <!-- INVITE GENERATOR (RIGHT CENTER) -->
+  <div class="invite-generator">
+    <div class="invite-trigger" id="inviteTrigger">
+      <span>🎁</span>
+      <span>CODE</span>
+    </div>
+    <div class="invite-panel" id="invitePanel">
+      <h3>⚡ GENERATE INVITE ⚡</h3>
+      <button class="invite-tier-btn master" data-tier="MASTER">👑 MASTER</button>
+      <button class="invite-tier-btn pro" data-tier="PRO">⚡ PRO</button>
+      <button class="invite-tier-btn premium" data-tier="PREMIUM">💎 PREMIUM</button>
+    </div>
+  </div>
+
+  <div class="invite-toast" id="inviteToast">📋 Code copied!</div>
 
   <input type="file" id="header-upload" accept="image/*">
   <input type="file" id="avatar-upload" accept="image/*">
@@ -339,14 +515,92 @@
       let pageBg = localStorage.getItem('pageBg') || '';
       let currentTheme = localStorage.getItem('theme') || 'dark';
 
-      // Creator mode - default false, only activated by double-click
       let isCreator = false;
+      const bgPresets = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png'];
 
-      // UPDATED: Only bg1-bg5 remain
-      const bgPresets = [
-        'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png'
-      ];
+      // ========== INVITE CODE FUNCTIONS ==========
+      function generate4DigitCode() {
+        return Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+      }
 
+      function getCodePrefix(tier) {
+        const prefixes = { 'MASTER': 'MST', 'PRO': 'PRO', 'PREMIUM': 'PRE' };
+        return prefixes[tier] || 'INV';
+      }
+
+      function generateInviteCode(tier) {
+        const prefix = getCodePrefix(tier);
+        const digits = generate4DigitCode();
+        const fullCode = `${prefix}-${digits}`;
+        
+        let activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
+        
+        // Check for duplicate (avoid same code if unlucky)
+        const exists = activeCodes.some(c => c.code === fullCode);
+        if (exists) {
+          return generateInviteCode(tier); // retry
+        }
+        
+        activeCodes.push({ 
+          code: fullCode, 
+          tier: tier, 
+          generatedAt: Date.now(), 
+          used: false 
+        });
+        localStorage.setItem('activeInviteCodes', JSON.stringify(activeCodes));
+        
+        return fullCode;
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById('inviteToast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2500);
+      }
+
+      function handleGenerateCode(tier) {
+        const code = generateInviteCode(tier);
+        navigator.clipboard.writeText(code).then(() => {
+          showToast(`✅ ${tier} CODE: ${code}\n📋 Copied to clipboard!`);
+        }).catch(() => {
+          showToast(`✅ ${tier} CODE: ${code}\n(please copy manually)`);
+        });
+        
+        // Close panel after generation
+        document.getElementById('invitePanel').classList.remove('active');
+      }
+
+      // ========== INVITE GENERATOR UI ==========
+      function initInviteGenerator() {
+        const trigger = document.getElementById('inviteTrigger');
+        const panel = document.getElementById('invitePanel');
+        
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          panel.classList.toggle('active');
+        });
+        
+        // Close panel when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!trigger.contains(e.target) && !panel.contains(e.target)) {
+            panel.classList.remove('active');
+          }
+        });
+        
+        // Add listeners to tier buttons
+        document.querySelectorAll('.invite-tier-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const tier = btn.dataset.tier;
+            handleGenerateCode(tier);
+          });
+        });
+      }
+
+      // ========== EXISTING PROFILE FUNCTIONS ==========
       function init() {
         applyTheme();
         if (pageBg) document.body.style.backgroundImage = `url(${pageBg})`;
@@ -367,6 +621,7 @@
         setupEditMenuTriggers();
         attachGlobalListeners();
         buildEditMenuContent();
+        initInviteGenerator();
       }
 
       function applyTheme() {
@@ -395,7 +650,6 @@
         applyTheme();
       }
 
-      // DOUBLE CLICK ON GEAR — ONLY WAY TO ACTIVATE CREATOR MODE
       function tryActivateCreator() {
         const pwd = prompt('🔐 Enter creator password:');
         if (pwd === CREATOR_PASSWORD) {
@@ -419,7 +673,6 @@
 
       function buildEditMenuContent() {
         const menu = document.getElementById('editMenu');
-        // UPDATED: Only 5 bg buttons
         let bgButtons = bgPresets.map(bg => 
           `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
         ).join('');
@@ -434,13 +687,9 @@
           <button onclick="enterEditMode()">✏️ Edit Profile</button>
         `;
 
-        // ONLY show invite buttons if creator mode is active
         if (isCreator) {
           html += `
             <div style="margin-top:10px;padding-top:10px;border-top:1px solid #555">
-              <button onclick="generateInviteCode('Premium')">🎁 Premium Invite</button>
-              <button onclick="generateInviteCode('Master')">🎁 Master Invite</button>
-              <button onclick="generateInviteCode('Pro')">🎁 Pro Invite</button>
               <button onclick="showActiveCodes()">📊 Active Codes</button>
               <button onclick="revokeAllCodes()">🗑️ Revoke All</button>
             </div>
@@ -451,28 +700,11 @@
         menu.innerHTML = html;
       }
 
-      // Invite functions (guarded)
-      function generateInviteCode(tier) {
-        if (!isCreator) { alert('Permission denied'); return; }
-        const raw = Math.random().toString(36).substring(2, 10).toUpperCase();
-        const fullCode = `${tier.slice(0,3).toUpperCase()}-${raw}`;
-
-        let activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
-        activeCodes.push({ code: fullCode, tier: tier, generatedAt: Date.now(), used: false });
-        localStorage.setItem('activeInviteCodes', JSON.stringify(activeCodes));
-
-        navigator.clipboard.writeText(fullCode).then(() => {
-          alert(`✅ Invite code generated!\n\nCode: ${fullCode}\nTier: ${tier}\n\nCopied to clipboard!`);
-        }).catch(() => {
-          alert(`✅ Code: ${fullCode}\nTier: ${tier}\n(please copy manually)`);
-        });
-      }
-
       function showActiveCodes() {
         if (!isCreator) return;
         const codes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
         if (!codes.length) { alert('No active invite codes.'); return; }
-        let msg = 'Active Invite Codes:\n\n';
+        let msg = 'ACTIVE INVITE CODES:\n\n';
         codes.forEach(c => msg += `${c.code} — ${c.tier} — ${c.used ? 'USED' : 'ACTIVE'}\n`);
         alert(msg);
       }
@@ -484,7 +716,6 @@
         document.getElementById('editMenu').style.display = 'none';
       }
 
-      // Background & color functions
       window.setPresetBg = function(filename) {
         pageBg = filename;
         localStorage.setItem('pageBg', pageBg);
@@ -532,7 +763,6 @@
           <div class="field-label">City</div>
           <div class="field-value">${profileData.city || 'Not specified'}</div>
         `;
-
         document.getElementById('profileContent').innerHTML = content;
       }
 
@@ -601,9 +831,7 @@
         const headerEl = document.getElementById('header');
         const avatarEl = document.getElementById('avatar');
 
-        // Old clicks still work (click on image itself)
         headerEl.addEventListener('click', (e) => {
-          // Don't trigger if clicking the camera icon
           if (e.target.classList.contains('header-camera-icon')) return;
           document.getElementById('header-upload').click();
         });
@@ -613,7 +841,6 @@
           document.getElementById('avatar-upload').click();
         });
 
-        // Camera icon triggers
         document.getElementById('headerCameraBtn').addEventListener('click', (e) => {
           e.stopPropagation();
           document.getElementById('header-upload').click();
@@ -624,7 +851,6 @@
           document.getElementById('avatar-upload').click();
         });
 
-        // File upload handlers
         document.getElementById('header-upload').onchange = function(e) {
           const file = e.target.files[0];
           if (file) {
@@ -661,15 +887,13 @@
         setupDragToPan();
       }
 
-      // Expose to global
+      window.showActiveCodes = showActiveCodes;
+      window.revokeAllCodes = revokeAllCodes;
       window.setPresetBg = setPresetBg;
       window.changeTextColor = changeTextColor;
       window.changePageBg = changePageBg;
       window.enterEditMode = enterEditMode;
       window.saveProfile = saveProfile;
-      window.generateInviteCode = generateInviteCode;
-      window.showActiveCodes = showActiveCodes;
-      window.revokeAllCodes = revokeAllCodes;
 
       window.addEventListener('DOMContentLoaded', init);
     })();
