@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>CRYPTOBROS — GALLERY</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
@@ -10,14 +10,28 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       font-family: 'Montserrat', sans-serif;
       min-height: 100vh;
-      padding: 30px;
+      padding: 20px;
       position: relative;
       transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Better mobile padding */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
     }
 
     /* Background image */
@@ -57,23 +71,42 @@
       color: #000;
     }
 
-    /* Back button */
+    /* Back button - improved mobile touch target */
     .back-button {
       position: fixed;
-      top: 30px;
-      left: 30px;
+      top: 20px;
+      left: 20px;
       background: rgba(0,0,0,0.7);
       border: 2px solid #ffcc00;
       border-radius: 60px;
-      padding: 16px 36px;
+      padding: 12px 24px;
       color: #ffcc00;
       text-decoration: none;
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 600;
       font-family: 'Montserrat', sans-serif;
       z-index: 1000;
       transition: 0.3s;
       backdrop-filter: blur(5px);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .back-button {
+        top: 15px;
+        left: 15px;
+        padding: 10px 18px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .back-button {
+        top: 10px;
+        left: 10px;
+        padding: 8px 14px;
+        font-size: 0.8rem;
+      }
     }
 
     .back-button:hover {
@@ -81,64 +114,106 @@
       background: rgba(0,0,0,0.9);
     }
 
-    /* Theme toggle */
+    /* Theme toggle - improved mobile touch target */
     .theme-toggle {
       position: fixed;
-      top: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: #333;
-      border: 3px solid #ffcc00;
+      border: 2px solid #ffcc00;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 24px;
       z-index: 1000;
       transition: 0.3s;
       backdrop-filter: blur(5px);
     }
 
-    .theme-toggle:hover {
-      box-shadow: 0 0 20px #ffcc00;
-      transform: scale(1.1);
+    @media (max-width: 768px) {
+      .theme-toggle {
+        top: 15px;
+        right: 15px;
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+      }
     }
 
-    /* Main title - solid, bold font */
+    @media (max-width: 480px) {
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+    }
+
+    .theme-toggle:hover {
+      box-shadow: 0 0 20px #ffcc00;
+      transform: scale(1.05);
+    }
+
+    /* Main title - responsive font */
     .page-title {
       font-family: 'Archivo Black', sans-serif;
-      font-size: 5rem;
+      font-size: clamp(2rem, 8vw, 5rem);
       text-align: center;
-      margin: 80px 0 20px;
+      margin: 70px 0 20px;
       color: #ffcc00;
       text-shadow: 4px 4px 0 #000, 0 0 30px #ffcc00, 0 0 60px #ff9900;
       letter-spacing: 2px;
       position: relative;
       z-index: 10;
+      word-break: keep-all;
     }
 
-    /* Rotating slogan - thicker and glowing */
+    @media (max-width: 768px) {
+      .page-title {
+        margin: 60px 0 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title {
+        margin: 50px 0 10px;
+      }
+    }
+
+    /* Rotating slogan - responsive */
     .rotating-slogan {
       font-family: 'Montserrat', sans-serif;
-      font-size: 2rem;
+      font-size: clamp(1rem, 5vw, 2rem);
       text-align: center;
       font-weight: 700;
-      margin-bottom: 50px;
-      min-height: 80px;
+      margin-bottom: 40px;
+      min-height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 20px;
-      transition: color 0.5s ease;
+      padding: 0 15px;
+      transition: color 0.5s ease, opacity 0.3s ease, transform 0.3s ease;
       text-shadow: 2px 2px 0 #000, 0 0 20px currentColor, 0 0 40px currentColor;
       letter-spacing: 1px;
       position: relative;
       z-index: 10;
+      will-change: transform, opacity;
     }
 
-    /* Grid 6x5 = 30 slots */
+    @media (max-width: 768px) {
+      .rotating-slogan {
+        margin-bottom: 30px;
+        min-height: 60px;
+        padding: 0 10px;
+      }
+    }
+
+    /* Grid - fully responsive with dynamic borders */
     .image-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -166,11 +241,25 @@
       aspect-ratio: 1/1;
       background: rgba(20, 20, 20, 0.8);
       backdrop-filter: blur(2px);
-      border-right: 2px solid #ffcc00;
-      border-bottom: 2px solid #ffcc00;
       position: relative;
       cursor: pointer;
       transition: 0.2s;
+    }
+
+    /* Dynamic borders - no hardcoded nth-child rules */
+    .image-grid:not(.no-dynamic-borders) .grid-item {
+      border-right: 2px solid #ffcc00;
+      border-bottom: 2px solid #ffcc00;
+    }
+
+    /* Remove right border for last item in each row using dynamic approach via JS */
+    .grid-item.row-end {
+      border-right: none !important;
+    }
+
+    /* Remove bottom border for last row items */
+    .grid-item.last-row {
+      border-bottom: none !important;
     }
 
     .grid-item:hover {
@@ -178,23 +267,29 @@
       z-index: 5;
     }
 
-    .grid-item:nth-child(6n) { border-right: none; }
-    .grid-item:nth-last-child(-n+6) { border-bottom: none; }
-
     .grid-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      background: #1a1a2e;
     }
 
-    /* ===== SLOT NUMBERS - BOLD & GLOWING ===== */
+    /* Fallback for broken images */
+    .grid-item img[src=""], 
+    .grid-item img:not([src]), 
+    .grid-item img.error {
+      opacity: 0.6;
+      background: linear-gradient(135deg, #2a2a3e 0%, #1a1a2a 100%);
+    }
+
+    /* ===== SLOT NUMBERS - BOLD & GLOWING, RESPONSIVE ===== */
     .item-number {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      width: 44px;
-      height: 44px;
+      top: 8px;
+      left: 8px;
+      width: clamp(32px, 8vw, 44px);
+      height: clamp(32px, 8vw, 44px);
       background: rgba(0, 0, 0, 0.85);
       border: 2px solid #ffcc00;
       border-radius: 50%;
@@ -203,12 +298,21 @@
       justify-content: center;
       color: #ffcc00;
       font-weight: 900;
-      font-size: 1.3rem;
+      font-size: clamp(0.9rem, 4vw, 1.3rem);
       font-family: 'Montserrat', sans-serif;
       text-shadow: 0 0 15px #ffcc00, 0 0 30px #ffaa00, 0 0 45px #ff8800;
       box-shadow: 0 0 20px #ffcc00, inset 0 0 10px rgba(255,204,0,0.5);
       z-index: 20;
       backdrop-filter: blur(2px);
+      pointer-events: none;
+    }
+
+    @media (max-width: 480px) {
+      .item-number {
+        top: 4px;
+        left: 4px;
+        border-width: 1.5px;
+      }
     }
 
     /* Lightbox */
@@ -223,6 +327,7 @@
       z-index: 10000;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
     }
 
     .lightbox.active {
@@ -235,17 +340,18 @@
       border: 4px solid #ff00ff;
       border-radius: 15px;
       box-shadow: 0 0 50px #ff00ff;
+      object-fit: contain;
     }
 
     .lightbox-close {
       position: absolute;
-      top: 30px;
-      right: 30px;
+      top: 20px;
+      right: 20px;
       color: #ff00ff;
-      font-size: 3rem;
+      font-size: 2.5rem;
       cursor: pointer;
-      width: 65px;
-      height: 65px;
+      width: 55px;
+      height: 55px;
       border: 3px solid #ff00ff;
       border-radius: 50%;
       display: flex;
@@ -253,93 +359,175 @@
       justify-content: center;
       transition: 0.3s;
       font-family: 'Montserrat', sans-serif;
+      background: rgba(0,0,0,0.5);
+    }
+
+    @media (max-width: 768px) {
+      .lightbox-close {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 2rem;
+      }
     }
 
     .lightbox-close:hover {
       box-shadow: 0 0 40px #ff00ff;
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
 
     .lightbox-number {
       position: absolute;
-      bottom: 30px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       color: #00ffff;
-      font-size: 1.5rem;
-      background: black;
-      padding: 12px 35px;
-      border: 3px solid #00ffff;
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      background: rgba(0,0,0,0.8);
+      padding: 10px 25px;
+      border: 2px solid #00ffff;
       border-radius: 60px;
       box-shadow: 0 0 25px #00ffff;
       font-family: 'Montserrat', sans-serif;
       font-weight: 600;
+      white-space: nowrap;
     }
 
-    /* ===== BOTTOM MESSAGE - BOLD & GLOWING ===== */
+    @media (max-width: 480px) {
+      .lightbox-number {
+        bottom: 15px;
+        padding: 8px 18px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+    }
+
+    /* ===== BOTTOM MESSAGE - OPTIMIZED ANIMATIONS (REDUCED MOTION SUPPORT) ===== */
     .bottom-message {
       max-width: 1000px;
-      margin: 50px auto 70px;
-      padding: 30px 40px;
+      margin: 40px auto 60px;
+      padding: 25px 30px;
       background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(8px);
       border: 2px solid rgba(255, 204, 0, 0.4);
       border-radius: 30px;
       text-align: center;
       font-family: 'Montserrat', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 600; /* BOLDER! */
-      line-height: 1.7;
+      font-size: clamp(1rem, 4vw, 1.4rem);
+      font-weight: 600;
+      line-height: 1.6;
       color: #ffffff;
-      text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffaa00, 0 0 30px #ff8800; /* GLOW! */
+      text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffaa00, 0 0 30px #ff8800;
       box-shadow: 0 0 40px rgba(255, 204, 0, 0.3);
       position: relative;
       z-index: 10;
       letter-spacing: 0.5px;
+      transition: all 0.3s ease;
     }
-
+    
+    /* Only apply animations if user prefers motion */
+    @media (prefers-reduced-motion: no-preference) {
+      .bottom-message {
+        animation: messageGlowPulse 3s ease-in-out infinite, textColorShift 5s linear infinite;
+      }
+    }
+    
+    /* Keyframes for multi-color text shift */
+    @keyframes textColorShift {
+      0%, 100% {
+        color: #ffffff;
+        text-shadow: 0 0 8px #ffcc00, 0 0 20px #ffaa00, 0 0 30px #ff8800;
+      }
+      20% {
+        color: #ffcc66;
+        text-shadow: 0 0 12px #ff3366, 0 0 25px #ff3366, 0 0 35px #ff0033;
+      }
+      40% {
+        color: #66ffcc;
+        text-shadow: 0 0 12px #00ffcc, 0 0 25px #00ffaa, 0 0 35px #00ff88;
+      }
+      60% {
+        color: #ffaa66;
+        text-shadow: 0 0 12px #ffaa44, 0 0 25px #ff8844, 0 0 35px #ff6644;
+      }
+      80% {
+        color: #cc66ff;
+        text-shadow: 0 0 12px #aa66ff, 0 0 25px #aa44ff, 0 0 35px #aa22ff;
+      }
+    }
+    
+    @keyframes messageGlowPulse {
+      0%, 100% {
+        border-color: rgba(255, 204, 0, 0.5);
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+      }
+      50% {
+        border-color: #ff00cc;
+        box-shadow: 0 0 50px #ff44aa, 0 0 80px rgba(255, 68, 170, 0.6);
+      }
+    }
+    
     .bottom-message .email {
       display: inline-block;
-      margin-top: 20px;
-      padding: 12px 30px;
+      margin-top: 18px;
+      padding: 10px 24px;
       font-weight: 800;
-      font-size: 1.8rem;
+      font-size: clamp(1.1rem, 5vw, 1.8rem);
       color: #ffcc00;
       text-shadow: 0 0 15px #ffcc00, 0 0 30px #ffaa00, 0 0 45px #ff8800;
       background: rgba(0, 0, 0, 0.5);
       border: 2px solid #ffcc00;
       border-radius: 60px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
+      word-break: break-all;
     }
 
-    .bottom-message .email:hover {
-      transform: scale(1.05);
-      background: rgba(255, 204, 0, 0.2);
-      box-shadow: 0 0 50px #ffcc00;
-      border-color: #ffffff;
+    .bottom-message .email:active {
+      transform: scale(0.98);
+    }
+
+    @media (hover: hover) {
+      .bottom-message .email:hover {
+        transform: scale(1.03);
+        background: rgba(255, 204, 0, 0.2);
+        box-shadow: 0 0 50px #ffcc00;
+        border-color: #ffffff;
+      }
     }
 
     /* Copy toast notification */
     .copy-toast {
       position: fixed;
-      bottom: 40px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
       background: #000;
       color: #ffcc00;
-      padding: 16px 32px;
+      padding: 14px 28px;
       border-radius: 60px;
       font-family: 'Montserrat', sans-serif;
       font-weight: 600;
-      font-size: 1.2rem;
+      font-size: clamp(0.9rem, 3.5vw, 1.2rem);
       border: 2px solid #ffcc00;
       box-shadow: 0 0 30px #ffcc00;
       z-index: 20000;
       opacity: 0;
       transition: all 0.3s ease;
       backdrop-filter: blur(5px);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      .copy-toast {
+        padding: 10px 20px;
+        white-space: normal;
+        text-align: center;
+        max-width: 85vw;
+      }
     }
 
     .copy-toast.show {
@@ -349,54 +537,79 @@
 
     /* Light mode adjustments */
     body.light-mode .bottom-message {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.85);
       color: #222;
       text-shadow: 0 0 10px #ffaa00, 0 0 20px #ffaa00;
+    }
+    
+    @media (prefers-reduced-motion: no-preference) {
+      body.light-mode .bottom-message {
+        animation: messageGlowPulseLight 3s ease-in-out infinite, textColorShiftLight 5s linear infinite;
+      }
+    }
+    
+    @keyframes textColorShiftLight {
+      0%, 100% {
+        color: #111;
+        text-shadow: 0 0 6px #ffaa44, 0 0 12px #ffaa44;
+      }
+      25% {
+        color: #aa4422;
+        text-shadow: 0 0 8px #ff6644, 0 0 16px #ff6644;
+      }
+      50% {
+        color: #2277aa;
+        text-shadow: 0 0 8px #44aaff, 0 0 16px #44aaff;
+      }
+      75% {
+        color: #44aa55;
+        text-shadow: 0 0 8px #88ff88, 0 0 16px #66ff66;
+      }
+    }
+    
+    @keyframes messageGlowPulseLight {
+      0%, 100% {
+        border-color: rgba(255, 180, 0, 0.6);
+        box-shadow: 0 0 20px rgba(255, 170, 0, 0.3);
+      }
+      50% {
+        border-color: #ff44aa;
+        box-shadow: 0 0 50px #ff66aa;
+      }
     }
 
     body.light-mode .bottom-message .email {
       color: #cc7700;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.8);
+      text-shadow: 0 0 12px #ffaa44, 0 0 20px #ffaa44;
     }
   </style>
 </head>
 <body>
-  <!-- Back button to merch page -->
   <a href="merch.html" class="back-button">← BACK TO MERCH</a>
-  
-  <!-- Theme toggle -->
   <div class="theme-toggle" id="themeToggle">🌙</div>
 
-  <!-- Lightbox -->
   <div class="lightbox" id="lightbox">
     <div class="lightbox-close" id="lightboxClose">✕</div>
     <img id="lightboxImg" src="" alt="">
     <div class="lightbox-number" id="lightboxNumber"></div>
   </div>
 
-  <!-- Copy toast notification -->
   <div class="copy-toast" id="copyToast">📋 Email copied to clipboard!</div>
 
-  <!-- Main content -->
   <div class="gallery-container">
     <h1 class="page-title">DESIGN GALLERY</h1>
-    
-    <!-- Rotating slogan (changes every 15 seconds) -->
     <div class="rotating-slogan" id="rotatingSlogan"></div>
-    
-    <!-- Grid 30 slots - ALL FILLED -->
     <div class="image-grid" id="designsGrid"></div>
-
-    <!-- BOTTOM MESSAGE - BOLD & GLOWING -->
     <div class="bottom-message">
       Hey bro, just pick your shirt number and design number. Drop your size from the chart, shipping address and name — I'll hit you back with the exact price, no BS!<br>
-      <span class="email" id="emailCopy">✉️ xbro10@proton.me</span>
+      <span class="email" id="emailCopy">✉️ cryptobrosmerch@proton.me</span>
     </div>
   </div>
 
   <script>
     (function() {
-      // ========== SLOGANS FROM MERCH PAGE ==========
+      // SLOGANS
       const slogans = [
         "Real ones wear the merch. Fake ones fear the truth.",
         "CRYPTOBROS Merch – not just clothes, it's a statement.",
@@ -405,10 +618,7 @@
         "Don't just HODL — SHOW it. CRYPTOBROS Merch for the fearless."
       ];
 
-      // Colors for slogan
       const colors = ['#ffcc00', '#ff3366', '#33ccff', '#aa66ff', '#00ffaa', '#ff8800', '#ff00ff', '#66ff66'];
-
-      // ========== FILE NAMES ==========
       const IMAGE_PATH = 'merch-artworks/';
       
       const imageFiles = [
@@ -421,7 +631,6 @@
         '28a.png', '29a.png', '30a.png', '31a.png'
       ];
 
-      // Elements
       const grid = document.getElementById('designsGrid');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
@@ -432,9 +641,42 @@
       const emailSpan = document.getElementById('emailCopy');
       const copyToast = document.getElementById('copyToast');
 
-      // ========== COPY EMAIL TO CLIPBOARD ==========
-      emailSpan.addEventListener('click', async () => {
-        const email = 'xbro10@proton.me';
+      let sloganInterval = null;
+
+      // ========== DYNAMIC BORDER HANDLER ==========
+      function updateGridBorders() {
+        if (!grid) return;
+        const items = grid.querySelectorAll('.grid-item');
+        if (!items.length) return;
+        
+        // Get current columns count based on computed style
+        const gridStyle = window.getComputedStyle(grid);
+        const templateColumns = gridStyle.gridTemplateColumns;
+        const columnCount = templateColumns.split(' ').length;
+        
+        // Remove existing classes
+        items.forEach(item => {
+          item.classList.remove('row-end', 'last-row');
+        });
+        
+        // Apply row-end class (remove right border for last in each row)
+        items.forEach((item, index) => {
+          if ((index + 1) % columnCount === 0) {
+            item.classList.add('row-end');
+          }
+        });
+        
+        // Apply last-row class (remove bottom border for last row items)
+        const totalItems = items.length;
+        const lastRowStart = Math.floor((totalItems - 1) / columnCount) * columnCount;
+        for (let i = lastRowStart; i < totalItems; i++) {
+          if (items[i]) items[i].classList.add('last-row');
+        }
+      }
+
+      // ========== COPY EMAIL WITH PROPER ERROR HANDLING ==========
+      async function copyEmailToClipboard() {
+        const email = 'cryptobrosmerch@proton.me';
         try {
           await navigator.clipboard.writeText(email);
           copyToast.classList.add('show');
@@ -442,93 +684,182 @@
             copyToast.classList.remove('show');
           }, 2000);
         } catch (err) {
-          alert('Failed to copy email. Please copy manually: ' + email);
+          // Fallback for older browsers or permission issues
+          try {
+            const textArea = document.createElement('textarea');
+            textArea.value = email;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            const success = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            if (success) {
+              copyToast.classList.add('show');
+              setTimeout(() => {
+                copyToast.classList.remove('show');
+              }, 2000);
+            } else {
+              alert('Failed to copy email. Please copy manually: ' + email);
+            }
+          } catch (fallbackErr) {
+            alert('Failed to copy email. Please copy manually: ' + email);
+          }
         }
-      });
+      }
 
-      // ========== ROTATING SLOGAN ==========
-      let sloganIndex = 0;
-      
+      if (emailSpan) {
+        emailSpan.addEventListener('click', (e) => {
+          e.stopPropagation();
+          copyEmailToClipboard();
+        });
+      }
+
+      // ========== ROTATING SLOGAN WITH CLEANUP ==========
       function updateSlogan() {
+        if (!sloganEl) return;
         sloganEl.style.opacity = '0';
         sloganEl.style.transform = 'translateY(10px)';
         
         setTimeout(() => {
+          if (!sloganEl) return;
+          sloganIndex = (sloganIndex + 1) % slogans.length;
           sloganEl.textContent = slogans[sloganIndex];
           sloganEl.style.color = colors[Math.floor(Math.random() * colors.length)];
           sloganEl.style.opacity = '1';
           sloganEl.style.transform = 'translateY(0)';
         }, 300);
-        
-        sloganIndex = (sloganIndex + 1) % slogans.length;
       }
 
-      sloganEl.textContent = slogans[0];
-      sloganEl.style.color = colors[Math.floor(Math.random() * colors.length)];
-      sloganEl.style.transition = 'opacity 0.3s ease, transform 0.3s ease, color 0.5s ease';
-      setInterval(updateSlogan, 15000);
+      let sloganIndex = 0;
+      if (sloganEl) {
+        sloganEl.textContent = slogans[0];
+        sloganEl.style.color = colors[Math.floor(Math.random() * colors.length)];
+        sloganEl.style.transition = 'opacity 0.3s ease, transform 0.3s ease, color 0.5s ease';
+        sloganInterval = setInterval(updateSlogan, 15000);
+      }
 
-      // ========== THEME TOGGLE ==========
-      if (localStorage.getItem('theme') === 'light') {
+      // ========== THEME TOGGLE WITH VALIDATION ==========
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
         document.body.classList.add('light-mode');
-        themeToggle.textContent = '☀️';
+        if (themeToggle) themeToggle.textContent = '☀️';
+      } else if (savedTheme === 'dark') {
+        document.body.classList.remove('light-mode');
+        if (themeToggle) themeToggle.textContent = '🌙';
       }
 
-      themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        themeToggle.textContent = isLight ? '☀️' : '🌙';
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      });
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          document.body.classList.toggle('light-mode');
+          const isLight = document.body.classList.contains('light-mode');
+          themeToggle.textContent = isLight ? '☀️' : '🌙';
+          localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+      }
 
-      // ========== RENDER GRID ==========
+      // ========== RENDER GRID WITH ERROR HANDLING ==========
       function renderGrid() {
+        if (!grid) return;
         let html = '';
         for (let slot = 1; slot <= 30; slot++) {
-          html += '<div class="grid-item" data-id="' + slot + '">';
-          html += '<div class="item-number">' + slot + '</div>';
           const fileName = imageFiles[slot - 1];
-          const imagePath = IMAGE_PATH + fileName;
-          html += '<img src="' + imagePath + '" alt="Design ' + slot + '" loading="lazy">';
-          html += '</div>';
+          const imagePath = fileName ? IMAGE_PATH + fileName : '';
+          html += `
+            <div class="grid-item" data-id="${slot}">
+              <div class="item-number">${slot}</div>
+              <img src="${imagePath}" alt="Design ${slot}" loading="lazy" onerror="this.classList.add('error')">
+            </div>
+          `;
         }
         grid.innerHTML = html;
+        updateGridBorders();
+        
+        // Add error handling for images
+        grid.querySelectorAll('img').forEach(img => {
+          img.addEventListener('error', function() {
+            this.classList.add('error');
+          });
+        });
       }
 
       renderGrid();
 
-      // ========== LIGHTBOX ==========
-      grid.addEventListener('click', (e) => {
-        const item = e.target.closest('.grid-item');
-        if (!item) return;
-        const slot = item.dataset.id;
-        const img = item.querySelector('img');
-        if (img && img.src) {
-          lightboxImg.src = img.src;
-          lightboxNum.textContent = 'DESIGN #' + slot;
+      // ========== LIGHTBOX WITH XSS PROTECTION ==========
+      function openLightbox(imgSrc, slotNumber) {
+        if (!imgSrc || imgSrc.trim() === '') return;
+        // Sanitize and validate URL (prevent javascript: etc)
+        try {
+          const url = new URL(imgSrc, window.location.href);
+          if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+            console.warn('Invalid image protocol blocked');
+            return;
+          }
+          lightboxImg.src = url.href;
+          lightboxNum.textContent = 'DESIGN #' + slotNumber;
           lightbox.classList.add('active');
+        } catch (e) {
+          console.warn('Invalid image URL');
         }
-      });
+      }
 
-      lightboxClose.addEventListener('click', () => {
+      function closeLightbox() {
         lightbox.classList.remove('active');
         lightboxImg.src = '';
-      });
+      }
 
-      lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-          lightbox.classList.remove('active');
-          lightboxImg.src = '';
-        }
-      });
+      if (grid) {
+        grid.addEventListener('click', (e) => {
+          const item = e.target.closest('.grid-item');
+          if (!item) return;
+          const slot = item.dataset.id;
+          const imgElement = item.querySelector('img');
+          if (imgElement && imgElement.src && imgElement.src.trim() !== '') {
+            openLightbox(imgElement.src, slot);
+          }
+        });
+      }
 
+      if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+      if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) closeLightbox();
+        });
+      }
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          lightbox.classList.remove('active');
-          lightboxImg.src = '';
-        }
+        if (e.key === 'Escape') closeLightbox();
       });
 
+      // ========== RESIZE HANDLER FOR DYNAMIC BORDERS ==========
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          updateGridBorders();
+        }, 100);
+      });
+
+      // Observe grid changes (for responsive design)
+      if (window.MutationObserver) {
+        const observer = new MutationObserver(() => {
+          updateGridBorders();
+        });
+        if (grid) observer.observe(grid, { childList: true, subtree: true });
+      }
+
+      // ========== CLEANUP ON PAGE UNLOAD ==========
+      window.addEventListener('beforeunload', () => {
+        if (sloganInterval) {
+          clearInterval(sloganInterval);
+          sloganInterval = null;
+        }
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+      });
+
+      // Initial border update after images load
+      window.addEventListener('load', () => {
+        updateGridBorders();
+      });
     })();
   </script>
 </body>
