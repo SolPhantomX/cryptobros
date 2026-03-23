@@ -324,81 +324,75 @@
       20%,24%,55%,81%,85% { opacity:0.8; }
     }
 
-    /* INVITE GENERATOR - BOTTOM RIGHT DRAWER (mobile-friendly) */
+    /* INVITE GENERATOR - RIGHT CENTER (ORIGINAL STYLE - FOR ADMIN USE) */
     .invite-generator {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
       z-index: 1000;
       font-family: 'Arial', sans-serif;
     }
 
-    @media (max-width: 768px) {
-      .invite-generator {
-        bottom: 15px;
-        right: 15px;
-      }
-    }
-
     .invite-trigger {
-      width: 56px;
-      height: 56px;
+      width: 60px;
+      height: 120px;
       background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
       border: 2px solid #ffcc00;
-      border-radius: 50%;
+      border-right: none;
+      border-radius: 30px 0 0 30px;
       color: #ffcc00;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       transition: all 0.3s ease;
-      box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+      box-shadow: -5px 0 20px rgba(255, 204, 0, 0.3);
       backdrop-filter: blur(5px);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      letter-spacing: 4px;
     }
 
     .invite-trigger span {
-      font-size: 10px;
-      margin-top: 2px;
+      transform: rotate(180deg);
+      font-size: 14px;
+      font-weight: bold;
+      margin: 5px 0;
     }
 
     .invite-trigger:hover {
-      transform: scale(1.1);
+      width: 70px;
       background: linear-gradient(135deg, #ffcc00 0%, #ffaa00 100%);
       color: #000;
-      box-shadow: 0 0 30px rgba(255, 204, 0, 0.8);
+      box-shadow: -5px 0 35px rgba(255, 204, 0, 0.8);
     }
 
     .invite-panel {
       position: absolute;
-      bottom: 70px;
-      right: 0;
+      right: 60px;
+      top: 50%;
+      transform: translateY(-50%) translateX(100%);
       background: rgba(0, 0, 0, 0.95);
       backdrop-filter: blur(15px);
       border: 2px solid #ffcc00;
       border-radius: 20px;
       padding: 20px;
-      min-width: 200px;
+      min-width: 220px;
       opacity: 0;
       visibility: hidden;
-      transform: translateY(20px) scale(0.95);
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       box-shadow: 0 0 50px rgba(255, 204, 0, 0.3);
       pointer-events: none;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .invite-panel {
-        transition: none;
-      }
-    }
-
     .invite-panel.active {
+      transform: translateY(-50%) translateX(0);
       opacity: 1;
       visibility: visible;
-      transform: translateY(0) scale(1);
       pointer-events: all;
     }
 
@@ -406,18 +400,18 @@
       color: #ffcc00;
       text-align: center;
       margin-bottom: 15px;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       text-shadow: 0 0 10px #ffcc00;
     }
 
     .invite-tier-btn {
       width: 100%;
-      padding: 10px;
-      margin: 6px 0;
+      padding: 12px;
+      margin: 8px 0;
       border: none;
       border-radius: 12px;
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: all 0.2s ease;
       text-transform: uppercase;
@@ -440,21 +434,21 @@
     }
 
     .invite-tier-btn:active {
-      transform: scale(0.96);
+      transform: scale(0.98);
     }
 
     .invite-toast {
       position: fixed;
-      bottom: 100px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
       background: linear-gradient(135deg, #00ff9d, #00cc88);
       color: #000;
-      padding: 12px 24px;
+      padding: 14px 28px;
       border-radius: 60px;
       font-family: monospace;
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 1.1rem;
       z-index: 10000;
       opacity: 0;
       transition: all 0.3s ease;
@@ -468,31 +462,31 @@
       opacity: 1;
     }
 
+    /* Minimal mobile adjustments — just smaller, still right center */
     @media (max-width: 768px) {
       .invite-trigger {
-        width: 48px;
-        height: 48px;
+        width: 45px;
+        height: 90px;
         font-size: 20px;
       }
       .invite-trigger span {
-        font-size: 8px;
+        font-size: 10px;
       }
       .invite-panel {
-        min-width: 170px;
-        padding: 12px;
-        bottom: 60px;
+        min-width: 180px;
+        padding: 15px;
+        right: 45px;
       }
       .invite-tier-btn {
         padding: 8px;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
       }
       .invite-toast {
-        font-size: 0.85rem;
-        padding: 8px 16px;
+        font-size: 0.9rem;
+        padding: 10px 20px;
         white-space: normal;
         text-align: center;
         max-width: 85vw;
-        bottom: 80px;
       }
       .sidebar {
         width: 140px;
@@ -548,7 +542,7 @@
     <div class="main" id="profileContent"></div>
   </div>
 
-  <!-- INVITE GENERATOR - BOTTOM RIGHT DRAWER -->
+  <!-- INVITE GENERATOR - RIGHT CENTER (ADMIN ONLY, STAYS SIDEWAYS) -->
   <div class="invite-generator">
     <div class="invite-trigger" id="inviteTrigger">
       <span>🎁</span>
@@ -571,14 +565,12 @@
   <script>
     (function() {
       // ========== CONSTANTS ==========
-      // Password is hashed for security (simple SHA-256 simulation - in production use real hash)
-      const CREATOR_PASSWORD_HASH = '5d41402abc4b2a76b9719d911017c592'; // "hello" hash - demo only
+      const CREATOR_PASSWORD_HASH = '5d41402abc4b2a76b9719d911017c592';
       const MAX_RECURSION_DEPTH = 5;
       const MAX_NAME_LENGTH = 50;
       const VALID_IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
       const bgPresets = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png'];
 
-      // Simple hash function for demo (in production use proper crypto)
       function simpleHash(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -589,20 +581,17 @@
         return Math.abs(hash).toString(16);
       }
 
-      // ========== CRYPTOGRAPHICALLY SECURE RANDOM CODE ==========
       function generateSecure4DigitCode() {
         try {
           const randomArray = new Uint32Array(1);
           crypto.getRandomValues(randomArray);
           return (randomArray[0] % 10000).toString().padStart(4, '0');
         } catch (e) {
-          // Fallback for older browsers (still better than Math.random alone)
           console.warn('crypto.getRandomValues failed, using fallback');
           return (Math.floor(Math.random() * 10000)).toString().padStart(4, '0');
         }
       }
 
-      // ========== STATE ==========
       let profileData = (() => {
         try {
           const saved = localStorage.getItem('profileData');
@@ -633,7 +622,6 @@
       let isCreator = false;
       let activeTimeouts = [];
 
-      // ========== SAFE STORAGE ==========
       function safeStorageSet(key, value) {
         try {
           localStorage.setItem(key, JSON.stringify(value));
@@ -662,7 +650,6 @@
         }
       }
 
-      // ========== IMAGE VALIDATION ==========
       function isValidImageDataUrl(str) {
         if (!str || typeof str !== 'string') return false;
         if (!str.startsWith('data:image/')) return false;
@@ -740,7 +727,6 @@
         return true;
       }
 
-      // ========== INVITE CODE FUNCTIONS (CRYPTOGRAPHICALLY SECURE) ==========
       function getCodePrefix(tier) {
         const prefixes = { 'MASTER': 'MST', 'PRO': 'PRO', 'PREMIUM': 'PRE' };
         return prefixes[tier] || 'INV';
@@ -834,7 +820,6 @@
         if (panel) panel.classList.remove('active');
       }
 
-      // ========== INVITE GENERATOR UI ==========
       function initInviteGenerator() {
         const trigger = document.getElementById('inviteTrigger');
         const panel = document.getElementById('invitePanel');
@@ -861,7 +846,6 @@
         });
       }
 
-      // ========== PROFILE FUNCTIONS ==========
       function applyTheme() {
         if (currentTheme === 'light') {
           document.body.style.backgroundColor = '#f0f0f0';
@@ -909,7 +893,6 @@
         const cancel = modalDiv.querySelector('#creatorCancelBtn');
         
         submit.onclick = () => {
-          // Simple hash check - in production use proper hashing
           if (simpleHash(input.value) === CREATOR_PASSWORD_HASH) {
             isCreator = true;
             alert('✅ Creator mode activated! Invite tools now available in menu.');
@@ -1126,7 +1109,6 @@
         alert('✅ Profile saved!');
       };
 
-      // ========== HEADER DRAG TO PAN WITH RESET ==========
       function setupDragToPan() {
         const headerEl = document.getElementById('header');
         if (!headerEl) return;
@@ -1167,7 +1149,6 @@
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
         
-        // Reset button handler
         const resetBtn = document.getElementById('headerResetBtn');
         if (resetBtn) {
           resetBtn.addEventListener('click', (e) => {
@@ -1184,7 +1165,6 @@
         }});
       }
 
-      // ========== FILE UPLOAD HANDLERS ==========
       function setupEditMenuTriggers() {
         const headerEl = document.getElementById('header');
         const avatarEl = document.getElementById('avatar');
@@ -1281,7 +1261,6 @@
         setupDragToPan();
       }
 
-      // ========== CLEANUP ==========
       function cleanup() {
         activeTimeouts.forEach(item => {
           if (typeof item === 'number') clearTimeout(item);
@@ -1290,7 +1269,6 @@
         activeTimeouts = [];
       }
 
-      // ========== INITIALIZATION ==========
       function init() {
         const savedPos = safeStorageGet('headerPos', { x: 0, y: 0 });
         if (savedPos && typeof savedPos.x === 'number' && typeof savedPos.y === 'number') {
@@ -1322,7 +1300,6 @@
         window.addEventListener('beforeunload', cleanup);
       }
 
-      // Expose global functions
       window.showActiveCodes = showActiveCodes;
       window.revokeAllCodes = revokeAllCodes;
       window.setPresetBg = window.setPresetBg;
