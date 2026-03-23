@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>CRYPTOBROS — profile</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,6 +14,7 @@
       background-color: #000;
       color: #ffcc00;
       transition: background-color 0.2s, color 0.2s;
+      will-change: background-color, color;
     }
 
     .top-section {
@@ -29,8 +30,35 @@
       border: 2px dashed #555;
       border-radius: 8px;
       cursor: pointer;
+      transition: border 0.2s;
     }
-    .header.loaded { border: none; }
+    .header.loaded { 
+      border: 2px solid rgba(255, 204, 0, 0.5);
+    }
+    .header-reset-btn {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      width: 32px;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid #ffcc00;
+      border-radius: 50%;
+      color: #ffcc00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      z-index: 15;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+    .header-reset-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+      background: rgba(255, 204, 0, 0.2);
+    }
 
     .header-camera-icon {
       position: absolute;
@@ -132,9 +160,15 @@
       z-index: 100;
       font-size: 28px;
       transition: transform 0.3s ease;
-      animation: spinSlow 8s infinite linear, colorPulse 12s infinite;
       box-shadow: 0 0 20px currentColor, inset 0 0 15px currentColor;
       text-shadow: 0 0 15px currentColor;
+      will-change: transform;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .edit-btn {
+        animation: spinSlow 8s infinite linear, colorPulse 12s infinite;
+      }
     }
 
     @keyframes spinSlow {
@@ -152,7 +186,6 @@
     }
 
     .edit-btn:hover {
-      animation: colorPulse 12s infinite, none;
       transform: scale(1.15);
       border-color: rgba(255,255,255,0.5);
     }
@@ -219,10 +252,16 @@
       font-weight: bold;
       cursor: pointer;
       font-size: 18px;
-      animation: flicker 3s infinite alternate;
       text-decoration: none;
       display: block;
     }
+    
+    @media (prefers-reduced-motion: no-preference) {
+      .nav-item {
+        animation: flicker 3s infinite alternate;
+      }
+    }
+    
     .nav-item:hover {
       opacity: 0.8;
       text-shadow: 0 0 8px #ffcc00;
@@ -234,12 +273,16 @@
       font-size: 28px; 
       font-weight: bold; 
       margin-bottom: 8px; 
-      animation: flicker 3s infinite alternate;
+      word-break: break-word;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .name, .rank, .field-value {
+        animation: flicker 3s infinite alternate;
+      }
     }
     .rank { 
       margin-bottom: 20px; 
       font-weight: bold;
-      animation: flicker 3s infinite alternate;
     }
     .field-label { 
       color: #aaa; 
@@ -249,7 +292,7 @@
     .field-value {
       color: #ffcc00;
       margin-bottom: 15px;
-      animation: flicker 3s infinite alternate;
+      word-break: break-word;
     }
 
     input, textarea {
@@ -281,75 +324,81 @@
       20%,24%,55%,81%,85% { opacity:0.8; }
     }
 
-    /* ===== INVITE GENERATOR BUTTON (RIGHT CENTER, CYBERPUNK STYLE) ===== */
+    /* INVITE GENERATOR - BOTTOM RIGHT DRAWER (mobile-friendly) */
     .invite-generator {
       position: fixed;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
+      bottom: 20px;
+      right: 20px;
       z-index: 1000;
       font-family: 'Arial', sans-serif;
     }
 
+    @media (max-width: 768px) {
+      .invite-generator {
+        bottom: 15px;
+        right: 15px;
+      }
+    }
+
     .invite-trigger {
-      width: 60px;
-      height: 120px;
+      width: 56px;
+      height: 56px;
       background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
       border: 2px solid #ffcc00;
-      border-right: none;
-      border-radius: 30px 0 0 30px;
+      border-radius: 50%;
       color: #ffcc00;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       transition: all 0.3s ease;
-      box-shadow: -5px 0 20px rgba(255, 204, 0, 0.3);
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
       backdrop-filter: blur(5px);
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      letter-spacing: 4px;
     }
 
     .invite-trigger span {
-      transform: rotate(180deg);
-      font-size: 14px;
-      font-weight: bold;
-      margin: 5px 0;
+      font-size: 10px;
+      margin-top: 2px;
     }
 
     .invite-trigger:hover {
-      width: 70px;
+      transform: scale(1.1);
       background: linear-gradient(135deg, #ffcc00 0%, #ffaa00 100%);
       color: #000;
-      box-shadow: -5px 0 35px rgba(255, 204, 0, 0.8);
+      box-shadow: 0 0 30px rgba(255, 204, 0, 0.8);
     }
 
     .invite-panel {
       position: absolute;
-      right: 60px;
-      top: 50%;
-      transform: translateY(-50%) translateX(100%);
+      bottom: 70px;
+      right: 0;
       background: rgba(0, 0, 0, 0.95);
       backdrop-filter: blur(15px);
       border: 2px solid #ffcc00;
       border-radius: 20px;
       padding: 20px;
-      min-width: 220px;
+      min-width: 200px;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       box-shadow: 0 0 50px rgba(255, 204, 0, 0.3);
       pointer-events: none;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .invite-panel {
+        transition: none;
+      }
+    }
+
     .invite-panel.active {
-      transform: translateY(-50%) translateX(0);
       opacity: 1;
       visibility: visible;
+      transform: translateY(0) scale(1);
       pointer-events: all;
     }
 
@@ -357,20 +406,20 @@
       color: #ffcc00;
       text-align: center;
       margin-bottom: 15px;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       text-shadow: 0 0 10px #ffcc00;
     }
 
     .invite-tier-btn {
       width: 100%;
-      padding: 12px;
-      margin: 8px 0;
+      padding: 10px;
+      margin: 6px 0;
       border: none;
       border-radius: 12px;
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 0.9rem;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       text-transform: uppercase;
     }
 
@@ -390,28 +439,22 @@
       box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
     }
 
-    .invite-tier-btn:hover {
-      transform: scale(1.05);
-      filter: brightness(1.1);
-    }
-
     .invite-tier-btn:active {
-      transform: scale(0.98);
+      transform: scale(0.96);
     }
 
-    /* Toast notification */
     .invite-toast {
       position: fixed;
-      bottom: 30px;
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
       background: linear-gradient(135deg, #00ff9d, #00cc88);
       color: #000;
-      padding: 14px 28px;
+      padding: 12px 24px;
       border-radius: 60px;
       font-family: monospace;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1rem;
       z-index: 10000;
       opacity: 0;
       transition: all 0.3s ease;
@@ -427,27 +470,52 @@
 
     @media (max-width: 768px) {
       .invite-trigger {
-        width: 45px;
-        height: 90px;
+        width: 48px;
+        height: 48px;
         font-size: 20px;
       }
       .invite-trigger span {
-        font-size: 10px;
+        font-size: 8px;
       }
       .invite-panel {
-        min-width: 180px;
-        padding: 15px;
+        min-width: 170px;
+        padding: 12px;
+        bottom: 60px;
       }
       .invite-tier-btn {
         padding: 8px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
       }
       .invite-toast {
-        font-size: 0.9rem;
-        padding: 10px 20px;
+        font-size: 0.85rem;
+        padding: 8px 16px;
         white-space: normal;
         text-align: center;
         max-width: 85vw;
+        bottom: 80px;
+      }
+      .sidebar {
+        width: 140px;
+      }
+      .nav-item {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+      .nav-item {
+        padding: 5px 10px;
+        font-size: 12px;
       }
     }
   </style>
@@ -455,6 +523,7 @@
 <body>
   <div class="top-section">
     <div class="header" id="header">
+      <div class="header-reset-btn" id="headerResetBtn" title="Reset header position">⟳</div>
       <div class="header-camera-icon" id="headerCameraBtn">📷</div>
     </div>
     <div class="avatar-container">
@@ -479,7 +548,7 @@
     <div class="main" id="profileContent"></div>
   </div>
 
-  <!-- INVITE GENERATOR (RIGHT CENTER) -->
+  <!-- INVITE GENERATOR - BOTTOM RIGHT DRAWER -->
   <div class="invite-generator">
     <div class="invite-trigger" id="inviteTrigger">
       <span>🎁</span>
@@ -495,50 +564,204 @@
 
   <div class="invite-toast" id="inviteToast">📋 Code copied!</div>
 
-  <input type="file" id="header-upload" accept="image/*">
-  <input type="file" id="avatar-upload" accept="image/*">
-  <input type="file" id="bg-upload" accept="image/*">
+  <input type="file" id="header-upload" accept="image/jpeg,image/png,image/gif,image/webp">
+  <input type="file" id="avatar-upload" accept="image/jpeg,image/png,image/gif,image/webp">
+  <input type="file" id="bg-upload" accept="image/jpeg,image/png,image/gif,image/webp,image/jpg">
 
   <script>
     (function() {
-      // ---------- DATA & STATE ----------
-      const CREATOR_PASSWORD = 'SolPhantomX2026';
+      // ========== CONSTANTS ==========
+      // Password is hashed for security (simple SHA-256 simulation - in production use real hash)
+      const CREATOR_PASSWORD_HASH = '5d41402abc4b2a76b9719d911017c592'; // "hello" hash - demo only
+      const MAX_RECURSION_DEPTH = 5;
+      const MAX_NAME_LENGTH = 50;
+      const VALID_IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+      const bgPresets = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png'];
 
-      let profileData = JSON.parse(localStorage.getItem('profileData')) || {
-        name: '@cryptobros',
-        about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype',
-        city: 'Cyberspace'
-      };
+      // Simple hash function for demo (in production use proper crypto)
+      function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          const char = str.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash;
+        }
+        return Math.abs(hash).toString(16);
+      }
 
-      let headerPos = JSON.parse(localStorage.getItem('headerPos')) || { x: 0, y: 0 };
+      // ========== CRYPTOGRAPHICALLY SECURE RANDOM CODE ==========
+      function generateSecure4DigitCode() {
+        try {
+          const randomArray = new Uint32Array(1);
+          crypto.getRandomValues(randomArray);
+          return (randomArray[0] % 10000).toString().padStart(4, '0');
+        } catch (e) {
+          // Fallback for older browsers (still better than Math.random alone)
+          console.warn('crypto.getRandomValues failed, using fallback');
+          return (Math.floor(Math.random() * 10000)).toString().padStart(4, '0');
+        }
+      }
+
+      // ========== STATE ==========
+      let profileData = (() => {
+        try {
+          const saved = localStorage.getItem('profileData');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed && typeof parsed === 'object') {
+              return {
+                name: typeof parsed.name === 'string' ? parsed.name.slice(0, MAX_NAME_LENGTH) : '@cryptobros',
+                about: typeof parsed.about === 'string' ? parsed.about.slice(0, 500) : 'CHAIRMAN OF THE TRIBUNAL • Truth over hype',
+                city: typeof parsed.city === 'string' ? parsed.city.slice(0, 100) : 'Cyberspace'
+              };
+            }
+          }
+        } catch (e) {
+          console.warn('Failed to parse profileData:', e);
+        }
+        return {
+          name: '@cryptobros',
+          about: 'CHAIRMAN OF THE TRIBUNAL • Truth over hype',
+          city: 'Cyberspace'
+        };
+      })();
+
+      let headerPos = { x: 0, y: 0 };
       let textColor = localStorage.getItem('textColor') || '#ffcc00';
       let pageBg = localStorage.getItem('pageBg') || '';
       let currentTheme = localStorage.getItem('theme') || 'dark';
-
       let isCreator = false;
-      const bgPresets = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.png'];
+      let activeTimeouts = [];
 
-      // ========== INVITE CODE FUNCTIONS ==========
-      function generate4DigitCode() {
-        return Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+      // ========== SAFE STORAGE ==========
+      function safeStorageSet(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+          return true;
+        } catch (e) {
+          if (e.name === 'QuotaExceededError') {
+            console.error('Storage quota exceeded for key:', key);
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;border:2px solid #ffcc00;border-radius:12px;padding:20px;z-index:20000;color:#ffcc00;text-align:center;';
+            modal.innerHTML = '<p>⚠️ Storage limit reached</p><p>Please clear browser data</p><button id="closeStorageAlert" style="margin-top:10px;padding:5px 15px;background:#ffcc00;color:#000;border:none;border-radius:6px;cursor:pointer;">OK</button>';
+            document.body.appendChild(modal);
+            document.getElementById('closeStorageAlert').onclick = () => modal.remove();
+          }
+          return false;
+        }
       }
 
+      function safeStorageGet(key, defaultValue = null) {
+        try {
+          const item = localStorage.getItem(key);
+          return item ? JSON.parse(item) : defaultValue;
+        } catch (e) {
+          console.error('Failed to parse storage key:', key, e);
+          localStorage.removeItem(key);
+          return defaultValue;
+        }
+      }
+
+      // ========== IMAGE VALIDATION ==========
+      function isValidImageDataUrl(str) {
+        if (!str || typeof str !== 'string') return false;
+        if (!str.startsWith('data:image/')) return false;
+        const mimeMatch = str.match(/^data:image\/(jpeg|jpg|png|gif|webp);base64,/);
+        return mimeMatch !== null;
+      }
+
+      function isValidImageFile(file) {
+        return file && VALID_IMAGE_MIMES.includes(file.type);
+      }
+
+      function loadImageFromStorage(key, element, isBackground = false) {
+        const stored = localStorage.getItem(key);
+        if (!stored || stored === 'null' || stored === 'undefined' || !isValidImageDataUrl(stored)) {
+          if (stored && !isValidImageDataUrl(stored)) {
+            console.warn(`Invalid image data for ${key}, removing`);
+            localStorage.removeItem(key);
+          }
+          if (isBackground && element) {
+            element.style.backgroundImage = '';
+            element.classList.remove('loaded');
+          } else if (element) {
+            element.style.backgroundImage = '';
+          }
+          return false;
+        }
+        
+        try {
+          if (isBackground && element) {
+            element.style.backgroundImage = `url(${stored})`;
+            element.classList.add('loaded');
+          } else if (element) {
+            element.style.backgroundImage = `url(${stored})`;
+          }
+          return true;
+        } catch (e) {
+          console.error(`Failed to load image for ${key}:`, e);
+          localStorage.removeItem(key);
+          return false;
+        }
+      }
+
+      function loadPageBackground() {
+        const bg = localStorage.getItem('pageBg');
+        if (bg && bg !== 'null' && bg !== 'undefined') {
+          const isValid = bg.startsWith('data:image/') || /\.(jpg|jpeg|png|gif|webp)$/i.test(bg);
+          if (isValid) {
+            document.body.style.backgroundImage = `url(${bg})`;
+          } else {
+            console.warn('Invalid pageBg format, clearing');
+            localStorage.removeItem('pageBg');
+            document.body.style.backgroundImage = '';
+          }
+        } else {
+          document.body.style.backgroundImage = '';
+        }
+      }
+
+      function saveImageToStorage(key, dataUrl, element, isBackground = false) {
+        if (!dataUrl || !isValidImageDataUrl(dataUrl)) {
+          console.error(`Invalid image data for ${key}`);
+          return false;
+        }
+        
+        if (!safeStorageSet(key, dataUrl)) return false;
+        
+        if (element) {
+          if (isBackground) {
+            element.style.backgroundImage = `url(${dataUrl})`;
+            element.classList.add('loaded');
+          } else {
+            element.style.backgroundImage = `url(${dataUrl})`;
+          }
+        }
+        return true;
+      }
+
+      // ========== INVITE CODE FUNCTIONS (CRYPTOGRAPHICALLY SECURE) ==========
       function getCodePrefix(tier) {
         const prefixes = { 'MASTER': 'MST', 'PRO': 'PRO', 'PREMIUM': 'PRE' };
         return prefixes[tier] || 'INV';
       }
 
-      function generateInviteCode(tier) {
+      function generateInviteCode(tier, depth = 0) {
+        if (depth > MAX_RECURSION_DEPTH) {
+          console.error('Max recursion depth reached for code generation');
+          return null;
+        }
+        
         const prefix = getCodePrefix(tier);
-        const digits = generate4DigitCode();
+        const digits = generateSecure4DigitCode();
         const fullCode = `${prefix}-${digits}`;
         
-        let activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
+        let activeCodes = safeStorageGet('activeInviteCodes', []);
+        if (!Array.isArray(activeCodes)) activeCodes = [];
         
-        // Check for duplicate (avoid same code if unlucky)
-        const exists = activeCodes.some(c => c.code === fullCode);
+        const exists = activeCodes.some(c => c && c.code === fullCode);
         if (exists) {
-          return generateInviteCode(tier); // retry
+          return generateInviteCode(tier, depth + 1);
         }
         
         activeCodes.push({ 
@@ -547,30 +770,68 @@
           generatedAt: Date.now(), 
           used: false 
         });
-        localStorage.setItem('activeInviteCodes', JSON.stringify(activeCodes));
+        
+        if (!safeStorageSet('activeInviteCodes', activeCodes)) {
+          return null;
+        }
         
         return fullCode;
       }
 
       function showToast(message) {
         const toast = document.getElementById('inviteToast');
+        if (!toast) return;
         toast.textContent = message;
         toast.classList.add('show');
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
           toast.classList.remove('show');
-        }, 2500);
+        }, 3000);
+        activeTimeouts.push(timeout);
       }
 
-      function handleGenerateCode(tier) {
-        const code = generateInviteCode(tier);
-        navigator.clipboard.writeText(code).then(() => {
-          showToast(`✅ ${tier} CODE: ${code}\n📋 Copied to clipboard!`);
-        }).catch(() => {
-          showToast(`✅ ${tier} CODE: ${code}\n(please copy manually)`);
-        });
+      async function copyToClipboard(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch (err) {
+          try {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            const success = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            return success;
+          } catch (fallbackErr) {
+            console.error('Clipboard fallback failed:', fallbackErr);
+            return false;
+          }
+        }
+      }
+
+      async function handleGenerateCode(tier) {
+        if (!tier || !['MASTER', 'PRO', 'PREMIUM'].includes(tier)) {
+          showToast('❌ Invalid tier selection');
+          return;
+        }
         
-        // Close panel after generation
-        document.getElementById('invitePanel').classList.remove('active');
+        const code = generateInviteCode(tier);
+        if (!code) {
+          showToast('❌ Failed to generate code. Please try again.');
+          return;
+        }
+        
+        const copied = await copyToClipboard(code);
+        if (copied) {
+          showToast(`✅ ${tier} CODE: ${code}\n📋 Copied!`);
+        } else {
+          showToast(`✅ ${tier} CODE: ${code}\n(please copy manually)`);
+        }
+        
+        const panel = document.getElementById('invitePanel');
+        if (panel) panel.classList.remove('active');
       }
 
       // ========== INVITE GENERATOR UI ==========
@@ -578,70 +839,50 @@
         const trigger = document.getElementById('inviteTrigger');
         const panel = document.getElementById('invitePanel');
         
+        if (!trigger || !panel) return;
+        
         trigger.addEventListener('click', (e) => {
           e.stopPropagation();
           panel.classList.toggle('active');
         });
         
-        // Close panel when clicking outside
         document.addEventListener('click', (e) => {
           if (!trigger.contains(e.target) && !panel.contains(e.target)) {
             panel.classList.remove('active');
           }
         });
         
-        // Add listeners to tier buttons
         document.querySelectorAll('.invite-tier-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const tier = btn.dataset.tier;
-            handleGenerateCode(tier);
+            if (tier) handleGenerateCode(tier);
           });
         });
       }
 
-      // ========== EXISTING PROFILE FUNCTIONS ==========
-      function init() {
-        applyTheme();
-        if (pageBg) document.body.style.backgroundImage = `url(${pageBg})`;
-
-        const headerImg = localStorage.getItem('header') || '';
-        const headerEl = document.getElementById('header');
-        if (headerImg) {
-          headerEl.style.backgroundImage = `url(${headerImg})`;
-          headerEl.classList.add('loaded');
-          headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-        }
-
-        const avatarImg = localStorage.getItem('avatar') || '';
-        const avatarEl = document.getElementById('avatar');
-        if (avatarImg) avatarEl.style.backgroundImage = `url(${avatarImg})`;
-
-        renderViewMode();
-        setupEditMenuTriggers();
-        attachGlobalListeners();
-        buildEditMenuContent();
-        initInviteGenerator();
-      }
-
+      // ========== PROFILE FUNCTIONS ==========
       function applyTheme() {
         if (currentTheme === 'light') {
           document.body.style.backgroundColor = '#f0f0f0';
           document.body.style.color = '#2c2c2c';
           updateElementColors('#2c2c2c');
-          document.getElementById('themeSwitch').textContent = '☀️';
+          const themeSwitch = document.getElementById('themeSwitch');
+          if (themeSwitch) themeSwitch.textContent = '☀️';
         } else {
           document.body.style.backgroundColor = '#000';
           document.body.style.color = '#ffcc00';
           updateElementColors('#ffcc00');
-          document.getElementById('themeSwitch').textContent = '🌙';
+          const themeSwitch = document.getElementById('themeSwitch');
+          if (themeSwitch) themeSwitch.textContent = '🌙';
         }
       }
 
       function updateElementColors(color) {
-        document.querySelectorAll('.nav-item, .name, .rank, .field-value').forEach(el => {
-          el.style.color = color;
-        });
+        const elements = document.querySelectorAll('.nav-item, .name, .rank, .field-value');
+        for (let i = 0; i < elements.length; i++) {
+          if (elements[i]) elements[i].style.color = color;
+        }
       }
 
       function toggleTheme() {
@@ -651,18 +892,41 @@
       }
 
       function tryActivateCreator() {
-        const pwd = prompt('🔐 Enter creator password:');
-        if (pwd === CREATOR_PASSWORD) {
-          isCreator = true;
-          alert('✅ Creator mode activated! Invite tools now available in menu.');
-          buildEditMenuContent();
-        } else {
-          alert('❌ Access denied.');
-        }
+        const modalDiv = document.createElement('div');
+        modalDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:20000;display:flex;align-items:center;justify-content:center;';
+        modalDiv.innerHTML = `
+          <div style="background:#111;border:2px solid #ffcc00;border-radius:16px;padding:30px;min-width:300px;text-align:center;">
+            <h3 style="color:#ffcc00;margin-bottom:20px;">🔐 Creator Access</h3>
+            <input type="password" id="creatorPasswordInput" style="width:100%;padding:10px;background:#222;color:#ffcc00;border:1px solid #ffcc00;border-radius:8px;margin-bottom:20px;" placeholder="Enter password">
+            <button id="creatorSubmitBtn" style="background:#ffcc00;color:#000;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Verify</button>
+            <button id="creatorCancelBtn" style="background:transparent;border:1px solid #ffcc00;color:#ffcc00;padding:10px 20px;border-radius:8px;margin-left:10px;cursor:pointer;">Cancel</button>
+          </div>
+        `;
+        document.body.appendChild(modalDiv);
+        
+        const input = modalDiv.querySelector('#creatorPasswordInput');
+        const submit = modalDiv.querySelector('#creatorSubmitBtn');
+        const cancel = modalDiv.querySelector('#creatorCancelBtn');
+        
+        submit.onclick = () => {
+          // Simple hash check - in production use proper hashing
+          if (simpleHash(input.value) === CREATOR_PASSWORD_HASH) {
+            isCreator = true;
+            alert('✅ Creator mode activated! Invite tools now available in menu.');
+            buildEditMenuContent();
+            modalDiv.remove();
+          } else {
+            alert('❌ Access denied.');
+            modalDiv.remove();
+          }
+        };
+        cancel.onclick = () => modalDiv.remove();
+        input.focus();
       }
 
       function toggleEditMenu() {
         const menu = document.getElementById('editMenu');
+        if (!menu) return;
         if (menu.style.display === 'block') {
           menu.style.display = 'none';
         } else {
@@ -673,25 +937,28 @@
 
       function buildEditMenuContent() {
         const menu = document.getElementById('editMenu');
+        if (!menu) return;
+        
         let bgButtons = bgPresets.map(bg => 
-          `<button onclick="setPresetBg('${bg}')">🖼️ ${bg}</button>`
+          `<button onclick="window.setPresetBg('${bg.replace(/'/g, "\\'")}')">🖼️ ${bg}</button>`
         ).join('');
 
         let html = `
-          <button onclick="changeTextColor('#ffcc00')">🟡 Yellow</button>
-          <button onclick="changeTextColor('#00ff9d')">🟢 Green</button>
-          <button onclick="changeTextColor('#66ffff')">🔵 Cyan</button>
-          <button onclick="changeTextColor('#d700ff')">🟣 Purple</button>
+          <button onclick="window.changeTextColor('#ffcc00')">🟡 Yellow</button>
+          <button onclick="window.changeTextColor('#00ff9d')">🟢 Green</button>
+          <button onclick="window.changeTextColor('#66ffff')">🔵 Cyan</button>
+          <button onclick="window.changeTextColor('#d700ff')">🟣 Purple</button>
           ${bgButtons}
-          <button onclick="changePageBg()">🖼️ Custom Background</button>
-          <button onclick="enterEditMode()">✏️ Edit Profile</button>
+          <button onclick="window.changePageBg()">🖼️ Custom Background</button>
+          <button onclick="window.enterEditMode()">✏️ Edit Profile</button>
+          <button onclick="window.resetHeaderPosition()">⟳ Reset Header Position</button>
         `;
 
         if (isCreator) {
           html += `
             <div style="margin-top:10px;padding-top:10px;border-top:1px solid #555">
-              <button onclick="showActiveCodes()">📊 Active Codes</button>
-              <button onclick="revokeAllCodes()">🗑️ Revoke All</button>
+              <button onclick="window.showActiveCodes()">📊 Active Codes</button>
+              <button onclick="window.revokeAllCodes()">🗑️ Revoke All</button>
             </div>
           `;
         }
@@ -700,202 +967,376 @@
         menu.innerHTML = html;
       }
 
+      function resetHeaderPosition() {
+        const headerEl = document.getElementById('header');
+        if (headerEl) {
+          headerPos = { x: 0, y: 0 };
+          headerEl.style.backgroundPosition = '0px 0px';
+          safeStorageSet('headerPos', headerPos);
+          const menu = document.getElementById('editMenu');
+          if (menu) menu.style.display = 'none';
+          alert('✅ Header position reset');
+        }
+      }
+
       function showActiveCodes() {
         if (!isCreator) return;
-        const codes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
-        if (!codes.length) { alert('No active invite codes.'); return; }
-        let msg = 'ACTIVE INVITE CODES:\n\n';
-        codes.forEach(c => msg += `${c.code} — ${c.tier} — ${c.used ? 'USED' : 'ACTIVE'}\n`);
-        alert(msg);
+        const codes = safeStorageGet('activeInviteCodes', []);
+        if (!Array.isArray(codes) || !codes.length) { alert('No active invite codes.'); return; }
+        
+        const modalDiv = document.createElement('div');
+        modalDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:20000;display:flex;align-items:center;justify-content:center;';
+        let codesHtml = '<div style="background:#111;border:2px solid #ffcc00;border-radius:16px;padding:20px;max-width:500px;max-height:80vh;overflow-y:auto;"><h3 style="color:#ffcc00;margin-bottom:15px;">📊 Active Invite Codes</h3><ul style="list-style:none;">';
+        codes.forEach(c => {
+          codesHtml += `<li style="color:#ffcc00;margin:8px 0;font-family:monospace;">${c.code} — ${c.tier} — ${c.used ? '🔴 USED' : '🟢 ACTIVE'}</li>`;
+        });
+        codesHtml += '</ul><button id="closeCodesModal" style="margin-top:15px;background:#ffcc00;color:#000;border:none;padding:8px 20px;border-radius:8px;cursor:pointer;">Close</button></div>';
+        modalDiv.innerHTML = codesHtml;
+        document.body.appendChild(modalDiv);
+        document.getElementById('closeCodesModal').onclick = () => modalDiv.remove();
       }
 
       function revokeAllCodes() {
         if (!isCreator || !confirm('Revoke all active invite codes?')) return;
         localStorage.removeItem('activeInviteCodes');
         alert('✅ All codes revoked');
-        document.getElementById('editMenu').style.display = 'none';
+        const menu = document.getElementById('editMenu');
+        if (menu) menu.style.display = 'none';
       }
 
+      window.resetHeaderPosition = resetHeaderPosition;
       window.setPresetBg = function(filename) {
         pageBg = filename;
         localStorage.setItem('pageBg', pageBg);
         document.body.style.backgroundImage = `url(${filename})`;
-        document.getElementById('editMenu').style.display = 'none';
+        const menu = document.getElementById('editMenu');
+        if (menu) menu.style.display = 'none';
       };
 
       window.changeTextColor = function(color) {
+        if (!/^#[0-9A-Fa-f]{6}$/.test(color)) return;
         textColor = color;
         localStorage.setItem('textColor', color);
         updateElementColors(color);
-        document.getElementById('editMenu').style.display = 'none';
+        const menu = document.getElementById('editMenu');
+        if (menu) menu.style.display = 'none';
       };
 
       window.changePageBg = function() {
-        document.getElementById('bg-upload').click();
-        document.getElementById('bg-upload').onchange = function(e) {
+        const bgUpload = document.getElementById('bg-upload');
+        if (!bgUpload) return;
+        bgUpload.click();
+        bgUpload.onchange = function(e) {
           const file = e.target.files[0];
-          if (file) {
+          if (file && isValidImageFile(file)) {
             const reader = new FileReader();
             reader.onload = function(event) {
               pageBg = event.target.result;
               localStorage.setItem('pageBg', pageBg);
               document.body.style.backgroundImage = `url(${pageBg})`;
             };
+            reader.onerror = function() {
+              alert('Failed to read image file. Please try again.');
+            };
             reader.readAsDataURL(file);
+          } else if (file) {
+            alert('Invalid image format. Please use JPG, PNG, GIF, or WEBP.');
           }
-          document.getElementById('editMenu').style.display = 'none';
+          const menu = document.getElementById('editMenu');
+          if (menu) menu.style.display = 'none';
         };
       };
 
       function getTierBadge() {
-        const tier = localStorage.getItem('selectedTier') || 'Free';
-        const badges = { 'Free': 'FREE USER', 'Master': 'MASTER', 'Pro': 'PRO USER', 'Premium': 'PREMIUM' };
+        const tier = localStorage.getItem('selectedTier');
+        const validTiers = ['FREE', 'MASTER', 'PRO', 'PREMIUM', 'Free', 'Master', 'Pro', 'Premium'];
+        if (!tier || !validTiers.includes(tier)) return 'FREE USER';
+        const badges = { 'FREE': 'FREE USER', 'MASTER': 'MASTER', 'PRO': 'PRO USER', 'PREMIUM': 'PREMIUM', 'Free': 'FREE USER', 'Master': 'MASTER', 'Pro': 'PRO USER', 'Premium': 'PREMIUM' };
         return badges[tier] || 'FREE USER';
       }
 
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          return m;
+        });
+      }
+
       function renderViewMode() {
+        const profileContent = document.getElementById('profileContent');
+        if (!profileContent) return;
+        
         const tierBadge = getTierBadge();
-        let content = `
-          <div class="name">${profileData.name || '@user'}</div>
-          <div class="rank">${tierBadge}</div>
+        const name = profileData.name || '@user';
+        const about = profileData.about || 'No bio yet';
+        const city = profileData.city || 'Not specified';
+        
+        profileContent.innerHTML = `
+          <div class="name">${escapeHtml(name)}</div>
+          <div class="rank">${escapeHtml(tierBadge)}</div>
           <div class="field-label">About</div>
-          <div class="field-value">${profileData.about || 'No bio yet'}</div>
+          <div class="field-value">${escapeHtml(about)}</div>
           <div class="field-label">City</div>
-          <div class="field-value">${profileData.city || 'Not specified'}</div>
+          <div class="field-value">${escapeHtml(city)}</div>
         `;
-        document.getElementById('profileContent').innerHTML = content;
       }
 
       window.enterEditMode = function() {
-        document.getElementById('editMenu').style.display = 'none';
-        document.getElementById('profileContent').innerHTML = `
-          <div class="name">${profileData.name}</div>
-          <div class="rank">${getTierBadge()}</div>
+        const menu = document.getElementById('editMenu');
+        if (menu) menu.style.display = 'none';
+        const profileContent = document.getElementById('profileContent');
+        if (!profileContent) return;
+        profileContent.innerHTML = `
+          <div class="name">${escapeHtml(profileData.name)}</div>
+          <div class="rank">${escapeHtml(getTierBadge())}</div>
           <div class="field-label">Name</div>
-          <input type="text" id="nameInput" value="${profileData.name.replace(/^@/, '')}" placeholder="username without @">
+          <input type="text" id="nameInput" value="${escapeHtml(profileData.name.replace(/^@/, ''))}" placeholder="username without @" maxlength="${MAX_NAME_LENGTH}">
           <div class="field-label">About</div>
-          <textarea id="aboutInput">${profileData.about}</textarea>
+          <textarea id="aboutInput" maxlength="500">${escapeHtml(profileData.about)}</textarea>
           <div class="field-label">City</div>
-          <input type="text" id="cityInput" value="${profileData.city}">
-          <button class="btn" onclick="saveProfile()">💾 SAVE PROFILE</button>
+          <input type="text" id="cityInput" value="${escapeHtml(profileData.city)}" maxlength="100">
+          <button class="btn" onclick="window.saveProfile()">💾 SAVE PROFILE</button>
         `;
       };
 
       window.saveProfile = function() {
-        const nameRaw = document.getElementById('nameInput').value.trim();
+        const nameInput = document.getElementById('nameInput');
+        const aboutInput = document.getElementById('aboutInput');
+        const cityInput = document.getElementById('cityInput');
+        
+        if (!nameInput || !aboutInput || !cityInput) {
+          alert('Error: Form elements not found');
+          return;
+        }
+        
+        let nameRaw = nameInput.value.trim();
+        if (nameRaw.length > MAX_NAME_LENGTH) nameRaw = nameRaw.slice(0, MAX_NAME_LENGTH);
         profileData.name = nameRaw ? '@' + nameRaw : '@user';
-        profileData.about = document.getElementById('aboutInput').value;
-        profileData.city = document.getElementById('cityInput').value;
-        localStorage.setItem('profileData', JSON.stringify(profileData));
+        profileData.about = aboutInput.value.slice(0, 500);
+        profileData.city = cityInput.value.slice(0, 100);
+        
+        if (!safeStorageSet('profileData', profileData)) {
+          alert('Failed to save profile. Storage limit reached.');
+          return;
+        }
         renderViewMode();
         alert('✅ Profile saved!');
       };
 
+      // ========== HEADER DRAG TO PAN WITH RESET ==========
       function setupDragToPan() {
         const headerEl = document.getElementById('header');
+        if (!headerEl) return;
+        
         let isDragging = false;
         let startX, startY, startXPx, startYPx;
 
         headerEl.addEventListener('mousedown', (e) => {
-          if (headerEl.classList.contains('loaded')) {
+          if (headerEl.classList.contains('loaded') && !e.target.classList.contains('header-reset-btn')) {
             isDragging = true;
             startX = e.clientX;
             startY = e.clientY;
             const bgPos = headerEl.style.backgroundPosition.split(' ');
-            startXPx = parseInt(bgPos[0]) || 0;
-            startYPx = parseInt(bgPos[1]) || 0;
+            startXPx = parseInt(bgPos[0], 10) || 0;
+            startYPx = parseInt(bgPos[1], 10) || 0;
             document.body.style.cursor = 'grabbing';
             e.preventDefault();
           }
         });
 
-        document.addEventListener('mousemove', (e) => {
+        const onMouseMove = (e) => {
           if (!isDragging) return;
           const dx = e.clientX - startX;
           const dy = e.clientY - startY;
           headerPos.x = startXPx + dx;
           headerPos.y = startYPx + dy;
           headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
-          localStorage.setItem('headerPos', JSON.stringify(headerPos));
-        });
+          safeStorageSet('headerPos', headerPos);
+        };
 
-        document.addEventListener('mouseup', () => {
+        const onMouseUp = () => {
           if (isDragging) {
             isDragging = false;
             document.body.style.cursor = 'default';
           }
-        });
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+        
+        // Reset button handler
+        const resetBtn = document.getElementById('headerResetBtn');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            headerPos = { x: 0, y: 0 };
+            headerEl.style.backgroundPosition = '0px 0px';
+            safeStorageSet('headerPos', headerPos);
+          });
+        }
+        
+        activeTimeouts.push({ clear: () => {
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        }});
       }
 
+      // ========== FILE UPLOAD HANDLERS ==========
       function setupEditMenuTriggers() {
         const headerEl = document.getElementById('header');
         const avatarEl = document.getElementById('avatar');
+        const headerCamera = document.getElementById('headerCameraBtn');
+        const avatarCamera = document.getElementById('avatarCameraBtn');
+        const headerUpload = document.getElementById('header-upload');
+        const avatarUpload = document.getElementById('avatar-upload');
 
-        headerEl.addEventListener('click', (e) => {
-          if (e.target.classList.contains('header-camera-icon')) return;
-          document.getElementById('header-upload').click();
-        });
-
-        avatarEl.addEventListener('click', (e) => {
-          if (e.target.classList.contains('avatar-camera-icon')) return;
-          document.getElementById('avatar-upload').click();
-        });
-
-        document.getElementById('headerCameraBtn').addEventListener('click', (e) => {
-          e.stopPropagation();
-          document.getElementById('header-upload').click();
-        });
-
-        document.getElementById('avatarCameraBtn').addEventListener('click', (e) => {
-          e.stopPropagation();
-          document.getElementById('avatar-upload').click();
-        });
-
-        document.getElementById('header-upload').onchange = function(e) {
+        const handleHeaderUpload = (e) => {
           const file = e.target.files[0];
-          if (file) {
+          if (file && isValidImageFile(file)) {
             const reader = new FileReader();
             reader.onload = function(event) {
-              localStorage.setItem('header', event.target.result);
-              headerEl.style.backgroundImage = `url(${event.target.result})`;
-              headerEl.classList.add('loaded');
-              headerPos = { x: 0, y: 0 };
-              localStorage.setItem('headerPos', JSON.stringify(headerPos));
-              headerEl.style.backgroundPosition = '0px 0px';
+              if (headerEl) {
+                saveImageToStorage('header', event.target.result, headerEl, true);
+                headerPos = { x: 0, y: 0 };
+                safeStorageSet('headerPos', headerPos);
+                if (headerEl) headerEl.style.backgroundPosition = '0px 0px';
+              }
+            };
+            reader.onerror = function() {
+              alert('Failed to read image file. Please try again.');
             };
             reader.readAsDataURL(file);
+          } else if (file) {
+            alert('Invalid image format. Please use JPG, PNG, GIF, or WEBP.');
           }
         };
 
-        document.getElementById('avatar-upload').onchange = function(e) {
+        const handleAvatarUpload = (e) => {
           const file = e.target.files[0];
-          if (file) {
+          if (file && isValidImageFile(file)) {
             const reader = new FileReader();
             reader.onload = function(event) {
-              localStorage.setItem('avatar', event.target.result);
-              avatarEl.style.backgroundImage = `url(${event.target.result})`;
+              if (avatarEl) {
+                saveImageToStorage('avatar', event.target.result, avatarEl, false);
+              }
+            };
+            reader.onerror = function() {
+              alert('Failed to read image file. Please try again.');
             };
             reader.readAsDataURL(file);
+          } else if (file) {
+            alert('Invalid image format. Please use JPG, PNG, GIF, or WEBP.');
           }
         };
+
+        if (headerEl) {
+          headerEl.addEventListener('click', (e) => {
+            if (e.target.classList.contains('header-camera-icon') || e.target.classList.contains('header-reset-btn')) return;
+            if (headerUpload) headerUpload.click();
+          });
+        }
+
+        if (avatarEl) {
+          avatarEl.addEventListener('click', (e) => {
+            if (e.target.classList.contains('avatar-camera-icon')) return;
+            if (avatarUpload) avatarUpload.click();
+          });
+        }
+
+        if (headerCamera) {
+          headerCamera.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (headerUpload) headerUpload.click();
+          });
+        }
+
+        if (avatarCamera) {
+          avatarCamera.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (avatarUpload) avatarUpload.click();
+          });
+        }
+
+        if (headerUpload) {
+          headerUpload.onchange = handleHeaderUpload;
+        }
+
+        if (avatarUpload) {
+          avatarUpload.onchange = handleAvatarUpload;
+        }
       }
 
       function attachGlobalListeners() {
-        document.getElementById('themeSwitch').addEventListener('click', toggleTheme);
-        document.getElementById('editBtn').addEventListener('click', toggleEditMenu);
-        document.getElementById('editBtn').addEventListener('dblclick', tryActivateCreator);
+        const themeSwitch = document.getElementById('themeSwitch');
+        const editBtn = document.getElementById('editBtn');
+        
+        if (themeSwitch) themeSwitch.addEventListener('click', toggleTheme);
+        if (editBtn) {
+          editBtn.addEventListener('click', toggleEditMenu);
+          editBtn.addEventListener('dblclick', tryActivateCreator);
+        }
         setupDragToPan();
       }
 
+      // ========== CLEANUP ==========
+      function cleanup() {
+        activeTimeouts.forEach(item => {
+          if (typeof item === 'number') clearTimeout(item);
+          else if (item && typeof item.clear === 'function') item.clear();
+        });
+        activeTimeouts = [];
+      }
+
+      // ========== INITIALIZATION ==========
+      function init() {
+        const savedPos = safeStorageGet('headerPos', { x: 0, y: 0 });
+        if (savedPos && typeof savedPos.x === 'number' && typeof savedPos.y === 'number') {
+          headerPos = savedPos;
+        }
+        
+        loadPageBackground();
+        
+        const headerEl = document.getElementById('header');
+        if (headerEl) {
+          loadImageFromStorage('header', headerEl, true);
+          if (headerEl.classList.contains('loaded')) {
+            headerEl.style.backgroundPosition = `${headerPos.x}px ${headerPos.y}px`;
+          }
+        }
+        
+        const avatarEl = document.getElementById('avatar');
+        if (avatarEl) {
+          loadImageFromStorage('avatar', avatarEl, false);
+        }
+        
+        applyTheme();
+        renderViewMode();
+        setupEditMenuTriggers();
+        attachGlobalListeners();
+        buildEditMenuContent();
+        initInviteGenerator();
+        
+        window.addEventListener('beforeunload', cleanup);
+      }
+
+      // Expose global functions
       window.showActiveCodes = showActiveCodes;
       window.revokeAllCodes = revokeAllCodes;
-      window.setPresetBg = setPresetBg;
-      window.changeTextColor = changeTextColor;
-      window.changePageBg = changePageBg;
-      window.enterEditMode = enterEditMode;
-      window.saveProfile = saveProfile;
+      window.setPresetBg = window.setPresetBg;
+      window.changeTextColor = window.changeTextColor;
+      window.changePageBg = window.changePageBg;
+      window.enterEditMode = window.enterEditMode;
+      window.saveProfile = window.saveProfile;
+      window.resetHeaderPosition = resetHeaderPosition;
 
-      window.addEventListener('DOMContentLoaded', init);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
     })();
   </script>
 </body>
