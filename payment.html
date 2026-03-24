@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRYPTOBROS • CHOOSE YOUR TIER</title>
-<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.98.0/solana-web3.min.js" as="script">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -71,7 +70,6 @@ gap:15px;
 .tier-status-value.master { color:#d700ff; }
 .tier-status-value.pro { color:#00d4ff; }
 .tier-status-value.premium { color:#ffd700; }
-.tier-status-expiry { color:#ffaa00; font-size:0.95rem; }
 .tiers-grid {
 display:grid;
 grid-template-columns:repeat(4, 1fr);
@@ -129,7 +127,6 @@ margin-top: auto;
 }
 .select-btn:hover:not(:disabled) { transform:translateY(-4px); box-shadow:0 10px 25px rgba(255,255,255,0.15); }
 .select-btn:disabled { opacity:0.5; cursor:not-allowed; }
-.select-btn:focus-visible { outline:2px solid currentColor; outline-offset:2px; }
 .free .select-btn { border-color:#00ff9d; color:#00ff9d; background:rgba(0,255,157,0.09); }
 .master .select-btn { border-color:#d700ff; color:#d700ff; background:rgba(215,0,255,0.09); }
 .pro .select-btn { border-color:#00d4ff; color:#00d4ff; background:rgba(0,212,255,0.09); }
@@ -145,47 +142,29 @@ margin-top: auto;
 .feature-col-right li::before { content: "→"; position: absolute; left: 0; color: #ffd700; }
 .invite-section { grid-column: 1 / 2; background: linear-gradient(135deg,rgba(80,40,180,0.3),rgba(0,80,180,0.2)); border: 2px solid #7755ff; border-radius: 18px; padding: 24px 28px; margin-top: 30px; }
 .invite-title { font-size: 1.4rem; color: #bb99ff; margin-bottom: 16px; font-weight: 700; }
-.invite-row { display: flex; gap: 12px; margin-bottom: 8px; }
-.invite-input { flex: 1; background: #111122; border: 1px solid #444466; border-radius: 10px; padding: 12px 16px; color: #fff; font-size: 0.95rem; }
+.invite-row { display: flex; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.invite-input { flex: 1; background: #111122; border: 1px solid #444466; border-radius: 10px; padding: 12px 16px; color: #fff; font-size: 0.95rem; min-width: 180px; }
 .invite-input::placeholder { color: #556688; }
+.invite-btn-group { display: flex; gap: 12px; }
 .invite-btn { background: linear-gradient(90deg,#6644ff,#4488ff); border: none; color: #fff; padding: 0 24px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
-.invite-btn:hover { transform: scale(1.04); box-shadow: 0 0 25px rgba(100,80,255,0.6); }
-.invite-examples { color: #aaccff; font-size: 0.9rem; margin-top: 5px; }
-#inviteMessage { margin-top: 15px; padding: 10px; border-radius: 8px; font-size: 0.9rem; display: none; }
-#inviteMessage.success { background: rgba(0,255,157,0.1); color:#00ff9d; border:1px solid #00ff9d; }
-#inviteMessage.error { background: rgba(255,77,77,0.1); color:#ff4d4d; border:1px solid #ff4d4d; }
-.modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.95); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); align-items:center; justify-content:center; z-index:1000; }
-@supports not (backdrop-filter: blur(1px)) { .modal-overlay { background:rgba(10,10,20,0.98); } }
-.modal-overlay.active { display:flex; }
-.modal-content { background:#111122; border:2px solid #00ff9d; border-radius:24px; padding:30px; max-width:500px; width:90%; text-align:center; position:relative; }
-.modal-title { font-size:1.8rem; font-weight:700; color:#00ff9d; margin-bottom:20px; }
-.modal-text { color:#88aaff; margin-bottom:20px; line-height:1.5; }
-.payment-details { background:#0a0c1f; border:1px solid #334466; border-radius:12px; padding:15px; margin:20px 0; text-align:left; }
-.payment-details p { color:#88aaff; font-size:0.9rem; margin-bottom:5px; display:flex; justify-content:space-between; align-items:center; }
-.payment-details .value { color:#00ff9d; font-family:monospace; word-break:break-all; margin-bottom:15px; font-size:0.9rem; cursor:pointer; padding:8px; background:rgba(0,0,0,0.3); border-radius:4px; transition:all 0.2s; }
-.payment-details .value:hover { background:rgba(0,255,157,0.15); }
-.copy-icon { cursor:pointer; opacity:0.7; padding:4px 8px; border-radius:4px; }
-.copy-icon:hover { opacity:1; background:rgba(255,255,255,0.1); }
-.memo-box { background:rgba(0,255,157,0.1); border:2px dashed #00ff9d; border-radius:12px; padding:15px; margin:20px 0; word-break:break-all; font-family:monospace; font-size:0.9rem; }
-.memo-label { color:#88aaff; font-size:0.85rem; margin-bottom:5px; }
-.memo-warning { color:#ff4444; font-size:1.1rem; font-weight:bold; margin:15px 0; padding:10px; background:rgba(255,68,68,0.1); border-radius:8px; }
-.modal-btn { width:100%; padding:14px; background:linear-gradient(90deg,#00ff9d,#00cc88); border:none; border-radius:12px; color:#0a0c1f; font-weight:700; font-size:1rem; cursor:pointer; margin-bottom:10px; transition:all 0.3s; }
-.modal-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 5px 20px rgba(0,255,157,0.4); }
-.modal-btn:disabled { opacity:0.5; cursor:not-allowed; }
-.modal-btn.secondary { background:transparent; border:1px solid #445588; color:#88aaff; }
-.modal-btn.secondary:hover:not(:disabled) { border-color:#00ff9d; color:#00ff9d; }
-.payment-status { margin-top:15px; padding:10px; border-radius:8px; font-size:0.9rem; display:none; }
-.payment-status.info { background:rgba(0,212,255,0.1); color:#00d4ff; border:1px solid #00d4ff; }
-.payment-status.success { background:rgba(0,255,157,0.1); color:#00ff9d; border:1px solid #00ff9d; }
-.payment-status.error { background:rgba(255,77,77,0.1); color:#ff4d4d; border:1px solid #ff4d4d; }
-.spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(0,255,157,0.3); border-top-color:#00ff9d; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.close-modal { position:absolute; top:15px; right:20px; font-size:24px; color:#88aaff; cursor:pointer; background:none; border:none; padding:5px; line-height:1; }
-.close-modal:hover { color:#ff4d4d; }
-.loading { display:inline-block; width:30px; height:30px; border:3px solid rgba(0,255,157,0.3); border-top-color:#00ff9d; border-radius:50%; animation:spin 1s linear infinite; margin:20px auto; }
-.solana-loading { background:rgba(0,0,0,0.7); padding:20px; border-radius:12px; margin:20px 0; text-align:center; }
-@media (max-width:1000px) { .bottom-section { grid-template-columns:1fr; } }
-@media (max-width:600px) { .invite-row { flex-direction:column; } .invite-btn { width:100%; padding:14px; } .tier-status { flex-direction:column; text-align:center; } .back-button { top: 10px; left: 10px; padding: 8px 16px; font-size: 0.9rem; } }
+.restore-btn { background: linear-gradient(90deg,#ff8844,#ff6644); border: none; color: #fff; padding: 0 24px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+.invite-btn:hover, .restore-btn:hover { transform: scale(1.04); box-shadow: 0 0 25px rgba(255,100,100,0.6); }
+.invite-examples { color: #aaccff; font-size: 0.85rem; margin-top: 8px; }
+#inviteMessage { margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 0.9rem; display: none; }
+#inviteMessage.success { background: rgba(0,255,157,0.15); color:#00ff9d; border:1px solid #00ff9d; }
+#inviteMessage.error { background: rgba(255,77,77,0.15); color:#ff4d4d; border:1px solid #ff4d4d; }
+#inviteMessage.info { background: rgba(0,212,255,0.15); color:#00d4ff; border:1px solid #00d4ff; }
+.payment-btn-disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+@media (max-width: 600px) { 
+  .invite-row { flex-direction: column; } 
+  .invite-btn-group { width: 100%; }
+  .invite-btn, .restore-btn { width: 100%; padding: 12px; } 
+  .tier-status { flex-direction: column; text-align: center; } 
+  .back-button { top: 10px; left: 10px; padding: 8px 16px; font-size: 0.9rem; }
+}
 </style>
 </head>
 <body>
@@ -196,18 +175,12 @@ margin-top: auto;
 <div class="tier-status" id="tierStatus">
 <span class="tier-status-label">Your current tier:</span>
 <span class="tier-status-value" id="currentTierDisplay">FREE</span>
-<span class="tier-status-expiry" id="tierExpiryDisplay"></span>
-</div>
-<div id="solanaLoading" class="solana-loading" style="display:none;">
-<div class="loading"></div>
-<p>Connecting to Solana network...</p>
 </div>
 <div class="tiers-grid">
 <div class="tier-card free">
 <div class="tier-name">FREE</div>
 <div class="tier-price">0 AUS</div>
 <ul>
-<li>2-week limited access</li>
 <li>Basic token analysis</li>
 <li>Standard verdict only</li>
 <li>No premium features</li>
@@ -257,12 +230,15 @@ margin-top: auto;
       <li>Liquidity lock check</li>
     </ul>
     <div class="invite-section">
-      <div class="invite-title">Have an Invite Code?</div>
+      <div class="invite-title">🎁 INVITE CODE / RESTORE ACCESS</div>
       <div class="invite-row">
-        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite code (MST-1234, PRO-5678, PRE-9012)" aria-label="Invite code input">
-        <button class="invite-btn" id="inviteBtn" aria-label="Activate invite code">ACTIVATE INVITE</button>
+        <input type="text" class="invite-input" id="inviteCode" placeholder="Enter invite or recovery code" aria-label="Code input">
+        <div class="invite-btn-group">
+          <button class="invite-btn" id="inviteBtn">ACTIVATE INVITE</button>
+          <button class="restore-btn" id="restoreBtn">RESTORE</button>
+        </div>
       </div>
-      <div class="invite-examples">MST-1234, PRO-5678, PRE-9012</div>
+      <div class="invite-examples">Invite: MST-1234, PRO-5678, PRE-9012 | Recovery: 6-digit code</div>
       <div id="inviteMessage" role="alert"></div>
     </div>
   </div>
@@ -277,356 +253,329 @@ margin-top: auto;
   </div>
 </div>
 </div>
-<div class="modal-overlay" id="paymentModal" aria-hidden="true">
-<div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-<button class="close-modal" id="closeModalBtn" aria-label="Close payment modal">&times;</button>
-<div class="modal-title" id="modalTitle">💳 Payment Required</div>
-<div class="modal-text" id="modalText"></div>
-<div class="memo-box">
-<div class="memo-label">📋 YOUR MEMO (COPY THIS EXACTLY):</div>
-<div id="paymentMemoDisplay" style="color:#00ff9d; font-weight:bold; word-break:break-all; font-size:1rem;"></div>
-<button class="copy-btn" id="copyMemoBtn" style="margin-top:10px; background:transparent; border:1px solid #00ff9d; color:#00ff9d; padding:8px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">📋 Copy Memo</button>
-</div>
-<div class="memo-warning">
-⚠️ CRITICAL: You MUST paste this memo in Phantom manually!
-<br>
-<span style="color:#00ff9d; font-size:0.9rem;">Transaction without memo will NOT be detected</span>
-</div>
-<div class="payment-details">
-<p>
-Treasury Address:
-<span class="copy-icon" id="copyTreasuryBtn" role="button" tabindex="0" aria-label="Copy treasury address">📋</span>
-</p>
-<div class="value" id="treasuryAddr" role="button" tabindex="0" aria-label="Click to copy treasury address">C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6</div>
-<p>
-Amount:
-<span class="copy-icon" id="copyAmountBtn" role="button" tabindex="0" aria-label="Copy amount">📋</span>
-</p>
-<div class="value" id="modalAmount" role="button" tabindex="0" aria-label="Click to copy amount"></div>
-</div>
-<button class="modal-btn" id="phantomPayBtn" aria-label="Open Phantom wallet">👻 Open Phantom Wallet</button>
-<button class="modal-btn secondary" id="verifyPaymentBtn" aria-label="Verify payment" disabled>✅ Wait 30s...</button>
-<button class="modal-btn secondary" id="cancelModalBtn" aria-label="Cancel payment">Cancel</button>
-<div id="paymentStatus" class="payment-status" role="status"></div>
-</div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.98.0/solana-web3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tweetnacl@1.0.3/nacl.min.js"></script>
+
 <script>
 (function() {
-const IS_DEMO_MODE = true;
-const TREASURY = 'C4jGvk7MwKPPpKXVDCzkToVF5NKLq84a5hT9C4NHD4q6';
-const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000;
-const PAYMENT_TIMEOUT = 15 * 60 * 1000;
-const TIER_PRICES = { 'MASTER': 500, 'PRO': 2000, 'PREMIUM': 10000 };
+  const TIER_PRICES = { 'MASTER': 500, 'PRO': 2000, 'PREMIUM': 10000 };
+  let isProcessing = false;
 
-// ========== INVITE CODE VALIDATION FROM localStorage ==========
-function isValidInviteCode(code) {
-  if (!code || typeof code !== 'string') return null;
-  const trimmed = code.trim().toUpperCase();
-  // Format: MST-1234, PRO-5678, PRE-9012
-  if (!/^(MST|PRO|PRE)-\d{4}$/.test(trimmed)) return null;
-  
-  const activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
-  const found = activeCodes.find(c => c.code === trimmed && !c.used);
-  
-  if (found) {
-    return { tier: found.tier, code: found.code };
-  }
-  return null;
-}
-
-function markInviteCodeAsUsed(code) {
-  const activeCodes = JSON.parse(localStorage.getItem('activeInviteCodes')) || [];
-  const updated = activeCodes.map(c => {
-    if (c.code === code && !c.used) {
-      return { ...c, used: true, usedAt: Date.now() };
-    }
-    return c;
-  });
-  localStorage.setItem('activeInviteCodes', JSON.stringify(updated));
-}
-
-function showMessage(elementId, text, type) {
-  const msgEl = document.getElementById(elementId);
-  if (!msgEl) return;
-  msgEl.textContent = text;
-  msgEl.className = type;
-  msgEl.style.display = 'block';
-  setTimeout(() => {
-    if (msgEl) msgEl.style.display = 'none';
-  }, 4000);
-}
-
-function activateInvite() {
-  const input = document.getElementById('inviteCode');
-  const code = input ? input.value.trim() : '';
-  if (!code) {
-    showMessage('inviteMessage', 'Please enter an invite code', 'error');
-    return;
-  }
-  
-  const valid = isValidInviteCode(code);
-  if (!valid) {
-    showMessage('inviteMessage', '❌ Invalid or already used invite code', 'error');
-    return;
-  }
-  
-  // Mark as used
-  markInviteCodeAsUsed(valid.code);
-  
-  // Show success and activate tier
-  showMessage('inviteMessage', `✅ ${valid.tier} invite activated!`, 'success');
-  
-  // Activate the tier (bypass payment)
-  activateTier(valid.tier);
-}
-
-let selectedTier = null, paymentStartTime = null, pollingTimeout = null, isPollingActive = false, connection = null, updateTimeout = null, paymentMemo = null, lastCheckedSig = null, verifyTimer = null;
-
-const storage = {
-  get: (key, def = null) => { try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : def; } catch { return def; } },
-  set: (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch { return false; } }
-};
-
-function showSolanaLoading() { document.getElementById('solanaLoading').style.display = 'block'; }
-function hideSolanaLoading() { document.getElementById('solanaLoading').style.display = 'none'; }
-
-showSolanaLoading();
-try {
-  connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl(IS_DEMO_MODE ? 'devnet' : 'mainnet-beta'), 'confirmed');
-  hideSolanaLoading();
-} catch (e) {
-  hideSolanaLoading();
-  console.error('Solana connection failed:', e);
-}
-
-function hasPhantom() { return window.solana && window.solana.isPhantom; }
-
-async function createSignedCertificate(tier) {
-  if (!hasPhantom()) { throw new Error('Phantom required'); }
-  try {
-    const { publicKey, signMessage } = window.solana;
-    const payload = { wallet: publicKey.toString(), tier, activatedAt: Date.now(), nonce: generateNonce() };
-    const message = new TextEncoder().encode(JSON.stringify(payload));
-    const signature = await signMessage(message);
-    return { ...payload, signature: toBase64(signature) };
-  } catch (e) { console.error('Signing failed:', e); return null; }
-}
-
-function verifyCertificate(cert) {
-  if (IS_DEMO_MODE) {
-    const validTiers = ['FREE', 'MASTER', 'PRO', 'PREMIUM'];
-    const now = Date.now();
-    return cert && validTiers.includes(cert.tier) && typeof cert.activatedAt === 'number' && cert.activatedAt <= now && cert.activatedAt > now - TWO_WEEKS_MS * 2 && cert.nonce && cert.nonce.length > 20;
-  }
-  try {
-    const payload = { wallet: cert.wallet, tier: cert.tier, activatedAt: cert.activatedAt, nonce: cert.nonce };
-    const message = new TextEncoder().encode(JSON.stringify(payload));
-    const signature = fromBase64(cert.signature);
-    const pubkey = new solanaWeb3.PublicKey(cert.wallet);
-    return window.nacl && nacl.sign.detached.verify(message, signature, pubkey.toBytes());
-  } catch (e) { console.warn('Verification failed:', e); return false; }
-}
-
-function getCurrentTier() {
-  const cert = storage.get('tierCertificate');
-  if (cert && verifyCertificate(cert)) { const elapsed = Date.now() - cert.activatedAt; if (elapsed <= TWO_WEEKS_MS) { return cert.tier; } }
-  const tier = storage.get('userTier'), activated = storage.get('tierActivatedAt');
-  if (tier === 'FREE' && activated) { const elapsed = Date.now() - activated; if (elapsed <= TWO_WEEKS_MS) { return 'FREE'; } }
-  storage.set('userTier', null); storage.set('tierActivatedAt', null); storage.set('tierCertificate', null);
-  return 'FREE';
-}
-
-function getTierStatus() {
-  const currentTier = getCurrentTier();
-  if (currentTier === 'FREE') {
-    const activated = storage.get('tierActivatedAt');
-    if (activated) { const expires = activated + TWO_WEEKS_MS; const daysLeft = Math.max(0, Math.ceil((expires - Date.now()) / (1000 * 60 * 60 * 24))); return { tier: 'FREE', active: true, daysLeft }; }
-    return { tier: 'FREE', active: false };
-  }
-  const cert = storage.get('tierCertificate');
-  if (cert) { const expires = cert.activatedAt + TWO_WEEKS_MS; const daysLeft = Math.max(0, Math.ceil((expires - Date.now()) / (1000 * 60 * 60 * 24))); return { tier: cert.tier, active: true, daysLeft }; }
-  return { tier: 'FREE', active: false };
-}
-
-function updateUI() {
-  const status = getTierStatus();
-  const displayEl = document.getElementById('currentTierDisplay'), expiryEl = document.getElementById('tierExpiryDisplay');
-  displayEl.textContent = status.tier;
-  displayEl.className = 'tier-status-value ' + status.tier.toLowerCase();
-  if (status.active && status.tier !== 'FREE') { expiryEl.textContent = `expires in ${status.daysLeft} days`; }
-  else if (status.tier === 'FREE' && status.active) { expiryEl.textContent = `expires in ${status.daysLeft} days`; }
-  else { expiryEl.textContent = ''; }
-}
-
-function activateTier(tier) {
-  if (tier !== 'FREE') {
-    createSignedCertificate(tier).then(cert => {
-      if (cert) { storage.set('tierCertificate', cert); showMessage('inviteMessage', `✅ ${tier} activated!`, 'success'); }
-      else { showMessage('inviteMessage', '❌ Failed to activate tier', 'error'); return; }
-      updateUI();
-      if (tier === 'PREMIUM') { setTimeout(() => window.location.href = 'profile.html', 1500); }
-      else { setTimeout(() => window.location.href = 'index.html', 1500); }
-    });
-  } else {
-    storage.set('userTier', tier);
-    storage.set('tierActivatedAt', Date.now());
-    showMessage('inviteMessage', `✅ ${tier} activated!`, 'success');
-    updateUI();
-    setTimeout(() => window.location.href = 'index.html', 1500);
-  }
-}
-
-function selectTier(tier) {
-  const status = getTierStatus();
-  if (tier === 'FREE') {
-    if (status.tier === 'FREE' && status.active) { showMessage('inviteMessage', 'You already have FREE tier', 'error'); return; }
-    activateTier('FREE');
-    return;
-  }
-  selectedTier = tier;
-  paymentStartTime = Date.now();
-  paymentMemo = `CRYPTOBROS:${tier}:${Date.now()}:${generateNonce().substring(0, 8)}`;
-  lastCheckedSig = null;
-  document.getElementById('modalText').textContent = `Send exactly ${TIER_PRICES[tier]} AUS to activate ${tier}`;
-  document.getElementById('modalAmount').textContent = `${TIER_PRICES[tier]} AUS`;
-  document.getElementById('paymentMemoDisplay').textContent = paymentMemo;
-  document.getElementById('paymentModal').classList.add('active');
-  document.getElementById('paymentModal').setAttribute('aria-hidden', 'false');
-  const verifyBtn = document.getElementById('verifyPaymentBtn');
-  verifyBtn.disabled = true;
-  verifyBtn.textContent = '✅ Wait 30s...';
-  if (verifyTimer) clearTimeout(verifyTimer);
-  verifyTimer = setTimeout(() => { verifyBtn.disabled = false; verifyBtn.textContent = '✅ I\'ve Sent Payment'; }, 30000);
-}
-
-function generateNonce() {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) { return crypto.randomUUID(); }
-  const arr = new Uint8Array(16);
-  if (crypto && crypto.getRandomValues) { crypto.getRandomValues(arr); } else { for (let i = 0; i < 16; i++) { arr[i] = Math.floor(Math.random() * 256); } }
-  arr[6] = (arr[6] & 0x0f) | 0x40; arr[8] = (arr[8] & 0x3f) | 0x80;
-  return Array.from(arr, b => b.toString(16).padStart(2, '0')).join('').replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
-}
-
-function toBase64(bytes) { let binary = ''; bytes.forEach(b => binary += String.fromCharCode(b)); return btoa(binary); }
-function fromBase64(base64) { const binary = atob(base64); const bytes = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) { bytes[i] = binary.charCodeAt(i); } return bytes; }
-
-function copyToClipboard(text) {
-  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(() => { showPaymentStatus('success', '✓ Copied!'); setTimeout(() => hidePaymentStatus(), 2000); }).catch(() => fallbackCopy(text)); }
-  else { fallbackCopy(text); }
-}
-function fallbackCopy(text) {
-  const textarea = document.createElement('textarea'); textarea.value = text; textarea.style.position = 'fixed'; textarea.style.opacity = '0'; document.body.appendChild(textarea); textarea.select();
-  try { document.execCommand('copy'); showPaymentStatus('success', '✓ Copied!'); setTimeout(() => hidePaymentStatus(), 2000); } catch (err) { showPaymentStatus('error', '❌ Failed to copy'); setTimeout(() => hidePaymentStatus(), 2000); }
-  document.body.removeChild(textarea);
-}
-function showPaymentStatus(type, message) {
-  const statusEl = document.getElementById('paymentStatus'); statusEl.className = 'payment-status ' + type; statusEl.innerHTML = '';
-  if (message.includes('spinner')) { const spinner = document.createElement('span'); spinner.className = 'spinner'; statusEl.appendChild(spinner); const textNode = document.createTextNode(message.replace(/<[^>]*>/g, '')); statusEl.appendChild(textNode); }
-  else { statusEl.textContent = message; }
-  statusEl.style.display = 'block';
-}
-function hidePaymentStatus() { document.getElementById('paymentStatus').style.display = 'none'; }
-function openPhantomPayment() {
-  if (!selectedTier) return;
-  if (!hasPhantom()) { showPaymentStatus('error', '🦊 Phantom not detected.'); setTimeout(() => window.open('https://phantom.app/', '_blank'), 2000); return; }
-  const amount = TIER_PRICES[selectedTier], lamports = IS_DEMO_MODE ? amount * 1e9 : amount;
-  const url = `https://phantom.app/ul/transfer?to=${TREASURY}&amount=${lamports}`;
-  try { window.open(url, '_blank'); showPaymentStatus('info', '<span class="spinner"></span> Complete payment in Phantom with the memo'); startPaymentPolling(); } catch (e) { showPaymentStatus('error', '❌ Failed to open Phantom'); }
-}
-function startPaymentPolling() {
-  if (isPollingActive) return; isPollingActive = true; let attempts = 0; const maxAttempts = 60;
-  async function poll() {
-    if (!selectedTier || !isPollingActive) return; attempts++;
-    const received = await checkPaymentReceived();
-    if (received) { handlePaymentSuccess(); return; }
-    if (Date.now() - paymentStartTime > PAYMENT_TIMEOUT || attempts >= maxAttempts) { showPaymentStatus('error', '⏰ Payment timeout.'); stopPolling(); return; }
-    pollingTimeout = setTimeout(poll, 5000);
-  }
-  if (pollingTimeout) clearTimeout(pollingTimeout); poll();
-}
-function stopPolling() { isPollingActive = false; if (pollingTimeout) { clearTimeout(pollingTimeout); pollingTimeout = null; } }
-async function checkPaymentReceived() {
-  if (!connection || !selectedTier) return false;
-  let retries = 0; const maxRetries = 3;
-  while (retries < maxRetries) {
+  // ========== SAFE STORAGE UTILITIES ==========
+  function safeStorageGet(key, defaultValue = null) {
     try {
-      const treasuryPubkey = new solanaWeb3.PublicKey(TREASURY);
-      const options = { limit: 100 };
-      if (lastCheckedSig) { options.until = lastCheckedSig; }
-      const signatures = await connection.getSignaturesForAddress(treasuryPubkey, options);
-      if (signatures.length > 0) { lastCheckedSig = signatures[signatures.length - 1].signature; }
-      for (const sig of signatures) {
-        if (sig.blockTime * 1000 < paymentStartTime - 5000) continue;
-        const tx = await connection.getParsedTransaction(sig.signature, { maxSupportedTransactionVersion: 0 });
-        if (!tx || !tx.meta) continue;
-        let hasCorrectMemo = false;
-        if (tx.transaction.message.instructions) {
-          for (const ix of tx.transaction.message.instructions) {
-            if (ix.programId && ix.programId.toString() === 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr') {
-              if (ix.data && new TextDecoder().decode(ix.data).includes(paymentMemo)) { hasCorrectMemo = true; break; }
-            }
-          }
-        }
-        if (!hasCorrectMemo) continue;
-        const expectedAmount = TIER_PRICES[selectedTier] * 1e9; let amountSent = 0;
-        const treasuryIndex = tx.transaction.message.accountKeys.findIndex(key => key.equals(treasuryPubkey));
-        if (treasuryIndex !== -1 && tx.meta.postBalances && tx.meta.preBalances) { amountSent = tx.meta.postBalances[treasuryIndex] - tx.meta.preBalances[treasuryIndex]; }
-        if (!IS_DEMO_MODE && tx.meta.innerInstructions) {
-          for (const inner of tx.meta.innerInstructions) {
-            for (const ix of inner.instructions) {
-              if (ix.parsed?.type === 'transfer' && ix.parsed.info.destination === TREASURY) {
-                if (ix.parsed.info.amount >= expectedAmount * 0.99) { return true; }
-              }
-            }
-          }
-        }
-        if (amountSent >= expectedAmount * 0.99) { return true; }
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch (e) {
+      console.error(`Failed to parse storage key: ${key}`, e);
+      localStorage.removeItem(key);
+      return defaultValue;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      console.error(`Failed to save storage key: ${key}`, e);
+      if (e.name === 'QuotaExceededError') {
+        alert('Storage limit reached. Please clear some data.');
       }
       return false;
-    } catch (err) {
-      if (err.message?.includes('429') && retries < maxRetries - 1) { retries++; await new Promise(r => setTimeout(r, 5000 * retries)); continue; }
-      console.error('Payment check error:', err); return false;
     }
   }
-  return false;
-}
-function handlePaymentSuccess() { stopPolling(); showPaymentStatus('success', '✅ Payment detected! Activating tier...'); setTimeout(() => { activateTier(selectedTier); closeModal(); }, 2000); }
-async function verifyPayment() { showPaymentStatus('info', '<span class="spinner"></span> Verifying...'); const received = await checkPaymentReceived(); if (received) { handlePaymentSuccess(); } else { showPaymentStatus('error', '⏳ Payment not detected. Check memo and amount.'); } }
-function closeModal() {
-  document.getElementById('paymentModal').classList.remove('active');
-  document.getElementById('paymentModal').setAttribute('aria-hidden', 'true');
-  stopPolling(); selectedTier = null; hidePaymentStatus();
-  if (verifyTimer) clearTimeout(verifyTimer);
-}
 
-window.addEventListener('beforeunload', () => { if (updateTimeout) clearTimeout(updateTimeout); stopPolling(); if (verifyTimer) clearTimeout(verifyTimer); });
-function startUIUpdates() {
-  const scheduleUpdate = () => { if (document.visibilityState === 'visible') { updateUI(); } updateTimeout = setTimeout(scheduleUpdate, 60000); };
-  scheduleUpdate();
-}
-function init() {
-  startUIUpdates();
-  updateUI();
-  document.getElementById('freeBtn').addEventListener('click', () => selectTier('FREE'));
-  document.getElementById('masterBtn').addEventListener('click', () => selectTier('MASTER'));
-  document.getElementById('proBtn').addEventListener('click', () => selectTier('PRO'));
-  document.getElementById('premiumBtn').addEventListener('click', () => selectTier('PREMIUM'));
-  document.getElementById('inviteBtn').addEventListener('click', activateInvite);
-  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-  document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
-  document.getElementById('paymentModal').addEventListener('click', (e) => { if (e.target === document.getElementById('paymentModal')) closeModal(); });
-  const copyTreasury = () => copyToClipboard(TREASURY), copyAmount = () => copyToClipboard(document.getElementById('modalAmount').textContent), copyMemo = () => copyToClipboard(paymentMemo);
-  ['copyTreasuryBtn', 'treasuryAddr'].forEach(id => { document.getElementById(id).addEventListener('click', copyTreasury); document.getElementById(id).addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyTreasury(); } }); });
-  ['copyAmountBtn', 'modalAmount'].forEach(id => { document.getElementById(id).addEventListener('click', copyAmount); document.getElementById(id).addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyAmount(); } }); });
-  document.getElementById('copyMemoBtn').addEventListener('click', copyMemo);
-  document.getElementById('phantomPayBtn').addEventListener('click', openPhantomPayment);
-  document.getElementById('verifyPaymentBtn').addEventListener('click', verifyPayment);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) { stopPolling(); } else if (selectedTier && document.getElementById('paymentModal').classList.contains('active')) { startPaymentPolling(); } });
-}
-if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+  // ========== CRYPTOGRAPHICALLY SECURE RECOVERY CODE ==========
+  function generateSecureRecoveryCode() {
+    try {
+      const randomArray = new Uint32Array(1);
+      crypto.getRandomValues(randomArray);
+      return (randomArray[0] % 900000 + 100000).toString();
+    } catch (e) {
+      console.warn('crypto.getRandomValues failed, using fallback');
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+  }
+
+  function isCodeUnique(code, recoveryMap) {
+    return !recoveryMap[code];
+  }
+
+  function generateUniqueRecoveryCode() {
+    let recoveryMap = safeStorageGet('recoveryCodes', {});
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    while (attempts < maxAttempts) {
+      const code = generateSecureRecoveryCode();
+      if (isCodeUnique(code, recoveryMap)) {
+        return code;
+      }
+      attempts++;
+    }
+    
+    // Fallback with timestamp to ensure uniqueness
+    const fallbackCode = Date.now().toString().slice(-6);
+    return fallbackCode;
+  }
+
+  function saveRecoveryCode(code, tier) {
+    let recoveryMap = safeStorageGet('recoveryCodes', {});
+    recoveryMap[code] = { tier: tier, activatedAt: Date.now() };
+    return safeStorageSet('recoveryCodes', recoveryMap);
+  }
+
+  function restoreFromRecoveryCode(code) {
+    let recoveryMap = safeStorageGet('recoveryCodes', {});
+    const data = recoveryMap[code];
+    
+    if (!data) return null;
+    
+    // Delete the code after use (one-time use)
+    delete recoveryMap[code];
+    safeStorageSet('recoveryCodes', recoveryMap);
+    
+    return data.tier;
+  }
+
+  // ========== INVITE CODE SYSTEM ==========
+  function isValidInviteCode(code) {
+    if (!code || typeof code !== 'string') return null;
+    const trimmed = code.trim().toUpperCase();
+    if (!/^(MST|PRO|PRE)-\d{4}$/.test(trimmed)) return null;
+    
+    const activeCodes = safeStorageGet('activeInviteCodes', []);
+    if (!Array.isArray(activeCodes)) return null;
+    
+    const found = activeCodes.find(c => c && c.code === trimmed && !c.used);
+    
+    if (found && found.tier) {
+      return { tier: found.tier, code: found.code };
+    }
+    return null;
+  }
+
+  function markInviteCodeAsUsed(code) {
+    let activeCodes = safeStorageGet('activeInviteCodes', []);
+    if (!Array.isArray(activeCodes)) return false;
+    
+    let found = false;
+    activeCodes = activeCodes.map(c => {
+      if (c && c.code === code && !c.used) {
+        found = true;
+        return { ...c, used: true, usedAt: Date.now() };
+      }
+      return c;
+    });
+    
+    if (!found) return false;
+    return safeStorageSet('activeInviteCodes', activeCodes);
+  }
+
+  // ========== UI HELPERS ==========
+  function showMessage(text, type) {
+    const msgEl = document.getElementById('inviteMessage');
+    if (!msgEl) return;
+    msgEl.textContent = text;
+    msgEl.className = type;
+    msgEl.style.display = 'block';
+    setTimeout(() => {
+      if (msgEl) msgEl.style.display = 'none';
+    }, 5000);
+  }
+
+  function getCurrentTier() {
+    const tier = safeStorageGet('userTier', 'FREE');
+    return tier === 'FREE' ? 'FREE' : tier;
+  }
+
+  function updateUI() {
+    const currentTier = getCurrentTier();
+    const displayEl = document.getElementById('currentTierDisplay');
+    if (displayEl) {
+      displayEl.textContent = currentTier;
+      displayEl.className = `tier-status-value ${currentTier.toLowerCase()}`;
+    }
+  }
+
+  // ========== TIER ACTIVATION ==========
+  function activateTier(tier, skipRedirect = false) {
+    if (tier === 'FREE') {
+      safeStorageSet('userTier', 'FREE');
+      showMessage('✅ FREE tier activated!', 'success');
+    } else {
+      const currentTier = getCurrentTier();
+      if (currentTier !== 'FREE') {
+        showMessage(`You already have ${currentTier} tier.`, 'error');
+        return false;
+      }
+      
+      const recoveryCode = generateUniqueRecoveryCode();
+      if (!saveRecoveryCode(recoveryCode, tier)) {
+        showMessage('❌ Failed to save recovery code. Please try again.', 'error');
+        return false;
+      }
+      
+      safeStorageSet('userTier', tier);
+      showMessage(`✅ ${tier} activated!\n\n📋 SAVE THIS RECOVERY CODE:\n${recoveryCode}\n\nPage will redirect in 5 seconds...`, 'success');
+      
+      if (!skipRedirect) {
+        setTimeout(() => {
+          window.location.href = 'profile.html';
+        }, 5000);
+      }
+      return true;
+    }
+    
+    updateUI();
+    if (!skipRedirect) {
+      setTimeout(() => {
+        window.location.href = 'profile.html';
+      }, 2000);
+    }
+    return true;
+  }
+
+  // ========== INVITE ACTIVATION ==========
+  function activateInvite() {
+    if (isProcessing) {
+      showMessage('Please wait, processing...', 'info');
+      return;
+    }
+    
+    const input = document.getElementById('inviteCode');
+    if (!input) {
+      showMessage('System error. Please refresh the page.', 'error');
+      return;
+    }
+    
+    const code = input.value.trim();
+    if (!code) {
+      showMessage('Please enter an invite code', 'error');
+      return;
+    }
+    
+    isProcessing = true;
+    
+    try {
+      const currentTier = getCurrentTier();
+      if (currentTier !== 'FREE') {
+        showMessage(`You already have ${currentTier} tier. Invites are for new users only.`, 'error');
+        return;
+      }
+      
+      const valid = isValidInviteCode(code);
+      if (!valid) {
+        showMessage('❌ Invalid or already used invite code', 'error');
+        return;
+      }
+      
+      if (!markInviteCodeAsUsed(valid.code)) {
+        showMessage('❌ Failed to activate code. Please try again.', 'error');
+        return;
+      }
+      
+      activateTier(valid.tier);
+    } finally {
+      isProcessing = false;
+    }
+  }
+
+  // ========== RESTORE BY RECOVERY CODE ==========
+  function restoreAccess() {
+    if (isProcessing) {
+      showMessage('Please wait, processing...', 'info');
+      return;
+    }
+    
+    const input = document.getElementById('inviteCode');
+    if (!input) {
+      showMessage('System error. Please refresh the page.', 'error');
+      return;
+    }
+    
+    const code = input.value.trim();
+    if (!code) {
+      showMessage('Please enter your 6-digit recovery code', 'error');
+      return;
+    }
+    
+    if (!/^\d{6}$/.test(code)) {
+      showMessage('❌ Recovery code must be 6 digits', 'error');
+      return;
+    }
+    
+    isProcessing = true;
+    
+    try {
+      const restoredTier = restoreFromRecoveryCode(code);
+      if (!restoredTier) {
+        showMessage('❌ Invalid or already used recovery code', 'error');
+        return;
+      }
+      
+      safeStorageSet('userTier', restoredTier);
+      showMessage(`✅ Access restored! Welcome back, ${restoredTier}. Redirecting...`, 'success');
+      updateUI();
+      
+      setTimeout(() => {
+        window.location.href = 'profile.html';
+      }, 2000);
+    } finally {
+      isProcessing = false;
+    }
+  }
+
+  // ========== PAYMENT SELECTION (with debounce) ==========
+  let lastClickTime = 0;
+  const CLICK_DEBOUNCE_MS = 1000;
+
+  function selectTier(tier) {
+    const now = Date.now();
+    if (now - lastClickTime < CLICK_DEBOUNCE_MS) {
+      showMessage('Please wait before selecting again', 'info');
+      return;
+    }
+    lastClickTime = now;
+    
+    if (tier === 'FREE') {
+      const currentTier = getCurrentTier();
+      if (currentTier !== 'FREE') {
+        showMessage(`You already have ${currentTier} tier.`, 'error');
+        return;
+      }
+      activateTier('FREE');
+      return;
+    }
+    
+    showMessage(`💰 Payment for ${tier} (${TIER_PRICES[tier]} AUS) coming soon.\n\nUse invite code for free access.`, 'info');
+  }
+
+  // ========== INITIALIZATION ==========
+  function init() {
+    updateUI();
+    
+    const elements = {
+      freeBtn: document.getElementById('freeBtn'),
+      masterBtn: document.getElementById('masterBtn'),
+      proBtn: document.getElementById('proBtn'),
+      premiumBtn: document.getElementById('premiumBtn'),
+      inviteBtn: document.getElementById('inviteBtn'),
+      restoreBtn: document.getElementById('restoreBtn')
+    };
+    
+    if (elements.freeBtn) elements.freeBtn.addEventListener('click', () => selectTier('FREE'));
+    if (elements.masterBtn) elements.masterBtn.addEventListener('click', () => selectTier('MASTER'));
+    if (elements.proBtn) elements.proBtn.addEventListener('click', () => selectTier('PRO'));
+    if (elements.premiumBtn) elements.premiumBtn.addEventListener('click', () => selectTier('PREMIUM'));
+    if (elements.inviteBtn) elements.inviteBtn.addEventListener('click', activateInvite);
+    if (elements.restoreBtn) elements.restoreBtn.addEventListener('click', restoreAccess);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>
 </body>
